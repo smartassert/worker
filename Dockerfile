@@ -47,8 +47,8 @@ RUN curl -L --output dockerize.tar.gz \
   && rm dockerize.tar.gz \
   && mkdir -p var/log/supervisor
 
-COPY supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-COPY supervisor/conf.d/app.conf /etc/supervisor/conf.d/supervisord.conf
+COPY tests/build/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+COPY tests/build/supervisor/conf.d/app.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY composer.json composer.lock /app/
 COPY bin/console /app/bin/console

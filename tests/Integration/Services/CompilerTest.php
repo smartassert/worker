@@ -72,7 +72,7 @@ class CompilerTest extends AbstractTestCreationTest
                         [
                             'config' => [
                                 'browser' => 'chrome',
-                                'url' => 'http://nginx-html/index.html'
+                                'url' => 'http://html-fixtures/index.html'
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-open-index.yml',
                             'target' => '{{ target_directory }}/Generated2380721d052389cf928f39ac198a41baTest.php',
@@ -96,7 +96,7 @@ class CompilerTest extends AbstractTestCreationTest
                         [
                             'config' => [
                                 'browser' => 'chrome',
-                                'url' => 'http://nginx-html/index.html'
+                                'url' => 'http://html-fixtures/index.html'
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                             'target' => '{{ target_directory }}/Generated45ead8003cb8ba3fa966dc1ad5a91372Test.php',
@@ -105,7 +105,7 @@ class CompilerTest extends AbstractTestCreationTest
                         [
                             'config' => [
                                 'browser' => 'firefox',
-                                'url' => 'http://nginx-html/index.html'
+                                'url' => 'http://html-fixtures/index.html'
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                             'target' => '{{ target_directory }}/Generated88b4291e887760b0fe2eec8891356665Test.php',

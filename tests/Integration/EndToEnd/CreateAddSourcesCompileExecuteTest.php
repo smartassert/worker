@@ -245,7 +245,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-open-index.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -258,7 +258,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'statements' => [
                                     [
                                         'type' => 'assertion',
-                                        'source' => '$page.url is "http://nginx-html/index.html"',
+                                        'source' => '$page.url is "http://html-fixtures/index.html"',
                                         'status' => 'passed',
                                         'transformations' => [
                                             [
@@ -277,7 +277,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-open-index.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -288,7 +288,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-firefox-open-index.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -301,7 +301,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'statements' => [
                                     [
                                         'type' => 'assertion',
-                                        'source' => '$page.url is "http://nginx-html/index.html"',
+                                        'source' => '$page.url is "http://html-fixtures/index.html"',
                                         'status' => 'passed',
                                     ],
                                 ],
@@ -314,7 +314,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-firefox-open-index.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -325,7 +325,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-firefox-open-index.yml',
                                 'config' => [
                                     'browser' => 'firefox',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -338,7 +338,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'statements' => [
                                     [
                                         'type' => 'assertion',
-                                        'source' => '$page.url is "http://nginx-html/index.html"',
+                                        'source' => '$page.url is "http://html-fixtures/index.html"',
                                         'status' => 'passed',
                                     ],
                                 ],
@@ -351,7 +351,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-firefox-open-index.yml',
                                 'config' => [
                                     'browser' => 'firefox',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
@@ -362,7 +362,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-open-form.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/form.html',
+                                    'url' => 'http://html-fixtures/form.html',
                                 ],
                             ]
                         ),
@@ -375,7 +375,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'statements' => [
                                     [
                                         'type' => 'assertion',
-                                        'source' => '$page.url is "http://nginx-html/form.html"',
+                                        'source' => '$page.url is "http://html-fixtures/form.html"',
                                         'status' => 'passed',
                                     ],
                                 ],
@@ -388,7 +388,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-open-form.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/form.html',
+                                    'url' => 'http://html-fixtures/form.html',
                                 ],
                             ]
                         ),
@@ -468,7 +468,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'path' => 'Test/chrome-open-index-with-step-failure.yml',
                                 'config' => [
                                     'browser' => 'chrome',
-                                    'url' => 'http://nginx-html/index.html',
+                                    'url' => 'http://html-fixtures/index.html',
                                 ],
                             ]
                         ),
