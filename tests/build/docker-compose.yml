@@ -80,5 +80,5 @@ services:
       - postgres
     volumes:
       - /var/log/app-web:/app/var/log
-      - ${LOCAL_SOURCE_PATH}:${SOURCE_PATH}
+      - ../Fixtures/CompilerSource:${SOURCE_PATH}
       - ${LOCAL_TARGET_PATH}:${TARGET_PATH}
