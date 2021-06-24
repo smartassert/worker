@@ -1,44 +1,42 @@
 version: "3"
 
-networks:
-  primary:
-    name: worker-network
-
 services:
+  httpbin:
+    image: kennethreitz/httpbin
+    container_name: httpbin
+    ports:
+      - 8080:80
+
+  html-fixtures:
+    image: nginx:1.19
+    container_name: html-fixtures
+    volumes:
+      - ../Fixtures/Html:/usr/share/nginx/html
+
   compiler:
     image: ghcr.io/smartassert/compiler:0.29
     container_name: compiler
-    restart: always
-    networks:
-      - primary
     volumes:
-      - ${LOCAL_SOURCE_PATH}:${SOURCE_PATH}
-      - ${LOCAL_TARGET_PATH}:${TARGET_PATH}
+      - ../Fixtures/CompilerSource:/app/source
+      - ../Fixtures/CompilerTarget:/app/tests
+    ports:
+      - 9500:8000
 
   chrome-runner:
     image: ghcr.io/smartassert/chrome-runner:0.18
     container_name: chrome-runner
-    restart: always
-    networks:
-      - primary
     volumes:
-      - ${LOCAL_TARGET_PATH}:${TARGET_PATH}
+      - ../Fixtures/CompilerTarget:/app/tests
 
   firefox-runner:
     image: ghcr.io/smartassert/firefox-runner:0.18
     container_name: firefox-runner
-    restart: always
-    networks:
-      - primary
     volumes:
-      - ${LOCAL_TARGET_PATH}:${TARGET_PATH}
+      - ../Fixtures/CompilerTarget:/app/tests
 
   delegator:
     image: ghcr.io/smartassert/runner-delegator:0.6
     container_name: delegator
-    restart: always
-    networks:
-      - primary
     environment:
       CHROME_RUNNER_HOST: chrome-runner
       CHROME_RUNNER_PORT: 8000
@@ -47,28 +45,23 @@ services:
     depends_on:
       - chrome-runner
       - firefox-runner
+    ports:
+      - 9501:8000
 
   postgres:
     image: postgres:12.5
     container_name: postgres
-    restart: always
-    networks:
-      - primary
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - ${POSTGRES_EXPOSED_PORT}:5432
+      - 5432:5432
 
   nginx:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
+      context: nginx
     container_name: nginx
-    restart: always
-    networks:
-      - primary
     ports:
-      - ${NGINX_EXPOSED_PORT}:80
+      - 80:80
     links:
       - app-web:app-web
     volumes:
@@ -76,19 +69,16 @@ services:
 
   app-web:
     build:
-      context: $APP_BUILD_CONTEXT
+      context: ../..
       args:
         DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/worker-db?serverVersion=12&charset=utf8
         MESSENGER_TRANSPORT_DSN: doctrine://default
     container_name: app-web
-    restart: always
-    networks:
-      - primary
     depends_on:
       - compiler
       - delegator
       - postgres
     volumes:
       - /var/log/app-web:/app/var/log
-      - ${LOCAL_SOURCE_PATH}:${SOURCE_PATH}
-      - ${LOCAL_TARGET_PATH}:${TARGET_PATH}
+      - ../Fixtures/CompilerSource:/app/source
+      - ../Fixtures/CompilerTarget:/app/tests

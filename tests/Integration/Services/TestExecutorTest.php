@@ -101,7 +101,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 'statements:' . "\n" .
                                 '  -' . "\n" .
                                 '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://nginx-html/index.html"\'' . "\n" .
+                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
                                 '    status: passed' . "\n" .
                                 '    transformations:' . "\n" .
                                 '      -' . "\n" .
@@ -135,7 +135,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 'statements:' . "\n" .
                                 '  -' . "\n" .
                                 '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://nginx-html/index.html"\'' . "\n" .
+                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
                                 '    status: passed' . "\n"
                             );
 
@@ -165,7 +165,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 'statements:' . "\n" .
                                 '  -' . "\n" .
                                 '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://nginx-html/index.html"\'' . "\n" .
+                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
                                 '    status: passed' . "\n"
                             );
 
@@ -187,7 +187,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 'statements:' . "\n" .
                                 '  -' . "\n" .
                                 '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://nginx-html/index.html"\'' . "\n" .
+                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
                                 '    status: passed' . "\n"
                             );
 

@@ -12,4 +12,5 @@
 !/config/services.yaml
 !/public/index.php
 !/src
-!/supervisor
+!/tests/build/supervisor
+!/tests/build/nginx
