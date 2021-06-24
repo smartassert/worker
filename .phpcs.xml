@@ -2,7 +2,6 @@
 <ruleset name="Default">
     <file>src</file>
     <file>tests</file>
-    <file>self-test/app/src</file>
 
     <arg name="colors"/>
     <arg name="extensions" value="php"/>

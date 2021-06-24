@@ -1,8 +1,0 @@
-config:
-  browsers:
-    - {{ BROWSER }}
-  url: "http://http-fixtures"
-
-"verify page is open":
-  assertions:
-    - $page.url is "http://http-fixtures/"
