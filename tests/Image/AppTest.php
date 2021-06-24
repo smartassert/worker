@@ -131,6 +131,8 @@ class AppTest extends TestCase
             $durationExceeded = $duration >= self::WAIT_TIMEOUT;
         }
 
+        self::assertFalse($durationExceeded);
+
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
             'callback_url' => 'http://example.com/callback',
