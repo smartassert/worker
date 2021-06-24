@@ -3,5 +3,4 @@ parameters:
   paths:
     - src
     - tests
-    - self-test/app/src
   inferPrivatePropertyTypeFromConstructor: true
