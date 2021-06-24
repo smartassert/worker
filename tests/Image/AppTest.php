@@ -148,7 +148,7 @@ class AppTest extends TestCase
                 [
                     'configuration' => [
                         'browser' => 'chrome',
-                        'url' => 'http://nginx-html/index.html',
+                        'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-open-index.yml',
                     'step_count' => 1,
@@ -158,7 +158,7 @@ class AppTest extends TestCase
                 [
                     'configuration' => [
                         'browser' => 'chrome',
-                        'url' => 'http://nginx-html/index.html',
+                        'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-firefox-open-index.yml',
                     'step_count' => 1,
@@ -168,7 +168,7 @@ class AppTest extends TestCase
                 [
                     'configuration' => [
                         'browser' => 'firefox',
-                        'url' => 'http://nginx-html/index.html',
+                        'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-firefox-open-index.yml',
                     'step_count' => 1,
@@ -178,7 +178,7 @@ class AppTest extends TestCase
                 [
                     'configuration' => [
                         'browser' => 'chrome',
-                        'url' => 'http://nginx-html/form.html',
+                        'url' => 'http://html-fixtures/form.html',
                     ],
                     'source' => 'Test/chrome-open-form.yml',
                     'step_count' => 1,
