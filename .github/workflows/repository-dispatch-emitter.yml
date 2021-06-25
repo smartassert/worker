@@ -24,7 +24,7 @@ jobs:
 
       - name: Examine payload
         run: |
-          ${{ steps.payload.outputs.value }}
+          echo ${{ steps.payload.outputs.value }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
