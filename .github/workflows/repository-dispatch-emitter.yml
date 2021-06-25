@@ -14,4 +14,4 @@ jobs:
         with:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }})
           event-type: test
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }, "custom_field": "custom value"}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "custom_field": "custom value"}'
