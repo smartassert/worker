@@ -14,7 +14,7 @@ services:
       - ../Fixtures/Html:/usr/share/nginx/html
 
   compiler:
-    image: ghcr.io/smartassert/compiler:0.29
+    image: ghcr.io/smartassert/compiler:${COMPILER_VERSION}
     container_name: compiler
     volumes:
       - ../Fixtures/CompilerSource:/app/source
@@ -23,19 +23,19 @@ services:
       - 9500:8000
 
   chrome-runner:
-    image: ghcr.io/smartassert/chrome-runner:0.18
+    image: ghcr.io/smartassert/chrome-runner:${CHROME_RUNNER_VERSION}
     container_name: chrome-runner
     volumes:
       - ../Fixtures/CompilerTarget:/app/tests
 
   firefox-runner:
-    image: ghcr.io/smartassert/firefox-runner:0.18
+    image: ghcr.io/smartassert/firefox-runner:${FIREFOX_RUNNER_VERSION}
     container_name: firefox-runner
     volumes:
       - ../Fixtures/CompilerTarget:/app/tests
 
   delegator:
-    image: ghcr.io/smartassert/runner-delegator:0.6
+    image: ghcr.io/smartassert/runner-delegator:${DELEGATOR_VERSION}
     container_name: delegator
     environment:
       CHROME_RUNNER_HOST: chrome-runner
@@ -49,10 +49,9 @@ services:
       - 9501:8000
 
   postgres:
+    env_file: .env
     image: postgres:12.5
     container_name: postgres
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - 5432:5432
 
@@ -72,7 +71,6 @@ services:
       context: ../..
       args:
         DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/worker-db?serverVersion=12&charset=utf8
-        MESSENGER_TRANSPORT_DSN: doctrine://default
     container_name: app-web
     depends_on:
       - compiler
