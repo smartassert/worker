@@ -1,0 +1,17 @@
+name: Tests
+
+on:
+  pull_request:
+
+jobs:
+  dispatch:
+    name: Emit repository-dispatch event to smartassert/worker-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
+          event-type: test
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }, "custom_field": "custom value"}"}'
