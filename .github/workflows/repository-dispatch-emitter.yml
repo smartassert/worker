@@ -32,6 +32,7 @@ jobs:
             value=$(echo $line | cut -d'=' -f2)
             echo $key
             echo $value
+            payload="$payload, appended"
           done
 
           echo $payload
