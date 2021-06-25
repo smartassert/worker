@@ -19,8 +19,11 @@ jobs:
 
       - name: Create payload
         run: |
-          ls -la
-          pwd
+          cat ./image-versions.env
+          cat ./image-versions.env | while read line
+          do
+            echo $line
+          done
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
