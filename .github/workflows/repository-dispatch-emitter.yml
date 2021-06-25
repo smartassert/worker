@@ -23,6 +23,13 @@ jobs:
           payload="payload"
           payload="$payload, appended"
 
+          cat .image-versions.env | while read line
+          do
+            echo "before loop echo"
+            echo $payload
+            echo "after loop echo"
+          done
+
           echo $payload
 
           echo "::set-output name=value::$payload"
