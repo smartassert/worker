@@ -19,8 +19,9 @@ jobs:
 
       - name: Create payload
         run: |
-          cat ./image-versions.env
-          cat ./image-versions.env | while read line
+          ls -la
+          cat .image-versions.env
+          cat .image-versions.env | while read line
           do
             echo $line
           done
