@@ -18,13 +18,13 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
 
       - name: Create payload
+        id: payload
         run: |
-          ls -la
-          cat .image-versions.env
-          cat .image-versions.env | while read line
-          do
-            echo $line
-          done
+          echo "::set-output name=value::payload-content"
+
+      - name: Examine payload
+        run: |
+          ${{ steps.payload.outputs.value }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
