@@ -34,7 +34,7 @@ jobs:
 
           echo $payload
 
-          echo "::set-output name=value::payload-content"
+          echo "::set-output name=value::$payload"
 
       - name: Examine payload
         run: |
