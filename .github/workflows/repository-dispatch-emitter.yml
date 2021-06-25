@@ -12,12 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Create payload
+      - name: Get versions from .image-versions.env
         id: payload
         run: |
           while read line
@@ -27,12 +22,12 @@ jobs:
             echo "::set-output name=$key::$value"
           done <<<$(cat .image-versions.env)
 
-      - name: Examine payload
+      - name: Examine versions
         run: |
-          echo ${{ steps.payload.outputs.COMPILER_VERSION }}
-          echo ${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}
-          echo ${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}
-          echo ${{ steps.payload.outputs.DELEGATOR_VERSION }}
+          echo steps.payload.outputs.COMPILER_VERSION ${{ steps.payload.outputs.COMPILER_VERSION }}
+          echo steps.payload.outputs.CHROME_RUNNER_VERSION ${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}
+          echo steps.payload.outputs.FIREFOX_RUNNER_VERSION ${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}
+          echo steps.payload.outputs.DELEGATOR_VERSION ${{ steps.payload.outputs.DELEGATOR_VERSION }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
