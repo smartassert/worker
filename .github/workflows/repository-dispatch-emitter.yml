@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Create payload
+        run: |
+          ls -la
+
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
