@@ -20,20 +20,7 @@ jobs:
       - name: Create payload
         id: payload
         run: |
-          payload=""
-
-          while read line
-          do
-            echo "before loop echo"
-            echo $payload
-            echo "after loop echo"
-            key=$(echo $line | cut -d'=' -f1)
-            value=$(echo $line | cut -d'=' -f2)
-            echo $key
-            echo $value
-            payload="$payload, \"\"$key\"\": \"\"$value\"\""
-          done <<<$(cat .image-versions.env)
-
+          payload=$(./.github/actions/create-worker-deploy-payload.sh)
           echo $payload
 
           echo "::set-output name=value::$payload"
