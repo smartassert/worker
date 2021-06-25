@@ -20,17 +20,8 @@ jobs:
       - name: Create payload
         id: payload
         run: |
-          payload=""
-
-          cat .image-versions.env | while read line
-          do
-            echo $line
-            key=$(echo $line | cut -d'=' -f1)
-            value=$(echo $line | cut -d'=' -f2)
-            echo $key
-            echo $value
-            payload="$payload, \"$key\": \"$value\""
-          done
+          payload="payload"
+          payload="$payload, appended"
 
           echo $payload
 
