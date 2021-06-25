@@ -116,8 +116,9 @@
             "sleep 2",
             "@db-setup"
         ],
+        "integration-bar": "(export echo $(cat .image-versions.env | tr '\\n' ' '); COMMAND)",
         "integration-start": [
-            "docker-compose -f ./tests/build/docker-compose.yml up -d --build",
+            "(export echo $(cat .image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d --build)",
             "docker-compose -f ./tests/build/docker-compose.yml stop app-web"
         ],
         "image-start": [
