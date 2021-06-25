@@ -40,4 +40,4 @@ jobs:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
           repository: smartassert/worker-deploy
           event-type: test
-          client-payload: '{"compiler_version": "${{ steps.payload.outputs.COMPILER_VERSION }}"}'
+          client-payload: '{"compiler_version": "${{ steps.payload.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.payload.outputs.DELEGATOR_VERSION }}"}'
