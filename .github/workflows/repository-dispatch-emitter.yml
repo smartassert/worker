@@ -20,14 +20,20 @@ jobs:
       - name: Create payload
         id: payload
         run: |
-          payload=$(./.github/actions/create-worker-deploy-payload.sh)
-          echo $payload
+          while read line
+          do
+            key=$(echo $line | cut -d'=' -f1)
+            value=$(echo $line | cut -d'=' -f2)
+          done <<<$(cat .image-versions.env)
 
-          echo "::set-output name=value::$payload"
+          echo "::set-output name=$key::$value"
 
       - name: Examine payload
         run: |
-          echo ${{ steps.payload.outputs.value }}
+          echo ${{ steps.payload.outputs.COMPILER_VERSION }}
+          echo ${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}
+          echo ${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}
+          echo ${{ steps.payload.outputs.DELEGATOR_VERSION }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
