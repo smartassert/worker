@@ -24,11 +24,17 @@ jobs:
 
           cat .image-versions.env | while read line
           do
+            echo "before line"
             echo $line
+            echo "after line"
             key=$(echo $line | cat /dev/stdin | cut -d':' -f1)
             value=$(echo $line | cat /dev/stdin | cut -d':' -f2)
+            echo "before key"
             echo $key
+            echo "after key"
+            echo "before value"
             echo $value
+            echo "after value"
             payload="$payload, \"key\": \"value\""
           done
 
