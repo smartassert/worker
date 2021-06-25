@@ -32,7 +32,7 @@ jobs:
             value=$(echo $line | cut -d'=' -f2)
             echo $key
             echo $value
-            payload="$payload, appended"
+            payload="$payload, \"$key\": \"$value\""
           done <<<$(cat .image-versions.env)
 
           echo $payload
