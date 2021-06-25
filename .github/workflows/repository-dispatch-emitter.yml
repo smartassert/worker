@@ -20,6 +20,22 @@ jobs:
       - name: Create payload
         id: payload
         run: |
+          payload=""
+
+          ls -la
+          cat .image-versions.env
+          cat .image-versions.env | while read line
+          do
+            echo $line
+            key=$(echo $line | cat /dev/stdin | cut -d':' -f1)
+            key=$(echo $line | cat /dev/stdin | cut -d':' -f2)
+            echo $key
+            echo $value
+            payload="$payload, \"key\": \"value\""
+          done
+
+          echo $payload
+
           echo "::set-output name=value::payload-content"
 
       - name: Examine payload
