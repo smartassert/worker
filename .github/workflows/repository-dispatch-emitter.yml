@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get versions from .image-versions.env
-        id: payload
+        id: dependency-versions
         run: |
           while read line
           do
@@ -22,12 +22,20 @@ jobs:
             echo "::set-output name=$key::$value"
           done <<<$(cat .image-versions.env)
 
+      - name: Set app version from release tag
+        id: app-version
+        env:
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || echo "::set-output name=value::master"
+
       - name: Examine versions
         run: |
-          echo steps.payload.outputs.COMPILER_VERSION ${{ steps.payload.outputs.COMPILER_VERSION }}
-          echo steps.payload.outputs.CHROME_RUNNER_VERSION ${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}
-          echo steps.payload.outputs.FIREFOX_RUNNER_VERSION ${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}
-          echo steps.payload.outputs.DELEGATOR_VERSION ${{ steps.payload.outputs.DELEGATOR_VERSION }}
+          echo steps.app-version.outputs.value ${{ steps.app-version.outputs.value }}
+          echo steps.dependency-versions.outputs.COMPILER_VERSION ${{ steps.dependency-versions.outputs.COMPILER_VERSION }}
+          echo steps.dependency-versions.outputs.CHROME_RUNNER_VERSION ${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}
+          echo steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION ${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}
+          echo steps.dependency-versions.outputs.DELEGATOR_VERSION ${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
@@ -35,4 +43,4 @@ jobs:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
           repository: smartassert/worker-deploy
           event-type: test
-          client-payload: '{"compiler_version": "${{ steps.payload.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.payload.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.payload.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.payload.outputs.DELEGATOR_VERSION }}"}'
+          client-payload: '{"worker_version": "${{ steps.app-version.outputs.value }}", "compiler_version": "${{ steps.dependency-versions.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}"}'
