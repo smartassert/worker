@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get versions from .image-versions.env
+      - name: Get versions from image-versions.env
         id: dependency-versions
         run: |
           while read line
@@ -22,7 +22,7 @@ jobs:
             key=$(echo $line | cut -d'=' -f1)
             value=$(echo $line | cut -d'=' -f2)
             echo "::set-output name=$key::$value"
-          done <<<$(cat .image-versions.env)
+          done <<<$(cat image-versions.env)
 
       - name: Set app version from release tag
         id: app-version
