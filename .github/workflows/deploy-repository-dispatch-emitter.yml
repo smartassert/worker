@@ -1,6 +1,10 @@
 name: Release Repository Dispatch Event
 
 on:
+  push:
+    branches:
+      - master
+  pull_request:
   release:
     types:
       - published
