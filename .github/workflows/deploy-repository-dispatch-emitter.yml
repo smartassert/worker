@@ -14,30 +14,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get versions from .image-versions.env
+      - name: Get versions from image-versions.env
         id: dependency-versions
         run: |
           while read line
           do
-            key=$(echo $line | cut -d'=' -f1)
-            value=$(echo $line | cut -d'=' -f2)
-            echo "::set-output name=$key::$value"
-          done <<<$(cat .image-versions.env)
+            if [ "" != "$line" ]; then
+              key=$(echo $line | cut -d'=' -f1)
+              value=$(echo $line | cut -d'=' -f2)
+              echo "::set-output name=$key::$value"
+            fi
+          done < image-versions.env
 
       - name: Set app version from release tag
-        id: app-version
+        id: version
         env:
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || echo "::set-output name=value::master"
+          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || exit 1
 
       - name: Examine versions
         run: |
-          echo steps.app-version.outputs.value ${{ steps.app-version.outputs.value }}
-          echo steps.dependency-versions.outputs.COMPILER_VERSION ${{ steps.dependency-versions.outputs.COMPILER_VERSION }}
-          echo steps.dependency-versions.outputs.CHROME_RUNNER_VERSION ${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}
-          echo steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION ${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}
-          echo steps.dependency-versions.outputs.DELEGATOR_VERSION ${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}
+          echo COMPILER_VERSION ${{ steps.dependency-versions.outputs.COMPILER_VERSION }}
+          echo CHROME_RUNNER_VERSION ${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}
+          echo FIREFOX_RUNNER_VERSION ${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}
+          echo DELEGATOR_VERSION ${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}
+          echo WORKER_VERSION ${{ steps.version.outputs.value }}
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
@@ -45,4 +47,4 @@ jobs:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
           repository: smartassert/worker-deploy
           event-type: worker-release
-          client-payload: '{"worker_version": "${{ steps.app-version.outputs.value }}", "compiler_version": "${{ steps.dependency-versions.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}"}'
+          client-payload: '{"worker_version": "${{ steps.version.outputs.value }}", "compiler_version": "${{ steps.dependency-versions.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.dependency-versions.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.dependency-versions.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.dependency-versions.outputs.DELEGATOR_VERSION }}"}'
