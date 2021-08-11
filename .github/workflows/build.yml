@@ -43,15 +43,9 @@ jobs:
       - name: Get versions from image-versions.env
         if: ${{ steps.version.outputs.value != 'master' }}
         id: image-versions
-        run: |
-          while read line
-          do
-            if [ "" != "$line" ]; then
-              key=$(echo $line | cut -d'=' -f1)
-              value=$(echo $line | cut -d'=' -f2)
-              echo "::set-output name=$key::$value"
-            fi
-          done < image-versions.env
+        env:
+          ENV_FILE_PATH: ./image-versions.env
+        run: ./.github/workflows/read-env-file.sh
 
       - name: Examine versions
         if: ${{ steps.version.outputs.value != 'master' }}
@@ -62,18 +56,13 @@ jobs:
           echo DELEGATOR_VERSION ${{ steps.image-versions.outputs.DELEGATOR_VERSION }}
           echo WORKER_VERSION ${{ steps.version.outputs.value }}
 
-      - name: Repository Dispatch
+      - name: Trigger deploy workflow if a release
         if: ${{ steps.version.outputs.value != 'master' }}
-        uses: peter-evans/repository-dispatch@v1
+        uses: benc-uk/workflow-dispatch@v1
         with:
-          token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
-          repository: smartassert/worker-deploy
-          event-type: worker-release
-          client-payload: |
+          workflow: deploy
+          token: ${{ secrets.PAT_TOKEN_SELF }}
+          inputs: |
             {
-              "worker_version": "${{ steps.version.outputs.value }}",
-              "compiler_version": "${{ steps.image-versions.outputs.COMPILER_VERSION }}",
-              "chrome_runner_version": "${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}",
-              "firefox_runner_version": "${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}",
-              "delegator_version": "${{ steps.image-versions.outputs.DELEGATOR_VERSION }}"
+              "version": "${{ steps.version.outputs.value }}"
             }
