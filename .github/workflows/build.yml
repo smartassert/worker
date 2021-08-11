@@ -41,14 +41,12 @@ jobs:
           tags: ghcr.io/smartassert/worker:${{ steps.version.outputs.value }}
 
       - name: Get versions from image-versions.env
-        if: ${{ steps.version.outputs.value != 'master' }}
         id: image-versions
         env:
           ENV_FILE_PATH: ./image-versions.env
         run: ./.github/workflows/read-env-file.sh
 
       - name: Examine versions
-        if: ${{ steps.version.outputs.value != 'master' }}
         run: |
           echo COMPILER_VERSION ${{ steps.image-versions.outputs.COMPILER_VERSION }}
           echo CHROME_RUNNER_VERSION ${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}
