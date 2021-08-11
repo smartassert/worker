@@ -69,4 +69,11 @@ jobs:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
           repository: smartassert/worker-deploy
           event-type: worker-release
-          client-payload: '{"worker_version": "${{ steps.version.outputs.value }}", "compiler_version": "${{ steps.image-versions.outputs.COMPILER_VERSION }}", "chrome_runner_version": "${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}", "firefox_runner_version": "${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}", "delegator_version": "${{ steps.image-versions.outputs.DELEGATOR_VERSION }}"}'
+          client-payload: |
+            {
+              "worker_version": "${{ steps.version.outputs.value }}",
+              "compiler_version": "${{ steps.image-versions.outputs.COMPILER_VERSION }}",
+              "chrome_runner_version": "${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}",
+              "firefox_runner_version": "${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}",
+              "delegator_version": "${{ steps.image-versions.outputs.DELEGATOR_VERSION }}"
+            }
