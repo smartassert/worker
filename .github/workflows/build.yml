@@ -58,7 +58,7 @@ jobs:
         if: ${{ steps.version.outputs.value != 'master' }}
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: deploy
+          workflow: Deploy
           token: ${{ secrets.PAT_TOKEN_SELF }}
           inputs: |
             {
