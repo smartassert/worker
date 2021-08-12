@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to deploy
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get image versions for chosen version
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          URL="https://raw.githubusercontent.com/smartassert/worker/${VERSION}/deploy-image-versions.env"
+          HTTP_STATUS_CODE=$(curl -s $URL --write-out '%{http_code}' --output image-versions.env)
+
+          if [ 200 -ne $HTTP_STATUS_CODE ]; then
+            exit 1
+          fi
+
+      - name: Get versions from image-versions.env
+        id: image-versions
+        env:
+          ENV_FILE_PATH: ./deploy-image-versions.env
+        run: ./.github/workflows/read-env-file.sh
+
+      - name: Examine versions
+        run: |
+          echo COMPILER_VERSION ${{ steps.image-versions.outputs.COMPILER_VERSION }}
+          echo CHROME_RUNNER_VERSION ${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}
+          echo FIREFOX_RUNNER_VERSION ${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}
+          echo DELEGATOR_VERSION ${{ steps.image-versions.outputs.DELEGATOR_VERSION }}
+          echo WORKER_VERSION ${{ github.event.inputs.version }}
+
+      - name: Dispatch worker-release event to worker-deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
+          repository: smartassert/worker-deploy
+          event-type: worker-release
+          client-payload: |
+            {
+              "worker_version": "${{ github.event.inputs.version }}",
+              "compiler_version": "${{ steps.image-versions.outputs.COMPILER_VERSION }}",
+              "chrome_runner_version": "${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}",
+              "firefox_runner_version": "${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}",
+              "delegator_version": "${{ steps.image-versions.outputs.DELEGATOR_VERSION }}"
+            }
