@@ -17,7 +17,7 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
-          URL="https://raw.githubusercontent.com/smartassert/worker/${VERSION}/deploy-image-versions.env"
+          URL="https://raw.githubusercontent.com/smartassert/worker/${VERSION}/image-versions.env"
           HTTP_STATUS_CODE=$(curl -s $URL --write-out '%{http_code}' --output image-versions.env)
 
           if [ 200 -ne $HTTP_STATUS_CODE ]; then
@@ -27,7 +27,7 @@ jobs:
       - name: Get versions from image-versions.env
         id: image-versions
         env:
-          ENV_FILE_PATH: ./deploy-image-versions.env
+          ENV_FILE_PATH: ./image-versions.env
         run: ./.github/workflows/read-env-file.sh
 
       - name: Examine versions
