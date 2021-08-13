@@ -64,8 +64,8 @@ jobs:
     #if: ${{ needs.setup.outputs.version != 'master' }}
 
     steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Trigger deploy workflow
         uses: benc-uk/workflow-dispatch@v1
