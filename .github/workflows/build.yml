@@ -55,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/smartassert/worker:${{ needs.setup.outputs.versio }}
+          tags: ghcr.io/smartassert/worker:${{ needs.setup.outputs.version }}
 
   trigger-deploy:
     name: Trigger deploy
