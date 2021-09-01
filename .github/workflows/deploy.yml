@@ -24,11 +24,18 @@ jobs:
             exit 1
           fi
 
-      - name: Get versions from image-versions.env
+      - name: Checkout bash-read-env-file
+        uses: actions/checkout@v2
+        with:
+          repository: smartassert/bash-read-env-file
+          path: ./vendor/smartassert/bash-read-env-file
+          ref: main
+
+      - name: Read image versions
         id: image-versions
         env:
           ENV_FILE_PATH: ./image-versions.env
-        run: ./.github/workflows/read-env-file.sh
+        run: ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
 
       - name: Examine versions
         run: |
