@@ -18,9 +18,9 @@ jobs:
           VERSION: ${{ github.event.inputs.version }}
         run: |
           URL="https://raw.githubusercontent.com/smartassert/worker/${VERSION}/image-versions.env"
-          HTTP_STATUS_CODE=$(curl -s $URL --write-out '%{http_code}' --output image-versions.env)
+          HTTP_STATUS_CODE=$(curl -s "$URL" --write-out '%{http_code}' --output image-versions.env)
 
-          if [ 200 -ne $HTTP_STATUS_CODE ]; then
+          if [ "200" != "$HTTP_STATUS_CODE" ]; then
             exit 1
           fi
 
