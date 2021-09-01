@@ -62,8 +62,3 @@ jobs:
         run: composer test-functional
         env:
           DATABASE_URL: postgres://postgres:password!@127.0.0.1:5432/worker-db?charset=UTF-8
-
-      - name: Teardown functional test environment
-        run: |
-          composer functional-teardown
-          rm -Rf $PWD/var/basil/local/source/*
