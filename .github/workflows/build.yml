@@ -29,13 +29,21 @@ jobs:
         run: |
           [[ -n "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || echo "::set-output name=value::master"
 
-      - name: Output image versions
-        run: cat image-versions.env
+  verify-setup:
+    name: Verify setup
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Output
+        env:
+          OUTPUTS: ${{ toJson(needs.setup.outputs) }}
+        run: echo "$OUTPUTS"
 
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: setup
+    needs: [setup, verify-setup]
 
     steps:
       - name: Checkout code
