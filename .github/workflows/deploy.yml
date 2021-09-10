@@ -43,30 +43,10 @@ jobs:
     needs: setup
 
     steps:
-      - name: Worker version
+      - name: Output
         env:
-          VALUE: ${{ needs.setup.outputs.worker-version }}
-        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
-
-      - name: Compiler version
-        env:
-          VALUE: ${{ needs.setup.outputs.compiler-version }}
-        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
-
-      - name: Chrome runner version
-        env:
-          VALUE: ${{ needs.setup.outputs.chrome-runner-version }}
-        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
-
-      - name: Firefox runner version
-        env:
-          VALUE: ${{ needs.setup.outputs.firefox-runner-version }}
-        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
-
-      - name: Delegator version
-        env:
-          VALUE: ${{ needs.setup.outputs.delegator-version }}
-        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+          OUTPUTS: ${{ toJson(needs.setup.outputs) }}
+        run: echo "$OUTPUTS"
 
   dispatch-worker-release-event:
     name: Dispatch worker release event
