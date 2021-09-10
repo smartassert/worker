@@ -8,21 +8,21 @@ on:
         required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
+    outputs:
+      worker-version: ${{ github.event.inputs.version }}
+      compiler-version: ${{ steps.image-versions.outputs.COMPILER_VERSION }}
+      chrome-runner-version: ${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}
+      firefox-runner-version: ${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}
+      delegator-version: ${{ steps.image-versions.outputs.DELEGATOR_VERSION }}
 
     steps:
-      - name: Get image versions for chosen version
-        env:
-          VERSION: ${{ github.event.inputs.version }}
-        run: |
-          URL="https://raw.githubusercontent.com/smartassert/worker/${VERSION}/image-versions.env"
-          HTTP_STATUS_CODE=$(curl -s "$URL" --write-out '%{http_code}' --output image-versions.env)
-
-          if [ "200" != "$HTTP_STATUS_CODE" ]; then
-            exit 1
-          fi
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.version }}
 
       - name: Checkout bash-read-env-file
         uses: actions/checkout@v2
@@ -37,15 +37,44 @@ jobs:
           ENV_FILE_PATH: ./image-versions.env
         run: ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
 
-      - name: Examine versions
-        run: |
-          echo COMPILER_VERSION ${{ steps.image-versions.outputs.COMPILER_VERSION }}
-          echo CHROME_RUNNER_VERSION ${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}
-          echo FIREFOX_RUNNER_VERSION ${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}
-          echo DELEGATOR_VERSION ${{ steps.image-versions.outputs.DELEGATOR_VERSION }}
-          echo WORKER_VERSION ${{ github.event.inputs.version }}
+  verify-setup:
+    name: Verify setup
+    runs-on: ubuntu-latest
+    needs: setup
 
-      - name: Dispatch worker-release event to worker-deploy
+    steps:
+      - name: Worker version
+        env:
+          VALUE: ${{ needs.setup.outputs.worker-version }}
+        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+
+      - name: Compiler version
+        env:
+          VALUE: ${{ needs.setup.outputs.compiler-version }}
+        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+
+      - name: Chrome runner version
+        env:
+          VALUE: ${{ needs.setup.outputs.chrome-runner-version }}
+        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+
+      - name: Firefox runner version
+        env:
+          VALUE: ${{ needs.setup.outputs.firefox-runner-version }}
+        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+
+      - name: Delegator version
+        env:
+          VALUE: ${{ needs.setup.outputs.delegator-version }}
+        run: '[ "" != "$VALUE" ] && echo "$VALUE"'
+
+  dispatch-worker-release-event:
+    name: Dispatch worker release event
+    runs-on: ubuntu-latest
+    needs: [setup, verify-setup]
+
+    steps:
+      - name: Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
@@ -53,9 +82,9 @@ jobs:
           event-type: worker-release
           client-payload: |
             {
-              "worker_version": "${{ github.event.inputs.version }}",
-              "compiler_version": "${{ steps.image-versions.outputs.COMPILER_VERSION }}",
-              "chrome_runner_version": "${{ steps.image-versions.outputs.CHROME_RUNNER_VERSION }}",
-              "firefox_runner_version": "${{ steps.image-versions.outputs.FIREFOX_RUNNER_VERSION }}",
-              "delegator_version": "${{ steps.image-versions.outputs.DELEGATOR_VERSION }}"
+              "worker_version": "${{ needs.setup.outputs.worker-version }}",
+              "compiler_version": "${{ needs.setup.outputs.compiler-version }}",
+              "chrome_runner_version": "${{ needs.setup.outputs.chrome-runner-version }}",
+              "firefox_runner_version": "${{ needs.setup.outputs.firefox-runner-version }}",
+              "delegator_version": "${{ needs.setup.outputs.delegator-version }}"
             }
