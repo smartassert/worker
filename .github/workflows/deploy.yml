@@ -43,10 +43,20 @@ jobs:
     needs: setup
 
     steps:
+      - name: Checkout bash-ga-ci-tools
+        uses: actions/checkout@v2
+        with:
+          repository: smartassert/bash-ga-ci-tools
+          path: ./vendor/smartassert/bash-ga-ci-tools
+          ref: main
+
       - name: Output
         env:
           OUTPUTS: ${{ toJson(needs.setup.outputs) }}
-        run: echo "$OUTPUTS"
+        run: |
+          echo "$OUTPUTS"
+          ./vendor/smartassert/bash-ga-ci-tools/src/json-contains-no-empty-values.sh
+
 
   dispatch-worker-release-event:
     name: Dispatch worker release event
