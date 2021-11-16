@@ -8,10 +8,10 @@ services:
       - 8080:80
 
   html-fixtures:
-    image: nginx:1.19
+    image: caddy:2.4.5
     container_name: html-fixtures
     volumes:
-      - ../Fixtures/Html:/usr/share/nginx/html
+      - ../Fixtures/Html:/usr/share/caddy
 
   compiler:
     image: ghcr.io/smartassert/compiler:${COMPILER_VERSION}
