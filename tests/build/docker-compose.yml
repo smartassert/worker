@@ -55,17 +55,6 @@ services:
     ports:
       - 5432:5432
 
-  nginx:
-    build:
-      context: nginx
-    container_name: nginx
-    ports:
-      - 80:80
-    links:
-      - app-web:app-web
-    volumes:
-      - /var/log/nginx:/var/log/nginx
-
   caddy:
     image: caddy:2.4.5-alpine
     container_name: caddy
