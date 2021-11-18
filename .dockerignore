@@ -13,4 +13,4 @@
 !/public/index.php
 !/src
 !/tests/build/supervisor
-!/tests/build/nginx
+!/tests/build/caddy

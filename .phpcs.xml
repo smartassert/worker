@@ -2,6 +2,7 @@
 <ruleset name="Default">
     <file>src</file>
     <file>tests</file>
+    <exclude-pattern>tests/build/*</exclude-pattern>
 
     <arg name="colors"/>
     <arg name="extensions" value="php"/>

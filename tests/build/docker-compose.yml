@@ -1,17 +1,20 @@
 version: "3"
 
 services:
-  httpbin:
-    image: kennethreitz/httpbin
-    container_name: httpbin
+  caddy-callback:
+    image: caddy:2.4.5-alpine
+    container_name: caddy-callback
+    restart: unless-stopped
     ports:
-      - 8080:80
+      - "8080:80"
+    volumes:
+      - ./caddy-callback/Caddyfile:/etc/caddy/Caddyfile
 
   html-fixtures:
-    image: nginx:1.19
+    image: caddy:2.4.5
     container_name: html-fixtures
     volumes:
-      - ../Fixtures/Html:/usr/share/nginx/html
+      - ../Fixtures/Html:/usr/share/caddy
 
   compiler:
     image: ghcr.io/smartassert/compiler:${COMPILER_VERSION}
@@ -55,16 +58,20 @@ services:
     ports:
       - 5432:5432
 
-  nginx:
-    build:
-      context: nginx
-    container_name: nginx
+  caddy:
+    image: caddy:2.4.5-alpine
+    container_name: caddy
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${CADDY_DOMAIN:-localhost}
+      TLS_INTERNAL: ${CADDY_TLS_INTERNAL:-internal}
     ports:
-      - 80:80
+      - "443:443"
     links:
       - app-web:app-web
     volumes:
-      - /var/log/nginx:/var/log/nginx
+      - ./caddy/index.php:/app/public/index.php
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
 
   app-web:
     build:

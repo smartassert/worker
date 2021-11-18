@@ -28,14 +28,16 @@ class AppTest extends TestCase
     {
         parent::setUp();
 
-        $this->httpClient = new Client();
+        $this->httpClient = new Client([
+            'verify' => false,
+        ]);
         $this->jobAsserter = new SerializedJobAsserter($this->httpClient);
     }
 
     public function testInitialStatus(): void
     {
         try {
-            $response = $this->httpClient->get('http://localhost:/job');
+            $response = $this->httpClient->get('https://localhost:/job');
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
         }
@@ -48,7 +50,7 @@ class AppTest extends TestCase
      */
     public function testCreateJob(): void
     {
-        $response = $this->httpClient->post('http://localhost/job', [
+        $response = $this->httpClient->post('https://localhost/job', [
             'form_params' => [
                 'label' => md5('label content'),
                 'callback-url' => 'http://example.com/callback',
@@ -77,7 +79,7 @@ class AppTest extends TestCase
     {
         $manifestKey = new UploadedFileKey(AddSourcesRequest::KEY_MANIFEST);
 
-        $this->httpClient->post('http://localhost/add-sources', [
+        $this->httpClient->post('https://localhost/add-sources', [
             'multipart' => [
                 [
                     'name' => $manifestKey->encode(),
@@ -228,7 +230,7 @@ class AppTest extends TestCase
         string $executionState,
         string $callbackState,
     ): bool {
-        $jobStatus = $this->getJsonResponse('http://localhost/job');
+        $jobStatus = $this->getJsonResponse('https://localhost/job');
 
         return $compilationState === $jobStatus['compilation_state']
             && $executionState === $jobStatus['execution_state']
