@@ -80,7 +80,7 @@ class CallbackResponseHandlerTest extends AbstractBaseFunctionalTest
                 'context' => new Response(
                     503,
                     [
-                        'retry-after' => 30,
+                        'retry-after' => '30',
                     ]
                 ),
                 'expectedCallbackStamps' => new StampCollection([

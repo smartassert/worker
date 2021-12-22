@@ -47,16 +47,16 @@ class BackoffStrategyFactoryTest extends TestCase
             ],
             'http response, has single retry-after header of 10 seconds' => [
                 'context' => new Response(503, [
-                    'retry-after' => 10,
+                    'retry-after' => '10',
                 ]),
                 'expectedBackoffStrategy' => new FixedBackoffStrategy(10000),
             ],
             'http response, has multiple retry-after headers of 10 seconds, 20 seconds, 30 seconds' => [
                 'context' => new Response(503, [
                     'retry-after' => [
-                        10,
-                        20,
-                        30,
+                        '10',
+                        '20',
+                        '30',
                     ],
                 ]),
                 'expectedBackoffStrategy' => new FixedBackoffStrategy(30000),
@@ -70,8 +70,8 @@ class BackoffStrategyFactoryTest extends TestCase
             'http response, has multiple retry-after headers of 10 seconds, 20 seconds, non-digit value' => [
                 'context' => new Response(503, [
                     'retry-after' => [
-                        10,
-                        20,
+                        '10',
+                        '20',
                         'cheese',
                     ],
                 ]),
