@@ -20,10 +20,5 @@
 ###< squizlabs/php_codesniffer ###
 .vagrant
 tests/build/coverage
-
-###> friendsofphp/php-cs-fixer ###
-/.php-cs-fixer.php
-/.php-cs-fixer.cache
-###< friendsofphp/php-cs-fixer ###
-
 /.php_cs.cache
+/.php-cs-fixer.cache
