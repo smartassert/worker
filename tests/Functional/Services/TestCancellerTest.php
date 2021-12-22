@@ -26,19 +26,19 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $testCanceller = self::$container->get(TestCanceller::class);
+        $testCanceller = self::getContainer()->get(TestCanceller::class);
         \assert($testCanceller instanceof TestCanceller);
         $this->testCanceller = $testCanceller;
 
-        $eventDispatcher = self::$container->get(\Symfony\Component\EventDispatcher\EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(\Symfony\Component\EventDispatcher\EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $testFactory = self::$container->get(TestTestFactory::class);
+        $testFactory = self::getContainer()->get(TestTestFactory::class);
         \assert($testFactory instanceof TestTestFactory);
         $this->testFactory = $testFactory;
 
-        $testEntityAsserter = self::$container->get(TestEntityAsserter::class);
+        $testEntityAsserter = self::getContainer()->get(TestEntityAsserter::class);
         \assert($testEntityAsserter instanceof TestEntityAsserter);
         $this->testEntityAsserter = $testEntityAsserter;
     }

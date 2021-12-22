@@ -34,23 +34,23 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $compilationWorkflowHandler = self::$container->get(CompilationWorkflowHandler::class);
+        $compilationWorkflowHandler = self::getContainer()->get(CompilationWorkflowHandler::class);
         \assert($compilationWorkflowHandler instanceof CompilationWorkflowHandler);
         $this->handler = $compilationWorkflowHandler;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
 
-        $eventListenerRemover = self::$container->get(EventListenerRemover::class);
+        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             SendCallbackMessageDispatcher::class => [

@@ -22,11 +22,11 @@ class EntityPersisterTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $entityPersister = self::$container->get(EntityPersister::class);
+        $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
         $this->entityPersister = $entityPersister;
 
-        $entityManager = self::$container->get(EntityManagerInterface::class);
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
     }

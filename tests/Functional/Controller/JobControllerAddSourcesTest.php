@@ -35,46 +35,46 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $localSourceStoreHandler = self::$container->get('app.tests.services.file_store_handler.local_source');
+        $localSourceStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.local_source');
         \assert($localSourceStoreHandler instanceof FileStoreHandler);
         $this->localSourceStoreHandler = $localSourceStoreHandler;
         $this->localSourceStoreHandler->clear();
 
-        $uploadStoreHandler = self::$container->get('app.tests.services.file_store_handler.uploaded');
+        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
         \assert($uploadStoreHandler instanceof FileStoreHandler);
         $this->uploadStoreHandler = $uploadStoreHandler;
         $this->uploadStoreHandler->clear();
 
-        $jobFactory = self::$container->get(JobFactory::class);
+        $jobFactory = self::getContainer()->get(JobFactory::class);
         \assert($jobFactory instanceof JobFactory);
         $jobFactory->create(md5('label content'), 'http://example.com/callback', 10);
 
-        $sourceEntityAsserter = self::$container->get(SourceEntityAsserter::class);
+        $sourceEntityAsserter = self::getContainer()->get(SourceEntityAsserter::class);
         \assert($sourceEntityAsserter instanceof SourceEntityAsserter);
         $this->sourceEntityAsserter = $sourceEntityAsserter;
 
         $this->sourceEntityAsserter->assertRepositoryIsEmpty();
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
         $this->messengerAsserter->assertQueueIsEmpty();
 
-        $clientRequestSender = self::$container->get(ClientRequestSender::class);
+        $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
 
-        $uploadedFileFactory = self::$container->get(UploadedFileFactory::class);
+        $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
         \assert($uploadedFileFactory instanceof UploadedFileFactory);
 
-        $uploadedFileFactory = self::$container->get(UploadedFileFactory::class);
+        $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
         \assert($uploadedFileFactory instanceof UploadedFileFactory);
 
         $uploadedFileCollection = $uploadedFileFactory->createCollection(
             $this->uploadStoreHandler->copyFixtures(self::EXPECTED_SOURCES)
         );
 
-        $jsonResponseAsserter = self::$container->get(JsonResponseAsserter::class);
+        $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
 

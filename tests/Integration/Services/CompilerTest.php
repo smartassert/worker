@@ -17,7 +17,7 @@ class CompilerTest extends AbstractTestCreationTest
     {
         parent::setUp();
 
-        $compiler = self::$container->get(Compiler::class);
+        $compiler = self::getContainer()->get(Compiler::class);
         \assert($compiler instanceof Compiler);
         $this->compiler = $compiler;
 

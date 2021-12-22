@@ -20,15 +20,15 @@ class CallbackStoreTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $store = self::$container->get(CallbackStore::class);
+        $store = self::getContainer()->get(CallbackStore::class);
         \assert($store instanceof CallbackStore);
         $this->store = $store;
 
-        $factory = self::$container->get(CallbackFactory::class);
+        $factory = self::getContainer()->get(CallbackFactory::class);
         \assert($factory instanceof CallbackFactory);
         $this->factory = $factory;
 
-        $entityPersister = self::$container->get(EntityPersister::class);
+        $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
         $this->entityPersister = $entityPersister;
     }

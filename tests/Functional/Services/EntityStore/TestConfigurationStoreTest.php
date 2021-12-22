@@ -16,7 +16,7 @@ class TestConfigurationStoreTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $store = self::$container->get(TestConfigurationStore::class);
+        $store = self::getContainer()->get(TestConfigurationStore::class);
         \assert($store instanceof TestConfigurationStore);
         $this->store = $store;
     }

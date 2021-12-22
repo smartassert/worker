@@ -20,12 +20,12 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackState = self::$container->get(CallbackState::class);
+        $callbackState = self::getContainer()->get(CallbackState::class);
         if ($callbackState instanceof CallbackState) {
             $this->callbackState = $callbackState;
         }
 
-        $testCallbackFactory = self::$container->get(TestCallbackFactory::class);
+        $testCallbackFactory = self::getContainer()->get(TestCallbackFactory::class);
         \assert($testCallbackFactory instanceof TestCallbackFactory);
         $this->testCallbackFactory = $testCallbackFactory;
     }

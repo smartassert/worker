@@ -26,19 +26,19 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $jobStore = self::$container->get(JobStore::class);
+        $jobStore = self::getContainer()->get(JobStore::class);
         \assert($jobStore instanceof JobStore);
         $this->jobStore = $jobStore;
 
-        $clientRequestSender = self::$container->get(ClientRequestSender::class);
+        $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
         $this->clientRequestSender = $clientRequestSender;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
 
-        $jsonResponseAsserter = self::$container->get(JsonResponseAsserter::class);
+        $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
     }

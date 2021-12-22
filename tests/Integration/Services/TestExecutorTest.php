@@ -26,15 +26,15 @@ class TestExecutorTest extends AbstractTestCreationTest
     {
         parent::setUp();
 
-        $testExecutor = self::$container->get(TestExecutor::class);
+        $testExecutor = self::getContainer()->get(TestExecutor::class);
         \assert($testExecutor instanceof TestExecutor);
         $this->testExecutor = $testExecutor;
 
-        $compiler = self::$container->get(Compiler::class);
+        $compiler = self::getContainer()->get(Compiler::class);
         \assert($compiler instanceof Compiler);
         $this->compiler = $compiler;
 
-        $testFactory = self::$container->get(TestFactory::class);
+        $testFactory = self::getContainer()->get(TestFactory::class);
         \assert($testFactory instanceof TestFactory);
         $this->testFactory = $testFactory;
     }

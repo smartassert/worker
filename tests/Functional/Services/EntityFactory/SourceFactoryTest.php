@@ -16,7 +16,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $factory = self::$container->get(SourceFactory::class);
+        $factory = self::getContainer()->get(SourceFactory::class);
         \assert($factory instanceof SourceFactory);
         $this->factory = $factory;
     }

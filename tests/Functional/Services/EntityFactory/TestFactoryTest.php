@@ -18,11 +18,11 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $factory = self::$container->get(TestFactory::class);
+        $factory = self::getContainer()->get(TestFactory::class);
         \assert($factory instanceof TestFactory);
         $this->factory = $factory;
 
-        $repository = self::$container->get(TestRepository::class);
+        $repository = self::getContainer()->get(TestRepository::class);
         \assert($repository instanceof TestRepository);
         $this->repository = $repository;
     }

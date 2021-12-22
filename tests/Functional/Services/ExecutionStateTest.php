@@ -20,12 +20,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $executionState = self::$container->get(ExecutionState::class);
+        $executionState = self::getContainer()->get(ExecutionState::class);
         if ($executionState instanceof ExecutionState) {
             $this->executionState = $executionState;
         }
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

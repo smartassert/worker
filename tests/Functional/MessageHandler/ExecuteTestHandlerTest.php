@@ -35,11 +35,11 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $executeTestHandler = self::$container->get(ExecuteTestHandler::class);
+        $executeTestHandler = self::getContainer()->get(ExecuteTestHandler::class);
         \assert($executeTestHandler instanceof ExecuteTestHandler);
         $this->handler = $executeTestHandler;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }
@@ -58,14 +58,14 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $tests = $environment->getTests();
         $test = $tests[0];
 
-        $jobStore = self::$container->get(JobStore::class);
+        $jobStore = self::getContainer()->get(JobStore::class);
         \assert($jobStore instanceof JobStore);
 
         $job = $jobStore->get();
         self::assertInstanceOf(Job::class, $job);
         self::assertFalse($job->hasStarted());
 
-        $executionState = self::$container->get(ExecutionState::class);
+        $executionState = self::getContainer()->get(ExecutionState::class);
         \assert($executionState instanceof ExecutionState);
 
         self::assertSame(ExecutionState::STATE_AWAITING, (string) $executionState);

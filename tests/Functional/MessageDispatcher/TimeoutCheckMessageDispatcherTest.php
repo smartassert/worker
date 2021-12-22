@@ -28,19 +28,19 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $messageDispatcher = self::$container->get(TimeoutCheckMessageDispatcher::class);
+        $messageDispatcher = self::getContainer()->get(TimeoutCheckMessageDispatcher::class);
         \assert($messageDispatcher instanceof TimeoutCheckMessageDispatcher);
         $this->messageDispatcher = $messageDispatcher;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $eventListenerRemover = self::$container->get(EventListenerRemover::class);
+        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             SendCallbackMessageDispatcher::class => [

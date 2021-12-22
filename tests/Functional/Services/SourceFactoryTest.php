@@ -34,29 +34,29 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $factory = self::$container->get(SourceFactory::class);
+        $factory = self::getContainer()->get(SourceFactory::class);
         \assert($factory instanceof SourceFactory);
         $this->factory = $factory;
 
-        $store = self::$container->get(SourceFileStore::class);
+        $store = self::getContainer()->get(SourceFileStore::class);
         \assert($store instanceof SourceFileStore);
         $this->sourceFileStore = $store;
 
-        $uploadedFileFactory = self::$container->get(UploadedFileFactory::class);
+        $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
         \assert($uploadedFileFactory instanceof UploadedFileFactory);
         $this->uploadedFileFactory = $uploadedFileFactory;
 
-        $localSourceStoreHandler = self::$container->get('app.tests.services.file_store_handler.local_source');
+        $localSourceStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.local_source');
         \assert($localSourceStoreHandler instanceof FileStoreHandler);
         $this->localSourceStoreHandler = $localSourceStoreHandler;
         $this->localSourceStoreHandler->clear();
 
-        $uploadStoreHandler = self::$container->get('app.tests.services.file_store_handler.uploaded');
+        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
         \assert($uploadStoreHandler instanceof FileStoreHandler);
         $this->uploadStoreHandler = $uploadStoreHandler;
         $this->uploadStoreHandler->clear();
 
-        $entityManager = self::$container->get(EntityManagerInterface::class);
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $sourceRepository = $entityManager->getRepository(Source::class);
         \assert($sourceRepository instanceof ObjectRepository);

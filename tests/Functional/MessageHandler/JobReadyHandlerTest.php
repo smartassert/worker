@@ -24,7 +24,7 @@ class JobReadyHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $jobReadyHandler = self::$container->get(JobReadyHandler::class);
+        $jobReadyHandler = self::getContainer()->get(JobReadyHandler::class);
         \assert($jobReadyHandler instanceof JobReadyHandler);
         $this->handler = $jobReadyHandler;
     }

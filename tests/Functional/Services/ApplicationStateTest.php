@@ -24,11 +24,11 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $applicationState = self::$container->get(ApplicationState::class);
+        $applicationState = self::getContainer()->get(ApplicationState::class);
         \assert($applicationState instanceof ApplicationState);
         $this->applicationState = $applicationState;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

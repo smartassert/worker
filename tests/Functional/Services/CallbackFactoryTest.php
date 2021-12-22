@@ -42,7 +42,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackFactory = self::$container->get(CallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(CallbackFactory::class);
         \assert($callbackFactory instanceof CallbackFactory);
         $this->callbackFactory = $callbackFactory;
     }

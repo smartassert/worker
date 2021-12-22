@@ -19,11 +19,11 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackStateMutator = self::$container->get(CallbackStateMutator::class);
+        $callbackStateMutator = self::getContainer()->get(CallbackStateMutator::class);
         \assert($callbackStateMutator instanceof CallbackStateMutator);
         $this->callbackStateMutator = $callbackStateMutator;
 
-        $entityManager = self::$container->get(EntityManagerInterface::class);
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
     }

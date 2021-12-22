@@ -22,12 +22,12 @@ class SourcePathFinderTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $sourcePathFinder = self::$container->get(SourcePathFinder::class);
+        $sourcePathFinder = self::getContainer()->get(SourcePathFinder::class);
         if ($sourcePathFinder instanceof SourcePathFinder) {
             $this->sourcePathFinder = $sourcePathFinder;
         }
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

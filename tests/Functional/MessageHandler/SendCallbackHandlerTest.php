@@ -30,15 +30,15 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $sendCallbackHandler = self::$container->get(SendCallbackHandler::class);
+        $sendCallbackHandler = self::getContainer()->get(SendCallbackHandler::class);
         \assert($sendCallbackHandler instanceof SendCallbackHandler);
         $this->handler = $sendCallbackHandler;
 
-        $callbackRepository = self::$container->get(CallbackRepository::class);
+        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
         \assert($callbackRepository instanceof CallbackRepository);
         $this->callbackRepository = $callbackRepository;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

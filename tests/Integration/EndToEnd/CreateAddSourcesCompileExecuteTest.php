@@ -41,27 +41,27 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
     {
         parent::setUp();
 
-        $callableInvoker = self::$container->get(CallableInvoker::class);
+        $callableInvoker = self::getContainer()->get(CallableInvoker::class);
         \assert($callableInvoker instanceof CallableInvoker);
         $this->callableInvoker = $callableInvoker;
 
-        $clientRequestSender = self::$container->get(ClientRequestSender::class);
+        $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
         $this->clientRequestSender = $clientRequestSender;
 
-        $jsonResponseAsserter = self::$container->get(JsonResponseAsserter::class);
+        $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
 
-        $systemStateAsserter = self::$container->get(SystemStateAsserter::class);
+        $systemStateAsserter = self::getContainer()->get(SystemStateAsserter::class);
         \assert($systemStateAsserter instanceof SystemStateAsserter);
         $this->systemStateAsserter = $systemStateAsserter;
 
-        $applicationStateHandler = self::$container->get(ApplicationStateHandler::class);
+        $applicationStateHandler = self::getContainer()->get(ApplicationStateHandler::class);
         \assert($applicationStateHandler instanceof ApplicationStateHandler);
         $this->applicationStateHandler = $applicationStateHandler;
 
-        $jobProperties = self::$container->get(IntegrationJobProperties::class);
+        $jobProperties = self::getContainer()->get(IntegrationJobProperties::class);
         \assert($jobProperties instanceof IntegrationJobProperties);
         $this->jobProperties = $jobProperties;
     }
@@ -122,7 +122,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
             ApplicationState::STATE_AWAITING_SOURCES
         );
 
-        $uploadedFileFactory = self::$container->get(UploadedFileFactory::class);
+        $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
         \assert($uploadedFileFactory instanceof UploadedFileFactory);
 
         $uploadedFileCollection = $uploadedFileFactory->createCollection(

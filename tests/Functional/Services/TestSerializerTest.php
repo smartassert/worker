@@ -18,11 +18,11 @@ class TestSerializerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $testSerializer = self::$container->get(TestSerializer::class);
+        $testSerializer = self::getContainer()->get(TestSerializer::class);
         \assert($testSerializer instanceof TestSerializer);
         $this->testSerializer = $testSerializer;
 
-        $testTestFactory = self::$container->get(TestTestFactory::class);
+        $testTestFactory = self::getContainer()->get(TestTestFactory::class);
         \assert($testTestFactory instanceof TestTestFactory);
         $this->testTestFactory = $testTestFactory;
     }

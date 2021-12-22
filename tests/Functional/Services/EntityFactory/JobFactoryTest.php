@@ -16,7 +16,7 @@ class JobFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $factory = self::$container->get(JobFactory::class);
+        $factory = self::getContainer()->get(JobFactory::class);
         \assert($factory instanceof JobFactory);
         $this->factory = $factory;
     }

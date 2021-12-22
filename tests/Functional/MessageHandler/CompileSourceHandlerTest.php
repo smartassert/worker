@@ -36,11 +36,11 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $compileSourceHandler = self::$container->get(CompileSourceHandler::class);
+        $compileSourceHandler = self::getContainer()->get(CompileSourceHandler::class);
         \assert($compileSourceHandler instanceof CompileSourceHandler);
         $this->handler = $compileSourceHandler;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

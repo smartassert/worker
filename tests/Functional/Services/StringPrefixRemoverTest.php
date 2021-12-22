@@ -18,11 +18,11 @@ class StringPrefixRemoverTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $compilerSourceRemover = self::$container->get('app.services.path-prefix-remover.compiler-source');
+        $compilerSourceRemover = self::getContainer()->get('app.services.path-prefix-remover.compiler-source');
         \assert($compilerSourceRemover instanceof DefinedStringPrefixRemover);
         $this->compilerSourceRemover = $compilerSourceRemover;
 
-        $compilerTargetRemover = self::$container->get('app.services.path-prefix-remover.compiler-target');
+        $compilerTargetRemover = self::getContainer()->get('app.services.path-prefix-remover.compiler-target');
         \assert($compilerTargetRemover instanceof DefinedStringPrefixRemover);
         $this->compilerTargetRemover = $compilerTargetRemover;
 

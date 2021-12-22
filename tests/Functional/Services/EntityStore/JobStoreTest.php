@@ -18,13 +18,13 @@ class JobStoreTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $store = self::$container->get(JobStore::class);
+        $store = self::getContainer()->get(JobStore::class);
         self::assertInstanceOf(JobStore::class, $store);
         if ($store instanceof JobStore) {
             $this->store = $store;
         }
 
-        $persister = self::$container->get(EntityPersister::class);
+        $persister = self::getContainer()->get(EntityPersister::class);
         self::assertInstanceOf(EntityPersister::class, $persister);
         if ($persister instanceof EntityPersister) {
             $this->persister = $persister;

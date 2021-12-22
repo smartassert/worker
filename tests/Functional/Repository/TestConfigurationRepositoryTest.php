@@ -81,7 +81,7 @@ class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
 
     protected function getRepository(): ?TestConfigurationRepository
     {
-        $repository = self::$container->get(TestConfigurationRepository::class);
+        $repository = self::getContainer()->get(TestConfigurationRepository::class);
         if ($repository instanceof TestConfigurationRepository) {
             return $repository;
         }

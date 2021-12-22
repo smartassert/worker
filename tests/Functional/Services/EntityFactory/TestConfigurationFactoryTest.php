@@ -15,7 +15,7 @@ class TestConfigurationFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $factory = self::$container->get(TestConfigurationFactory::class);
+        $factory = self::getContainer()->get(TestConfigurationFactory::class);
         \assert($factory instanceof TestConfigurationFactory);
         $this->factory = $factory;
     }

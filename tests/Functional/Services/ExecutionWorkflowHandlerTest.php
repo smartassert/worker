@@ -37,23 +37,23 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $executionWorkflowHandler = self::$container->get(ExecutionWorkflowHandler::class);
+        $executionWorkflowHandler = self::getContainer()->get(ExecutionWorkflowHandler::class);
         \assert($executionWorkflowHandler instanceof ExecutionWorkflowHandler);
         $this->handler = $executionWorkflowHandler;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
 
-        $eventListenerRemover = self::$container->get(EventListenerRemover::class);
+        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
 
         $eventListenerRemover->remove([
@@ -302,7 +302,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueCount(1);
 
-        $callbackRespository = self::$container->get(CallbackRepository::class);
+        $callbackRespository = self::getContainer()->get(CallbackRepository::class);
         \assert($callbackRespository instanceof CallbackRepository);
         $callbacks = $callbackRespository->findAll();
         $expectedCallback = array_pop($callbacks);

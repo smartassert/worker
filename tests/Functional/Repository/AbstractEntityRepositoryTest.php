@@ -30,7 +30,7 @@ abstract class AbstractEntityRepositoryTest extends AbstractBaseFunctionalTest
             $this->repository = $repository;
         }
 
-        $entityManager = self::$container->get(EntityManagerInterface::class);
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
     }
