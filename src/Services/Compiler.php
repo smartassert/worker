@@ -22,7 +22,7 @@ class Compiler
     ) {
     }
 
-    public function compile(string $source): ErrorOutputInterface|SuiteManifest
+    public function compile(string $source): ErrorOutputInterface | SuiteManifest
     {
         $output = '';
         $exitCode = null;

@@ -19,7 +19,7 @@ class CallbackResponseHandler
     ) {
     }
 
-    public function handle(CallbackInterface $callback, ClientExceptionInterface|ResponseInterface $context): void
+    public function handle(CallbackInterface $callback, ClientExceptionInterface | ResponseInterface $context): void
     {
         $callback->incrementRetryCount();
         $callback = $this->createNextCallback($callback, $context);
@@ -29,7 +29,7 @@ class CallbackResponseHandler
 
     private function createNextCallback(
         CallbackInterface $callback,
-        ClientExceptionInterface|ResponseInterface $context
+        ClientExceptionInterface | ResponseInterface $context
     ): CallbackInterface {
         if (0 === $callback->getRetryCount()) {
             return $callback;
