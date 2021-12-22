@@ -12,7 +12,7 @@ use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\TestEntityAsserter;
 use App\Tests\Services\TestTestFactory;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\YamlDocument\Document;
 
 class TestCancellerTest extends AbstractBaseFunctionalTest
@@ -30,7 +30,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         \assert($testCanceller instanceof TestCanceller);
         $this->testCanceller = $testCanceller;
 
-        $eventDispatcher = self::getContainer()->get(\Symfony\Component\EventDispatcher\EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
