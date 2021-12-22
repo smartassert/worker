@@ -13,7 +13,7 @@ class CallbackHttpErrorEvent extends Event
 {
     public function __construct(
         private CallbackInterface $callback,
-        private ClientExceptionInterface | ResponseInterface $context
+        private ClientExceptionInterface|ResponseInterface $context
     ) {
     }
 
@@ -22,7 +22,7 @@ class CallbackHttpErrorEvent extends Event
         return $this->callback;
     }
 
-    public function getContext(): ClientExceptionInterface | ResponseInterface
+    public function getContext(): ClientExceptionInterface|ResponseInterface
     {
         return $this->context;
     }

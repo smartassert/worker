@@ -14,7 +14,7 @@ class JsonResponseAsserter
      */
     public function assertJsonResponse(
         int $expectedStatusCode,
-        array | \stdClass $expectedData,
+        array|\stdClass $expectedData,
         Response $response
     ): void {
         TestCase::assertSame($expectedStatusCode, $response->getStatusCode());

@@ -9,10 +9,7 @@ use Mockery\MockInterface;
 
 class MockUploadedSourceCollection
 {
-    /**
-     * @var MockInterface|UploadedSourceCollection
-     */
-    private UploadedSourceCollection | MockInterface $sources;
+    private UploadedSourceCollection|MockInterface $sources;
 
     public function __construct()
     {
