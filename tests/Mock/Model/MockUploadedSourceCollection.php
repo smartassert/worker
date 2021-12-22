@@ -23,22 +23,26 @@ class MockUploadedSourceCollection
 
     public function withContainsCall(string $path, bool $contains): self
     {
-        $this->sources
-            ->shouldReceive('contains')
-            ->with($path)
-            ->andReturn($contains)
-        ;
+        if ($this->sources instanceof MockInterface) {
+            $this->sources
+                ->shouldReceive('contains')
+                ->with($path)
+                ->andReturn($contains)
+            ;
+        }
 
         return $this;
     }
 
     public function withOffsetGetCall(string $offset, mixed $return): self
     {
-        $this->sources
-            ->shouldReceive('offsetGet')
-            ->with($offset)
-            ->andReturn($return)
-        ;
+        if ($this->sources instanceof MockInterface) {
+            $this->sources
+                ->shouldReceive('offsetGet')
+                ->with($offset)
+                ->andReturn($return)
+            ;
+        }
 
         return $this;
     }
