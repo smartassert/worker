@@ -23,7 +23,7 @@ abstract class AbstractTestCreationTest extends AbstractBaseIntegrationTest
 
     protected function tearDown(): void
     {
-        $compilerClient = self::$container->get('app.services.compiler-client');
+        $compilerClient = self::getContainer()->get('app.services.compiler-client');
         self::assertInstanceOf(Client::class, $compilerClient);
 
         $request = 'rm ' . $this->compilerTargetDirectory . '/*.php';

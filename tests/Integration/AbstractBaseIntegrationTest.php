@@ -18,15 +18,15 @@ abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $entityRemover = self::$container->get(EntityRemover::class);
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
         \assert($entityRemover instanceof EntityRemover);
         $this->entityRemover = $entityRemover;
 
-        $localSourceStoreHandler = self::$container->get('app.tests.services.file_store_handler.local_source');
+        $localSourceStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.local_source');
         \assert($localSourceStoreHandler instanceof FileStoreHandler);
         $this->localSourceStoreHandler = $localSourceStoreHandler;
 
-        $uploadStoreHandler = self::$container->get('app.tests.services.file_store_handler.uploaded');
+        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
         \assert($uploadStoreHandler instanceof FileStoreHandler);
         $this->uploadStoreHandler = $uploadStoreHandler;
 

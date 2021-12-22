@@ -29,11 +29,11 @@ class CallbackResponseHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackResponseHandler = self::$container->get(CallbackResponseHandler::class);
+        $callbackResponseHandler = self::getContainer()->get(CallbackResponseHandler::class);
         \assert($callbackResponseHandler instanceof CallbackResponseHandler);
         $this->callbackResponseHandler = $callbackResponseHandler;
 
-        $httpErrorEventSubscriber = self::$container->get(CallbackHttpErrorEventSubscriber::class);
+        $httpErrorEventSubscriber = self::getContainer()->get(CallbackHttpErrorEventSubscriber::class);
         \assert($httpErrorEventSubscriber instanceof CallbackHttpErrorEventSubscriber);
         $this->httpErrorEventSubscriber = $httpErrorEventSubscriber;
     }
@@ -80,7 +80,7 @@ class CallbackResponseHandlerTest extends AbstractBaseFunctionalTest
                 'context' => new Response(
                     503,
                     [
-                        'retry-after' => 30,
+                        'retry-after' => '30',
                     ]
                 ),
                 'expectedCallbackStamps' => new StampCollection([

@@ -22,7 +22,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     {
         parent::setUp();
 
-        $testConfigurationStore = self::$container->get(TestConfigurationStore::class);
+        $testConfigurationStore = self::getContainer()->get(TestConfigurationStore::class);
         \assert($testConfigurationStore instanceof TestConfigurationStore);
         $this->testConfigurationStore = $testConfigurationStore;
     }
@@ -399,7 +399,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     protected function getRepository(): ?TestRepository
     {
-        $repository = self::$container->get(TestRepository::class);
+        $repository = self::getContainer()->get(TestRepository::class);
         if ($repository instanceof TestRepository) {
             return $repository;
         }

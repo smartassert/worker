@@ -19,7 +19,7 @@ class CompilationFailedEventCallbackFactoryTest extends AbstractEventCallbackFac
 
     protected function getCallbackFactory(): ?EventCallbackFactoryInterface
     {
-        $callbackFactory = self::$container->get(CompilationFailedEventCallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(CompilationFailedEventCallbackFactory::class);
 
         return $callbackFactory instanceof CompilationFailedEventCallbackFactory
             ? $callbackFactory

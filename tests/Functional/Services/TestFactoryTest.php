@@ -11,7 +11,7 @@ use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockSuiteManifest;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilModels\Test\Configuration;
@@ -35,11 +35,11 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $testFactory = self::$container->get(TestFactory::class);
+        $testFactory = self::getContainer()->get(TestFactory::class);
         \assert($testFactory instanceof TestFactory);
         $this->factory = $testFactory;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
@@ -141,7 +141,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
             $event = new PassedEvent('/app/source/Test/test.yml', $suiteManifest);
             $this->eventDispatcher->dispatch($event);
 
-            $testRepository = self::$container->get(TestRepository::class);
+            $testRepository = self::getContainer()->get(TestRepository::class);
             \assert($testRepository instanceof TestRepository);
 
             return $testRepository->findAll();

@@ -20,15 +20,15 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $store = self::$container->get(SourceStore::class);
+        $store = self::getContainer()->get(SourceStore::class);
         \assert($store instanceof SourceStore);
         $this->store = $store;
 
-        $factory = self::$container->get(SourceFactory::class);
+        $factory = self::getContainer()->get(SourceFactory::class);
         \assert($factory instanceof SourceFactory);
         $this->factory = $factory;
 
-        $entityPersister = self::$container->get(EntityPersister::class);
+        $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
         $this->entityPersister = $entityPersister;
     }

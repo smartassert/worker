@@ -39,7 +39,10 @@ class SendCallbackMessageDispatcher extends AbstractMessageDispatcher implements
         parent::__construct($messageDispatcher);
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array<string, array<int, array<int, int|string>>>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             JobReadyEvent::class => [

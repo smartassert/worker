@@ -19,7 +19,7 @@ class TestEventCallbackFactoryTest extends AbstractEventCallbackFactoryTest
 
     protected function getCallbackFactory(): ?EventCallbackFactoryInterface
     {
-        $callbackFactory = self::$container->get(TestEventCallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(TestEventCallbackFactory::class);
 
         return $callbackFactory instanceof TestEventCallbackFactory
             ? $callbackFactory

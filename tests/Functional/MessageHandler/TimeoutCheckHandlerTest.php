@@ -30,11 +30,11 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $timeoutCheckHandler = self::$container->get(TimeoutCheckHandler::class);
+        $timeoutCheckHandler = self::getContainer()->get(TimeoutCheckHandler::class);
         \assert($timeoutCheckHandler instanceof TimeoutCheckHandler);
         $this->handler = $timeoutCheckHandler;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
     }

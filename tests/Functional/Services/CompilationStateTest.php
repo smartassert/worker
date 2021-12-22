@@ -23,12 +23,12 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $compilationState = self::$container->get(CompilationState::class);
+        $compilationState = self::getContainer()->get(CompilationState::class);
         if ($compilationState instanceof CompilationState) {
             $this->compilationState = $compilationState;
         }
 
-        $environmentFactory = self::$container->get(EnvironmentFactory::class);
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
     }

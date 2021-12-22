@@ -19,7 +19,7 @@ class JobTimeoutEventCallbackFactoryTest extends AbstractEventCallbackFactoryTes
 
     protected function getCallbackFactory(): ?EventCallbackFactoryInterface
     {
-        $callbackFactory = self::$container->get(JobTimeoutEventCallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(JobTimeoutEventCallbackFactory::class);
 
         return $callbackFactory instanceof JobTimeoutEventCallbackFactory
             ? $callbackFactory

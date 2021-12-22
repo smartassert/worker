@@ -25,19 +25,19 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $testStateMutator = self::$container->get(TestStateMutator::class);
+        $testStateMutator = self::getContainer()->get(TestStateMutator::class);
         \assert($testStateMutator instanceof TestStateMutator);
         $this->mutator = $testStateMutator;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $testMutator = self::$container->get(TestTestMutator::class);
+        $testMutator = self::getContainer()->get(TestTestMutator::class);
         \assert($testMutator instanceof TestTestMutator);
         $this->testMutator = $testMutator;
 
-        $testTestFactory = self::$container->get(TestTestFactory::class);
+        $testTestFactory = self::getContainer()->get(TestTestFactory::class);
         \assert($testTestFactory instanceof TestTestFactory);
         $this->test = $testTestFactory->create(new TestSetup());
     }

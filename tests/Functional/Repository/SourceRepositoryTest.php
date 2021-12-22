@@ -94,7 +94,7 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
 
     protected function getRepository(): ?SourceRepository
     {
-        $repository = self::$container->get(SourceRepository::class);
+        $repository = self::getContainer()->get(SourceRepository::class);
         if ($repository instanceof SourceRepository) {
             return $repository;
         }

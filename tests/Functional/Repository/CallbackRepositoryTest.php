@@ -123,7 +123,7 @@ class CallbackRepositoryTest extends AbstractEntityRepositoryTest
 
     protected function getRepository(): ?CallbackRepository
     {
-        $repository = self::$container->get(CallbackRepository::class);
+        $repository = self::getContainer()->get(CallbackRepository::class);
         if ($repository instanceof CallbackRepository) {
             return $repository;
         }

@@ -54,19 +54,19 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $callbackRepository = self::$container->get(CallbackRepository::class);
+        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
         \assert($callbackRepository instanceof CallbackRepository);
         $this->callbackRepository = $callbackRepository;
 
-        $eventListenerRemover = self::$container->get(EventListenerRemover::class);
+        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             TestStateMutator::class => [
@@ -273,7 +273,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $event = new CallbackHttpErrorEvent($callbackEntity, new Response(503));
 
-        $dispatcher = self::$container->get(SendCallbackMessageDispatcher::class);
+        $dispatcher = self::getContainer()->get(SendCallbackMessageDispatcher::class);
         \assert($dispatcher instanceof SendCallbackMessageDispatcher);
 
         $this->messengerAsserter->assertQueueIsEmpty();

@@ -36,7 +36,7 @@ class NoPayloadEventCallbackFactoryTest extends AbstractEventCallbackFactoryTest
 
     protected function getCallbackFactory(): ?EventCallbackFactoryInterface
     {
-        $callbackFactory = self::$container->get(NoPayloadEventCallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(NoPayloadEventCallbackFactory::class);
 
         return $callbackFactory instanceof NoPayloadEventCallbackFactory
             ? $callbackFactory

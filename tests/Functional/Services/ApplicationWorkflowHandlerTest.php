@@ -39,19 +39,19 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $applicationWorkflowHandler = self::$container->get(ApplicationWorkflowHandler::class);
+        $applicationWorkflowHandler = self::getContainer()->get(ApplicationWorkflowHandler::class);
         \assert($applicationWorkflowHandler instanceof ApplicationWorkflowHandler);
         $this->handler = $applicationWorkflowHandler;
 
-        $eventDispatcher = self::$container->get(EventDispatcherInterface::class);
+        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $eventListenerRemover = self::$container->get(EventListenerRemover::class);
+        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             SendCallbackMessageDispatcher::class => [

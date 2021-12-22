@@ -11,7 +11,10 @@ use Symfony\Component\Messenger\Envelope;
 
 class TimeoutCheckMessageDispatcher extends AbstractMessageDispatcher implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array<string, array<int, array<int, int|string>>>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             JobReadyEvent::class => [

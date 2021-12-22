@@ -29,11 +29,11 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackSender = self::$container->get(CallbackSender::class);
+        $callbackSender = self::getContainer()->get(CallbackSender::class);
         \assert($callbackSender instanceof CallbackSender);
         $this->callbackSender = $callbackSender;
 
-        $mockHandler = self::$container->get('app.tests.services.guzzle.handler.queuing');
+        $mockHandler = self::getContainer()->get('app.tests.services.guzzle.handler.queuing');
         \assert($mockHandler instanceof MockHandler);
         $this->mockHandler = $mockHandler;
     }
@@ -131,7 +131,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
     private function createJob(): void
     {
-        $jobFactory = self::$container->get(JobFactory::class);
+        $jobFactory = self::getContainer()->get(JobFactory::class);
         \assert($jobFactory instanceof JobFactory);
         $jobFactory->create('label content', 'http://example.com/callback', 10);
     }

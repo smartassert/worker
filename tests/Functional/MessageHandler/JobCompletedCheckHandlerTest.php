@@ -29,11 +29,11 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $jobCompletedCheckHandler = self::$container->get(JobCompletedCheckHandler::class);
+        $jobCompletedCheckHandler = self::getContainer()->get(JobCompletedCheckHandler::class);
         \assert($jobCompletedCheckHandler instanceof JobCompletedCheckHandler);
         $this->handler = $jobCompletedCheckHandler;
 
-        $messengerAsserter = self::$container->get(MessengerAsserter::class);
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
     }

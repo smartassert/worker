@@ -11,7 +11,10 @@ class CallbackHttpErrorEventSubscriber implements EventSubscriberInterface
 {
     private ?CallbackHttpErrorEvent $event = null;
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array<string, string>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             CallbackHttpErrorEvent::class => 'onCallbackHttpException',
