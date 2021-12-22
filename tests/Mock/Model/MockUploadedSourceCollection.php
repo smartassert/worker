@@ -9,9 +9,6 @@ use Mockery\MockInterface;
 
 class MockUploadedSourceCollection
 {
-    /**
-     * @var MockInterface|UploadedSourceCollection
-     */
     private UploadedSourceCollection | MockInterface $sources;
 
     public function __construct()
@@ -26,22 +23,26 @@ class MockUploadedSourceCollection
 
     public function withContainsCall(string $path, bool $contains): self
     {
-        $this->sources
-            ->shouldReceive('contains')
-            ->with($path)
-            ->andReturn($contains)
-        ;
+        if ($this->sources instanceof MockInterface) {
+            $this->sources
+                ->shouldReceive('contains')
+                ->with($path)
+                ->andReturn($contains)
+            ;
+        }
 
         return $this;
     }
 
     public function withOffsetGetCall(string $offset, mixed $return): self
     {
-        $this->sources
-            ->shouldReceive('offsetGet')
-            ->with($offset)
-            ->andReturn($return)
-        ;
+        if ($this->sources instanceof MockInterface) {
+            $this->sources
+                ->shouldReceive('offsetGet')
+                ->with($offset)
+                ->andReturn($return)
+            ;
+        }
 
         return $this;
     }

@@ -19,7 +19,7 @@ class SourceStore
     }
 
     /**
-     * @param Source::TYPE_*|null $type
+     * @param null|Source::TYPE_* $type
      *
      * @return string[]
      */

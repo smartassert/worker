@@ -15,6 +15,9 @@ return (new PhpCsFixer\Config())
         'trailing_comma_in_multiline' => false,
         'php_unit_internal_class' => false,
         'php_unit_test_class_requires_covers' => false,
+        'types_spaces' => [
+            'space' => 'single',
+        ],
     ])
     ->setFinder($finder)
 ;
