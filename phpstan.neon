@@ -4,9 +4,3 @@ parameters:
     - src
     - tests
   inferPrivatePropertyTypeFromConstructor: true
-  excludePaths:
-    - tests/Fixtures
-  ignoreErrors:
-    -
-      message: '#App\\Tests\\Mock\\Model\\MockUploadedSourceCollection::getMock\(\)#'
-      path: "tests/Mock/Model/MockUploadedSourceCollection.php"
