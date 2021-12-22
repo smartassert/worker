@@ -11,7 +11,7 @@
         "composer/package-versions-deprecated": "1.11.99.1",
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/orm": "^2.10",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.4",
         "symfony/console": "5.4.*",
         "symfony/dotenv": "5.4.*",
         "symfony/flex": "^1.13",
@@ -44,7 +44,7 @@
         "symfony/browser-kit": "5.4.*",
         "symfony/maker-bundle": "^1.32",
         "symfony/phpunit-bridge": "5.4.*",
-        "webignition/http-history-container": "^2.2",
+        "webignition/http-history-container": "^2.4",
         "webignition/object-reflector": "^1.0"
     },
     "config": {
