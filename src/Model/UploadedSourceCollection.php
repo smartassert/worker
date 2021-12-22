@@ -50,14 +50,14 @@ class UploadedSourceCollection implements \ArrayAccess, \IteratorAggregate
         return $this->uploadedSources[$offset] ?? null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($value instanceof UploadedSource) {
             $this->uploadedSources[$value->getPath()] = $value;
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->uploadedSources[$offset]);
     }
