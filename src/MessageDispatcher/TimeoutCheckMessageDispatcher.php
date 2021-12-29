@@ -8,9 +8,15 @@ use App\Event\JobReadyEvent;
 use App\Message\TimeoutCheckMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-class TimeoutCheckMessageDispatcher extends AbstractMessageDispatcher implements EventSubscriberInterface
+class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
 {
+    public function __construct(
+        private MessageBusInterface $messageBus,
+    ) {
+    }
+
     /**
      * @return array<string, array<int, array<int, int|string>>>
      */
@@ -25,6 +31,6 @@ class TimeoutCheckMessageDispatcher extends AbstractMessageDispatcher implements
 
     public function dispatch(): Envelope
     {
-        return $this->doDispatch(new TimeoutCheckMessage());
+        return $this->messageBus->dispatch(new TimeoutCheckMessage());
     }
 }
