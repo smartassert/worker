@@ -15,7 +15,7 @@ abstract class AbstractTestCreationTest extends AbstractBaseIntegrationTest
     {
         parent::setUp();
 
-        $compilerTargetDirectory = self::$container->getParameter('compiler_target_directory');
+        $compilerTargetDirectory = self::getContainer()->getParameter('compiler_target_directory');
         if (is_string($compilerTargetDirectory)) {
             $this->compilerTargetDirectory = $compilerTargetDirectory;
         }

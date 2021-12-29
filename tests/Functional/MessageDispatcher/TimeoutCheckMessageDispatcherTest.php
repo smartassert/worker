@@ -58,7 +58,7 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueCount(1);
         $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
 
-        $jobTimeoutCheckPeriod = self::$container->getParameter('job_timeout_check_period_ms');
+        $jobTimeoutCheckPeriod = self::getContainer()->getParameter('job_timeout_check_period_ms');
         if (is_string($jobTimeoutCheckPeriod)) {
             $jobTimeoutCheckPeriod = (int) $jobTimeoutCheckPeriod;
         }

@@ -26,10 +26,10 @@ class StringPrefixRemoverTest extends AbstractBaseFunctionalTest
         \assert($compilerTargetRemover instanceof DefinedStringPrefixRemover);
         $this->compilerTargetRemover = $compilerTargetRemover;
 
-        $compilerSourceDirectory = self::$container->getParameter('compiler_source_directory');
+        $compilerSourceDirectory = self::getContainer()->getParameter('compiler_source_directory');
         $this->compilerSourceDirectory = is_string($compilerSourceDirectory) ? $compilerSourceDirectory : '';
 
-        $compilerTargetDirectory = self::$container->getParameter('compiler_target_directory');
+        $compilerTargetDirectory = self::getContainer()->getParameter('compiler_target_directory');
         $this->compilerTargetDirectory = is_string($compilerTargetDirectory) ? $compilerTargetDirectory : '';
     }
 
