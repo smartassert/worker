@@ -107,18 +107,12 @@ services:
                 - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
 
-    app.message_dispatcher.backoff_strategy.fixed:
-        class: webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\FixedBackoffStrategy
-        arguments:
-            $delayInMilliseconds: '%job_timeout_check_period_ms%'
-
     app.message_dispatcher.backoff_strategy.exponential:
         class: webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\ExponentialBackoffStrategy
 
     webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware:
         arguments:
             $backoffStrategies:
-                App\Message\TimeoutCheckMessage: '@app.message_dispatcher.backoff_strategy.fixed'
                 App\Message\SendCallbackMessage: '@app.message_dispatcher.backoff_strategy.exponential'
 
     webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware:
