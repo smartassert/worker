@@ -9,11 +9,13 @@ use App\Message\TimeoutCheckMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
+        private int $checkPeriodInMilliseconds,
     ) {
     }
 
@@ -31,6 +33,11 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
 
     public function dispatch(): Envelope
     {
-        return $this->messageBus->dispatch(new TimeoutCheckMessage());
+        return $this->messageBus->dispatch(
+            new TimeoutCheckMessage(),
+            [
+                new DelayStamp($this->checkPeriodInMilliseconds),
+            ]
+        );
     }
 }

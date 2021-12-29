@@ -139,3 +139,7 @@ services:
 
     App\MessageHandler\TimeoutCheckHandler:
         tags: [messenger.message_handler]
+
+    App\MessageDispatcher\TimeoutCheckMessageDispatcher:
+        arguments:
+            $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
