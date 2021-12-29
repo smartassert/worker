@@ -21,7 +21,7 @@ class CompilerTest extends AbstractTestCreationTest
         \assert($compiler instanceof Compiler);
         $this->compiler = $compiler;
 
-        $compilerSourceDirectory = self::$container->getParameter('compiler_source_directory');
+        $compilerSourceDirectory = self::getContainer()->getParameter('compiler_source_directory');
         if (is_string($compilerSourceDirectory)) {
             $this->compilerSourceDirectory = $compilerSourceDirectory;
         }
