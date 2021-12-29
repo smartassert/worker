@@ -9,9 +9,8 @@ use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Services\EntityStore\JobStore;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class TimeoutCheckHandler implements MessageHandlerInterface
+class TimeoutCheckHandler
 {
     public function __construct(
         private JobStore $jobStore,

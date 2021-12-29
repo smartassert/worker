@@ -136,3 +136,6 @@ services:
         class: webignition\YamlDocumentGenerator\YamlGenerator
 
     Symfony\Component\Yaml\Dumper: ~
+
+    App\MessageHandler\TimeoutCheckHandler:
+        tags: [messenger.message_handler]

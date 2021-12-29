@@ -479,8 +479,8 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                     ]);
 
                     $transactions = $transactions->slice(
-                        -1 * $expectedHttpRequests->count(),
-                        null
+                        (-1 * $expectedHttpRequests->count()) - 1,
+                        $expectedHttpRequests->count()
                     );
 
                     $requests = $transactions->getRequests();
