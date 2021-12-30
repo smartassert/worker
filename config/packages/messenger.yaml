@@ -11,4 +11,8 @@ framework:
 
         routing:
             'App\Message\SendCallbackMessage': callback
-            '*': async
+            'App\Message\CompileSourceMessage': async
+            'App\Message\ExecuteTestMessage': async
+            'App\Message\JobCompletedCheckMessage': async
+            'App\Message\JobReadyMessage': async
+            'App\Message\TimeoutCheckMessage': async

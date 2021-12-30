@@ -22,7 +22,6 @@ use App\Event\TestStartedEvent;
 use App\Event\TestStepFailedEvent;
 use App\Event\TestStepPassedEvent;
 use App\Message\SendCallbackMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\CallbackRepository;
 use App\Services\ApplicationWorkflowHandler;
@@ -39,7 +38,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher;
 use webignition\YamlDocument\Document;
 
 class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
@@ -261,28 +259,5 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedCallbackPayload' => [],
             ],
         ];
-    }
-
-    public function testCallbackSetToFailedWhenRetryLimitReached(): void
-    {
-        $callbackEntity = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-
-        $event = new CallbackHttpErrorEvent($callbackEntity, new Response(503));
-
-        $dispatcher = self::getContainer()->get(SendCallbackMessageDispatcher::class);
-        \assert($dispatcher instanceof SendCallbackMessageDispatcher);
-
-        $this->messengerAsserter->assertQueueIsEmpty();
-
-        $envelope = $dispatcher->dispatchForCallbackHttpErrorEvent($event);
-
-        self::assertFalse(MessageDispatcher::isDispatchable($envelope));
-        $this->messengerAsserter->assertQueueIsEmpty();
-
-        self::assertSame(CallbackInterface::STATE_FAILED, $callbackEntity->getState());
     }
 }

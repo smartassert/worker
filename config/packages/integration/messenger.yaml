@@ -1,7 +1,9 @@
 framework:
     messenger:
         transports:
-            async: 'sync://'
-
-        routing:
-            '*': async
+            callback:
+                dsn: 'sync://'
+                retry_strategy:
+                    service: App\Messenger\CallbackMessageRetryStrategy
+            async:
+                dsn: 'sync://'
