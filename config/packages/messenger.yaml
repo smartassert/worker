@@ -2,8 +2,17 @@ framework:
     messenger:
         reset_on_message: true
         transports:
+            callback:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    service: ~
+                    max_retries: '%callback_retry_limit%'
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
+            'App\Message\SendCallbackMessage': callback
             '*': async
