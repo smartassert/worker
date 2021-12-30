@@ -137,3 +137,15 @@ services:
     App\MessageDispatcher\TimeoutCheckMessageDispatcher:
         arguments:
             $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
+
+    app.messenger.retry_strategy.callback.multiplier:
+        class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
+        arguments:
+            $maxRetries: '%callback_retry_limit%'
+            $delayMilliseconds: 1000
+            $multiplier: 2
+            $maxDelayMilliseconds: 0
+
+    App\Messenger\CallbackMessageRetryStrategy:
+        arguments:
+            $multiplierRetryStrategy: '@app.messenger.retry_strategy.callback.multiplier'
