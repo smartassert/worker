@@ -47,6 +47,3 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
         factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
-
-    App\Services\CallbackAborter:
-        public: true
