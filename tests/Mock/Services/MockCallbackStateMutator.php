@@ -35,6 +35,19 @@ class MockCallbackStateMutator
         return $this;
     }
 
+    public function withoutSetCompleteCall(): self
+    {
+        if (false === $this->mock instanceof MockInterface) {
+            return $this;
+        }
+
+        $this->mock
+            ->shouldNotReceive('setComplete')
+        ;
+
+        return $this;
+    }
+
     public function withSetSendingCall(CallbackInterface $callback): self
     {
         if (false === $this->mock instanceof MockInterface) {

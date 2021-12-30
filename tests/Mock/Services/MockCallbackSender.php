@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Mock\Services;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Model\SendCallbackResult;
 use App\Services\CallbackSender;
 use Mockery\MockInterface;
 
@@ -22,7 +23,7 @@ class MockCallbackSender
         return $this->mock;
     }
 
-    public function withSendCall(CallbackInterface $callback): self
+    public function withSendCall(CallbackInterface $callback, ?SendCallbackResult $result): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
@@ -30,7 +31,10 @@ class MockCallbackSender
 
         $this->mock
             ->shouldReceive('send')
-            ->with($callback)
+            ->withArgs(function (CallbackInterface $callbackArg) use ($callback) {
+                return $callbackArg->getId() === $callback->getId();
+            })
+            ->andReturn($result)
         ;
 
         return $this;
