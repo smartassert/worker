@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-  caddy-callback:
+  callback-receiver:
     image: caddy:2.4.5-alpine
-    container_name: caddy-callback
+    container_name: callback-receiver
     restart: unless-stopped
     ports:
       - "8080:80"
