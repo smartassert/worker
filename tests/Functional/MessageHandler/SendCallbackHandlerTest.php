@@ -9,11 +9,9 @@ use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Model\SendCallbackResult;
 use App\Repository\CallbackRepository;
-use App\Services\CallbackResponseHandler;
 use App\Services\CallbackSender;
 use App\Services\CallbackStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Services\MockCallbackResponseHandler;
 use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
@@ -89,12 +87,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
             ;
 
-        $responseHandler = (new MockCallbackResponseHandler())
-            ->withoutHandleCall()
-            ->getMock()
-        ;
-
-        $this->doInvoke($sender, $responseHandler, $expectedCallbackState);
+        $this->doInvoke($sender, $expectedCallbackState);
     }
 
     /**
@@ -127,12 +120,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $responseHandler = (new MockCallbackResponseHandler())
-            ->withHandleCall($this->callback, $sendCallbackResultContext)
-            ->getMock()
-        ;
-
-        $this->doInvoke($sender, $responseHandler, $expectedCallbackState);
+        $this->doInvoke($sender, $expectedCallbackState);
     }
 
     /**
@@ -152,13 +140,9 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         ];
     }
 
-    private function doInvoke(
-        CallbackSender $sender,
-        CallbackResponseHandler $responseHandler,
-        string $expectedState
-    ): void {
+    private function doInvoke(CallbackSender $sender, string $expectedState): void
+    {
         $this->setCallbackSender($sender);
-        $this->setCallbackResponseHandler($responseHandler);
 
         $message = new SendCallbackMessage((int) $this->callback->getId());
 
@@ -174,15 +158,5 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     private function setCallbackSender(CallbackSender $callbackSender): void
     {
         ObjectReflector::setProperty($this->handler, $this->handler::class, 'sender', $callbackSender);
-    }
-
-    private function setCallbackResponseHandler(CallbackResponseHandler $responseHandler): void
-    {
-        ObjectReflector::setProperty(
-            $this->handler,
-            $this->handler::class,
-            'callbackResponseHandler',
-            $responseHandler
-        );
     }
 }
