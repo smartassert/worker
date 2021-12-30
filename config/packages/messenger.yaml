@@ -5,11 +5,7 @@ framework:
             callback:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
-                    service: ~
-                    max_retries: '%callback_retry_limit%'
-                    delay: 1000
-                    multiplier: 2
-                    max_delay: 0
+                    service: App\Messenger\CallbackMessageRetryStrategy
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
