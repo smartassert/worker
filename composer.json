@@ -20,7 +20,6 @@
         "symfony/yaml": "5.4.*",
         "webignition/basil-compiler-models": "^0.15.0",
         "webignition/string-prefix-remover": "^0.2.0",
-        "webignition/symfony-messenger-message-dispatcher": ">=0.4,<1",
         "webignition/tcp-cli-proxy-client": "^0.12.0",
         "webignition/yaml-document": "^0.2.0",
         "webignition/yaml-document-generator": "^0.3.0"

@@ -81,12 +81,6 @@ services:
         arguments:
             $baseUrl: '%env(CALLBACK_BASE_URL)%'
 
-    webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher:
-        arguments:
-            $middleware:
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware'
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware'
-
     App\Tests\Services\IntegrationCallbackRequestFactory:
         public: true
 

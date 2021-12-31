@@ -21,8 +21,8 @@ use App\Services\ExecutionState;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher;
 
 class JobController
 {
@@ -67,7 +67,7 @@ class JobController
     public function addSources(
         SourceStore $sourceStore,
         SourceFactory $sourceFactory,
-        MessageDispatcher $messageDispatcher,
+        MessageBusInterface $messageBus,
         AddSourcesRequest $addSourcesRequest
     ): JsonResponse {
         if (false === $this->jobStore->has()) {
@@ -96,7 +96,7 @@ class JobController
             return BadAddSourcesRequestResponse::createSourceMissingResponse($testSourceException->getPath());
         }
 
-        $messageDispatcher->dispatch(new JobReadyMessage());
+        $messageBus->dispatch(new JobReadyMessage());
 
         return new JsonResponse();
     }

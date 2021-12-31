@@ -23,7 +23,7 @@ use App\Tests\Mock\Services\MockSourceFactory;
 use App\Tests\Mock\Services\MockSourceStore;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class JobControllerTest extends TestCase
 {
@@ -128,7 +128,7 @@ class JobControllerTest extends TestCase
         $response = $controller->addSources(
             $sourceStore,
             $sourceFactory,
-            \Mockery::mock(MessageDispatcher::class),
+            \Mockery::mock(MessageBusInterface::class),
             $addSourcesRequest
         );
 
