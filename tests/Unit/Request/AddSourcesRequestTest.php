@@ -23,7 +23,7 @@ class AddSourcesRequestTest extends TestCase
         ?Manifest $expectedManifest,
         UploadedSourceCollection $expectedSources
     ): void {
-        $addSourcesRequest = new AddSourcesRequest($request);
+        $addSourcesRequest = AddSourcesRequest::create($request);
 
         self::assertEquals($expectedManifest, $addSourcesRequest->getManifest());
         self::assertEquals($expectedSources, $addSourcesRequest->getUploadedSources());

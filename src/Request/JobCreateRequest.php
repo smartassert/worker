@@ -5,23 +5,24 @@ declare(strict_types=1);
 namespace App\Request;
 
 use Symfony\Component\HttpFoundation\Request;
+use webignition\EncapsulatingRequestResolverBundle\Model\EncapsulatingRequestInterface;
 
-class JobCreateRequest extends AbstractEncapsulatingRequest
+class JobCreateRequest implements EncapsulatingRequestInterface
 {
     public const KEY_LABEL = 'label';
     public const KEY_CALLBACK_URL = 'callback-url';
     public const KEY_MAXIMUM_DURATION = 'maximum-duration-in-seconds';
 
-    private string $label = '';
-    private string $callbackUrl = '';
-    private ?int $maximumDurationInSeconds;
+    public function __construct(
+        private string $label,
+        private string $callbackUrl,
+        private ?int $maximumDurationInSeconds
+    ) {
+    }
 
-    public function processRequest(Request $request): void
+    public static function create(Request $request): JobCreateRequest
     {
         $requestData = $request->request;
-
-        $this->label = (string) $requestData->get(self::KEY_LABEL);
-        $this->callbackUrl = (string) $requestData->get(self::KEY_CALLBACK_URL);
 
         $maximumDurationInSeconds = null;
         if ($requestData->has(self::KEY_MAXIMUM_DURATION)) {
@@ -31,7 +32,11 @@ class JobCreateRequest extends AbstractEncapsulatingRequest
             }
         }
 
-        $this->maximumDurationInSeconds = $maximumDurationInSeconds;
+        return new JobCreateRequest(
+            (string) $requestData->get(self::KEY_LABEL),
+            (string) $requestData->get(self::KEY_CALLBACK_URL),
+            $maximumDurationInSeconds
+        );
     }
 
     public function getLabel(): string
