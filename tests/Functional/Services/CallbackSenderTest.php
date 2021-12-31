@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Callback\CallbackEntity;
+use App\Entity\Callback\CallbackInterface;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Services\CallbackSender;
 use App\Services\EntityFactory\JobFactory;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\TestCallback;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
@@ -38,7 +39,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
     public function testSendSuccess(): void
     {
-        $callback = new TestCallback();
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
         $this->mockHandler->append(new Response(200));
         $this->createJob();
 
@@ -55,7 +56,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
-        $callback = new TestCallback();
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
         $this->mockHandler->append($response);
         $this->createJob();
 
@@ -85,7 +86,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendClientException(\Exception $exception): void
     {
-        $callback = new TestCallback();
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
         $this->mockHandler->append($exception);
         $this->createJob();
 
