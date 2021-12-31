@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
-use App\Model\SendCallbackResult;
 use App\Repository\CallbackRepository;
 use App\Services\CallbackSender;
 use App\Services\CallbackStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Mock\Entity\MockCallback;
 use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
@@ -20,8 +21,6 @@ use App\Tests\Services\EnvironmentFactory;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
 class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
@@ -70,79 +69,14 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         $this->callback = $callback;
     }
 
-    /**
-     * @dataProvider invokeSuccessDataProvider
-     */
-    public function testInvokeSuccess(
-        ClientExceptionInterface | ResponseInterface $sendCallbackResultContext,
-        string $expectedCallbackState,
-    ): void {
+    public function testInvokeSuccess(): void
+    {
         $expectedSentCallback = clone $this->callback;
         $expectedSentCallback->setState(CallbackInterface::STATE_SENDING);
 
-        $sendCallbackResult = new SendCallbackResult($this->callback, $sendCallbackResultContext);
-
-        $sender = (new MockCallbackSender())
-            ->withSendCall($expectedSentCallback, $sendCallbackResult)
-            ->getMock()
-            ;
-
-        $this->doInvoke($sender, $expectedCallbackState);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function invokeSuccessDataProvider(): array
-    {
-        return [
-            'success' => [
-                'sendCallbackResultContext' => new Response(200),
-                'expectedCallbackState' => CallbackInterface::STATE_COMPLETE,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider invokeFailureDataProvider
-     */
-    public function testInvokeFailure(
-        ClientExceptionInterface | ResponseInterface $sendCallbackResultContext,
-        string $expectedCallbackState,
-    ): void {
-        $expectedSentCallback = clone $this->callback;
-        $expectedSentCallback->setState(CallbackInterface::STATE_SENDING);
-
-        $sendCallbackResult = new SendCallbackResult($this->callback, $sendCallbackResultContext);
-
-        $sender = (new MockCallbackSender())
-            ->withSendCall($expectedSentCallback, $sendCallbackResult)
-            ->getMock()
-        ;
-
-        $this->doInvoke($sender, $expectedCallbackState);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function invokeFailureDataProvider(): array
-    {
-        return [
-            'HTTP 400' => [
-                'sendCallbackResultContext' => new Response(400),
-                'expectedCallbackState' => CallbackInterface::STATE_SENDING,
-            ],
-            'Guzzle ConnectException' => [
-                'sendCallbackResultContext' => \Mockery::mock(ConnectException::class),
-                'expectedCallbackState' => CallbackInterface::STATE_SENDING,
-            ],
-        ];
-    }
-
-    private function doInvoke(CallbackSender $sender, string $expectedState): void
-    {
-        $this->setCallbackSender($sender);
+        $this->setCallbackSender((new MockCallbackSender())
+            ->withSendCall($expectedSentCallback)
+            ->getMock());
 
         $message = new SendCallbackMessage((int) $this->callback->getId());
 
@@ -152,7 +86,55 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
         $callback = $this->callbackRepository->find($this->callback->getId());
         self::assertInstanceOf(CallbackInterface::class, $callback);
-        self::assertSame($expectedState, $this->callback->getState());
+        self::assertSame(CallbackInterface::STATE_COMPLETE, $this->callback->getState());
+    }
+
+    /**
+     * @dataProvider invokeFailureDataProvider
+     */
+    public function testInvokeFailure(\Exception $callbackSenderException, string $expectedCallbackState): void
+    {
+        $expectedSentCallback = clone $this->callback;
+        $expectedSentCallback->setState(CallbackInterface::STATE_SENDING);
+
+        $this->setCallbackSender((new MockCallbackSender())
+            ->withSendCall($expectedSentCallback, $callbackSenderException)
+            ->getMock());
+
+        $message = new SendCallbackMessage((int) $this->callback->getId());
+
+        self::assertSame(CallbackInterface::STATE_QUEUED, $this->callback->getState());
+
+        try {
+            ($this->handler)($message);
+            $this->fail($callbackSenderException::class . ' not thrown');
+        } catch (\Throwable $exception) {
+            self::assertSame($callbackSenderException, $exception);
+        }
+
+        $callback = $this->callbackRepository->find($this->callback->getId());
+        self::assertInstanceOf(CallbackInterface::class, $callback);
+        self::assertSame($expectedCallbackState, $this->callback->getState());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function invokeFailureDataProvider(): array
+    {
+        return [
+            'HTTP 400' => [
+                'callbackSenderException' => new NonSuccessfulHttpResponseException(
+                    (new MockCallback())->getMock(),
+                    new Response(400)
+                ),
+                'expectedCallbackState' => CallbackInterface::STATE_SENDING,
+            ],
+            'Guzzle ConnectException' => [
+                'callbackSenderException' => \Mockery::mock(ConnectException::class),
+                'expectedCallbackState' => CallbackInterface::STATE_SENDING,
+            ],
+        ];
     }
 
     private function setCallbackSender(CallbackSender $callbackSender): void
