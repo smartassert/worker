@@ -7,7 +7,6 @@ namespace App\Tests\Functional\MessageDispatcher;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
-use App\Event\CallbackHttpErrorEvent;
 use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompletedEvent;
@@ -33,7 +32,6 @@ use App\Tests\Mock\Entity\MockTest;
 use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EventListenerRemover;
-use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -138,13 +136,6 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         ;
 
         return [
-            CallbackHttpErrorEvent::class => [
-                'event' => new CallbackHttpErrorEvent($httpExceptionEventCallback, new Response(503)),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_FAILED,
-                'expectedCallbackPayload' => [
-                    'http-exception-event-key' => 'value',
-                ],
-            ],
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
                 'expectedCallbackType' => CallbackInterface::TYPE_JOB_STARTED,
