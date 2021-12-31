@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Exception\NonSuccessfulHttpResponseException;
 use App\HttpMessage\CallbackRequest;
-use App\Model\SendCallbackResult;
 use App\Services\EntityStore\JobStore;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
@@ -19,21 +19,22 @@ class CallbackSender
     ) {
     }
 
-    public function send(CallbackInterface $callback): ?SendCallbackResult
+    /**
+     * @throws ClientExceptionInterface
+     * @throws NonSuccessfulHttpResponseException
+     */
+    public function send(CallbackInterface $callback): void
     {
         if (false === $this->jobStore->has()) {
-            return null;
+            return;
         }
 
         $job = $this->jobStore->get();
         $request = new CallbackRequest($callback, $job);
+        $response = $this->httpClient->sendRequest($request);
 
-        try {
-            $resultContext = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $httpClientException) {
-            $resultContext = $httpClientException;
+        if ($response->getStatusCode() >= 300) {
+            throw new NonSuccessfulHttpResponseException($callback, $response);
         }
-
-        return new SendCallbackResult($callback, $resultContext);
     }
 }
