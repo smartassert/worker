@@ -10,21 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class CallbackEntityTest extends TestCase
 {
-    public function testIncrementRetryCount(): void
-    {
-        $callback = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
-        self::assertSame(0, $callback->getRetryCount());
-
-        $callback->incrementRetryCount();
-        self::assertSame(1, $callback->getRetryCount());
-
-        $callback->incrementRetryCount();
-        self::assertSame(2, $callback->getRetryCount());
-
-        $callback->incrementRetryCount();
-        self::assertSame(3, $callback->getRetryCount());
-    }
-
     public function testHasState(): void
     {
         $callback = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
