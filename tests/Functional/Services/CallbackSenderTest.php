@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackInterface;
-use App\Model\SendCallbackResult;
+use App\Exception\NonSuccessfulHttpResponseException;
 use App\Services\CallbackSender;
 use App\Services\EntityFactory\JobFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -37,51 +36,74 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
         $this->mockHandler = $mockHandler;
     }
 
-    /**
-     * @dataProvider sendResponseSuccessDataProvider
-     */
-    public function testSendResponseSuccess(ClientExceptionInterface | ResponseInterface $httpFixture): void
+    public function testSendSuccess(): void
     {
         $callback = new TestCallback();
-        $callback = $callback->withState(CallbackInterface::STATE_SENDING);
-
-        $this->mockHandler->append($httpFixture);
-
+        $this->mockHandler->append(new Response(200));
         $this->createJob();
 
-        $this->mockHandler->append($httpFixture);
-        $result = $this->callbackSender->send($callback);
+        try {
+            $this->callbackSender->send($callback);
+            $this->expectNotToPerformAssertions();
+        } catch (NonSuccessfulHttpResponseException | ClientExceptionInterface $e) {
+            $this->fail($e::class);
+        }
+    }
 
-        self::assertEquals(new SendCallbackResult($callback, $httpFixture), $result);
-        self::assertSame(CallbackInterface::STATE_SENDING, $callback->getState());
+    /**
+     * @dataProvider sendNonSuccessfulResponseDataProvider
+     */
+    public function testSendNonSuccessfulResponse(ResponseInterface $response): void
+    {
+        $callback = new TestCallback();
+        $this->mockHandler->append($response);
+        $this->createJob();
+
+        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($callback, $response));
+
+        $this->callbackSender->send($callback);
     }
 
     /**
      * @return array[]
      */
-    public function sendResponseSuccessDataProvider(): array
+    public function sendNonSuccessfulResponseDataProvider(): array
     {
-        $dataSets = [
-            'HTTP 400' => [
-                'response' => new Response(400),
-            ],
-            'Guzzle ConnectException' => [
-                'exception' => \Mockery::mock(ConnectException::class),
-            ],
-        ];
+        $dataSets = [];
 
-        for ($statusCode = 100; $statusCode < 300; ++$statusCode) {
+        for ($statusCode = 300; $statusCode < 600; ++$statusCode) {
             $dataSets[(string) $statusCode] = [
-                'httpFixture' => new Response($statusCode),
+                'response' => new Response($statusCode),
             ];
         }
 
         return $dataSets;
     }
 
-    public function testSendNoJob(): void
+    /**
+     * @dataProvider sendClientExceptionDataProvider
+     */
+    public function testSendClientException(\Exception $exception): void
     {
-        self::assertNull($this->callbackSender->send(new TestCallback()));
+        $callback = new TestCallback();
+        $this->mockHandler->append($exception);
+        $this->createJob();
+
+        $this->expectExceptionObject($exception);
+
+        $this->callbackSender->send($callback);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function sendClientExceptionDataProvider(): array
+    {
+        return [
+            'Guzzle ConnectException' => [
+                'exception' => \Mockery::mock(ConnectException::class),
+            ],
+        ];
     }
 
     private function createJob(): void
