@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Event\CallbackHttpErrorEvent;
 use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -46,9 +45,6 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
         return [
             JobReadyEvent::class => [
                 ['dispatchForEvent', 500],
-            ],
-            CallbackHttpErrorEvent::class => [
-                ['dispatchForCallbackHttpErrorEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
@@ -103,11 +99,6 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
         }
 
         return null;
-    }
-
-    public function dispatchForCallbackHttpErrorEvent(CallbackHttpErrorEvent $event): Envelope
-    {
-        return $this->dispatch($event->getCallback());
     }
 
     public function dispatch(CallbackInterface $callback): Envelope
