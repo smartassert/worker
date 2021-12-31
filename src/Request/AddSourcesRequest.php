@@ -10,23 +10,27 @@ use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use webignition\EncapsulatingRequestResolverBundle\Model\EncapsulatingRequestInterface;
 
-class AddSourcesRequest extends AbstractEncapsulatingRequest
+class AddSourcesRequest implements EncapsulatingRequestInterface
 {
     public const KEY_MANIFEST = 'manifest';
 
-    private ?Manifest $manifest;
-    private UploadedSourceCollection $uploadedSources;
+    public function __construct(
+        private ?Manifest $manifest,
+        private UploadedSourceCollection $uploadedSources
+    ) {
+    }
 
-    public function processRequest(Request $request): void
+    public static function create(Request $request): AddSourcesRequest
     {
         $files = $request->files;
 
         $manifestKey = new UploadedFileKey(self::KEY_MANIFEST);
         $encodedManifestKey = $manifestKey->encode();
 
-        $manifest = $files->get($encodedManifestKey);
-        $this->manifest = $manifest instanceof UploadedFile ? new Manifest($manifest) : null;
+        $manifestFile = $files->get($encodedManifestKey);
+        $manifest = $manifestFile instanceof UploadedFile ? new Manifest($manifestFile) : null;
 
         $files->remove($encodedManifestKey);
 
@@ -40,7 +44,9 @@ class AddSourcesRequest extends AbstractEncapsulatingRequest
             }
         }
 
-        $this->uploadedSources = new UploadedSourceCollection($uploadedSources);
+        $uploadedSources = new UploadedSourceCollection($uploadedSources);
+
+        return new AddSourcesRequest($manifest, $uploadedSources);
     }
 
     public function getManifest(): ?Manifest

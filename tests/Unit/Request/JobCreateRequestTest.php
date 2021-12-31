@@ -20,7 +20,7 @@ class JobCreateRequestTest extends TestCase
             JobCreateRequest::KEY_CALLBACK_URL => $callbackUrl,
         ]);
 
-        $jobCreateRequest = new JobCreateRequest($request);
+        $jobCreateRequest = JobCreateRequest::create($request);
 
         self::assertSame($label, $jobCreateRequest->getLabel());
         self::assertSame($callbackUrl, $jobCreateRequest->getCallbackUrl());
