@@ -468,9 +468,6 @@
     "webignition/string-prefix-remover": {
         "version": "0.2"
     },
-    "webignition/symfony-messenger-message-dispatcher": {
-        "version": "0.4"
-    },
     "webignition/tcp-cli-proxy-client": {
         "version": "0.12"
     },

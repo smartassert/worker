@@ -107,25 +107,6 @@ services:
                 - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
 
-    app.message_dispatcher.backoff_strategy.exponential:
-        class: webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\ExponentialBackoffStrategy
-
-    webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware:
-        arguments:
-            $backoffStrategies:
-                App\Message\SendCallbackMessage: '@app.message_dispatcher.backoff_strategy.exponential'
-
-    webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware:
-        arguments:
-            $retryLimits:
-                App\Message\SendCallbackMessage: '%callback_retry_limit%'
-
-    webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher:
-        arguments:
-            $middleware:
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware'
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware'
-
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
 
