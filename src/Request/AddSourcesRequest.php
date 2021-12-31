@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Request;
 
-use App\Model\Manifest;
 use App\Model\UploadedFileKey;
 use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
@@ -17,7 +16,7 @@ class AddSourcesRequest implements EncapsulatingRequestInterface
     public const KEY_MANIFEST = 'manifest';
 
     public function __construct(
-        private ?Manifest $manifest,
+        private ?UploadedFile $manifest,
         private UploadedSourceCollection $uploadedSources
     ) {
     }
@@ -30,7 +29,7 @@ class AddSourcesRequest implements EncapsulatingRequestInterface
         $encodedManifestKey = $manifestKey->encode();
 
         $manifestFile = $files->get($encodedManifestKey);
-        $manifest = $manifestFile instanceof UploadedFile ? new Manifest($manifestFile) : null;
+        $manifestFile = $manifestFile instanceof UploadedFile ? $manifestFile : null;
 
         $files->remove($encodedManifestKey);
 
@@ -46,10 +45,10 @@ class AddSourcesRequest implements EncapsulatingRequestInterface
 
         $uploadedSources = new UploadedSourceCollection($uploadedSources);
 
-        return new AddSourcesRequest($manifest, $uploadedSources);
+        return new AddSourcesRequest($manifestFile, $uploadedSources);
     }
 
-    public function getManifest(): ?Manifest
+    public function getManifest(): ?UploadedFile
     {
         return $this->manifest;
     }

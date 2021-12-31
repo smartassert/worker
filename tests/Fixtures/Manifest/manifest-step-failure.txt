@@ -1,1 +1,0 @@
-Test/chrome-open-index-with-step-failure.yml

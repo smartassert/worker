@@ -9,24 +9,25 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MockUploadedFile
 {
-    /**
-     * @var MockInterface|UploadedFile
-     */
-    private UploadedFile $uploadedFile;
+    private UploadedFile $mock;
 
     public function __construct()
     {
-        $this->uploadedFile = \Mockery::mock(UploadedFile::class);
+        $this->mock = \Mockery::mock(UploadedFile::class);
     }
 
     public function getMock(): UploadedFile
     {
-        return $this->uploadedFile;
+        return $this->mock;
     }
 
     public function withGetErrorCall(int $error): self
     {
-        $this->uploadedFile
+        if (false === $this->mock instanceof MockInterface) {
+            return $this;
+        }
+
+        $this->mock
             ->shouldReceive('getError')
             ->andReturn($error)
         ;
@@ -36,9 +37,27 @@ class MockUploadedFile
 
     public function withGetPathnameCall(string $pathname): self
     {
-        $this->uploadedFile
+        if (false === $this->mock instanceof MockInterface) {
+            return $this;
+        }
+
+        $this->mock
             ->shouldReceive('getPathname')
             ->andReturn($pathname)
+        ;
+
+        return $this;
+    }
+
+    public function withGetClientMimeTypeCall(string $mimeType): self
+    {
+        if (false === $this->mock instanceof MockInterface) {
+            return $this;
+        }
+
+        $this->mock
+            ->shouldReceive('getClientMimeType')
+            ->andReturn($mimeType)
         ;
 
         return $this;

@@ -79,7 +79,7 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
         $this->jsonResponseAsserter = $jsonResponseAsserter;
 
         $this->response = $clientRequestSender->addJobSources(
-            $uploadedFileFactory->createForManifest(getcwd() . '/tests/Fixtures/Manifest/manifest.txt'),
+            $uploadedFileFactory->createForManifest(getcwd() . '/tests/Fixtures/Manifest/manifest.yml'),
             $uploadedFileCollection
         );
     }

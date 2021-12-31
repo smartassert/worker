@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\Manifest\ManifestFactoryExceptionInterface;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
-use App\Model\Manifest;
 use App\Repository\TestRepository;
 use App\Request\AddSourcesRequest;
 use App\Request\JobCreateRequest;
@@ -18,8 +18,10 @@ use App\Services\EntityFactory\JobFactory;
 use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 use App\Services\ExecutionState;
+use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,6 +67,7 @@ class JobController
 
     #[Route('/add-sources', name: 'add-sources', methods: ['POST'])]
     public function addSources(
+        ManifestFactory $manifestFactory,
         SourceStore $sourceStore,
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
@@ -78,9 +81,15 @@ class JobController
             return BadAddSourcesRequestResponse::createSourcesNotEmptyResponse();
         }
 
-        $manifest = $addSourcesRequest->getManifest();
-        if (!$manifest instanceof Manifest) {
+        $manifestUploadedFile = $addSourcesRequest->getManifest();
+        if (!$manifestUploadedFile instanceof UploadedFile) {
             return BadAddSourcesRequestResponse::createManifestMissingResponse();
+        }
+
+        try {
+            $manifest = $manifestFactory->createFromUploadedFile($manifestUploadedFile);
+        } catch (ManifestFactoryExceptionInterface $manifestFactoryException) {
+            return BadAddSourcesRequestResponse::createInvalidRequestManifest($manifestFactoryException);
         }
 
         $manifestTestPaths = $manifest->getTestPaths();

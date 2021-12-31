@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Request;
 
-use App\Model\Manifest;
 use App\Model\UploadedFileKey;
 use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
 use App\Request\AddSourcesRequest;
 use App\Tests\Mock\MockUploadedFile;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class AddSourcesRequestTest extends TestCase
@@ -20,12 +20,12 @@ class AddSourcesRequestTest extends TestCase
      */
     public function testCreate(
         Request $request,
-        ?Manifest $expectedManifest,
+        ?UploadedFile $expectedManifestUploadedFile,
         UploadedSourceCollection $expectedSources
     ): void {
         $addSourcesRequest = AddSourcesRequest::create($request);
 
-        self::assertEquals($expectedManifest, $addSourcesRequest->getManifest());
+        self::assertEquals($expectedManifestUploadedFile, $addSourcesRequest->getManifest());
         self::assertEquals($expectedSources, $addSourcesRequest->getUploadedSources());
     }
 
@@ -44,7 +44,7 @@ class AddSourcesRequestTest extends TestCase
         return [
             'empty' => [
                 'request' => new Request(),
-                'expectedManifest' => null,
+                'expectedManifestUploadedFile' => null,
                 'expectedSources' => new UploadedSourceCollection(),
             ],
             'manifest present only' => [
@@ -57,7 +57,7 @@ class AddSourcesRequestTest extends TestCase
                         $manifestKey->encode() => $manifestUploadedFile,
                     ]
                 ),
-                'expectedManifest' => new Manifest($manifestUploadedFile),
+                'expectedManifestUploadedFile' => $manifestUploadedFile,
                 'expectedSources' => new UploadedSourceCollection(),
             ],
             'sources present only' => [
@@ -72,7 +72,7 @@ class AddSourcesRequestTest extends TestCase
                         (new UploadedFileKey('test3.yml'))->encode() => $source3,
                     ]
                 ),
-                'expectedManifest' => null,
+                'expectedManifestUploadedFile' => null,
                 'expectedSources' => new UploadedSourceCollection([
                     new UploadedSource('test1.yml', $source1),
                     new UploadedSource('test2.yml', $source2),
@@ -92,7 +92,7 @@ class AddSourcesRequestTest extends TestCase
                         (new UploadedFileKey('test3.yml'))->encode() => $source3,
                     ]
                 ),
-                'expectedManifest' => new Manifest($manifestUploadedFile),
+                'expectedManifestUploadedFile' => $manifestUploadedFile,
                 'expectedSources' => new UploadedSourceCollection([
                     new UploadedSource('test1.yml', $source1),
                     new UploadedSource('test2.yml', $source2),
