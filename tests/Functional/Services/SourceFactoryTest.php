@@ -9,6 +9,7 @@ use App\Model\Manifest;
 use App\Model\UploadedFileKey;
 use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
+use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\SourceFileStore;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -24,6 +25,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     private FileStoreHandler $localSourceStoreHandler;
     private FileStoreHandler $uploadStoreHandler;
     private UploadedFileFactory $uploadedFileFactory;
+    private ManifestFactory $manifestFactory;
 
     /**
      * @var ObjectRepository<Source>
@@ -61,6 +63,10 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $sourceRepository = $entityManager->getRepository(Source::class);
         \assert($sourceRepository instanceof ObjectRepository);
         $this->sourceRepository = $sourceRepository;
+
+        $manifestFactory = self::getContainer()->get(ManifestFactory::class);
+        \assert($manifestFactory instanceof ManifestFactory);
+        $this->manifestFactory = $manifestFactory;
     }
 
     protected function tearDown(): void
@@ -101,7 +107,8 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
             $uploadedSources[] = new UploadedSource($path, $uploadedFile);
         }
 
-        $manifest = new Manifest($manifestUploadedFile);
+        $manifest = $this->manifestFactory->createFromUploadedFile($manifestUploadedFile);
+        self::assertInstanceOf(Manifest::class, $manifest);
 
         self::assertCount(0, $this->sourceRepository->findAll());
 
@@ -128,13 +135,13 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     {
         return [
             'empty manifest' => [
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/empty.txt',
+                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/empty.yml',
                 'fixturePaths' => [],
                 'expectedStoredTestPaths' => [],
                 'expectedSources' => [],
             ],
             'non-empty manifest' => [
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest.txt',
+                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest.yml',
                 'fixturePaths' => [
                     'Test/chrome-open-index.yml',
                     'Test/chrome-firefox-open-index.yml',

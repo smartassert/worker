@@ -164,7 +164,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         return [
             'default' => [
                 'jobMaximumDurationInSeconds' => 60,
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest.txt',
+                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest.yml',
                 'sourcePaths' => [
                     'Page/index.yml',
                     'Test/chrome-open-index.yml',
@@ -400,7 +400,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
             ],
             'step failed' => [
                 'jobMaximumDurationInSeconds' => 60,
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest-step-failure.txt',
+                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest-step-failure.yml',
                 'sourcePaths' => [
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],

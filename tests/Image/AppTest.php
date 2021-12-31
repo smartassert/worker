@@ -84,9 +84,9 @@ class AppTest extends TestCase
                 [
                     'name' => $manifestKey->encode(),
                     'contents' => file_get_contents(
-                        getcwd() . '/tests/Fixtures/Manifest/manifest.txt'
+                        getcwd() . '/tests/Fixtures/Manifest/manifest.yml'
                     ),
-                    'filename' => 'manifest.txt'
+                    'filename' => 'manifest.yml'
                 ],
                 $this->createFileUploadData('Test/chrome-open-index.yml'),
                 $this->createFileUploadData('Test/chrome-firefox-open-index.yml'),

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Request;
 
-use App\Model\Manifest;
 use App\Model\UploadedSourceCollection;
 use App\Request\AddSourcesRequest;
 use Mockery\MockInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MockAddSourcesRequest
 {
@@ -26,11 +26,11 @@ class MockAddSourcesRequest
         return $this->addSourcesRequest;
     }
 
-    public function withGetManifestCall(?Manifest $manifest): self
+    public function withGetManifestCall(?UploadedFile $uploadedFile): self
     {
         $this->addSourcesRequest
             ->shouldReceive('getManifest')
-            ->andReturn($manifest)
+            ->andReturn($uploadedFile)
         ;
 
         return $this;
