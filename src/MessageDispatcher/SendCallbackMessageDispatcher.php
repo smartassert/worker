@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Event\CallbackHttpErrorEvent;
 use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -26,17 +25,16 @@ use App\Services\CallbackFactory;
 use App\Services\CallbackStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\Event;
-use webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher;
 
-class SendCallbackMessageDispatcher extends AbstractMessageDispatcher implements EventSubscriberInterface
+class SendCallbackMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
-        MessageDispatcher $messageDispatcher,
+        private MessageBusInterface $messageBus,
         private CallbackStateMutator $callbackStateMutator,
         private CallbackFactory $callbackFactory
     ) {
-        parent::__construct($messageDispatcher);
     }
 
     /**
@@ -47,9 +45,6 @@ class SendCallbackMessageDispatcher extends AbstractMessageDispatcher implements
         return [
             JobReadyEvent::class => [
                 ['dispatchForEvent', 500],
-            ],
-            CallbackHttpErrorEvent::class => [
-                ['dispatchForCallbackHttpErrorEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
@@ -106,20 +101,10 @@ class SendCallbackMessageDispatcher extends AbstractMessageDispatcher implements
         return null;
     }
 
-    public function dispatchForCallbackHttpErrorEvent(CallbackHttpErrorEvent $event): Envelope
-    {
-        return $this->dispatch($event->getCallback());
-    }
-
-    private function dispatch(CallbackInterface $callback): Envelope
+    public function dispatch(CallbackInterface $callback): Envelope
     {
         $this->callbackStateMutator->setQueued($callback);
-        $envelope = $this->doDispatch(new SendCallbackMessage((int) $callback->getId(), $callback->getRetryCount()));
 
-        if (false === MessageDispatcher::isDispatchable($envelope)) {
-            $this->callbackStateMutator->setFailed($callback);
-        }
-
-        return $envelope;
+        return $this->messageBus->dispatch(new SendCallbackMessage((int) $callback->getId()));
     }
 }

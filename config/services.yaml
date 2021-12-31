@@ -6,7 +6,7 @@
 parameters:
     compiler_source_directory: '%env(COMPILER_SOURCE_DIRECTORY)%'
     compiler_target_directory: '%env(COMPILER_TARGET_DIRECTORY)%'
-    callback_retry_limit: '%env(CALLBACK_RETRY_LIMIT)%'
+    callback_retry_limit: '%env(int:CALLBACK_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(JOB_TIMEOUT_CHECK_PERIOD_MS)%'
 
 services:
@@ -107,32 +107,26 @@ services:
                 - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
 
-    app.message_dispatcher.backoff_strategy.fixed:
-        class: webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\FixedBackoffStrategy
-        arguments:
-            $delayInMilliseconds: '%job_timeout_check_period_ms%'
-
-    app.message_dispatcher.backoff_strategy.exponential:
-        class: webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\ExponentialBackoffStrategy
-
-    webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware:
-        arguments:
-            $backoffStrategies:
-                App\Message\TimeoutCheckMessage: '@app.message_dispatcher.backoff_strategy.fixed'
-                App\Message\SendCallbackMessage: '@app.message_dispatcher.backoff_strategy.exponential'
-
-    webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware:
-        arguments:
-            $retryLimits:
-                App\Message\SendCallbackMessage: '%callback_retry_limit%'
-
-    webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher:
-        arguments:
-            $middleware:
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware'
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware'
-
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
 
     Symfony\Component\Yaml\Dumper: ~
+
+    App\MessageHandler\TimeoutCheckHandler:
+        tags: [messenger.message_handler]
+
+    App\MessageDispatcher\TimeoutCheckMessageDispatcher:
+        arguments:
+            $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
+
+    app.messenger.retry_strategy.callback.multiplier:
+        class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
+        arguments:
+            $maxRetries: '%callback_retry_limit%'
+            $delayMilliseconds: 1000
+            $multiplier: 2
+            $maxDelayMilliseconds: 0
+
+    App\Messenger\CallbackMessageRetryStrategy:
+        arguments:
+            $multiplierRetryStrategy: '@app.messenger.retry_strategy.callback.multiplier'

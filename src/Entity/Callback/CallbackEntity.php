@@ -26,11 +26,6 @@ class CallbackEntity implements CallbackInterface
     private string $state;
 
     /**
-     * @ORM\Column(type="smallint")
-     */
-    private int $retryCount;
-
-    /**
      * @ORM\Column(type="string", length=255)
      *
      * @var self::TYPE_*
@@ -52,7 +47,6 @@ class CallbackEntity implements CallbackInterface
     {
         $callback = new CallbackEntity();
         $callback->state = self::STATE_AWAITING;
-        $callback->retryCount = 0;
         $callback->type = $type;
         $callback->payload = $payload;
 
@@ -93,11 +87,6 @@ class CallbackEntity implements CallbackInterface
         $this->state = $state;
     }
 
-    public function getRetryCount(): int
-    {
-        return $this->retryCount;
-    }
-
     public function getType(): string
     {
         return $this->type;
@@ -109,10 +98,5 @@ class CallbackEntity implements CallbackInterface
     public function getPayload(): array
     {
         return $this->payload;
-    }
-
-    public function incrementRetryCount(): void
-    {
-        $this->retryCount = $this->retryCount + 1;
     }
 }

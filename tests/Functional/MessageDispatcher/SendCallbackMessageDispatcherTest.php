@@ -7,7 +7,6 @@ namespace App\Tests\Functional\MessageDispatcher;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
-use App\Event\CallbackHttpErrorEvent;
 use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompletedEvent;
@@ -22,7 +21,6 @@ use App\Event\TestStartedEvent;
 use App\Event\TestStepFailedEvent;
 use App\Event\TestStepPassedEvent;
 use App\Message\SendCallbackMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\CallbackRepository;
 use App\Services\ApplicationWorkflowHandler;
@@ -34,12 +32,10 @@ use App\Tests\Mock\Entity\MockTest;
 use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EventListenerRemover;
-use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher;
 use webignition\YamlDocument\Document;
 
 class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
@@ -140,13 +136,6 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         ;
 
         return [
-            CallbackHttpErrorEvent::class => [
-                'event' => new CallbackHttpErrorEvent($httpExceptionEventCallback, new Response(503)),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_FAILED,
-                'expectedCallbackPayload' => [
-                    'http-exception-event-key' => 'value',
-                ],
-            ],
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
                 'expectedCallbackType' => CallbackInterface::TYPE_JOB_STARTED,
@@ -261,28 +250,5 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedCallbackPayload' => [],
             ],
         ];
-    }
-
-    public function testCallbackSetToFailedWhenRetryLimitReached(): void
-    {
-        $callbackEntity = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-        $callbackEntity->incrementRetryCount();
-
-        $event = new CallbackHttpErrorEvent($callbackEntity, new Response(503));
-
-        $dispatcher = self::getContainer()->get(SendCallbackMessageDispatcher::class);
-        \assert($dispatcher instanceof SendCallbackMessageDispatcher);
-
-        $this->messengerAsserter->assertQueueIsEmpty();
-
-        $envelope = $dispatcher->dispatchForCallbackHttpErrorEvent($event);
-
-        self::assertFalse(MessageDispatcher::isDispatchable($envelope));
-        $this->messengerAsserter->assertQueueIsEmpty();
-
-        self::assertSame(CallbackInterface::STATE_FAILED, $callbackEntity->getState());
     }
 }

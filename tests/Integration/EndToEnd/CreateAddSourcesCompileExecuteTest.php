@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Integration\EndToEnd;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Message\JobReadyMessage;
 use App\Services\ApplicationState;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
@@ -22,7 +21,6 @@ use App\Tests\Services\IntegrationJobProperties;
 use App\Tests\Services\UploadedFileFactory;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
-use Symfony\Component\Messenger\MessageBusInterface;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
 use webignition\HttpHistoryContainer\Collection\RequestCollectionInterface;
 
@@ -78,7 +76,6 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         int $jobMaximumDurationInSeconds,
         string $manifestPath,
         array $sourcePaths,
-        ?callable $postAddSources,
         string $expectedCompilationEndState,
         string $expectedExecutionEndState,
         string $expectedApplicationEndState,
@@ -139,10 +136,6 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         $timer = new Timer();
         $timer->start();
 
-        if (is_callable($postAddSources)) {
-            $this->callableInvoker->invoke($postAddSources);
-        }
-
         $this->applicationStateHandler->waitUntilStateIs([
             ApplicationState::STATE_COMPLETE,
             ApplicationState::STATE_TIMED_OUT,
@@ -178,9 +171,6 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
-                'postAddSources' => function (MessageBusInterface $messageBus) {
-                    $messageBus->dispatch(new JobReadyMessage());
-                },
                 'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_COMPLETE,
                 'expectedApplicationEndState' => ApplicationState::STATE_COMPLETE,
@@ -414,9 +404,6 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                 'sourcePaths' => [
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
-                'postAddSources' => function (MessageBusInterface $messageBus) {
-                    $messageBus->dispatch(new JobReadyMessage());
-                },
                 'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_CANCELLED,
                 'expectedApplicationEndState' => ApplicationState::STATE_COMPLETE,
@@ -479,7 +466,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                     ]);
 
                     $transactions = $transactions->slice(
-                        -1 * $expectedHttpRequests->count(),
+                        (-1 * $expectedHttpRequests->count()),
                         null
                     );
 

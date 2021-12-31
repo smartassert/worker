@@ -81,18 +81,15 @@ services:
         arguments:
             $baseUrl: '%env(CALLBACK_BASE_URL)%'
 
-    webignition\SymfonyMessengerMessageDispatcher\Middleware\IgnoredMessageMiddleware:
-        arguments:
-            $messageClassNames:
-                - App\Message\TimeoutCheckMessage
-                - App\Message\JobReadyMessage
-
-    webignition\SymfonyMessengerMessageDispatcher\MessageDispatcher:
-        arguments:
-            $middleware:
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\IgnoredMessageMiddleware'
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\DelayedMessage\DelayedMessageMiddleware'
-                - '@webignition\SymfonyMessengerMessageDispatcher\Middleware\RetryByLimitMiddleware'
-
     App\Tests\Services\IntegrationCallbackRequestFactory:
         public: true
+
+    App\MessageHandler\TimeoutCheckHandler:
+        tags: ~
+
+    app.tests.services.integration.null_message_handler.timeout_check:
+        class: App\Tests\Services\Messenger\NullMessageHandler
+        tags:
+            -
+                name: messenger.message_handler
+                handles: App\Message\TimeoutCheckMessage

@@ -49,14 +49,10 @@ interface CallbackInterface extends EntityInterface
      */
     public function setState(string $state): void;
 
-    public function getRetryCount(): int;
-
     public function getType(): string;
 
     /**
      * @return array<mixed>
      */
     public function getPayload(): array;
-
-    public function incrementRetryCount(): void;
 }

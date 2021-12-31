@@ -53,7 +53,7 @@ class AppTest extends TestCase
         $response = $this->httpClient->post('https://localhost/job', [
             'form_params' => [
                 'label' => md5('label content'),
-                'callback-url' => 'http://example.com/callback',
+                'callback-url' => 'http://callback-receiver/callback',
                 'maximum-duration-in-seconds' => 600,
             ],
         ]);
@@ -62,7 +62,7 @@ class AppTest extends TestCase
 
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
-            'callback_url' => 'http://example.com/callback',
+            'callback_url' => 'http://callback-receiver/callback',
             'maximum_duration_in_seconds' => 600,
             'sources' => [],
             'compilation_state' => 'awaiting',
@@ -97,7 +97,7 @@ class AppTest extends TestCase
 
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
-            'callback_url' => 'http://example.com/callback',
+            'callback_url' => 'http://callback-receiver/callback',
             'maximum_duration_in_seconds' => 600,
             'sources' => [
                 'Test/chrome-open-index.yml',
@@ -137,7 +137,7 @@ class AppTest extends TestCase
 
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
-            'callback_url' => 'http://example.com/callback',
+            'callback_url' => 'http://callback-receiver/callback',
             'maximum_duration_in_seconds' => 600,
             'sources' => [
                 'Test/chrome-open-index.yml',

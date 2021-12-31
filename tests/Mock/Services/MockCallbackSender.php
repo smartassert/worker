@@ -22,16 +22,28 @@ class MockCallbackSender
         return $this->mock;
     }
 
-    public function withSendCall(CallbackInterface $callback): self
+    public function withSendCall(CallbackInterface $callback, ?\Exception $exception = null): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
         }
 
-        $this->mock
-            ->shouldReceive('send')
-            ->with($callback)
-        ;
+        if ($exception instanceof \Throwable) {
+            $this->mock
+                ->shouldReceive('send')
+                ->withArgs(function (CallbackInterface $callbackArg) use ($callback) {
+                    return $callbackArg->getId() === $callback->getId();
+                })
+                ->andThrow($exception)
+            ;
+        } else {
+            $this->mock
+                ->shouldReceive('send')
+                ->withArgs(function (CallbackInterface $callbackArg) use ($callback) {
+                    return $callbackArg->getId() === $callback->getId();
+                })
+            ;
+        }
 
         return $this;
     }
