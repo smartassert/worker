@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Services;
 use App\Services\TestDocumentMutator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Dumper;
-use webignition\StringPrefixRemover\DefinedStringPrefixRemover;
 use webignition\YamlDocument\Document;
 
 class TestDocumentMutatorTest extends TestCase
@@ -20,10 +19,7 @@ class TestDocumentMutatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->mutator = new TestDocumentMutator(
-            new Dumper(),
-            new DefinedStringPrefixRemover(self::COMPILER_SOURCE_DIRECTORY)
-        );
+        $this->mutator = new TestDocumentMutator(new Dumper(), self::COMPILER_SOURCE_DIRECTORY);
     }
 
     /**
@@ -37,7 +33,7 @@ class TestDocumentMutatorTest extends TestCase
     }
 
     /**
-     * @return \webignition\YamlDocument\Document[][]
+     * @return Document[][]
      */
     public function removeCompilerSourceDirectoryFromSourceDataProvider(): array
     {

@@ -7,22 +7,15 @@ namespace App\Services;
 use App\Entity\Source;
 use App\Repository\TestRepository;
 use App\Services\EntityStore\SourceStore;
-use webignition\StringPrefixRemover\DefinedStringPrefixRemover;
+use Symfony\Component\String\UnicodeString;
 
 class SourcePathFinder
 {
-    private DefinedStringPrefixRemover $compilerSourcePathPrefixRemover;
-
     public function __construct(
         private TestRepository $testRepository,
-        private SourceStore $sourceStore
+        private SourceStore $sourceStore,
+        private string $compilerSourceDirectory,
     ) {
-    }
-
-    public function setCompilerSourcePathPrefixRemover(
-        DefinedStringPrefixRemover $compilerSourcePathPrefixRemover
-    ): void {
-        $this->compilerSourcePathPrefixRemover = $compilerSourcePathPrefixRemover;
     }
 
     /**
@@ -61,7 +54,9 @@ class SourcePathFinder
 
         foreach ($paths as $path) {
             if (is_string($path)) {
-                $strippedPaths[] = $this->compilerSourcePathPrefixRemover->remove($path);
+                $strippedPaths[] = (string) (new UnicodeString($path))->trimPrefix(
+                    $this->compilerSourceDirectory . '/'
+                );
             }
         }
 

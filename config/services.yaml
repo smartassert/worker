@@ -38,28 +38,18 @@ services:
         arguments:
             $path: '%compiler_source_directory%'
 
-    app.services.path-prefix-remover.compiler-source:
-        class: webignition\StringPrefixRemover\DefinedStringPrefixRemover
-        arguments:
-            $prefix: '%compiler_source_directory%/'
-
-    app.services.path-prefix-remover.compiler-target:
-        class: webignition\StringPrefixRemover\DefinedStringPrefixRemover
-        arguments:
-            $prefix: '%compiler_target_directory%/'
-
     App\Services\TestSerializer:
         arguments:
-            $compilerSourcePathPrefixRemover: '@app.services.path-prefix-remover.compiler-source'
-            $compilerTargetPathPrefixRemover: '@app.services.path-prefix-remover.compiler-target'
+            $compilerSourceDirectory: '%compiler_source_directory%'
+            $compilerTargetDirectory: '%compiler_target_directory%'
 
     App\Services\SourcePathFinder:
-        calls:
-            - setCompilerSourcePathPrefixRemover: ['@app.services.path-prefix-remover.compiler-source']
+        arguments:
+            $compilerSourceDirectory: '%compiler_source_directory%'
 
     App\Services\TestDocumentMutator:
         arguments:
-            $compilerSourcePathPrefixRemover: '@app.services.path-prefix-remover.compiler-source'
+            $compilerSourceDirectory: '%compiler_source_directory%'
 
     webignition\TcpCliProxyClient\HandlerFactory:
         class: webignition\TcpCliProxyClient\HandlerFactory

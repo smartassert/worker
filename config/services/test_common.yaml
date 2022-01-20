@@ -12,6 +12,7 @@ services:
         public: true
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
+            $compilerTargetDirectory: '%compiler_target_directory%'
 
     App\Tests\Services\TestCallbackFactory:
         public: true

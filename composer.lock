@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4baf439200890a64f193912600569b65",
+    "content-hash": "bbbdb9fca44f7ca8051cc1d124e3aef7",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -4719,54 +4719,6 @@
                 "source": "https://github.com/webignition/error-handler/tree/0.2"
             },
             "time": "2021-02-22T10:10:26+00:00"
-        },
-        {
-            "name": "webignition/string-prefix-remover",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/string-prefix-remover.git",
-                "reference": "35c9f122ea869878fb86a18bcb7b7b5d5ead874e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/string-prefix-remover/zipball/35c9f122ea869878fb86a18bcb7b7b5d5ead874e",
-                "reference": "35c9f122ea869878fb86a18bcb7b7b5d5ead874e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4|^8"
-            },
-            "require-dev": {
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.78",
-                "phpstan/phpstan-phpunit": "^0.12.17",
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^9.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\StringPrefixRemover\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/string-prefix-remover",
-            "support": {
-                "issues": "https://github.com/webignition/string-prefix-remover/issues",
-                "source": "https://github.com/webignition/string-prefix-remover/tree/0.2"
-            },
-            "time": "2021-02-23T15:27:56+00:00"
         },
         {
             "name": "webignition/tcp-cli-proxy-client",

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Model\Document\Test;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Dumper;
-use webignition\StringPrefixRemover\DefinedStringPrefixRemover;
 use webignition\YamlDocument\Document;
 
 class TestDocumentMutator
 {
     public function __construct(
         private Dumper $yamlDumper,
-        private DefinedStringPrefixRemover $compilerSourcePathPrefixRemover
+        private string $compilerSourceDirectory,
     ) {
     }
 
@@ -23,7 +23,7 @@ class TestDocumentMutator
         if ($test->isTest()) {
             $path = $test->getPath();
 
-            $mutatedPath = $this->compilerSourcePathPrefixRemover->remove($path);
+            $mutatedPath = (string) (new UnicodeString($path))->trimPrefix($this->compilerSourceDirectory . '/');
             if ($mutatedPath !== $path) {
                 $mutatedPath = ltrim($mutatedPath, '/');
             }
