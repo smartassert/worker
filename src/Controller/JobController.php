@@ -62,7 +62,7 @@ class JobController
             $request->getMaximumDurationInSeconds()
         );
 
-        return new JsonResponse();
+        return new JsonResponse([]);
     }
 
     #[Route('/add-sources', name: 'add-sources', methods: ['POST'])]
@@ -107,7 +107,7 @@ class JobController
 
         $messageBus->dispatch(new JobReadyMessage());
 
-        return new JsonResponse();
+        return new JsonResponse([]);
     }
 
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]

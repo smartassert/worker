@@ -88,7 +88,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         $callbackUrl = $this->jobProperties->getCallbackUrl();
 
         $createResponse = $this->clientRequestSender->createJob($label, $callbackUrl, $jobMaximumDurationInSeconds);
-        $this->jsonResponseAsserter->assertJsonResponse(200, (object) [], $createResponse);
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $createResponse);
 
         $expectedJobProperties = [
             'label' => $label,
@@ -131,7 +131,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
             $uploadedFileCollection
         );
 
-        $this->jsonResponseAsserter->assertJsonResponse(200, (object) [], $addSourcesResponse);
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $addSourcesResponse);
 
         $timer = new Timer();
         $timer->start();
