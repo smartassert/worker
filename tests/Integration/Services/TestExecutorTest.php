@@ -78,7 +78,7 @@ class TestExecutorTest extends AbstractTestCreationTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function executeSuccessDataProvider(): array
     {

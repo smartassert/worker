@@ -13,7 +13,6 @@ use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockApplicationState;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
@@ -23,7 +22,6 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private JobCompletedCheckHandler $handler;
-    private MessengerAsserter $messengerAsserter;
 
     protected function setUp(): void
     {
@@ -32,10 +30,6 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
         $jobCompletedCheckHandler = self::getContainer()->get(JobCompletedCheckHandler::class);
         \assert($jobCompletedCheckHandler instanceof JobCompletedCheckHandler);
         $this->handler = $jobCompletedCheckHandler;
-
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
     }
 
     public function testInvokeApplicationStateNotComplete(): void

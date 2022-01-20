@@ -45,7 +45,7 @@ class YamlDocumentFactoryTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function processDataProvider(): array
     {

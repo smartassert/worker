@@ -33,12 +33,12 @@ class SerializedJobAsserter
         TestCase::assertSame($expectedJob['execution_state'], $job['execution_state']);
         TestCase::assertSame($expectedJob['callback_state'], $job['callback_state']);
 
-        $tests = $job['tests'];
-        TestCase::assertIsArray($tests);
+        TestCase::assertIsArray($job['tests']);
+        TestCase::assertIsArray($expectedJob['tests']);
 
         foreach ($expectedJob['tests'] as $index => $expectedTest) {
-            TestCase::assertArrayHasKey($index, $tests);
-            $actualTest = $tests[$index];
+            TestCase::assertArrayHasKey($index, $job['tests']);
+            $actualTest = $job['tests'][$index];
             TestCase::assertIsArray($actualTest);
 
             $this->assertTest(
@@ -64,6 +64,10 @@ class SerializedJobAsserter
         int $expectedPosition,
         array $actual
     ): void {
+        TestCase::assertIsString($expectedConfiguration['browser']);
+        TestCase::assertIsString($expectedConfiguration['url']);
+        TestCase::assertIsArray($actual['configuration']);
+
         $this->assertTestConfiguration(
             $expectedConfiguration['browser'],
             $expectedConfiguration['url'],
@@ -98,7 +102,9 @@ class SerializedJobAsserter
         TestCase::assertSame('application/json', $response->getHeaderLine('content-type'));
 
         $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        TestCase::assertIsArray($data);
 
-        return json_decode($body, true);
+        return $data;
     }
 }

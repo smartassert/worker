@@ -49,7 +49,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function setQueuedDataProvider(): array
     {
@@ -98,7 +98,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function setSendingDataProvider(): array
     {
@@ -147,7 +147,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function setFailedDataProvider(): array
     {
@@ -196,7 +196,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function setCompleteDataProvider(): array
     {

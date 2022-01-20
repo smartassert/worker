@@ -76,7 +76,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider(): array
     {
@@ -111,7 +111,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function dispatchNextCompileSourceMessageMessageDispatchedDataProvider(): array
     {
@@ -168,7 +168,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function subscribesToEventsDataProvider(): array
     {

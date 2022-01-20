@@ -16,6 +16,8 @@ class Test extends AbstractDocument
 
     public function getPath(): string
     {
-        return $this->getData()[self::KEY_PATH] ?? '';
+        $path = $this->getData()[self::KEY_PATH] ?? '';
+
+        return is_string($path) ? $path : '';
     }
 }

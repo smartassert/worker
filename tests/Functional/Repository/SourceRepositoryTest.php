@@ -8,9 +8,6 @@ use App\Entity\EntityInterface;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
 
-/**
- * @extends AbstractEntityRepositoryTest<Source>
- */
 class SourceRepositoryTest extends AbstractEntityRepositoryTest
 {
     public function findOneByDataProvider(): array

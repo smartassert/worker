@@ -60,7 +60,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function cancelAwaitingDataProvider(): array
     {
@@ -131,7 +131,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function cancelUnfinishedDataProvider(): array
     {
@@ -220,7 +220,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function cancelAwaitingFromTestStepFailedEventDataProvider(): array
     {
@@ -271,7 +271,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function subscribesToJobTimeoutEventDataProvider(): array
     {

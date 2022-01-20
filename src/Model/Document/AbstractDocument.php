@@ -23,7 +23,9 @@ abstract class AbstractDocument
 
     public function getType(): ?string
     {
-        return $this->data[self::KEY_TYPE] ?? null;
+        $type = $this->data[self::KEY_TYPE] ?? null;
+
+        return is_string($type) ? $type : null;
     }
 
     /**

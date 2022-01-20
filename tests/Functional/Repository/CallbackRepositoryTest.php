@@ -9,9 +9,6 @@ use App\Entity\Callback\CallbackInterface;
 use App\Entity\EntityInterface;
 use App\Repository\CallbackRepository;
 
-/**
- * @extends AbstractEntityRepositoryTest<CallbackEntity>
- */
 class CallbackRepositoryTest extends AbstractEntityRepositoryTest
 {
     public function findOneByDataProvider(): array

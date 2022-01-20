@@ -44,7 +44,7 @@ class StringPrefixRemoverTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function compilerSourceRemoverDataProvider(): array
     {
@@ -75,7 +75,7 @@ class StringPrefixRemoverTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function compilerTargetRemoverDataProvider(): array
     {

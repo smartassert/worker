@@ -70,7 +70,7 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function storeDataProvider(): array
     {

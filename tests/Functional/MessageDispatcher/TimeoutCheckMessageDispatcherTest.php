@@ -93,7 +93,7 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function subscribesToEventDataProvider(): array
     {

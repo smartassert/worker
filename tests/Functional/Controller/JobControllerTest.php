@@ -84,7 +84,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function statusDataProvider(): array
     {

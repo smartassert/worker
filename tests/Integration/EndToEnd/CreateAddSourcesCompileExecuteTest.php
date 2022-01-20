@@ -98,20 +98,19 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
 
         $statusResponse = $this->clientRequestSender->getStatus();
 
-        $this->jsonResponseAsserter->assertJsonResponse(
-            200,
-            array_merge(
-                $expectedJobProperties,
-                [
-                    'compilation_state' => CompilationState::STATE_AWAITING,
-                    'execution_state' => ExecutionState::STATE_AWAITING,
-                    'callback_state' => CallbackState::STATE_AWAITING,
-                    'sources' => [],
-                    'tests' => [],
-                ]
-            ),
-            $statusResponse
+        $expectedResponseData = array_merge(
+            $expectedJobProperties,
+            [
+                'compilation_state' => CompilationState::STATE_AWAITING,
+                'execution_state' => ExecutionState::STATE_AWAITING,
+                'callback_state' => CallbackState::STATE_AWAITING,
+                'sources' => [],
+                'tests' => [],
+            ]
         );
+        self::assertIsArray($expectedResponseData);
+
+        $this->jsonResponseAsserter->assertJsonResponse(200, $expectedResponseData, $statusResponse);
 
         $this->systemStateAsserter->assertSystemState(
             CompilationState::STATE_AWAITING,
@@ -157,7 +156,7 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createAddSourcesCompileExecuteDataProvider(): array
     {

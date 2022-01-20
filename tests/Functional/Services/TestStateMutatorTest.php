@@ -59,7 +59,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function setCompleteIfRunningDataProvider(): array
     {
@@ -116,7 +116,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function handleTestStepFailedEventDataProvider(): array
     {

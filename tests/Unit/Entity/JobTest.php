@@ -36,7 +36,7 @@ class JobTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function jsonSerializeDataProvider(): array
     {
@@ -61,7 +61,7 @@ class JobTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function hasReachedMaximumDurationDataProvider(): array
     {
