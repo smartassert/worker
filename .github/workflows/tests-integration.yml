@@ -8,11 +8,11 @@ on:
 
 jobs:
   integration-sync:
-    name: Sync integration tests - PHP ${{ matrix.php }} ${{ matrix.operating-system }}
+    name: Sync integration tests - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.0']
+        php: ['8.0', '8.1']
     runs-on: ${{ matrix.operating-system }}
 
     steps:
@@ -29,7 +29,6 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php }}
-          args: --ignore-platform-reqs --quiet
 
       - name: Setup integration test environment
         run: composer integration-setup
@@ -38,11 +37,11 @@ jobs:
         run: composer test-integration
 
   integration-app:
-    name: Image integration tests - PHP ${{ matrix.php }} ${{ matrix.operating-system }}
+    name: Image integration tests - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.0']
+        php: ['8.0', '8.1']
     runs-on: ${{ matrix.operating-system }}
 
     steps:
@@ -59,7 +58,6 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php }}
-          args: --ignore-platform-reqs --quiet
 
       - name: Setup image test environment
         run: |

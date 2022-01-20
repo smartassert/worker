@@ -21,11 +21,11 @@ jobs:
         run: composer cs-fixer-dry-run
 
   phpcs:
-    name: PHPCS - PHP ${{ matrix.php }} ${{ matrix.operating-system }}
+    name: PHPCS - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.0']
+        php: ['8.0', '8.1']
     runs-on: ${{ matrix.operating-system }}
 
     steps:
@@ -41,7 +41,6 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: ${{ matrix.php }}
-          args: --ignore-platform-reqs --quiet
 
       - name: Run
         run: composer cs-phpcs
