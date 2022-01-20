@@ -204,8 +204,10 @@ class AppTest extends TestCase
         self::assertSame('application/json', $response->getHeaderLine('content-type'));
 
         $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        self::assertIsArray($data);
 
-        return json_decode($body, true);
+        return $data;
     }
 
     /**

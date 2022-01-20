@@ -92,7 +92,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function dispatchNextExecuteTestMessageMessageDispatchedDataProvider(): array
     {
@@ -189,7 +189,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function dispatchNextExecuteTestMessageFromTestPassedEventDataProvider(): array
     {

@@ -11,7 +11,7 @@ use App\Tests\Mock\Entity\MockCallback;
 trait CreateFromJobFailedEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromJobFailedEventDataProvider(): array
     {

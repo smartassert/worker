@@ -51,7 +51,7 @@ class CompilerTest extends AbstractTestCreationTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function compileSuccessDataProvider(): array
     {
@@ -141,7 +141,7 @@ class CompilerTest extends AbstractTestCreationTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function compileFailureDataProvider(): array
     {
@@ -195,6 +195,9 @@ class CompilerTest extends AbstractTestCreationTest
             $encodedData
         );
 
-        return json_decode($encodedData, true);
+        $data = json_decode($encodedData, true);
+        self::assertIsArray($data);
+
+        return $data;
     }
 }

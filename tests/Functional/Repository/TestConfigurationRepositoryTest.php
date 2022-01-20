@@ -8,9 +8,6 @@ use App\Entity\EntityInterface;
 use App\Entity\TestConfiguration;
 use App\Repository\TestConfigurationRepository;
 
-/**
- * @extends AbstractEntityRepositoryTest<TestConfiguration>
- */
 class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
 {
     public function findOneByDataProvider(): array

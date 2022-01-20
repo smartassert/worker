@@ -30,7 +30,7 @@ class AddSourcesRequestTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createDataProvider(): array
     {

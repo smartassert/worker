@@ -116,7 +116,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function subscribesToEventDataProvider(): array
     {

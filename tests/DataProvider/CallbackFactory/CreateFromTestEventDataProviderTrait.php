@@ -17,7 +17,7 @@ use webignition\YamlDocument\Document;
 trait CreateFromTestEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromTestEventEventDataProvider(): array
     {

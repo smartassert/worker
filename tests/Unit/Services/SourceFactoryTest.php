@@ -41,7 +41,7 @@ class SourceFactoryTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createCollectionFromManifestThrowsExceptionDataProvider(): array
     {

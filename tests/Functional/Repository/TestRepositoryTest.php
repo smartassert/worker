@@ -11,9 +11,6 @@ use App\Repository\TestRepository;
 use App\Services\EntityStore\TestConfigurationStore;
 use webignition\ObjectReflector\ObjectReflector;
 
-/**
- * @extends AbstractEntityRepositoryTest<Test>
- */
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
     private TestConfigurationStore $testConfigurationStore;
@@ -96,7 +93,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findMaxPositionDataProvider(): array
     {
@@ -168,7 +165,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findNextAwaitingIdIsNullDataProvider(): array
     {
@@ -209,7 +206,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findNextAwaitingIdNotNullDataProvider(): array
     {
@@ -279,7 +276,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findAllAwaitingDataProvider(): array
     {
@@ -347,7 +344,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findUnfinishedCountDataProvider(): array
     {
@@ -527,6 +524,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
         $query = $queryBuilder->getQuery();
         $results = $query->getResult();
+        self::assertIsArray($results);
 
         return array_filter($results, function ($item) {
             return $item instanceof Test;

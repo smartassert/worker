@@ -61,7 +61,7 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function findAllPathsDataProvider(): array
     {

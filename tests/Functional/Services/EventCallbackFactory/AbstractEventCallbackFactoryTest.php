@@ -24,7 +24,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     abstract public function createDataProvider(): array;
 

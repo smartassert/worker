@@ -130,7 +130,7 @@ class TestRepository extends ServiceEntityRepository
     {
         try {
             $value = $query->getSingleResult($query::HYDRATE_SINGLE_SCALAR);
-            if (ctype_digit($value)) {
+            if (is_scalar($value)) {
                 $value = (int) $value;
             }
 

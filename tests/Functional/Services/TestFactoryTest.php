@@ -96,7 +96,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromTestManifestCollectionDataProvider(): array
     {

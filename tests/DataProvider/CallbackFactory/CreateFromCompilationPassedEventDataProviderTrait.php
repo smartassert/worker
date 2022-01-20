@@ -13,7 +13,7 @@ use App\Tests\Mock\MockSuiteManifest;
 trait CreateFromCompilationPassedEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromCompilationPassedEventDataProvider(): array
     {

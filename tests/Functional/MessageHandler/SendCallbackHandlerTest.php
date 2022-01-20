@@ -10,7 +10,6 @@ use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\CallbackRepository;
 use App\Services\CallbackSender;
-use App\Services\CallbackStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\Entity\MockCallback;
 use App\Tests\Mock\Services\MockCallbackSender;
@@ -29,7 +28,6 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
     private SendCallbackHandler $handler;
     private CallbackRepository $callbackRepository;
-    private CallbackStateMutator $stateMutator;
     private CallbackInterface $callback;
 
     protected function setUp(): void
@@ -43,10 +41,6 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         $callbackRepository = self::getContainer()->get(CallbackRepository::class);
         \assert($callbackRepository instanceof CallbackRepository);
         $this->callbackRepository = $callbackRepository;
-
-        $stateMutator = self::getContainer()->get(CallbackStateMutator::class);
-        \assert($stateMutator instanceof CallbackStateMutator);
-        $this->stateMutator = $stateMutator;
 
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())

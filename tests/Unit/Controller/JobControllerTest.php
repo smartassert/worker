@@ -56,7 +56,7 @@ class JobControllerTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createDataProvider(): array
     {
@@ -150,7 +150,7 @@ class JobControllerTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function addSourcesDataProvider(): array
     {

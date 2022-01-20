@@ -6,19 +6,17 @@ namespace App\Tests\Functional\Repository;
 
 use App\Entity\EntityInterface;
 use App\Tests\AbstractBaseFunctionalTest;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * @template T
- */
 abstract class AbstractEntityRepositoryTest extends AbstractBaseFunctionalTest
 {
     /**
-     * @var EntityRepository<T>
+     * @var ServiceEntityRepository<EntityInterface>
      */
-    protected EntityRepository $repository;
+    protected ServiceEntityRepository $repository;
     protected EntityManagerInterface $entityManager;
 
     protected function setUp(): void
@@ -63,8 +61,8 @@ abstract class AbstractEntityRepositoryTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider findOneByDataProvider
      *
-     * @param mixed[] $criteria
-     * @param mixed[] $orderBy
+     * @param mixed[]                    $criteria
+     * @param null|array<string, string> $orderBy
      */
     public function testFindOneBy(array $criteria, ?array $orderBy, ?int $expectedEntityIndex): void
     {
@@ -106,19 +104,19 @@ abstract class AbstractEntityRepositoryTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return EntityRepository<T>
+     * @return null|ServiceEntityRepository<EntityInterface>
      */
-    abstract protected function getRepository(): ?EntityRepository;
+    abstract protected function getRepository(): ?ServiceEntityRepository;
 
     abstract protected function createSingleEntity(): EntityInterface;
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     abstract protected function findOneByDataProvider(): array;
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     abstract protected function countDataProvider(): array;
 

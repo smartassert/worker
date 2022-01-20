@@ -29,6 +29,7 @@ class ManifestFactory
         }
 
         $data = $this->yamlParser->parse($uploadedFile->getContent());
+        $data = is_array($data) ? $data : [];
 
         $name = $data['name'] ?? '';
         $testPaths = $data['tests'] ?? [];

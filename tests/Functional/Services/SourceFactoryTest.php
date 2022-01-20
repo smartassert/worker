@@ -129,7 +129,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createCollectionFromManifestDataProvider(): array
     {

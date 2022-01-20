@@ -39,6 +39,7 @@ class Compiler
         );
 
         $outputData = $this->yamlParser->parse($output);
+        $outputData = is_array($outputData) ? $outputData : [];
 
         return 0 === $exitCode
             ? SuiteManifest::fromArray($outputData)

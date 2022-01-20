@@ -12,7 +12,7 @@ use webignition\BasilCompilerModels\ErrorOutputInterface;
 trait CreateFromCompilationFailedEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromCompilationFailedEventDataProvider(): array
     {

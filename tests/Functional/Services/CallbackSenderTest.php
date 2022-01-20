@@ -66,7 +66,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function sendNonSuccessfulResponseDataProvider(): array
     {
@@ -96,7 +96,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function sendClientExceptionDataProvider(): array
     {

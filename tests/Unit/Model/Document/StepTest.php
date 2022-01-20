@@ -19,7 +19,7 @@ class StepTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function isStepDataProvider(): array
     {
@@ -60,7 +60,7 @@ class StepTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function statusIsPassedDataProvider(): array
     {
@@ -101,7 +101,7 @@ class StepTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function statusIsFailedDataProvider(): array
     {

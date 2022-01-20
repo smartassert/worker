@@ -11,7 +11,7 @@ use App\Tests\Mock\Entity\MockCallback;
 trait CreateFromJobTimeoutEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromJobTimeoutEventDataProvider(): array
     {

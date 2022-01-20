@@ -44,7 +44,7 @@ class EntityPersisterTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function persistDataProvider(): array
     {

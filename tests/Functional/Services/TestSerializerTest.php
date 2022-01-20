@@ -43,7 +43,7 @@ class TestSerializerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function serializeDataProvider(): array
     {

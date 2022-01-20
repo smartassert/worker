@@ -46,7 +46,7 @@ class CallbackStoreTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function getFinishedCountDataProvider(): array
     {

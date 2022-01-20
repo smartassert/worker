@@ -11,7 +11,7 @@ use App\Tests\Mock\Entity\MockCallback;
 trait CreateFromExecutionCompletedEventDataProviderTrait
 {
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function createFromExecutionCompletedEventDataProvider(): array
     {

@@ -56,7 +56,7 @@ class ExecuteTestHandlerTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<mixed>
      */
     public function invokeNoExecutionDataProvider(): array
     {
