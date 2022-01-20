@@ -94,7 +94,7 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
 
     public function testResponse(): void
     {
-        $this->jsonResponseAsserter->assertJsonResponse(200, (object) [], $this->response);
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $this->response);
     }
 
     public function testSourcesAreCreated(): void

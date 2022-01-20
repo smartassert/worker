@@ -12,11 +12,8 @@ class JsonResponseAsserter
     /**
      * @param array<mixed> $expectedData
      */
-    public function assertJsonResponse(
-        int $expectedStatusCode,
-        array | \stdClass $expectedData,
-        Response $response
-    ): void {
+    public function assertJsonResponse(int $expectedStatusCode, array $expectedData, Response $response): void
+    {
         TestCase::assertSame($expectedStatusCode, $response->getStatusCode());
         TestCase::assertSame('application/json', $response->headers->get('content-type'));
 

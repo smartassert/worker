@@ -53,7 +53,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
         $response = $this->clientRequestSender->createJob($label, $callbackUrl, $maximumDurationInSeconds);
 
-        $this->jsonResponseAsserter->assertJsonResponse(200, (object) [], $response);
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
 
         self::assertTrue($this->jobStore->has());
         self::assertEquals(
