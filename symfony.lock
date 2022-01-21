@@ -450,9 +450,6 @@
     "webignition/object-reflector": {
         "version": "1.0"
     },
-    "webignition/string-prefix-remover": {
-        "version": "0.2"
-    },
     "webignition/tcp-cli-proxy-client": {
         "version": "0.12"
     },

@@ -10,7 +10,6 @@ use App\Services\TestDocumentFactory;
 use App\Services\TestDocumentMutator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Dumper;
-use webignition\StringPrefixRemover\DefinedStringPrefixRemover;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class TestDocumentFactoryTest extends TestCase
@@ -25,10 +24,7 @@ class TestDocumentFactoryTest extends TestCase
 
         $this->factory = new TestDocumentFactory(
             new YamlGenerator(),
-            new TestDocumentMutator(
-                new Dumper(),
-                new DefinedStringPrefixRemover(self::COMPILER_SOURCE_DIRECTORY)
-            )
+            new TestDocumentMutator(new Dumper(), self::COMPILER_SOURCE_DIRECTORY)
         );
     }
 

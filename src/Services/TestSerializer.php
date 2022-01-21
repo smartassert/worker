@@ -5,19 +5,14 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use webignition\StringPrefixRemover\DefinedStringPrefixRemover;
+use Symfony\Component\String\UnicodeString;
 
 class TestSerializer
 {
-    private DefinedStringPrefixRemover $compilerSourcePathPrefixRemover;
-    private DefinedStringPrefixRemover $compilerTargetPathPrefixRemover;
-
     public function __construct(
-        DefinedStringPrefixRemover $compilerSourcePathPrefixRemover,
-        DefinedStringPrefixRemover $compilerTargetPathPrefixRemover
+        private string $compilerSourceDirectory,
+        private string $compilerTargetDirectory,
     ) {
-        $this->compilerSourcePathPrefixRemover = $compilerSourcePathPrefixRemover;
-        $this->compilerTargetPathPrefixRemover = $compilerTargetPathPrefixRemover;
     }
 
     /**
@@ -46,8 +41,12 @@ class TestSerializer
         return array_merge(
             $test->jsonSerialize(),
             [
-                'source' => $this->compilerSourcePathPrefixRemover->remove((string) $test->getSource()),
-                'target' => $this->compilerTargetPathPrefixRemover->remove((string) $test->getTarget()),
+                'source' => (string) (new UnicodeString((string) $test->getSource()))->trimPrefix(
+                    $this->compilerSourceDirectory . '/'
+                ),
+                'target' => (string) (new UnicodeString((string) $test->getTarget()))->trimPrefix(
+                    $this->compilerTargetDirectory . '/'
+                ),
             ]
         );
     }

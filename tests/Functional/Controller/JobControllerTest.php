@@ -74,7 +74,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      *
      * @param array<mixed> $expectedResponseData
      */
-    public function testStatus(EnvironmentSetup $setup, array $expectedResponseData): void
+    public function testStatusHasJob(EnvironmentSetup $setup, array $expectedResponseData): void
     {
         $this->environmentFactory->create($setup);
 
@@ -148,12 +148,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test3.yml'),
                     ])->withTestSetups([
                         (new TestSetup())
-                            ->withSource('tests/Fixtures/CompilerSource/Test/test1.yml')
-                            ->withTarget('tests/Fixtures/CompilerTarget/GeneratedTest1.php')
+                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withTarget('{{ compiler_target_directory }}/GeneratedTest1.php')
                             ->withStepCount(3),
                         (new TestSetup())
-                            ->withSource('tests/Fixtures/CompilerSource/Test/test2.yml')
-                            ->withTarget('tests/Fixtures/CompilerTarget/GeneratedTest2.php')
+                            ->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                            ->withTarget('{{ compiler_target_directory }}/GeneratedTest2.php')
                             ->withStepCount(2),
                     ]),
                 'expectedResponseData' => [

@@ -15,6 +15,7 @@ class TestTestFactory
         private TestFactory $testFactory,
         private EntityManagerInterface $entityManager,
         private string $compilerSourceDirectory,
+        private string $compilerTargetDirectory,
     ) {
     }
 
@@ -23,10 +24,13 @@ class TestTestFactory
         $source = $testSetup->getSource();
         $source = str_replace('{{ compiler_source_directory }}', $this->compilerSourceDirectory, $source);
 
+        $target = $testSetup->getTarget();
+        $target = str_replace('{{ compiler_target_directory }}', $this->compilerTargetDirectory, $target);
+
         $test = $this->testFactory->create(
             $testSetup->getConfiguration(),
             $source,
-            $testSetup->getTarget(),
+            $target,
             $testSetup->getStepCount()
         );
 

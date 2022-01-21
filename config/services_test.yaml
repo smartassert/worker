@@ -1,6 +1,10 @@
 imports:
     - { resource: services/test_common.yaml }
 
+parameters:
+    compiler_source_directory: '%env(resolve:COMPILER_SOURCE_DIRECTORY)%'
+    compiler_target_directory: '%env(resolve:COMPILER_TARGET_DIRECTORY)%'
+
 services:
     _defaults:
         autowire: true
