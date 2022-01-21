@@ -23,12 +23,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: pgsql
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup integration test environment
         run: composer integration-setup
@@ -52,12 +49,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: pgsql
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup image test environment
         run: |
