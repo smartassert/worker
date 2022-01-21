@@ -43,10 +43,12 @@ class TestDocumentFactoryTest extends TestCase
         self::assertSame(
             [
                 'type' => 'test',
-                'path' => 'test.yml',
-                'config' => [
-                    'browser' => 'chrome',
-                    'url' => 'http://example.com',
+                'payload' => [
+                    'path' => 'test.yml',
+                    'config' => [
+                        'browser' => 'chrome',
+                        'url' => 'http://example.com',
+                    ],
                 ],
             ],
             $document->parse()

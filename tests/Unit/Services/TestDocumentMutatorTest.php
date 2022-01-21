@@ -23,11 +23,11 @@ class TestDocumentMutatorTest extends TestCase
     }
 
     /**
-     * @dataProvider removeCompilerSourceDirectoryFromSourceDataProvider
+     * @dataProvider removeCompilerSourceDirectoryFromPathDataProvider
      */
-    public function testRemoveCompilerSourceDirectoryFromSource(Document $document, Document $expectedDocument): void
+    public function testRemoveCompilerSourceDirectoryFromPath(Document $document, Document $expectedDocument): void
     {
-        $mutatedDocument = $this->mutator->removeCompilerSourceDirectoryFromSource($document);
+        $mutatedDocument = $this->mutator->removeCompilerSourceDirectoryFromPath($document);
 
         self::assertEquals($expectedDocument, $mutatedDocument);
     }
@@ -35,10 +35,13 @@ class TestDocumentMutatorTest extends TestCase
     /**
      * @return Document[][]
      */
-    public function removeCompilerSourceDirectoryFromSourceDataProvider(): array
+    public function removeCompilerSourceDirectoryFromPathDataProvider(): array
     {
         $step = new Document('{ type: step }');
         $testWithoutPrefixedPath = new Document('{ type: test, path: /path/to/test.yml }');
+        $testWithPrefixedPath = new Document(
+            '{ type: test, payload: { path: ' . self::COMPILER_SOURCE_DIRECTORY . '/Test/test.yml } }'
+        );
 
         return [
             'document is step' => [
@@ -50,10 +53,8 @@ class TestDocumentMutatorTest extends TestCase
                 'expectedDocument' => $testWithoutPrefixedPath,
             ],
             'test with prefixed path' => [
-                'document' => new Document(
-                    '{ type: test, path: ' . self::COMPILER_SOURCE_DIRECTORY . '/Test/test.yml }'
-                ),
-                'expectedDocument' => new Document('{ type: test, path: Test/test.yml }'),
+                'document' => $testWithPrefixedPath,
+                'expectedDocument' => new Document('{ type: test, payload: { path: Test/test.yml } }'),
             ],
         ];
     }
