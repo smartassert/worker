@@ -8,11 +8,11 @@ on:
 
 jobs:
   unit:
-    name: Unit tests - PHP ${{ matrix.php }} ${{ matrix.operating-system }}
+    name: Unit tests - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.0']
+        php: ['8.0', '8.1']
     runs-on: ${{ matrix.operating-system }}
 
     steps:
@@ -24,21 +24,18 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
-          args: --ignore-platform-reqs --quiet
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Run PHPUnit unit tests
         run: composer test-unit
 
   functional:
-    name: Functional tests - PHP ${{ matrix.php }} ${{ matrix.operating-system }}
+    name: Functional tests - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.0']
+        php: ['8.0', '8.1']
     runs-on: ${{ matrix.operating-system }}
 
     steps:
@@ -49,13 +46,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: pgsql
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
-          args: --ignore-platform-reqs --quiet
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup functional test environment
         run: composer functional-setup

@@ -27,3 +27,5 @@ tests/build/coverage
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+composer.lock
+
