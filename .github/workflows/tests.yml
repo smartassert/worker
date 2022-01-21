@@ -49,10 +49,8 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: pgsql
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup functional test environment
         run: composer functional-setup
