@@ -1,4 +1,4 @@
-name: Tests
+name: tests-integration
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   integration-sync:
-    name: Sync integration tests - PHP ${{ matrix.php }}
+    name: Synchronous - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
@@ -34,7 +34,7 @@ jobs:
         run: composer test-integration
 
   integration-app:
-    name: Image integration tests - PHP ${{ matrix.php }}
+    name: Image - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]

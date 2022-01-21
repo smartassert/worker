@@ -1,4 +1,4 @@
-name: Tests
+name: tests
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   unit:
-    name: Unit tests - PHP ${{ matrix.php }}
+    name: Unit - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
@@ -31,7 +31,7 @@ jobs:
         run: composer test-unit
 
   functional:
-    name: Functional tests - PHP ${{ matrix.php }}
+    name: Functional - PHP ${{ matrix.php }}
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
