@@ -20,10 +20,10 @@
         "symfony/messenger": "6.0.*",
         "symfony/string": "6.0.*",
         "symfony/yaml": "6.0.*",
-        "webignition/basil-compiler-models": "^0.15.0",
-        "webignition/encapsulating-request-resolver-bundle": "^0.2.0",
-        "webignition/tcp-cli-proxy-client": "^0.12.0",
-        "webignition/yaml-document": "^0.3.0",
+        "webignition/basil-compiler-models": "^0.16.0",
+        "webignition/encapsulating-request-resolver-bundle": "^1.1",
+        "webignition/tcp-cli-proxy-client": "^0.13.0",
+        "webignition/yaml-document": "^0.3",
         "webignition/yaml-document-generator": "^0.4.0"
     },
     "require-dev": {
@@ -43,7 +43,7 @@
         "symfony/browser-kit": "6.0.*",
         "symfony/maker-bundle": "^1.36",
         "symfony/phpunit-bridge": "6.0.*",
-        "webignition/http-history-container": "^2.4",
+        "webignition/http-history-container": "^2.5",
         "webignition/object-reflector": "^1.0"
     },
     "config": {

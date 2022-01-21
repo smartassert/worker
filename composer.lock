@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbbdb9fca44f7ca8051cc1d124e3aef7",
+    "content-hash": "a31641aaa98fb2dec5743fe5e9d74fdf",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -4465,31 +4465,30 @@
         },
         {
             "name": "webignition/basil-compiler-models",
-            "version": "0.15",
+            "version": "0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler-models.git",
-                "reference": "8e6e0271e1cec4ee6b03a903fec37e01a706e8da"
+                "reference": "331ef0778b8e79a6ecd9cb7a154ebd05f6e59be3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/8e6e0271e1cec4ee6b03a903fec37e01a706e8da",
-                "reference": "8e6e0271e1cec4ee6b03a903fec37e01a706e8da",
+                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/331ef0778b8e79a6ecd9cb7a154ebd05f6e59be3",
+                "reference": "331ef0778b8e79a6ecd9cb7a154ebd05f6e59be3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4|^8",
-                "webignition/basil-models": ">=0.58,<1"
+                "php": "^8.0|^8.1",
+                "webignition/basil-models": ">=0.60,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
                 "php-mock/php-mock-mockery": "^1.3",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.77",
-                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpstan/phpstan": "^1.3",
+                "phpstan/phpstan-mockery": "^1.0",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^9.1"
+                "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
             "autoload": {
@@ -4510,33 +4509,34 @@
             "homepage": "https://github.com/webignition/basil-compiler-models",
             "support": {
                 "issues": "https://github.com/webignition/basil-compiler-models/issues",
-                "source": "https://github.com/webignition/basil-compiler-models/tree/0.15"
+                "source": "https://github.com/webignition/basil-compiler-models/tree/0.16"
             },
-            "time": "2021-02-19T10:12:32+00:00"
+            "time": "2022-01-13T18:43:00+00:00"
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.58",
+            "version": "0.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "2184f3719e5cd91a9029f30b6e84114d22f29e20"
+                "reference": "638ce06c9754cff4ae8506d6d56e95a838aa1ba3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/2184f3719e5cd91a9029f30b6e84114d22f29e20",
-                "reference": "2184f3719e5cd91a9029f30b6e84114d22f29e20",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/638ce06c9754cff4ae8506d6d56e95a838aa1ba3",
+                "reference": "638ce06c9754cff4ae8506d6d56e95a838aa1ba3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.4|^8"
+                "php": "^8.0|^8.1"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.77",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.3",
+                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^9.1",
+                "squizlabs/php_codesniffer": "^3.6",
                 "webignition/object-reflector": "^0.1.0"
             },
             "type": "library",
@@ -4558,9 +4558,9 @@
             "homepage": "https://github.com/webignition/basil-models",
             "support": {
                 "issues": "https://github.com/webignition/basil-models/issues",
-                "source": "https://github.com/webignition/basil-models/tree/0.58"
+                "source": "https://github.com/webignition/basil-models/tree/0.61"
             },
-            "time": "2021-02-18T15:16:57+00:00"
+            "time": "2022-01-18T15:36:24+00:00"
         },
         {
             "name": "webignition/basil-runner-documents",
@@ -4614,29 +4614,29 @@
         },
         {
             "name": "webignition/encapsulating-request-resolver-bundle",
-            "version": "0.2",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/EncapsulatingRequestResolverBundle.git",
-                "reference": "489a1e636dddb174d3a4c3c9396c96c438ead374"
+                "reference": "850feea0ebe1ef5977ebecbccbd870631f96e0ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/EncapsulatingRequestResolverBundle/zipball/489a1e636dddb174d3a4c3c9396c96c438ead374",
-                "reference": "489a1e636dddb174d3a4c3c9396c96c438ead374",
+                "url": "https://api.github.com/repos/webignition/EncapsulatingRequestResolverBundle/zipball/850feea0ebe1ef5977ebecbccbd870631f96e0ae",
+                "reference": "850feea0ebe1ef5977ebecbccbd870631f96e0ae",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=8.0.2",
-                "symfony/config": "5.4.* || 6.0.*",
-                "symfony/dependency-injection": "5.4.* || 6.0.*",
-                "symfony/http-kernel": "5.4.* || 6.0.*",
-                "symfony/yaml": "5.4.* || 6.0.*"
+                "php": "^8.0|^8.1",
+                "symfony/config": "6.0.*",
+                "symfony/dependency-injection": "6.0.*",
+                "symfony/http-kernel": "6.0.*",
+                "symfony/yaml": "6.0.*"
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.2",
+                "phpstan/phpstan": "^1.4",
                 "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.6"
@@ -4664,36 +4664,35 @@
             "homepage": "https://github.com/webignition/encapsulating-request-resolver-bundle",
             "support": {
                 "issues": "https://github.com/webignition/EncapsulatingRequestResolverBundle/issues",
-                "source": "https://github.com/webignition/EncapsulatingRequestResolverBundle/tree/0.2"
+                "source": "https://github.com/webignition/EncapsulatingRequestResolverBundle/tree/1.1"
             },
-            "time": "2021-12-14T16:02:26+00:00"
+            "time": "2022-01-20T18:23:08+00:00"
         },
         {
             "name": "webignition/error-handler",
-            "version": "0.2",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/error-handler.git",
-                "reference": "9dfc4079c174385ac9a79bf5cde020360e0c71ce"
+                "reference": "d8cf9eb40025f4773e77ee726fed37c897cd4db0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/error-handler/zipball/9dfc4079c174385ac9a79bf5cde020360e0c71ce",
-                "reference": "9dfc4079c174385ac9a79bf5cde020360e0c71ce",
+                "url": "https://api.github.com/repos/webignition/error-handler/zipball/d8cf9eb40025f4773e77ee726fed37c897cd4db0",
+                "reference": "d8cf9eb40025f4773e77ee726fed37c897cd4db0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4|^8",
-                "psr/log": "^1.1"
+                "php": "^8.0|^8.1",
+                "psr/log": "^1.0|^2.0|^3.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.78",
-                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan-mockery": "^1.0",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^9.1",
+                "squizlabs/php_codesniffer": "^3.6",
                 "webignition/object-reflector": "^1.0"
             },
             "type": "library",
@@ -4716,38 +4715,37 @@
             "homepage": "https://github.com/webignition/error-handler",
             "support": {
                 "issues": "https://github.com/webignition/error-handler/issues",
-                "source": "https://github.com/webignition/error-handler/tree/0.2"
+                "source": "https://github.com/webignition/error-handler/tree/0.3"
             },
-            "time": "2021-02-22T10:10:26+00:00"
+            "time": "2022-01-17T17:39:33+00:00"
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.12",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "c28acc31bb96d2c709837ab1bf7d3a004d87dd7f"
+                "reference": "646f48bbf9093772368fe93b380f7d640cfd0218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/c28acc31bb96d2c709837ab1bf7d3a004d87dd7f",
-                "reference": "c28acc31bb96d2c709837ab1bf7d3a004d87dd7f",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/646f48bbf9093772368fe93b380f7d640cfd0218",
+                "reference": "646f48bbf9093772368fe93b380f7d640cfd0218",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4|^8",
-                "webignition/error-handler": "^0.2.0"
+                "php": "^8.0|^8.1",
+                "webignition/error-handler": "^0.3.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
                 "php-mock/php-mock": "^2.3",
                 "php-mock/php-mock-mockery": "^1.3",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.78",
-                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan-mockery": "^1.0",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^9.2",
+                "squizlabs/php_codesniffer": "^3.6",
                 "webignition/object-reflector": "^1.0"
             },
             "type": "library",
@@ -4769,9 +4767,9 @@
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
             "support": {
                 "issues": "https://github.com/webignition/tcp-cli-proxy-client/issues",
-                "source": "https://github.com/webignition/tcp-cli-proxy-client/tree/0.12"
+                "source": "https://github.com/webignition/tcp-cli-proxy-client/tree/0.13"
             },
-            "time": "2021-02-22T17:16:57+00:00"
+            "time": "2022-01-18T11:12:38+00:00"
         },
         {
             "name": "webignition/yaml-document",
@@ -7783,22 +7781,22 @@
         },
         {
             "name": "webignition/http-history-container",
-            "version": "2.4",
+            "version": "2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/http-history-container.git",
-                "reference": "53d17cf3077486e2a457317d7c98554396d63c4f"
+                "reference": "26e3ae3dec5c8fd0416f6c5235c2fa0e3898a2d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/http-history-container/zipball/53d17cf3077486e2a457317d7c98554396d63c4f",
-                "reference": "53d17cf3077486e2a457317d7c98554396d63c4f",
+                "url": "https://api.github.com/repos/webignition/http-history-container/zipball/26e3ae3dec5c8fd0416f6c5235c2fa0e3898a2d1",
+                "reference": "26e3ae3dec5c8fd0416f6c5235c2fa0e3898a2d1",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/psr7": "^1.7 || ^2.1",
-                "php": "8.*",
+                "php": "^8.0|^8.1",
                 "psr/http-message": "^1.0",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
@@ -7806,9 +7804,9 @@
                 "mockery/mockery": "^1.4",
                 "monolog/monolog": "^2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.80",
-                "phpstan/phpstan-mockery": "^0.12.12",
-                "phpstan/phpstan-phpunit": "^0.12.17",
+                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan-mockery": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.6",
                 "webignition/object-reflector": "^1.0"
@@ -7841,9 +7839,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webignition/http-history-container/issues",
-                "source": "https://github.com/webignition/http-history-container/tree/2.4"
+                "source": "https://github.com/webignition/http-history-container/tree/2.5"
             },
-            "time": "2021-12-15T16:26:09+00:00"
+            "time": "2022-01-21T10:30:06+00:00"
         },
         {
             "name": "webignition/object-reflector",
@@ -7956,7 +7954,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8",
+        "php": "^8.0|^8.1",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-iconv": "*",
