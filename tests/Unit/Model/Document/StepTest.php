@@ -71,21 +71,27 @@ class StepTest extends TestCase
                 ),
                 'expectedIsPassed' => false,
             ],
-            'no status' => [
+            'no payload' => [
                 'step' => new Step(
                     new Document('key: value')
                 ),
                 'expectedIsPassed' => false,
             ],
+            'no status' => [
+                'step' => new Step(
+                    new Document('payload: {}')
+                ),
+                'expectedIsPassed' => false,
+            ],
             'status is not passed' => [
                 'step' => new Step(
-                    new Document('status: failed')
+                    new Document('payload: { status: failed }')
                 ),
                 'expectedIsPassed' => false,
             ],
             'status is passed' => [
                 'step' => new Step(
-                    new Document('status: passed')
+                    new Document('payload: { status: passed }')
                 ),
                 'expectedIsPassed' => true,
             ],
@@ -112,23 +118,29 @@ class StepTest extends TestCase
                 ),
                 'expectedIsFailed' => false,
             ],
-            'no status' => [
+            'no payload' => [
                 'step' => new Step(
                     new Document('key: value')
                 ),
                 'expectedIsFailed' => false,
             ],
-            'status is not failed' => [
+            'no status' => [
                 'step' => new Step(
-                    new Document('status: passed')
+                    new Document('payload: {}')
                 ),
                 'expectedIsFailed' => false,
             ],
-            'status is failed' => [
+            'status is not failed' => [
                 'step' => new Step(
-                    new Document('status: failed')
+                    new Document('payload: { status: failed }')
                 ),
                 'expectedIsFailed' => true,
+            ],
+            'status is failed' => [
+                'step' => new Step(
+                    new Document('payload: { status: passed }')
+                ),
+                'expectedIsFailed' => false,
             ],
         ];
     }

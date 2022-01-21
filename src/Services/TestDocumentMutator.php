@@ -17,22 +17,23 @@ class TestDocumentMutator
     ) {
     }
 
-    public function removeCompilerSourceDirectoryFromSource(Document $document): Document
+    public function removeCompilerSourceDirectoryFromPath(Document $document): Document
     {
         $test = new Test($document);
         if ($test->isTest()) {
             $path = $test->getPath();
-
             $mutatedPath = (string) (new UnicodeString($path))->trimPrefix($this->compilerSourceDirectory . '/');
+
             if ($mutatedPath !== $path) {
-                $mutatedPath = ltrim($mutatedPath, '/');
+                $payload = $test->getPayload();
+                $payload[Test::KEY_PAYLOAD_PATH] = $mutatedPath;
+
+                $mutatedTestSource = $this->yamlDumper->dump($test->getMutatedData([
+                    Test::KEY_PAYLOAD => $payload,
+                ]));
+
+                $document = new Document($mutatedTestSource);
             }
-
-            $mutatedTestSource = $this->yamlDumper->dump($test->getMutatedData([
-                Test::KEY_PATH => $mutatedPath,
-            ]));
-
-            $document = new Document($mutatedTestSource);
         }
 
         return $document;

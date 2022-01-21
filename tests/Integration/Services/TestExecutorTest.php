@@ -96,17 +96,18 @@ class TestExecutorTest extends AbstractTestCreationTest
 
                             $expectedDocument = new Document(
                                 'type: step' . "\n" .
-                                'name: \'verify page is open\'' . "\n" .
-                                'status: passed' . "\n" .
-                                'statements:' . "\n" .
-                                '  -' . "\n" .
-                                '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '    status: passed' . "\n" .
-                                '    transformations:' . "\n" .
-                                '      -' . "\n" .
-                                '        type: resolution' . "\n" .
-                                '        source: \'$page.url is $index.url\'' . "\n"
+                                'payload:' . "\n" .
+                                '  name: \'verify page is open\'' . "\n" .
+                                '  status: passed' . "\n" .
+                                '  statements:' . "\n" .
+                                '    -' . "\n" .
+                                '      type: assertion' . "\n" .
+                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
+                                '      status: passed' . "\n" .
+                                '      transformations:' . "\n" .
+                                '        -' . "\n" .
+                                '          type: resolution' . "\n" .
+                                '          source: \'$page.url is $index.url\'' . "\n"
                             );
 
                             if ($event instanceof TestStepPassedEvent) {
@@ -130,13 +131,14 @@ class TestExecutorTest extends AbstractTestCreationTest
 
                             $expectedDocument = new Document(
                                 'type: step' . "\n" .
-                                'name: \'verify page is open\'' . "\n" .
-                                'status: passed' . "\n" .
-                                'statements:' . "\n" .
-                                '  -' . "\n" .
-                                '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '    status: passed' . "\n"
+                                'payload:' . "\n" .
+                                '  name: \'verify page is open\'' . "\n" .
+                                '  status: passed' . "\n" .
+                                '  statements:' . "\n" .
+                                '    -' . "\n" .
+                                '      type: assertion' . "\n" .
+                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
+                                '      status: passed' . "\n"
                             );
 
                             if ($event instanceof TestStepPassedEvent) {
@@ -160,13 +162,14 @@ class TestExecutorTest extends AbstractTestCreationTest
 
                             $expectedDocument = new Document(
                                 'type: step' . "\n" .
-                                'name: \'verify page is open\'' . "\n" .
-                                'status: passed' . "\n" .
-                                'statements:' . "\n" .
-                                '  -' . "\n" .
-                                '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '    status: passed' . "\n"
+                                'payload:' . "\n" .
+                                '  name: \'verify page is open\'' . "\n" .
+                                '  status: passed' . "\n" .
+                                '  statements:' . "\n" .
+                                '    -' . "\n" .
+                                '      type: assertion' . "\n" .
+                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
+                                '      status: passed' . "\n"
                             );
 
                             if ($event instanceof TestStepPassedEvent) {
@@ -182,13 +185,14 @@ class TestExecutorTest extends AbstractTestCreationTest
 
                             $expectedDocument = new Document(
                                 'type: step' . "\n" .
-                                'name: \'verify page is open\'' . "\n" .
-                                'status: passed' . "\n" .
-                                'statements:' . "\n" .
-                                '  -' . "\n" .
-                                '    type: assertion' . "\n" .
-                                '    source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '    status: passed' . "\n"
+                                'payload:' . "\n" .
+                                '  name: \'verify page is open\'' . "\n" .
+                                '  status: passed' . "\n" .
+                                '  statements:' . "\n" .
+                                '    -' . "\n" .
+                                '      type: assertion' . "\n" .
+                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
+                                '      status: passed' . "\n"
                             );
 
                             if ($event instanceof TestStepPassedEvent) {

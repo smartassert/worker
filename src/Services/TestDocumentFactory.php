@@ -20,8 +20,8 @@ class TestDocumentFactory
     public function create(TestEntity $test): Document
     {
         $runnerTest = new TestProxy($test);
-        $runnerTestString = $this->yamlGenerator->generate($runnerTest);
+        $runnerTestString = $this->yamlGenerator->generate($runnerTest->getData());
 
-        return $this->testDocumentMutator->removeCompilerSourceDirectoryFromSource(new Document($runnerTestString));
+        return $this->testDocumentMutator->removeCompilerSourceDirectoryFromPath(new Document($runnerTestString));
     }
 }
