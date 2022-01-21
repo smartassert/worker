@@ -12,5 +12,6 @@
 !/config/services.yaml
 !/public/index.php
 !/src
+!/symfony.lock
 !/tests/build/supervisor
 !/tests/build/caddy

@@ -50,7 +50,7 @@ RUN curl -L --output dockerize.tar.gz \
 COPY tests/build/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY tests/build/supervisor/conf.d/app.conf /etc/supervisor/conf.d/supervisord.conf
 
-COPY composer.json composer.lock /app/
+COPY composer.json symfony.lock /app/
 COPY bin/console /app/bin/console
 COPY public/index.php public/
 COPY src /app/src
@@ -59,9 +59,9 @@ COPY config/packages/*.yaml /app/config/packages/
 COPY config/packages/prod /app/config/packages/prod
 COPY config/routes/annotations.yaml /app/config/routes/
 
-RUN composer check-platform-reqs --ansi \
-  && composer install --no-dev --no-scripts \
+RUN composer install --no-dev --no-scripts \
   && rm composer.lock \
+  && rm symfony.lock \
   && touch /app/.env \
   && php bin/console cache:clear --env=prod \
   && chown -R www-data:www-data /app/var/log
