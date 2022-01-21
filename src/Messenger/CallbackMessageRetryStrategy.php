@@ -30,6 +30,8 @@ class CallbackMessageRetryStrategy implements RetryStrategyInterface
 
             $retryAfterHeaderLines = $response->getHeader('retry-after');
             $lastRetryAfterValue = array_pop($retryAfterHeaderLines);
+            $lastRetryAfterValue = is_scalar($lastRetryAfterValue) ? (string) $lastRetryAfterValue : '';
+
             $retryAfterSeconds = ctype_digit($lastRetryAfterValue) ? (int) $lastRetryAfterValue : null;
 
             if ($retryAfterSeconds > 0) {
