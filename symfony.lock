@@ -436,7 +436,7 @@
         "version": "0.58"
     },
     "webignition/basil-runner-documents": {
-        "version": "0.3"
+        "version": "1.0"
     },
     "webignition/encapsulating-request-resolver-bundle": {
         "version": "0.2"
