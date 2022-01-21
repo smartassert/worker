@@ -37,10 +37,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
 
-      - name: Download dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Run
         run: composer cs-phpcs
