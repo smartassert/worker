@@ -207,13 +207,13 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
-                        'compilation/started: chrome--open-form' => $requestFactory->create(
+                        'compilation/started: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_STARTED,
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
-                        'compilation/passed: chrome--open-form' => $requestFactory->create(
+                        'compilation/passed: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_PASSED,
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -231,10 +231,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-open-index.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -242,18 +244,20 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
-                                'name' => 'verify page is open',
-                                'status' => 'passed',
-                                'statements' => [
-                                    [
-                                        'type' => 'assertion',
-                                        'source' => '$page.url is "http://html-fixtures/index.html"',
-                                        'status' => 'passed',
-                                        'transformations' => [
-                                            [
-                                                'type' => 'resolution',
-                                                'source' => '$page.url is $index.url'
-                                            ]
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                            'transformations' => [
+                                                [
+                                                    'type' => 'resolution',
+                                                    'source' => '$page.url is $index.url'
+                                                ]
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -263,10 +267,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-open-index.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -274,10 +280,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-firefox-open-index.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-firefox-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -285,13 +293,15 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
-                                'name' => 'verify page is open',
-                                'status' => 'passed',
-                                'statements' => [
-                                    [
-                                        'type' => 'assertion',
-                                        'source' => '$page.url is "http://html-fixtures/index.html"',
-                                        'status' => 'passed',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -300,10 +310,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-firefox-open-index.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-firefox-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -311,10 +323,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-firefox-open-index.yml',
-                                'config' => [
-                                    'browser' => 'firefox',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-firefox-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'firefox',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -322,13 +336,15 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
-                                'name' => 'verify page is open',
-                                'status' => 'passed',
-                                'statements' => [
-                                    [
-                                        'type' => 'assertion',
-                                        'source' => '$page.url is "http://html-fixtures/index.html"',
-                                        'status' => 'passed',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -337,10 +353,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-firefox-open-index.yml',
-                                'config' => [
-                                    'browser' => 'firefox',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-firefox-open-index.yml',
+                                    'config' => [
+                                        'browser' => 'firefox',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -348,10 +366,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-open-form.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/form.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-open-form.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/form.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -359,13 +379,15 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
-                                'name' => 'verify page is open',
-                                'status' => 'passed',
-                                'statements' => [
-                                    [
-                                        'type' => 'assertion',
-                                        'source' => '$page.url is "http://html-fixtures/form.html"',
-                                        'status' => 'passed',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/form.html"',
+                                            'status' => 'passed',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -374,10 +396,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-open-form.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/form.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-open-form.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/form.html',
+                                    ],
                                 ],
                             ]
                         ),
@@ -419,25 +443,27 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_STEP_FAILED,
                             [
                                 'type' => 'step',
-                                'name' => 'fail on intentionally-missing element',
-                                'status' => 'failed',
-                                'statements' => [
-                                    [
-                                        'type' => 'assertion',
-                                        'source' => '$".non-existent" exists',
-                                        'status' => 'failed',
-                                        'summary' => [
-                                            'operator' => 'exists',
-                                            'source' => [
-                                                'type' => 'node',
-                                                'body' => [
-                                                    'type' => 'element',
-                                                    'identifier' => [
-                                                        'source' => '$".non-existent"',
-                                                        'properties' => [
-                                                            'type' => 'css',
-                                                            'locator' => '.non-existent',
-                                                            'position' => 1,
+                                'payload' => [
+                                    'name' => 'fail on intentionally-missing element',
+                                    'status' => 'failed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$".non-existent" exists',
+                                            'status' => 'failed',
+                                            'summary' => [
+                                                'operator' => 'exists',
+                                                'source' => [
+                                                    'type' => 'node',
+                                                    'body' => [
+                                                        'type' => 'element',
+                                                        'identifier' => [
+                                                            'source' => '$".non-existent"',
+                                                            'properties' => [
+                                                                'type' => 'css',
+                                                                'locator' => '.non-existent',
+                                                                'position' => 1,
+                                                            ],
                                                         ],
                                                     ],
                                                 ],
@@ -451,10 +477,12 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                             CallbackInterface::TYPE_TEST_FAILED,
                             [
                                 'type' => 'test',
-                                'path' => 'Test/chrome-open-index-with-step-failure.yml',
-                                'config' => [
-                                    'browser' => 'chrome',
-                                    'url' => 'http://html-fixtures/index.html',
+                                'payload' => [
+                                    'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'config' => [
+                                        'browser' => 'chrome',
+                                        'url' => 'http://html-fixtures/index.html',
+                                    ],
                                 ],
                             ]
                         ),

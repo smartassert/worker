@@ -6,7 +6,7 @@ namespace App\Model\Document;
 
 class Step extends AbstractDocument
 {
-    private const KEY_STATUS = 'status';
+    private const KEY_PAYLOAD_STATUS = 'status';
     private const TYPE = 'step';
     private const STATUS_PASSED = 'passed';
     private const STATUS_FAILED = 'failed';
@@ -18,16 +18,16 @@ class Step extends AbstractDocument
 
     public function statusIsPassed(): bool
     {
-        return $this->hasStatus(self::STATUS_PASSED);
+        return $this->hasStatusValue(self::STATUS_PASSED);
     }
 
     public function statusIsFailed(): bool
     {
-        return $this->hasStatus(self::STATUS_FAILED);
+        return $this->hasStatusValue(self::STATUS_FAILED);
     }
 
-    private function hasStatus(string $status): bool
+    private function hasStatusValue(string $status): bool
     {
-        return ($this->getData()[self::KEY_STATUS] ?? '') === $status;
+        return $status === $this->getPayloadStringValue(self::KEY_PAYLOAD_STATUS);
     }
 }

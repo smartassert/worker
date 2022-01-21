@@ -8,6 +8,7 @@ use webignition\YamlDocument\Document;
 
 abstract class AbstractDocument
 {
+    public const KEY_PAYLOAD = 'payload';
     private const KEY_TYPE = 'type';
 
     /**
@@ -44,5 +45,22 @@ abstract class AbstractDocument
     public function getMutatedData(array $mutations): array
     {
         return array_merge($this->data, $mutations);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getPayload(): array
+    {
+        $payload = $this->getData()[self::KEY_PAYLOAD] ?? [];
+
+        return is_array($payload) ? $payload : [];
+    }
+
+    protected function getPayloadStringValue(string $key): ?string
+    {
+        $value = $this->getPayload()[$key] ?? null;
+
+        return is_string($value) ? $value : null;
     }
 }
