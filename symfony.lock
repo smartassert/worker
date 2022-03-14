@@ -236,6 +236,9 @@
     "sebastian/version": {
         "version": "3.0.2"
     },
+    "smartassert/yaml-file": {
+        "version": "0.1"
+    },
     "squizlabs/php_codesniffer": {
         "version": "3.0",
         "recipe": {
