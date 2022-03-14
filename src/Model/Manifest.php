@@ -10,14 +10,8 @@ class Manifest
      * @param array<string> $testPaths
      */
     public function __construct(
-        private string $name,
         private array $testPaths,
     ) {
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     /**

@@ -31,13 +31,12 @@ class ManifestFactory
         $data = $this->yamlParser->parse($uploadedFile->getContent());
         $data = is_array($data) ? $data : [];
 
-        $name = $data['name'] ?? '';
         $testPaths = $data['tests'] ?? [];
         $testPaths = is_array($testPaths) ? $testPaths : [];
         $testPaths = array_filter($testPaths, function ($item) {
             return is_string($item) && '' !== $item;
         });
 
-        return new Manifest($name, $testPaths);
+        return new Manifest($testPaths);
     }
 }
