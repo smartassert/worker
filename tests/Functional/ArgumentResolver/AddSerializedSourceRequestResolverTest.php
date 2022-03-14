@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\ArgumentResolver;
 
-use App\ArgumentResolver\SourceCollectionResolver;
-use App\Model\SourceCollection;
+use App\ArgumentResolver\AddSerializedSourceRequestResolver;
+use App\Request\AddSerializedSourceRequest;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockArgumentMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class SourceCollectionResolverTest extends AbstractBaseFunctionalTest
+class AddSerializedSourceRequestResolverTest extends AbstractBaseFunctionalTest
 {
-    private SourceCollectionResolver $resolver;
+    private AddSerializedSourceRequestResolver $resolver;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $resolver = self::getContainer()->get(SourceCollectionResolver::class);
-        \assert($resolver instanceof SourceCollectionResolver);
+        $resolver = self::getContainer()->get(AddSerializedSourceRequestResolver::class);
+        \assert($resolver instanceof AddSerializedSourceRequestResolver);
         $this->resolver = $resolver;
     }
 
@@ -43,7 +43,9 @@ class SourceCollectionResolverTest extends AbstractBaseFunctionalTest
                 'expected' => false,
             ],
             'does support' => [
-                'argumentMetadata' => (new MockArgumentMetadata())->withGetTypeCall(SourceCollection::class)->getMock(),
+                'argumentMetadata' => (new MockArgumentMetadata())
+                    ->withGetTypeCall(AddSerializedSourceRequest::class)
+                    ->getMock(),
                 'expected' => true,
             ],
         ];
