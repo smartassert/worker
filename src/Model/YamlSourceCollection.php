@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Model;
 
 use SmartAssert\YamlFile\Collection\ProviderInterface;
-use SmartAssert\YamlFile\Exception\ProvisionException;
-use SmartAssert\YamlFile\YamlFile;
 
 class YamlSourceCollection
 {
@@ -21,13 +19,8 @@ class YamlSourceCollection
         return $this->manifest;
     }
 
-    /**
-     * @throws ProvisionException
-     *
-     * @return \Generator<YamlFile>
-     */
-    public function getSources(): \Generator
+    public function getYamlFiles(): ProviderInterface
     {
-        return $this->yamlFiles->getYamlFiles();
+        return $this->yamlFiles;
     }
 }
