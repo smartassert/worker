@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\ArgumentResolver;
 
 use SmartAssert\YamlFile\Collection\Deserializer;
-use SmartAssert\YamlFile\Provider\ProviderInterface;
+use SmartAssert\YamlFile\Collection\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
