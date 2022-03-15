@@ -7,7 +7,7 @@ namespace App\Tests\Functional\ArgumentResolver;
 use App\ArgumentResolver\YamlFileProviderResolver;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockArgumentMetadata;
-use SmartAssert\YamlFile\Provider\ProviderInterface;
+use SmartAssert\YamlFile\Collection\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
