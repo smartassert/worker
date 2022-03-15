@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\InvalidManifestException;
 use App\Exception\Manifest\ManifestFactoryExceptionInterface;
+use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
+use App\Model\YamlSourceCollection;
 use App\Repository\TestRepository;
 use App\Request\AddSourcesRequest;
 use App\Request\JobCreateRequest;
@@ -21,6 +24,9 @@ use App\Services\ExecutionState;
 use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
+use App\Services\YamlSourceCollectionFactory;
+use SmartAssert\YamlFile\Collection\ProviderInterface;
+use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -103,6 +109,39 @@ class JobController
             $sourceFactory->createCollectionFromManifest($manifest, $uploadedSources);
         } catch (MissingTestSourceException $testSourceException) {
             return BadAddSourcesRequestResponse::createSourceMissingResponse($testSourceException->getPath());
+        }
+
+        $messageBus->dispatch(new JobReadyMessage());
+
+        return new JsonResponse([]);
+    }
+
+    #[Route('/add-sources-as-single-file', name: 'add-sources-as-single-file', methods: ['POST'])]
+    public function addSerializedSource(
+        YamlSourceCollectionFactory $factory,
+        SourceFactory $sourceFactory,
+        MessageBusInterface $messageBus,
+        ProviderInterface $yamlFileProvider,
+    ): JsonResponse {
+        // @todo: validate yaml file provider in #163
+
+        if (false === $this->jobStore->has()) {
+            return BadAddSourcesRequestResponse::createJobMissingResponse();
+        }
+
+        $yamlSourceCollection = null;
+
+        try {
+            $yamlSourceCollection = $factory->create($yamlFileProvider);
+        } catch (InvalidManifestException | MissingManifestException | ProvisionException $e) {
+            // @todo: handle via ExceptionEvent listener in #166
+        }
+        \assert($yamlSourceCollection instanceof YamlSourceCollection);
+
+        try {
+            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollection);
+        } catch (MissingTestSourceException | ProvisionException $e) {
+            // @todo: handle via ExceptionEvent listener in #166
         }
 
         $messageBus->dispatch(new JobReadyMessage());

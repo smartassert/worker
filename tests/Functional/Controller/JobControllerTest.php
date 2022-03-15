@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\Job;
+use App\Entity\Source;
+use App\Repository\SourceRepository;
 use App\Services\EntityStore\JobStore;
+use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -21,6 +24,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private ClientRequestSender $clientRequestSender;
     private EnvironmentFactory $environmentFactory;
     private JsonResponseAsserter $jsonResponseAsserter;
+    private SourceStore $sourceStore;
+    private SourceRepository $sourceRepository;
 
     protected function setUp(): void
     {
@@ -41,6 +46,14 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
+
+        $sourceStore = self::getContainer()->get(SourceStore::class);
+        \assert($sourceStore instanceof SourceStore);
+        $this->sourceStore = $sourceStore;
+
+        $sourceRepository = self::getContainer()->get(SourceRepository::class);
+        \assert($sourceRepository instanceof SourceRepository);
+        $this->sourceRepository = $sourceRepository;
     }
 
     public function testCreate(): void
@@ -193,6 +206,135 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         ],
                     ],
                 ],
+            ],
+        ];
+    }
+
+    public function testAddSerializedSourceNoJob(): void
+    {
+        $response = $this->clientRequestSender->addSerializedSource('');
+
+        $this->jsonResponseAsserter->assertJsonResponse(
+            400,
+            [
+                'code' => 100,
+                'message' => 'job missing',
+                'type' => 'add-sources',
+            ],
+            $response
+        );
+    }
+
+    /**
+     * @dataProvider addSerializedSourceSuccessDataProvider
+     *
+     * @param array<string, array<mixed>> $expectedStoredSources
+     */
+    public function testAddSerializedSourceSuccess(
+        string $requestBody,
+        array $expectedStoredSources,
+    ): void {
+        $environmentSetup = (new EnvironmentSetup())
+            ->withJobSetup(
+                (new JobSetup())
+                    ->withLabel('label content')
+                    ->withCallbackUrl('http://example.com/callback')
+                    ->withMaximumDurationInSeconds(10)
+            )
+        ;
+
+        $this->environmentFactory->create($environmentSetup);
+
+        $response = $this->clientRequestSender->addSerializedSource($requestBody);
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(array_keys($expectedStoredSources), $this->sourceStore->findAllPaths());
+
+        foreach ($this->sourceRepository->findAll() as $source) {
+            $expectedSourceData = $expectedStoredSources[$source->getPath()];
+            self::assertIsArray($expectedSourceData);
+
+            self::assertArrayHasKey('type', $expectedSourceData);
+            self::assertSame($expectedSourceData['type'], $source->getType());
+
+            self::assertArrayHasKey('content', $expectedSourceData);
+
+            $sourceContent = (string) file_get_contents(
+                __DIR__ . '/../../Fixtures/CompilerSource/' . $source->getPath()
+            );
+
+            self::assertSame($expectedSourceData['content'], $sourceContent);
+        }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function addSerializedSourceSuccessDataProvider(): array
+    {
+        $sourceFiles = [
+            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Test/chrome-open-index.yml')),
+            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Test/firefox-open-index.yml')),
+            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Page/index.yml')),
+        ];
+
+        return [
+            'single source file, test only' => [
+                'requestBody' => str_replace(
+                    '{{ source_0 }}',
+                    str_replace("\n", "\n  ", $sourceFiles[0]),
+                    <<< 'EOT'
+                    "manifest.yaml": |
+                      - Test/chrome-open-index.yml
+                    "Test/chrome-open-index.yml": |
+                      {{ source_0 }}
+                    EOT
+                ),
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'content' => $sourceFiles[0],
+                    ],
+                ]
+            ],
+            'multiple source files' => [
+                'requestBody' => str_replace(
+                    [
+                        '{{ source_0 }}',
+                        '{{ source_1 }}',
+                        '{{ source_2 }}',
+                    ],
+                    [
+                        str_replace("\n", "\n  ", $sourceFiles[0]),
+                        str_replace("\n", "\n  ", $sourceFiles[1]),
+                        str_replace("\n", "\n  ", $sourceFiles[2]),
+                    ],
+                    <<< 'EOT'
+                    "manifest.yaml": |
+                      - Test/chrome-open-index.yml
+                      - Test/firefox-open-index.yml
+                    "Test/chrome-open-index.yml": |
+                      {{ source_0 }}                
+                    "Test/firefox-open-index.yml": |
+                      {{ source_1 }}   
+                    "Page/index.yml": |
+                      {{ source_2 }}                         
+                    EOT
+                ),
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'content' => $sourceFiles[0],
+                    ],
+                    'Test/firefox-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'content' => $sourceFiles[1],
+                    ],
+                    'Page/index.yml' => [
+                        'type' => Source::TYPE_RESOURCE,
+                        'content' => $sourceFiles[2],
+                    ],
+                ]
             ],
         ];
     }
