@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\ArgumentResolver;
 
-use App\Model\SourceCollection;
+use App\Model\SerializedSource;
 use App\Request\AddSerializedSourceRequest;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
             $provider = $this->yamlFileCollectionDeserializer->deserialize($request->getContent());
 
             yield new AddSerializedSourceRequest(
-                new SourceCollection($provider)
+                new SerializedSource($provider)
             );
         }
     }

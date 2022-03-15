@@ -8,7 +8,7 @@ use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Provider\ArrayProvider;
 use SmartAssert\YamlFile\Provider\ProviderInterface;
 
-class SourceCollection
+class SerializedSource
 {
     private ?YamlFile $manifestYamlFile;
     private ProviderInterface $sources;
