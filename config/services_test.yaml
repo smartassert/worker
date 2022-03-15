@@ -48,3 +48,6 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
         factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
+
+    App\Services\YamlSourceCollectionFactory:
+        public: true
