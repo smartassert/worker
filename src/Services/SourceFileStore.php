@@ -34,6 +34,23 @@ class SourceFileStore
         return $uploadedFile->move($directory, $filename);
     }
 
+    public function storeContent(string $content, string $relativePath): void
+    {
+        $directory = $this->path . '/' . dirname($relativePath);
+        if (false == file_exists($directory)) {
+            mkdir($directory);
+        }
+
+        $filename = basename($relativePath);
+
+        $path = $directory . '/' . $filename;
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        file_put_contents($path, $content);
+    }
+
     public function has(string $relativePath): bool
     {
         return file_exists($this->path . '/' . $relativePath);

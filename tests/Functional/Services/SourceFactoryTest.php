@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Source;
+use App\Exception\MissingTestSourceException;
 use App\Model\Manifest;
 use App\Model\UploadedFileKey;
 use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
+use App\Model\YamlSourceCollection;
 use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\SourceFileStore;
@@ -17,6 +19,8 @@ use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\UploadedFileFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use SmartAssert\YamlFile\Collection\ArrayCollection;
+use SmartAssert\YamlFile\YamlFile;
 
 class SourceFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -157,6 +161,51 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                     Source::create(Source::TYPE_TEST, 'Test/chrome-firefox-open-index.yml'),
                     Source::create(Source::TYPE_TEST, 'Test/chrome-open-form.yml'),
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider
+     */
+    public function testCreateFromYamlSourceCollectionThrowsMissingTestSourceException(
+        YamlSourceCollection $collection,
+        string $expectedMissingTestSourcePath
+    ): void {
+        try {
+            $this->factory->createFromYamlSourceCollection($collection);
+            self::fail(MissingTestSourceException::class . ' not thrown');
+        } catch (MissingTestSourceException $e) {
+            self::assertSame($expectedMissingTestSourcePath, $e->getPath());
+        }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider(): array
+    {
+        return [
+            'single source in manifest, no sources' => [
+                'collection' => new YamlSourceCollection(
+                    new Manifest([
+                        'test1.yaml',
+                    ]),
+                    new ArrayCollection([]),
+                ),
+                'expectedMissingTestSourcePath' => 'test1.yaml',
+            ],
+            'two sources in manifest, second not present' => [
+                'collection' => new YamlSourceCollection(
+                    new Manifest([
+                        'test1.yaml',
+                        'test2.yaml',
+                    ]),
+                    new ArrayCollection([
+                        YamlFile::create('test1.yaml', ''),
+                    ]),
+                ),
+                'expectedMissingTestSourcePath' => 'test2.yaml',
             ],
         ];
     }

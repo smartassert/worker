@@ -85,6 +85,18 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
         ];
     }
 
+    public function testStoreContent(): void
+    {
+        $fixturePath = 'Test/chrome-open-index.yml';
+
+        $content = (string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Test/chrome-open-index.yml');
+        $path = $fixturePath;
+
+        $this->store->storeContent($content, $path);
+
+        self::assertTrue($this->store->has($fixturePath));
+    }
+
     private function createUploadedSource(string $relativePath): UploadedSource
     {
         $uploadedFilePath = $this->uploadStoreHandler->copyFixture($relativePath);
