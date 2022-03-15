@@ -61,4 +61,15 @@ class ClientRequestSender
 
         return $this->client->getResponse();
     }
+
+    public function addSerializedSource(string $requestBody): Response
+    {
+        $this->client->request(
+            method: 'POST',
+            uri: '/add-sources-as-single-file',
+            content: $requestBody
+        );
+
+        return $this->client->getResponse();
+    }
 }
