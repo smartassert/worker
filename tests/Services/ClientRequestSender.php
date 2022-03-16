@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Model\UploadedFileKey;
+use App\Request\AddSerializedSourceRequest;
 use App\Request\AddSourcesRequest;
 use App\Request\JobCreateRequest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -62,12 +63,14 @@ class ClientRequestSender
         return $this->client->getResponse();
     }
 
-    public function addSerializedSource(string $requestBody): Response
+    public function addSerializedSource(string $source): Response
     {
         $this->client->request(
             method: 'POST',
             uri: '/add-sources-as-single-file',
-            content: $requestBody
+            parameters: [
+                AddSerializedSourceRequest::KEY_SOURCE => $source,
+            ],
         );
 
         return $this->client->getResponse();
