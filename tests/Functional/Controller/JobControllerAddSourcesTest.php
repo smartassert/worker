@@ -12,6 +12,7 @@ use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\Asserter\SourceEntityAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\FileStoreHandler;
+use App\Tests\Services\SourceFileInspector;
 use App\Tests\Services\UploadedFileFactory;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,6 +31,7 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
     private JsonResponseAsserter $jsonResponseAsserter;
     private FileStoreHandler $localSourceStoreHandler;
     private FileStoreHandler $uploadStoreHandler;
+    private SourceFileInspector $sourceFileInspector;
 
     protected function setUp(): void
     {
@@ -52,6 +54,10 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
         $sourceEntityAsserter = self::getContainer()->get(SourceEntityAsserter::class);
         \assert($sourceEntityAsserter instanceof SourceEntityAsserter);
         $this->sourceEntityAsserter = $sourceEntityAsserter;
+
+        $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
+        \assert($sourceFileInspector instanceof SourceFileInspector);
+        $this->sourceFileInspector = $sourceFileInspector;
 
         $this->sourceEntityAsserter->assertRepositoryIsEmpty();
 
@@ -105,7 +111,7 @@ class JobControllerAddSourcesTest extends AbstractBaseFunctionalTest
     public function testSourcesAreStored(): void
     {
         foreach (self::EXPECTED_SOURCES as $expectedSource) {
-            $this->sourceEntityAsserter->assertSourceExists($expectedSource);
+            self::assertTrue($this->sourceFileInspector->has($expectedSource));
         }
     }
 
