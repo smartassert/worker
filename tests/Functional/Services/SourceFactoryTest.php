@@ -14,7 +14,9 @@ use App\Model\YamlSourceCollection;
 use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\Asserter\SourceEntityAsserter;
 use App\Tests\Services\FileStoreHandler;
+use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use App\Tests\Services\UploadedFileFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +32,8 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     private UploadedFileFactory $uploadedFileFactory;
     private ManifestFactory $manifestFactory;
     private SourceFileInspector $sourceFileInspector;
+    private FixtureReader $fixtureReader;
+    private SourceEntityAsserter $sourceEntityAsserter;
 
     /**
      * @var ObjectRepository<Source>
@@ -71,6 +75,14 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
         \assert($sourceFileInspector instanceof SourceFileInspector);
         $this->sourceFileInspector = $sourceFileInspector;
+
+        $fixtureReader = self::getContainer()->get(FixtureReader::class);
+        \assert($fixtureReader instanceof FixtureReader);
+        $this->fixtureReader = $fixtureReader;
+
+        $sourceEntityAsserter = self::getContainer()->get(SourceEntityAsserter::class);
+        \assert($sourceEntityAsserter instanceof SourceEntityAsserter);
+        $this->sourceEntityAsserter = $sourceEntityAsserter;
     }
 
     protected function tearDown(): void
@@ -206,6 +218,84 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                     ]),
                 ),
                 'expectedMissingTestSourcePath' => 'test2.yaml',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createFromYamlSourceCollectionSuccessDataProvider
+     *
+     * @param string[] $expectedSourcePaths
+     */
+    public function testCreateFromYamlSourceCollectionSuccess(
+        callable $collectionCreator,
+        array $expectedSourcePaths,
+    ): void {
+        $this->factory->createFromYamlSourceCollection($collectionCreator($this->fixtureReader));
+
+        foreach ($expectedSourcePaths as $expectedSourcePath) {
+            self::assertTrue($this->sourceFileInspector->has($expectedSourcePath));
+            self::assertSame(
+                $this->fixtureReader->read($expectedSourcePath),
+                $this->sourceFileInspector->read($expectedSourcePath)
+            );
+
+            $this->sourceEntityAsserter->assertRelativePathsEqual($expectedSourcePaths);
+        }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createFromYamlSourceCollectionSuccessDataProvider(): array
+    {
+        return [
+            'single test in manifest, single test source' => [
+                'collectionCreator' => function (FixtureReader $fixtureReader) {
+                    return new YamlSourceCollection(
+                        new Manifest([
+                            'Test/chrome-open-index.yml',
+                        ]),
+                        new ArrayCollection([
+                            YamlFile::create(
+                                'Test/chrome-open-index.yml',
+                                $fixtureReader->read('Test/chrome-open-index.yml')
+                            ),
+                        ]),
+                    );
+                },
+                'expectedSourcePaths' => [
+                    'Test/chrome-open-index.yml',
+                ],
+            ],
+            'two tests in manifest, three test sources' => [
+                'collectionCreator' => function (FixtureReader $fixtureReader) {
+                    return new YamlSourceCollection(
+                        new Manifest([
+                            'Test/chrome-open-index.yml',
+                            'Test/firefox-open-index.yml',
+                        ]),
+                        new ArrayCollection([
+                            YamlFile::create(
+                                'Test/chrome-open-index.yml',
+                                $fixtureReader->read('Test/chrome-open-index.yml')
+                            ),
+                            YamlFile::create(
+                                'Test/firefox-open-index.yml',
+                                $fixtureReader->read('Test/firefox-open-index.yml')
+                            ),
+                            YamlFile::create(
+                                'Page/index.yml',
+                                $fixtureReader->read('Page/index.yml')
+                            ),
+                        ]),
+                    );
+                },
+                'expectedSourcePaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/firefox-open-index.yml',
+                    'Page/index.yml',
+                ],
             ],
         ];
     }
