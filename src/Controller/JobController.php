@@ -11,6 +11,7 @@ use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Model\YamlSourceCollection;
 use App\Repository\TestRepository;
+use App\Request\AddSerializedSourceRequest;
 use App\Request\AddSourcesRequest;
 use App\Request\JobCreateRequest;
 use App\Response\BadAddSourcesRequestResponse;
@@ -25,7 +26,6 @@ use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
-use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -121,7 +121,7 @@ class JobController
         YamlSourceCollectionFactory $factory,
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
-        ProviderInterface $yamlFileProvider,
+        AddSerializedSourceRequest $request,
     ): JsonResponse {
         // @todo: validate yaml file provider in #163
 
@@ -132,7 +132,7 @@ class JobController
         $yamlSourceCollection = null;
 
         try {
-            $yamlSourceCollection = $factory->create($yamlFileProvider);
+            $yamlSourceCollection = $factory->create($request->provider);
         } catch (InvalidManifestException | MissingManifestException | ProvisionException $e) {
             // @todo: handle via ExceptionEvent listener in #166
         }
