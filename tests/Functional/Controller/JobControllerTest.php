@@ -17,6 +17,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\EnvironmentFactory;
+use App\Tests\Services\SourceFileInspector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
 {
@@ -26,6 +27,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private JsonResponseAsserter $jsonResponseAsserter;
     private SourceStore $sourceStore;
     private SourceRepository $sourceRepository;
+    private SourceFileInspector $sourceFileInspector;
 
     protected function setUp(): void
     {
@@ -54,6 +56,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
         $this->sourceRepository = $sourceRepository;
+
+        $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
+        \assert($sourceFileInspector instanceof SourceFileInspector);
+        $this->sourceFileInspector = $sourceFileInspector;
     }
 
     public function testCreate(): void
@@ -259,11 +265,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
             self::assertArrayHasKey('content', $expectedSourceData);
 
-            $sourceContent = (string) file_get_contents(
-                __DIR__ . '/../../Fixtures/CompilerSource/' . $source->getPath()
-            );
-
-            self::assertSame($expectedSourceData['content'], $sourceContent);
+            self::assertTrue($this->sourceFileInspector->has($source->getPath()));
+            self::assertSame($expectedSourceData['content'], $this->sourceFileInspector->read($source->getPath()));
         }
     }
 
