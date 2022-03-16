@@ -66,24 +66,14 @@ class SourceFactory
     {
         $manifest = $sourceCollection->getManifest();
         $manifestTestPaths = $manifest->getTestPaths();
-        $sourceTestPaths = [];
+        $sourcePaths = [];
 
         $sources = $sourceCollection->getYamlFiles();
 
         /** @var YamlFile $source */
         foreach ($sources->getYamlFiles() as $source) {
-            $sourceTestPaths[] = (string) $source->name;
-        }
-
-        foreach ($manifestTestPaths as $manifestTestPath) {
-            if (false === in_array($manifestTestPath, $sourceTestPaths)) {
-                throw new MissingTestSourceException($manifestTestPath);
-            }
-        }
-
-        /** @var YamlFile $source */
-        foreach ($sources->getYamlFiles() as $source) {
             $sourcePath = (string) $source->name;
+            $sourcePaths[] = $sourcePath;
 
             $sourceType = Source::TYPE_RESOURCE;
 
@@ -93,6 +83,12 @@ class SourceFactory
 
             $this->sourceFileStore->storeContent($source->content, $sourcePath);
             $this->sourceEntityFactory->create($sourceType, $sourcePath);
+        }
+
+        foreach ($manifestTestPaths as $manifestTestPath) {
+            if (false === in_array($manifestTestPath, $sourcePaths)) {
+                throw new MissingTestSourceException($manifestTestPath);
+            }
         }
     }
 }
