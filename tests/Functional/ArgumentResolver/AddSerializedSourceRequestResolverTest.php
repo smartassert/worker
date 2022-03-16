@@ -95,10 +95,16 @@ class AddSerializedSourceRequestResolverTest extends AbstractBaseFunctionalTest
                 'request' => new Request(
                     request: [
                         AddSerializedSourceRequest::KEY_SOURCE => <<< 'EOT'
-                        "manifest.yaml": |
+                        ---
+                        "path": "manifest.yaml"
+                        "content": |
                           - test1.yaml
-                        "test1.yaml": |
-                          - test1 content                        
+                        ...
+                        ---
+                        "path": "test1.yaml"
+                        "content": |
+                          - test1 content
+                        ...                       
                         EOT
                         ,
                     ]

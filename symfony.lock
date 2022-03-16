@@ -462,6 +462,9 @@
     "webignition/yaml-document-generator": {
         "version": "0.3"
     },
+    "webignition/yaml-document-set-parser": {
+        "version": "0.3"
+    },
     "webmozart/assert": {
         "version": "1.10.0"
     }
