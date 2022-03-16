@@ -14,11 +14,6 @@ class SourceFileStore
     ) {
     }
 
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
     public function store(UploadedSource $uploadedSource, string $relativePath): File
     {
         $directory = $this->path . '/' . dirname($relativePath);
