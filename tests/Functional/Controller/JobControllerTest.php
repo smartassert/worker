@@ -17,6 +17,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\EnvironmentFactory;
+use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
@@ -28,6 +29,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private SourceStore $sourceStore;
     private SourceRepository $sourceRepository;
     private SourceFileInspector $sourceFileInspector;
+    private FixtureReader $fixtureReader;
 
     protected function setUp(): void
     {
@@ -60,6 +62,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
         \assert($sourceFileInspector instanceof SourceFileInspector);
         $this->sourceFileInspector = $sourceFileInspector;
+
+        $fixtureReader = self::getContainer()->get(FixtureReader::class);
+        \assert($fixtureReader instanceof FixtureReader);
+        $this->fixtureReader = $fixtureReader;
     }
 
     public function testCreate(): void
@@ -237,7 +243,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      * @param array<string, array<mixed>> $expectedStoredSources
      */
     public function testAddSerializedSourceSuccess(
-        string $requestBody,
+        callable $requestBodyCreator,
         array $expectedStoredSources,
     ): void {
         $environmentSetup = (new EnvironmentSetup())
@@ -251,7 +257,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
         $this->environmentFactory->create($environmentSetup);
 
-        $response = $this->clientRequestSender->addSerializedSource($requestBody);
+        $response = $this->clientRequestSender->addSerializedSource($requestBodyCreator($this->fixtureReader));
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(array_keys($expectedStoredSources), $this->sourceStore->findAllPaths());
@@ -263,10 +269,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             self::assertArrayHasKey('type', $expectedSourceData);
             self::assertSame($expectedSourceData['type'], $source->getType());
 
-            self::assertArrayHasKey('content', $expectedSourceData);
+            self::assertArrayHasKey('contentFixture', $expectedSourceData);
 
             self::assertTrue($this->sourceFileInspector->has($source->getPath()));
-            self::assertSame($expectedSourceData['content'], $this->sourceFileInspector->read($source->getPath()));
+            self::assertSame(
+                trim($this->fixtureReader->read($expectedSourceData['contentFixture'])),
+                $this->sourceFileInspector->read($source->getPath())
+            );
         }
     }
 
@@ -275,70 +284,57 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      */
     public function addSerializedSourceSuccessDataProvider(): array
     {
-        $sourceFiles = [
-            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Test/chrome-open-index.yml')),
-            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Test/firefox-open-index.yml')),
-            trim((string) file_get_contents(__DIR__ . '/../../Fixtures/Basil/Page/index.yml')),
-        ];
-
         return [
             'single source file, test only' => [
-                'requestBody' => str_replace(
-                    '{{ source_0 }}',
-                    str_replace("\n", "\n  ", $sourceFiles[0]),
-                    <<< 'EOT'
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
                     "manifest.yaml": |
                       - Test/chrome-open-index.yml
                     "Test/chrome-open-index.yml": |
-                      {{ source_0 }}
-                    EOT
-                ),
+                      {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
+                    EOT;
+                },
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
-                        'content' => $sourceFiles[0],
+                        'contentFixture' => 'Test/chrome-open-index.yml',
                     ],
                 ]
             ],
             'multiple source files' => [
-                'requestBody' => str_replace(
-                    [
-                        '{{ source_0 }}',
-                        '{{ source_1 }}',
-                        '{{ source_2 }}',
-                    ],
-                    [
-                        str_replace("\n", "\n  ", $sourceFiles[0]),
-                        str_replace("\n", "\n  ", $sourceFiles[1]),
-                        str_replace("\n", "\n  ", $sourceFiles[2]),
-                    ],
-                    <<< 'EOT'
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
                     "manifest.yaml": |
                       - Test/chrome-open-index.yml
                       - Test/firefox-open-index.yml
                     "Test/chrome-open-index.yml": |
-                      {{ source_0 }}                
+                      {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
                     "Test/firefox-open-index.yml": |
-                      {{ source_1 }}   
+                      {$this->createSourcePayload($fixtureReader, 'Test/firefox-open-index.yml')}
                     "Page/index.yml": |
-                      {{ source_2 }}                         
-                    EOT
-                ),
+                      {$this->createSourcePayload($fixtureReader, 'Page/index.yml')}
+                    EOT;
+                },
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
-                        'content' => $sourceFiles[0],
+                        'contentFixture' => 'Test/chrome-open-index.yml',
                     ],
                     'Test/firefox-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
-                        'content' => $sourceFiles[1],
+                        'contentFixture' => 'Test/firefox-open-index.yml',
                     ],
                     'Page/index.yml' => [
                         'type' => Source::TYPE_RESOURCE,
-                        'content' => $sourceFiles[2],
+                        'contentFixture' => 'Page/index.yml',
                     ],
                 ]
             ],
         ];
+    }
+
+    private function createSourcePayload(FixtureReader $fixtureReader, string $path): string
+    {
+        return str_replace("\n", "\n  ", $fixtureReader->read($path));
     }
 }
