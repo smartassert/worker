@@ -51,3 +51,8 @@ services:
 
     App\Services\YamlSourceCollectionFactory:
         public: true
+
+    App\Tests\Services\SourceFileInspector:
+        public: true
+        arguments:
+            $path: '%compiler_source_directory%'

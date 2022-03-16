@@ -13,9 +13,9 @@ use App\Model\UploadedSourceCollection;
 use App\Model\YamlSourceCollection;
 use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
-use App\Services\SourceFileStore;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\FileStoreHandler;
+use App\Tests\Services\SourceFileInspector;
 use App\Tests\Services\UploadedFileFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -25,11 +25,11 @@ use SmartAssert\YamlFile\YamlFile;
 class SourceFactoryTest extends AbstractBaseFunctionalTest
 {
     private SourceFactory $factory;
-    private SourceFileStore $sourceFileStore;
     private FileStoreHandler $localSourceStoreHandler;
     private FileStoreHandler $uploadStoreHandler;
     private UploadedFileFactory $uploadedFileFactory;
     private ManifestFactory $manifestFactory;
+    private SourceFileInspector $sourceFileInspector;
 
     /**
      * @var ObjectRepository<Source>
@@ -43,10 +43,6 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $factory = self::getContainer()->get(SourceFactory::class);
         \assert($factory instanceof SourceFactory);
         $this->factory = $factory;
-
-        $store = self::getContainer()->get(SourceFileStore::class);
-        \assert($store instanceof SourceFileStore);
-        $this->sourceFileStore = $store;
 
         $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
         \assert($uploadedFileFactory instanceof UploadedFileFactory);
@@ -71,6 +67,10 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $manifestFactory = self::getContainer()->get(ManifestFactory::class);
         \assert($manifestFactory instanceof ManifestFactory);
         $this->manifestFactory = $manifestFactory;
+
+        $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
+        \assert($sourceFileInspector instanceof SourceFileInspector);
+        $this->sourceFileInspector = $sourceFileInspector;
     }
 
     protected function tearDown(): void
@@ -118,7 +118,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
 
         $this->factory->createCollectionFromManifest($manifest, $uploadedSources);
         foreach ($expectedStoredTestPaths as $expectedStoredTestPath) {
-            self::assertTrue($this->sourceFileStore->has($expectedStoredTestPath));
+            self::assertTrue($this->sourceFileInspector->has($expectedStoredTestPath));
         }
 
         $sources = $this->sourceRepository->findAll();

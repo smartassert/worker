@@ -8,6 +8,7 @@ use App\Model\UploadedSource;
 use App\Services\SourceFileStore;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\FileStoreHandler;
+use App\Tests\Services\SourceFileInspector;
 use App\Tests\Services\UploadedFileFactory;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -17,6 +18,7 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
     private FileStoreHandler $localSourceStoreHandler;
     private FileStoreHandler $uploadStoreHandler;
     private UploadedFileFactory $uploadedFileFactory;
+    private SourceFileInspector $sourceFileInspector;
 
     protected function setUp(): void
     {
@@ -39,6 +41,10 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
         \assert($uploadStoreHandler instanceof FileStoreHandler);
         $this->uploadStoreHandler = $uploadStoreHandler;
         $this->uploadStoreHandler->clear();
+
+        $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
+        \assert($sourceFileInspector instanceof SourceFileInspector);
+        $this->sourceFileInspector = $sourceFileInspector;
     }
 
     protected function tearDown(): void
@@ -56,7 +62,7 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
         string $fixturePath,
         File $expectedFile
     ): void {
-        self::assertFalse($this->store->has($fixturePath));
+        self::assertFalse($this->sourceFileInspector->has($fixturePath));
 
         $expectedFilePath = $expectedFile->getPathname();
         self::assertFileDoesNotExist($expectedFilePath);
@@ -66,7 +72,7 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
 
         self::assertEquals($expectedFile->getPathname(), $file->getPathname());
         self::assertFileExists($expectedFilePath);
-        self::assertTrue($this->store->has($fixturePath));
+        self::assertTrue($this->sourceFileInspector->has($fixturePath));
     }
 
     /**
@@ -94,7 +100,7 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
 
         $this->store->storeContent($content, $path);
 
-        self::assertTrue($this->store->has($fixturePath));
+        self::assertTrue($this->sourceFileInspector->has($fixturePath));
     }
 
     private function createUploadedSource(string $relativePath): UploadedSource

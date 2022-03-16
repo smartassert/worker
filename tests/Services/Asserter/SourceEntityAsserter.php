@@ -6,7 +6,7 @@ namespace App\Tests\Services\Asserter;
 
 use App\Entity\Source;
 use App\Services\EntityStore\SourceStore;
-use App\Services\SourceFileStore;
+use App\Tests\Services\SourceFileInspector;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +21,7 @@ class SourceEntityAsserter
     public function __construct(
         EntityManagerInterface $entityManager,
         private SourceStore $sourceStore,
-        private SourceFileStore $sourceFileStore,
+        private SourceFileInspector $sourceFileInspector,
     ) {
         $repository = $entityManager->getRepository(Source::class);
         \assert($repository instanceof ObjectRepository);
@@ -43,6 +43,6 @@ class SourceEntityAsserter
 
     public function assertSourceExists(string $path): void
     {
-        TestCase::assertTrue($this->sourceFileStore->has($path));
+        TestCase::assertTrue($this->sourceFileInspector->has($path));
     }
 }

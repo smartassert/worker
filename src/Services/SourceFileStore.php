@@ -14,11 +14,6 @@ class SourceFileStore
     ) {
     }
 
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
     public function store(UploadedSource $uploadedSource, string $relativePath): File
     {
         $directory = $this->path . '/' . dirname($relativePath);
@@ -49,10 +44,5 @@ class SourceFileStore
         }
 
         file_put_contents($path, $content);
-    }
-
-    public function has(string $relativePath): bool
-    {
-        return file_exists($this->path . '/' . $relativePath);
     }
 }
