@@ -45,9 +45,4 @@ class SourceFileStore
 
         file_put_contents($path, $content);
     }
-
-    public function has(string $relativePath): bool
-    {
-        return file_exists($this->path . '/' . $relativePath);
-    }
 }
