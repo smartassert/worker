@@ -47,3 +47,8 @@ services:
         public: true
         arguments:
             $path: '%kernel.project_dir%/%basil_local_source_path%'
+
+    App\Tests\Services\FixtureReader:
+        public: true
+        arguments:
+            $path: '%kernel.project_dir%/%basil_local_fixtures_path%'
