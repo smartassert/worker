@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ArgumentResolver;
 
+use App\Exception\SerializedSourceIsNotYamlException;
 use App\Request\AddSerializedSourceRequest;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
     }
 
     /**
-     * @throws ParseException
+     * @throws SerializedSourceIsNotYamlException
      *
      * @return \Traversable<AddSerializedSourceRequest>
      */
@@ -34,9 +35,13 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
             $sourceContent = $request->request->get(AddSerializedSourceRequest::KEY_SOURCE);
             $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-            yield new AddSerializedSourceRequest(
-                $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
-            );
+            try {
+                yield new AddSerializedSourceRequest(
+                    $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
+                );
+            } catch (ParseException $parseException) {
+                throw new SerializedSourceIsNotYamlException($sourceContent, $parseException);
+            }
         }
     }
 }

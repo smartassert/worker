@@ -238,6 +238,39 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
+     * @dataProvider addSerializedSourceInvalidSerializedSourceDataProvider
+     */
+    public function testAddSerializedSourceInvalidSerializedSource(string $requestSource): void
+    {
+        $environmentSetup = (new EnvironmentSetup())
+            ->withJobSetup(
+                (new JobSetup())
+                    ->withLabel('label content')
+                    ->withCallbackUrl('http://example.com/callback')
+                    ->withMaximumDurationInSeconds(10)
+            )
+        ;
+
+        $this->environmentFactory->create($environmentSetup);
+
+        $response = $this->clientRequestSender->addSerializedSource($requestSource);
+
+        self::assertSame(500, $response->getStatusCode());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function addSerializedSourceInvalidSerializedSourceDataProvider(): array
+    {
+        return [
+            'default' => [
+                'requestSource' => '  invalid' . "\n" . 'yaml',
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider addSerializedSourceSuccessDataProvider
      *
      * @param array<string, array<mixed>> $expectedStoredSources
