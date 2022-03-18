@@ -120,4 +120,6 @@ services:
 
     webignition\YamlDocumentSetParser\Parser: ~
 
+    SmartAssert\YamlFile\FileHashes\Deserializer: ~
+
     SmartAssert\YamlFile\Collection\Deserializer: ~
