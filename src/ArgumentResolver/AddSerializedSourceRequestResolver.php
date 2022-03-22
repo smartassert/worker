@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\ArgumentResolver;
 
-use App\Exception\SerializedSourceIsNotYamlException;
+use App\Exception\SerializedSourceDeserializationException;
 use App\Request\AddSerializedSourceRequest;
 use SmartAssert\YamlFile\Collection\Deserializer;
+use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterface
 {
@@ -25,7 +25,7 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
     }
 
     /**
-     * @throws SerializedSourceIsNotYamlException
+     * @throws SerializedSourceDeserializationException
      *
      * @return \Traversable<AddSerializedSourceRequest>
      */
@@ -39,8 +39,8 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
                 yield new AddSerializedSourceRequest(
                     $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
                 );
-            } catch (ParseException $parseException) {
-                throw new SerializedSourceIsNotYamlException($sourceContent, $parseException);
+            } catch (DeserializeException $deserializeException) {
+                throw new SerializedSourceDeserializationException($sourceContent, $deserializeException);
             }
         }
     }

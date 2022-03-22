@@ -96,8 +96,10 @@ class AddSerializedSourceRequestResolverTest extends AbstractBaseFunctionalTest
                     request: [
                         AddSerializedSourceRequest::KEY_SOURCE => <<< 'EOT'
                         ---
-                        9427cdad1e98865ed992588e1856958d: manifest.yaml
-                        81872df992b687816c56189b401fe61a: test1.yaml
+                        9427cdad1e98865ed992588e1856958d:
+                            - manifest.yaml
+                        81872df992b687816c56189b401fe61a:
+                            - test1.yaml
                         ...
                         ---
                         - test1.yaml
