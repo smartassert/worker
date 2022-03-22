@@ -265,7 +265,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         return [
             'default' => [
-                'requestSource' => '  invalid' . "\n" . 'yaml',
+                'requestSource' => <<< 'EOT'
+                ---
+                  invalid
+                yaml
+                ...
+                EOT,
             ],
         ];
     }
@@ -322,8 +327,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'requestBodyCreator' => function (FixtureReader $fixtureReader) {
                     return <<< EOT
                     ---
-                    eef1a102a86969433b2e102e378cc623: manifest.yaml
-                    c9a849a4679e2a0917752edf7f5a256c: Test/chrome-open-index.yml
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                        - Test/chrome-open-index.yml
                     ...
                     ---
                     - Test/chrome-open-index.yml
@@ -344,10 +351,14 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'requestBodyCreator' => function (FixtureReader $fixtureReader) {
                     return <<< EOT
                     ---
-                    2d4337917ace625ce4df0c54bcc41b60: manifest.yaml
-                    c9a849a4679e2a0917752edf7f5a256c: Test/chrome-open-index.yml
-                    77f1d54a79de9f49de1c3f77d1be8caa: Test/firefox-open-index.yml
-                    aa0ed8761035d1f68f59d011c401efa9: Page/index.yml
+                    2d4337917ace625ce4df0c54bcc41b60:
+                        - manifest.yaml
+                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                        - Test/chrome-open-index.yml
+                    4f8258f0dcf8406f3a842810100c1701:
+                        - Test/firefox-open-index.yml
+                    002e2048e4129d6e0daf6626aac8dce2:
+                        - Page/index.yml
                     ...
                     ---
                     - Test/chrome-open-index.yml
