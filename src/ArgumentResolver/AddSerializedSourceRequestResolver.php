@@ -34,10 +34,6 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
             $sourceContent = $request->request->get(AddSerializedSourceRequest::KEY_SOURCE);
             $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-            // ParseException is being thrown for a manifest with invalid yaml content
-            // From the exception it is not possible to tell to which file the invalid yaml belongs
-            // All serialized documents are parsed. We need to know for which it fails.
-
             yield new AddSerializedSourceRequest(
                 $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
             );

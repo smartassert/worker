@@ -538,6 +538,30 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ],
                 ]
             ],
+            'single source file, test only with intentionally invalid yaml' => [
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
+                    ---
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    3dce4acdc7912a59eaeb7a4ebad24c44:
+                        - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'InvalidTest/invalid-yaml.yml')}
+                    ...
+                    EOT;
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'InvalidTest/invalid-yaml.yml',
+                    ],
+                ]
+            ],
             'multiple source files' => [
                 'requestBodyCreator' => function (FixtureReader $fixtureReader) {
                     return <<< EOT
