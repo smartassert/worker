@@ -26,7 +26,6 @@ use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
-use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -133,14 +132,14 @@ class JobController
 
         try {
             $yamlSourceCollection = $factory->create($request->provider);
-        } catch (InvalidManifestException | MissingManifestException | ProvisionException $e) {
+        } catch (InvalidManifestException | MissingManifestException $e) {
             // @todo: handle via ExceptionEvent listener in #166
         }
         \assert($yamlSourceCollection instanceof YamlSourceCollection);
 
         try {
             $sourceFactory->createFromYamlSourceCollection($yamlSourceCollection);
-        } catch (MissingTestSourceException | ProvisionException $e) {
+        } catch (MissingTestSourceException $e) {
             // @todo: handle via ExceptionEvent listener in #166
         }
 
