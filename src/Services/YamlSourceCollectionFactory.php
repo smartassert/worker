@@ -10,7 +10,6 @@ use App\Model\Manifest;
 use App\Model\YamlSourceCollection;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
-use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -26,7 +25,6 @@ class YamlSourceCollectionFactory
 
     /**
      * @throws MissingManifestException
-     * @throws ProvisionException
      * @throws InvalidManifestException
      */
     public function create(ProviderInterface $provider): YamlSourceCollection

@@ -11,7 +11,6 @@ use App\Model\UploadedSource;
 use App\Model\UploadedSourceCollection;
 use App\Model\YamlSourceCollection;
 use App\Services\EntityFactory\SourceFactory as SourceEntityFactory;
-use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\YamlFile;
 
 class SourceFactory
@@ -60,7 +59,6 @@ class SourceFactory
 
     /**
      * @throws MissingTestSourceException
-     * @throws ProvisionException
      */
     public function createFromYamlSourceCollection(YamlSourceCollection $sourceCollection): void
     {
