@@ -239,8 +239,87 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider addSerializedSourceInvalidSerializedSourceDataProvider
+     *
+     * @param array<mixed> $expectedResponseData
      */
-    public function testAddSerializedSourceInvalidSerializedSource(string $requestSource): void
+    public function testAddSerializedSourceInvalidSerializedSource(
+        string $requestSource,
+        array $expectedResponseData,
+    ): void {
+        $environmentSetup = (new EnvironmentSetup())
+            ->withJobSetup(
+                (new JobSetup())
+                    ->withLabel('label content')
+                    ->withCallbackUrl('http://example.com/callback')
+                    ->withMaximumDurationInSeconds(10)
+            )
+        ;
+
+        $this->environmentFactory->create($environmentSetup);
+
+        $response = $this->clientRequestSender->addSerializedSource($requestSource);
+
+        $this->jsonResponseAsserter->assertJsonResponse(
+            400,
+            $expectedResponseData,
+            $response
+        );
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function addSerializedSourceInvalidSerializedSourceDataProvider(): array
+    {
+        return [
+            'metadata not valid yaml' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                  invalid
+                yaml
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_serialized_source_metadata',
+                        'payload' => [
+                            'file_hashes_content' => '  invalid' . "\n" . 'yaml',
+                            'message' => 'Serialized source metadata cannot be decoded',
+                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        ],
+                    ],
+                ],
+            ],
+            'metadata incomplete' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                hash_content:
+                    - file.yaml
+                ...
+                ---
+                file1.yaml content
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'incomplete_serialized_source_metadata',
+                        'payload' => [
+                            'hash' => '272c8402fa38edc52165379d6d3c356a',
+                            'message' => 'Serialized source metadata is not complete',
+                            'previous_message' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider addSerializedSourceInvalidRequestDataProvider
+     *
+     * @param array<mixed> $expectedResponseData
+     */
+    public function testAddSerializedSourceInvalidRequest(string $requestSource, array $expectedResponseData): void
     {
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(
@@ -255,22 +334,134 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
         $response = $this->clientRequestSender->addSerializedSource($requestSource);
 
-        self::assertSame(500, $response->getStatusCode());
+        $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
     }
 
     /**
      * @return array<mixed>
      */
-    public function addSerializedSourceInvalidSerializedSourceDataProvider(): array
+    public function addSerializedSourceInvalidRequestDataProvider(): array
     {
         return [
-            'default' => [
+            'metadata not valid yaml' => [
                 'requestSource' => <<< 'EOT'
                 ---
                   invalid
                 yaml
                 ...
                 EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_serialized_source_metadata',
+                        'payload' => [
+                            'file_hashes_content' => '  invalid' . "\n" . 'yaml',
+                            'message' => 'Serialized source metadata cannot be decoded',
+                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        ],
+                    ],
+                ],
+            ],
+            'metadata incomplete' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                hash_content:
+                    - file.yaml
+                ...
+                ---
+                file1.yaml content
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'incomplete_serialized_source_metadata',
+                        'payload' => [
+                            'hash' => '272c8402fa38edc52165379d6d3c356a',
+                            'message' => 'Serialized source metadata is not complete',
+                            'previous_message' => null,
+                        ],
+                    ],
+                ],
+            ],
+            'invalid manifest: empty' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                d41d8cd98f00b204e9800998ecf8427e:
+                    - manifest.yaml
+                ...
+                ---
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_manifest',
+                        'payload' => [
+                            'code' => 300,
+                            'message' => 'Manifest is empty',
+                            'previous_message' => null,
+                        ],
+                    ],
+                ],
+            ],
+            'invalid manifest: invalid yaml within manifest' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                3dce4acdc7912a59eaeb7a4ebad24c44:
+                    - manifest.yaml
+                ...
+                ---
+                  invalid
+                yaml
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_manifest',
+                        'payload' => [
+                            'code' => 100,
+                            'message' => 'Manifest content is not valid yaml',
+                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        ],
+                    ],
+                ],
+            ],
+            'missing manifest' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                158bb7a11c6230d913642ed45a3dffbe:
+                    - file1.yaml
+                ...
+                ---
+                file1content
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'missing_manifest',
+                        'payload' => [],
+                    ],
+                ],
+            ],
+            'source file not present' => [
+                'requestSource' => <<< 'EOT'
+                ---
+                eef1a102a86969433b2e102e378cc623:
+                    - manifest.yaml
+                6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                    - Test/chrome-open-index.yml
+                ...
+                ---
+                - Test/chrome-open-index.yml
+                ...
+                EOT,
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'missing_test_source',
+                        'payload' => [
+                            'message' => 'Test source "Test/chrome-open-index.yml" missing',
+                            'path' => 'Test/chrome-open-index.yml',
+                        ],
+                    ],
+                ],
             ],
         ];
     }
@@ -344,6 +535,30 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
                         'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                ]
+            ],
+            'single source file, test only with intentionally invalid yaml' => [
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
+                    ---
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    3dce4acdc7912a59eaeb7a4ebad24c44:
+                        - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'InvalidTest/invalid-yaml.yml')}
+                    ...
+                    EOT;
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'InvalidTest/invalid-yaml.yml',
                     ],
                 ]
             ],

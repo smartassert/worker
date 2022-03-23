@@ -9,7 +9,6 @@ use App\Exception\Manifest\ManifestFactoryExceptionInterface;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
-use App\Model\YamlSourceCollection;
 use App\Repository\TestRepository;
 use App\Request\AddSerializedSourceRequest;
 use App\Request\AddSourcesRequest;
@@ -21,6 +20,7 @@ use App\Services\CompilationState;
 use App\Services\EntityFactory\JobFactory;
 use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
+use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
 use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
@@ -121,26 +121,23 @@ class JobController
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
         AddSerializedSourceRequest $request,
+        ErrorResponseFactory $errorResponseFactory,
     ): JsonResponse {
         // @todo: validate yaml file provider in #163
-
         if (false === $this->jobStore->has()) {
             return BadAddSourcesRequestResponse::createJobMissingResponse();
         }
 
-        $yamlSourceCollection = null;
-
         try {
-            $yamlSourceCollection = $factory->create($request->provider);
-        } catch (InvalidManifestException | MissingManifestException $e) {
-            // @todo: handle via ExceptionEvent listener in #166
-        }
-        \assert($yamlSourceCollection instanceof YamlSourceCollection);
-
-        try {
-            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollection);
-        } catch (MissingTestSourceException $e) {
-            // @todo: handle via ExceptionEvent listener in #166
+            $sourceFactory->createFromYamlSourceCollection(
+                $factory->create($request->provider)
+            );
+        } catch (InvalidManifestException $exception) {
+            return $errorResponseFactory->createFromInvalidManifestException($exception);
+        } catch (MissingManifestException $exception) {
+            return $errorResponseFactory->createFromMissingManifestException($exception);
+        } catch (MissingTestSourceException $exception) {
+            return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
         $messageBus->dispatch(new JobReadyMessage());

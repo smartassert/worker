@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ArgumentResolver;
 
-use App\Exception\SerializedSourceDeserializationException;
 use App\Request\AddSerializedSourceRequest;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
@@ -25,7 +24,7 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
     }
 
     /**
-     * @throws SerializedSourceDeserializationException
+     * @throws DeserializeException
      *
      * @return \Traversable<AddSerializedSourceRequest>
      */
@@ -35,13 +34,9 @@ class AddSerializedSourceRequestResolver implements ArgumentValueResolverInterfa
             $sourceContent = $request->request->get(AddSerializedSourceRequest::KEY_SOURCE);
             $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-            try {
-                yield new AddSerializedSourceRequest(
-                    $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
-                );
-            } catch (DeserializeException $deserializeException) {
-                throw new SerializedSourceDeserializationException($sourceContent, $deserializeException);
-            }
+            yield new AddSerializedSourceRequest(
+                $this->yamlFileCollectionDeserializer->deserialize($sourceContent)
+            );
         }
     }
 }
