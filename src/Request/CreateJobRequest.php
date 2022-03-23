@@ -6,7 +6,7 @@ namespace App\Request;
 
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 
-class CombinedCreateJobRequest
+class CreateJobRequest
 {
     public const KEY_LABEL = 'label';
     public const KEY_CALLBACK_URL = 'callback_url';
