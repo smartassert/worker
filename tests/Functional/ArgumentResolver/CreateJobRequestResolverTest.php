@@ -8,8 +8,6 @@ use App\ArgumentResolver\CreateJobRequestResolver;
 use App\Request\CreateJobRequest;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockArgumentMetadata;
-use SmartAssert\YamlFile\Collection\ArrayCollection;
-use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
@@ -81,7 +79,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                     '',
                     '',
                     null,
-                    new ArrayCollection([])
+                    ''
                 ),
             ],
             'all request parameters empty' => [
@@ -97,7 +95,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                     '',
                     '',
                     null,
-                    new ArrayCollection([])
+                    ''
                 ),
             ],
             'label, callback_url, maximum_duration_in_seconds populated' => [
@@ -113,7 +111,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                     'label value',
                     'https://example.com/callback',
                     300,
-                    new ArrayCollection([])
+                    ''
                 ),
             ],
             'all request parameters populated' => [
@@ -124,16 +122,6 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
-                        9427cdad1e98865ed992588e1856958d:
-                            - manifest.yaml
-                        81872df992b687816c56189b401fe61a:
-                            - test1.yaml
-                        ...
-                        ---
-                        - test1.yaml
-                        ...
-                        ---
-                        - test1 content
                         ...
                         EOT
                         ,
@@ -143,10 +131,11 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                     'label value',
                     'https://example.com/callback',
                     300,
-                    new ArrayCollection([
-                        YamlFile::create('manifest.yaml', '- test1.yaml'),
-                        YamlFile::create('test1.yaml', '- test1 content'),
-                    ])
+                    <<< 'EOT'
+                        ---
+                        ...
+                        EOT
+                    ,
                 ),
             ],
         ];
