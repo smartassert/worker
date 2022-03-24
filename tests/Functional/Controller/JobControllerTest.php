@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Controller;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
+use App\Request\CreateJobRequest;
 use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -66,6 +67,133 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $fixtureReader = self::getContainer()->get(FixtureReader::class);
         \assert($fixtureReader instanceof FixtureReader);
         $this->fixtureReader = $fixtureReader;
+    }
+
+    /**
+     * @dataProvider createBadRequestMissingValuesDataProvider
+     *
+     * @param array<mixed> $requestPayload
+     * @param array<mixed> $expectedResponseData
+     */
+    public function testCreateBadRequest(array $requestPayload, array $expectedResponseData): void
+    {
+        self::assertFalse($this->jobStore->has());
+
+        $response = $this->clientRequestSender->createCombinedJob($requestPayload);
+        $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
+
+        self::assertFalse($this->jobStore->has());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createBadRequestMissingValuesDataProvider(): array
+    {
+        $label = 'label value';
+        $callbackUrl = 'https://example.com/callback';
+        $maximumDurationInSeconds = 600;
+        $nonEmptySource = 'non-empty source';
+
+        $nonEmptyPayload = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
+            CreateJobRequest::KEY_SOURCE => $nonEmptySource,
+        ];
+
+        return [
+            'label missing' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_LABEL => null,
+                ]),
+                'expectedResponseData' => [
+                    'code' => 200,
+                    'message' => 'label missing',
+                    'type' => 'create',
+                ],
+            ],
+            'label empty' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_LABEL => '',
+                ]),
+                'expectedResponseData' => [
+                    'code' => 200,
+                    'message' => 'label missing',
+                    'type' => 'create',
+                ],
+            ],
+            'callback_url missing' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_CALLBACK_URL => null,
+                ]),
+                'expectedResponseData' => [
+                    'code' => 300,
+                    'message' => 'callback_url missing',
+                    'type' => 'create',
+                ],
+            ],
+            'callback_url empty' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_CALLBACK_URL => '',
+                ]),
+                'expectedResponseData' => [
+                    'code' => 300,
+                    'message' => 'callback_url missing',
+                    'type' => 'create',
+                ],
+            ],
+            'maximum_duration_in_seconds missing' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_MAXIMUM_DURATION => null,
+                ]),
+                'expectedResponseData' => [
+                    'code' => 400,
+                    'message' => 'maximum_duration_in_seconds missing',
+                    'type' => 'create',
+                ],
+            ],
+            'maximum_duration_in_seconds empty' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_MAXIMUM_DURATION => '',
+                ]),
+                'expectedResponseData' => [
+                    'code' => 400,
+                    'message' => 'maximum_duration_in_seconds missing',
+                    'type' => 'create',
+                ],
+            ],
+            'maximum_duration_in_seconds not an integer' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_MAXIMUM_DURATION => 'string',
+                ]),
+                'expectedResponseData' => [
+                    'code' => 400,
+                    'message' => 'maximum_duration_in_seconds missing',
+                    'type' => 'create',
+                ],
+            ],
+            'source missing' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_SOURCE => null
+                ]),
+                'expectedResponseData' => [
+                    'code' => 500,
+                    'message' => 'source missing',
+                    'type' => 'create',
+                ],
+            ],
+            'source empty' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_SOURCE => ''
+                ]),
+                'expectedResponseData' => [
+                    'code' => 500,
+                    'message' => 'source missing',
+                    'type' => 'create',
+                ],
+            ],
+        ];
     }
 
     public function testCreate(): void
