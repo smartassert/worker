@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Request;
 
-use SmartAssert\YamlFile\Collection\ProviderInterface;
-
 class CreateJobRequest
 {
     public const KEY_LABEL = 'label';
@@ -17,7 +15,7 @@ class CreateJobRequest
         public readonly string $label,
         public readonly string $callbackUrl,
         public readonly ?int $maximumDurationInSeconds,
-        public readonly ProviderInterface $provider,
+        public readonly string $source,
     ) {
     }
 }

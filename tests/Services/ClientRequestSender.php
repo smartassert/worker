@@ -33,6 +33,16 @@ class ClientRequestSender
     }
 
     /**
+     * @param array<mixed> $payload
+     */
+    public function createCombinedJob(array $payload): Response
+    {
+        $this->client->request('POST', '/create_combined', $payload);
+
+        return $this->client->getResponse();
+    }
+
+    /**
      * @param UploadedFile[] $sourceUploadedFiles
      */
     public function addJobSources(UploadedFile $manifest, array $sourceUploadedFiles): Response

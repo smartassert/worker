@@ -52,3 +52,10 @@ services:
         public: true
         arguments:
             $path: '%kernel.project_dir%/%basil_local_fixtures_path%'
+
+    SmartAssert\YamlFile\FileHashes\Serializer: ~
+
+    SmartAssert\YamlFile\Collection\Serializer: ~
+
+    App\Tests\Services\CreateJobSourceFactory:
+        public: true
