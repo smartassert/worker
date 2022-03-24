@@ -71,6 +71,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider createBadRequestMissingValuesDataProvider
+     * @dataProvider createBadRequestInvalidSourceDataProvider
      *
      * @param array<mixed> $requestPayload
      * @param array<mixed> $expectedResponseData
@@ -103,7 +104,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         ];
 
         return [
-            'label missing' => [
+            'missing values: label missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_LABEL => null,
                 ]),
@@ -113,7 +114,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'label empty' => [
+            'missing values: label empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_LABEL => '',
                 ]),
@@ -123,7 +124,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'callback_url missing' => [
+            'missing values: callback_url missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_CALLBACK_URL => null,
                 ]),
@@ -133,7 +134,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'callback_url empty' => [
+            'missing values: callback_url empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_CALLBACK_URL => '',
                 ]),
@@ -143,7 +144,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'maximum_duration_in_seconds missing' => [
+            'missing values: maximum_duration_in_seconds missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_MAXIMUM_DURATION => null,
                 ]),
@@ -153,7 +154,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'maximum_duration_in_seconds empty' => [
+            'missing values: maximum_duration_in_seconds empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                 ]),
@@ -163,7 +164,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'maximum_duration_in_seconds not an integer' => [
+            'missing values: maximum_duration_in_seconds not an integer' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_MAXIMUM_DURATION => 'string',
                 ]),
@@ -173,7 +174,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'source missing' => [
+            'missing values: source missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_SOURCE => null
                 ]),
@@ -183,7 +184,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'type' => 'create',
                 ],
             ],
-            'source empty' => [
+            'missing values: source empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
                     CreateJobRequest::KEY_SOURCE => ''
                 ]),
@@ -191,6 +192,153 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'code' => 500,
                     'message' => 'source missing',
                     'type' => 'create',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createBadRequestInvalidSourceDataProvider(): array
+    {
+        $nonSourcePayload = [
+            CreateJobRequest::KEY_LABEL => 'label value',
+            CreateJobRequest::KEY_CALLBACK_URL => 'https://example.com/callback',
+            CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
+        ];
+
+        return [
+            'invalid source: metadata not valid yaml' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                      invalid
+                    yaml
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_serialized_source_metadata',
+                        'payload' => [
+                            'file_hashes_content' => '  invalid' . "\n" . 'yaml',
+                            'message' => 'Serialized source metadata cannot be decoded',
+                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        ],
+                    ],
+                ],
+            ],
+            'invalid source: metadata incomplete' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    hash_content:
+                        - file.yaml
+                    ...
+                    ---
+                    file1.yaml content
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'incomplete_serialized_source_metadata',
+                        'payload' => [
+                            'hash' => '272c8402fa38edc52165379d6d3c356a',
+                            'message' => 'Serialized source metadata is not complete',
+                            'previous_message' => null,
+                        ],
+                    ],
+                ],
+            ],
+            'invalid source: invalid manifest: empty' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    d41d8cd98f00b204e9800998ecf8427e:
+                        - manifest.yaml
+                    ...
+                    ---
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_manifest',
+                        'payload' => [
+                            'code' => 300,
+                            'message' => 'Manifest is empty',
+                            'previous_message' => null,
+                        ],
+                    ],
+                ],
+            ],
+            'invalid source: invalid manifest: invalid yaml within manifest' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    3dce4acdc7912a59eaeb7a4ebad24c44:
+                        - manifest.yaml
+                    ...
+                    ---
+                      invalid
+                    yaml
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'invalid_manifest',
+                        'payload' => [
+                            'code' => 100,
+                            'message' => 'Manifest content is not valid yaml',
+                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        ],
+                    ],
+                ],
+            ],
+            'invalid source: missing manifest' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    158bb7a11c6230d913642ed45a3dffbe:
+                        - file1.yaml
+                    ...
+                    ---
+                    file1content
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'missing_manifest',
+                        'payload' => [],
+                    ],
+                ],
+            ],
+            'invalid source: source file not present' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                        - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error' => [
+                        'type' => 'missing_test_source',
+                        'payload' => [
+                            'message' => 'Test source "Test/chrome-open-index.yml" missing',
+                            'path' => 'Test/chrome-open-index.yml',
+                        ],
+                    ],
                 ],
             ],
         ];
