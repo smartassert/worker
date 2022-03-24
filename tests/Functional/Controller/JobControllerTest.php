@@ -17,6 +17,7 @@ use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
+use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
@@ -31,6 +32,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private SourceRepository $sourceRepository;
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
+    private CreateJobSourceFactory $createJobSourceFactory;
 
     protected function setUp(): void
     {
@@ -67,6 +69,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $fixtureReader = self::getContainer()->get(FixtureReader::class);
         \assert($fixtureReader instanceof FixtureReader);
         $this->fixtureReader = $fixtureReader;
+
+        $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
+        \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
+        $this->createJobSourceFactory = $createJobSourceFactory;
     }
 
     /**
@@ -347,10 +353,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider createSuccessDataProvider
      *
+     * @param string[]                    $manifestPaths
+     * @param string[]                    $sourcePaths
      * @param array<string, array<mixed>> $expectedStoredSources
      */
     public function testCreateSuccess(
-        callable $requestBodyCreator,
+        array $manifestPaths,
+        array $sourcePaths,
         array $expectedStoredSources,
     ): void {
         self::assertFalse($this->jobStore->has());
@@ -363,7 +372,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
-            CreateJobRequest::KEY_SOURCE => $requestBodyCreator($this->fixtureReader),
+            CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
 
         $response = $this->clientRequestSender->createCombinedJob($requestPayload);
@@ -402,22 +411,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         return [
             'single source file, test only' => [
-                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
-                    return <<< EOT
-                    ---
-                    eef1a102a86969433b2e102e378cc623:
-                        - manifest.yaml
-                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
-                        - Test/chrome-open-index.yml
-                    ...
-                    ---
-                    - Test/chrome-open-index.yml
-                    ...
-                    ---
-                    {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
-                    ...
-                    EOT;
-                },
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml'
+                ],
+                'sourcePaths' => [
+                    'Test/chrome-open-index.yml'
+                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
@@ -426,57 +425,35 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 ]
             ],
             'single source file, test only with intentionally invalid yaml' => [
-                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
-                    return <<< EOT
-                    ---
-                    eef1a102a86969433b2e102e378cc623:
-                        - manifest.yaml
-                    3dce4acdc7912a59eaeb7a4ebad24c44:
-                        - Test/chrome-open-index.yml
-                    ...
-                    ---
-                    - Test/chrome-open-index.yml
-                    ...
-                    ---
-                    {$this->createSourcePayload($fixtureReader, 'InvalidTest/invalid-yaml.yml')}
-                    ...
-                    EOT;
-                },
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'InvalidTest/invalid-yaml.yml',
+                ],
+                'sourcePaths' => [
+                    'Test/chrome-open-index.yml',
+                    'InvalidTest/invalid-yaml.yml',
+                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                    'InvalidTest/invalid-yaml.yml' => [
                         'type' => Source::TYPE_TEST,
                         'contentFixture' => 'InvalidTest/invalid-yaml.yml',
                     ],
                 ]
             ],
             'multiple source files' => [
-                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
-                    return <<< EOT
-                    ---
-                    2d4337917ace625ce4df0c54bcc41b60:
-                        - manifest.yaml
-                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
-                        - Test/chrome-open-index.yml
-                    4f8258f0dcf8406f3a842810100c1701:
-                        - Test/firefox-open-index.yml
-                    002e2048e4129d6e0daf6626aac8dce2:
-                        - Page/index.yml
-                    ...
-                    ---
-                    - Test/chrome-open-index.yml
-                    - Test/firefox-open-index.yml
-                    ...
-                    ---
-                    {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
-                    ...
-                    ---
-                    {$this->createSourcePayload($fixtureReader, 'Test/firefox-open-index.yml')}
-                    ...
-                    ---
-                    {$this->createSourcePayload($fixtureReader, 'Page/index.yml')}
-                    ...
-                    EOT;
-                },
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/firefox-open-index.yml',
+                ],
+                'sourcePaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/firefox-open-index.yml',
+                    'Page/index.yml',
+                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
