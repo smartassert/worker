@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
-use App\Model\UploadedFileKey;
-use App\Request\AddSourcesRequest;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\ExecutionState;
@@ -14,30 +12,41 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
+use SmartAssert\YamlFile\Collection\ArrayCollection;
+use SmartAssert\YamlFile\Collection\Serializer as YamlFileCollectionSerializer;
+use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
+use SmartAssert\YamlFile\YamlFile;
+use Symfony\Component\Yaml\Dumper;
 
 class AppTest extends TestCase
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
-    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND * 1;
+    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
+    private const JOB_URL = 'https://localhost:/job';
 
     private Client $httpClient;
     private SerializedJobAsserter $jobAsserter;
+    private YamlFileCollectionSerializer $yamlFileCollectionSerializer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->httpClient = new Client([
-            'verify' => false,
-        ]);
+        $this->httpClient = new Client(['verify' => false]);
         $this->jobAsserter = new SerializedJobAsserter($this->httpClient);
+
+        $this->yamlFileCollectionSerializer = new YamlFileCollectionSerializer(
+            new FileHashesSerializer(
+                new Dumper()
+            )
+        );
     }
 
     public function testInitialStatus(): void
     {
         try {
-            $response = $this->httpClient->get('https://localhost:/job');
+            $response = $this->httpClient->get(self::JOB_URL);
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
         }
@@ -50,84 +59,55 @@ class AppTest extends TestCase
      */
     public function testCreateJob(): void
     {
-        $response = $this->httpClient->post('https://localhost/job', [
+        $yamlFiles = [];
+
+        $yamlFiles[] = YamlFile::create(
+            'manifest.yaml',
+            <<< 'EOT'
+            - Test/chrome-open-index.yml
+            - Test/chrome-firefox-open-index.yml
+            - Test/chrome-open-form.yml
+            EOT
+        );
+
+        $sourcePaths = [
+            'Test/chrome-open-index.yml',
+            'Test/chrome-firefox-open-index.yml',
+            'Test/chrome-open-form.yml',
+            'Page/index.yml',
+        ];
+
+        foreach ($sourcePaths as $sourcePath) {
+            $yamlFiles[] = YamlFile::create(
+                $sourcePath,
+                trim((string) file_get_contents(getcwd() . '/tests/Fixtures/Basil/' . $sourcePath))
+            );
+        }
+
+        $yamlFileCollection = new ArrayCollection($yamlFiles);
+        $serializedSource = $this->yamlFileCollectionSerializer->serialize($yamlFileCollection);
+
+        $response = $this->httpClient->post('https://localhost/create_combined', [
             'form_params' => [
                 'label' => md5('label content'),
-                'callback-url' => 'http://callback-receiver/callback',
-                'maximum-duration-in-seconds' => 600,
+                'callback_url' => 'http://callback-receiver/callback',
+                'maximum_duration_in_seconds' => 600,
+                'source' => $serializedSource,
             ],
         ]);
 
         self::assertSame(200, $response->getStatusCode());
-
-        $this->jobAsserter->assertJob([
-            'label' => md5('label content'),
-            'callback_url' => 'http://callback-receiver/callback',
-            'maximum_duration_in_seconds' => 600,
-            'sources' => [],
-            'compilation_state' => 'awaiting',
-            'execution_state' => 'awaiting',
-            'callback_state' => 'awaiting',
-            'tests' => [],
-        ]);
     }
 
     /**
      * @depends testCreateJob
-     */
-    public function testAddSources(): void
-    {
-        $manifestKey = new UploadedFileKey(AddSourcesRequest::KEY_MANIFEST);
-
-        $this->httpClient->post('https://localhost/add-sources', [
-            'multipart' => [
-                [
-                    'name' => $manifestKey->encode(),
-                    'contents' => file_get_contents(
-                        getcwd() . '/tests/Fixtures/Manifest/manifest.yml'
-                    ),
-                    'filename' => 'manifest.yml'
-                ],
-                $this->createFileUploadData('Test/chrome-open-index.yml'),
-                $this->createFileUploadData('Test/chrome-firefox-open-index.yml'),
-                $this->createFileUploadData('Test/chrome-open-form.yml'),
-                $this->createFileUploadData('Page/index.yml'),
-            ],
-        ]);
-
-        $this->jobAsserter->assertJob([
-            'label' => md5('label content'),
-            'callback_url' => 'http://callback-receiver/callback',
-            'maximum_duration_in_seconds' => 600,
-            'sources' => [
-                'Test/chrome-open-index.yml',
-                'Test/chrome-firefox-open-index.yml',
-                'Test/chrome-open-form.yml',
-                'Page/index.yml',
-            ],
-            'compilation_state' => 'running',
-            'execution_state' => 'awaiting',
-            'callback_state' => 'awaiting',
-            'tests' => [],
-        ]);
-    }
-
-    /**
-     * @depends testAddSources
      */
     public function testCompilationExecution(): void
     {
         $duration = 0;
         $durationExceeded = false;
 
-        while (
-            false === $durationExceeded
-            && false === $this->waitForApplicationState(
-                CompilationState::STATE_COMPLETE,
-                ExecutionState::STATE_COMPLETE,
-                CallbackState::STATE_COMPLETE,
-            )
-        ) {
+        while (false === $durationExceeded && false === $this->waitForApplicationToComplete()) {
             usleep(self::WAIT_INTERVAL);
             $duration += self::WAIT_INTERVAL;
             $durationExceeded = $duration >= self::WAIT_TIMEOUT;
@@ -196,9 +176,9 @@ class AppTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function getJsonResponse(string $url): array
+    private function getJobStatus(): array
     {
-        $response = $this->httpClient->sendRequest(new Request('GET', $url));
+        $response = $this->httpClient->sendRequest(new Request('GET', self::JOB_URL));
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('application/json', $response->getHeaderLine('content-type'));
@@ -210,32 +190,12 @@ class AppTest extends TestCase
         return $data;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function createFileUploadData(string $path): array
+    private function waitForApplicationToComplete(): bool
     {
-        return [
-            'name' => base64_encode($path),
-            'contents' => (string) file_get_contents(getcwd() . '/tests/Fixtures/Basil/' . $path),
-            'filename' => $path
-        ];
-    }
+        $jobStatus = $this->getJobStatus();
 
-    /**
-     * @param CompilationState::STATE_* $compilationState
-     * @param ExecutionState::STATE_*   $executionState
-     * @param CallbackState::STATE_*    $callbackState
-     */
-    private function waitForApplicationState(
-        string $compilationState,
-        string $executionState,
-        string $callbackState,
-    ): bool {
-        $jobStatus = $this->getJsonResponse('https://localhost/job');
-
-        return $compilationState === $jobStatus['compilation_state']
-            && $executionState === $jobStatus['execution_state']
-            && $callbackState === $jobStatus['callback_state'];
+        return CompilationState::STATE_COMPLETE === $jobStatus['compilation_state']
+            && ExecutionState::STATE_COMPLETE === $jobStatus['execution_state']
+            && CallbackState::STATE_COMPLETE === $jobStatus['callback_state'];
     }
 }
