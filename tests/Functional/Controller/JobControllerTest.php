@@ -344,6 +344,157 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         ];
     }
 
+    /**
+     * @dataProvider createSuccessDataProvider
+     *
+     * @param array<string, array<mixed>> $expectedStoredSources
+     */
+    public function testCreateSuccess(
+        callable $requestBodyCreator,
+        array $expectedStoredSources,
+    ): void {
+        self::assertFalse($this->jobStore->has());
+
+        $label = md5((string) rand());
+        $callbackUrl = md5((string) rand());
+        $maximumDuration = rand(1, 1000);
+
+        $requestPayload = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+            CreateJobRequest::KEY_SOURCE => $requestBodyCreator($this->fixtureReader),
+        ];
+
+        $response = $this->clientRequestSender->createCombinedJob($requestPayload);
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
+
+        self::assertTrue($this->jobStore->has());
+
+        $job = $this->jobStore->get();
+        self::assertSame($label, $job->getLabel());
+        self::assertSame($callbackUrl, $job->getCallbackUrl());
+        self::assertSame($maximumDuration, $job->getMaximumDurationInSeconds());
+
+        self::assertSame(array_keys($expectedStoredSources), $this->sourceStore->findAllPaths());
+
+        foreach ($this->sourceRepository->findAll() as $source) {
+            $expectedSourceData = $expectedStoredSources[$source->getPath()];
+            self::assertIsArray($expectedSourceData);
+
+            self::assertArrayHasKey('type', $expectedSourceData);
+            self::assertSame($expectedSourceData['type'], $source->getType());
+
+            self::assertArrayHasKey('contentFixture', $expectedSourceData);
+
+            self::assertTrue($this->sourceFileInspector->has($source->getPath()));
+            self::assertSame(
+                trim($this->fixtureReader->read($expectedSourceData['contentFixture'])),
+                trim($this->sourceFileInspector->read($source->getPath()))
+            );
+        }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createSuccessDataProvider(): array
+    {
+        return [
+            'single source file, test only' => [
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
+                    ---
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                        - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
+                    ...
+                    EOT;
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                ]
+            ],
+            'single source file, test only with intentionally invalid yaml' => [
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
+                    ---
+                    eef1a102a86969433b2e102e378cc623:
+                        - manifest.yaml
+                    3dce4acdc7912a59eaeb7a4ebad24c44:
+                        - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'InvalidTest/invalid-yaml.yml')}
+                    ...
+                    EOT;
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'InvalidTest/invalid-yaml.yml',
+                    ],
+                ]
+            ],
+            'multiple source files' => [
+                'requestBodyCreator' => function (FixtureReader $fixtureReader) {
+                    return <<< EOT
+                    ---
+                    2d4337917ace625ce4df0c54bcc41b60:
+                        - manifest.yaml
+                    6f108c6f8b53deb2ab3f5ccc3865e2eb:
+                        - Test/chrome-open-index.yml
+                    4f8258f0dcf8406f3a842810100c1701:
+                        - Test/firefox-open-index.yml
+                    002e2048e4129d6e0daf6626aac8dce2:
+                        - Page/index.yml
+                    ...
+                    ---
+                    - Test/chrome-open-index.yml
+                    - Test/firefox-open-index.yml
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'Test/chrome-open-index.yml')}
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'Test/firefox-open-index.yml')}
+                    ...
+                    ---
+                    {$this->createSourcePayload($fixtureReader, 'Page/index.yml')}
+                    ...
+                    EOT;
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                    'Test/firefox-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/firefox-open-index.yml',
+                    ],
+                    'Page/index.yml' => [
+                        'type' => Source::TYPE_RESOURCE,
+                        'contentFixture' => 'Page/index.yml',
+                    ],
+                ]
+            ],
+        ];
+    }
+
     public function testCreate(): void
     {
         self::assertFalse($this->jobStore->has());
