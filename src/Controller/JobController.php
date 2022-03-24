@@ -10,7 +10,6 @@ use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
-use App\Request\AddSerializedSourceRequest;
 use App\Request\AddSourcesRequest;
 use App\Request\CreateJobRequest;
 use App\Request\JobCreateRequest;
@@ -174,36 +173,6 @@ class JobController
             $sourceFactory->createCollectionFromManifest($manifest, $uploadedSources);
         } catch (MissingTestSourceException $testSourceException) {
             return BadAddSourcesRequestResponse::createSourceMissingResponse($testSourceException->getPath());
-        }
-
-        $messageBus->dispatch(new JobReadyMessage());
-
-        return new JsonResponse([]);
-    }
-
-    #[Route('/add-sources-as-single-file', name: 'add-sources-as-single-file', methods: ['POST'])]
-    public function addSerializedSource(
-        YamlSourceCollectionFactory $factory,
-        SourceFactory $sourceFactory,
-        MessageBusInterface $messageBus,
-        AddSerializedSourceRequest $request,
-        ErrorResponseFactory $errorResponseFactory,
-    ): JsonResponse {
-        // @todo: validate yaml file provider in #163
-        if (false === $this->jobStore->has()) {
-            return BadAddSourcesRequestResponse::createJobMissingResponse();
-        }
-
-        try {
-            $sourceFactory->createFromYamlSourceCollection(
-                $factory->create($request->provider)
-            );
-        } catch (InvalidManifestException $exception) {
-            return $errorResponseFactory->createFromInvalidManifestException($exception);
-        } catch (MissingManifestException $exception) {
-            return $errorResponseFactory->createFromMissingManifestException($exception);
-        } catch (MissingTestSourceException $exception) {
-            return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
         $messageBus->dispatch(new JobReadyMessage());
