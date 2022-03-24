@@ -56,10 +56,3 @@ services:
         public: true
         arguments:
             $path: '%compiler_source_directory%'
-
-    SmartAssert\YamlFile\FileHashes\Serializer: ~
-
-    SmartAssert\YamlFile\Collection\Serializer: ~
-
-    App\Tests\Services\CreateJobSourceFactory:
-        public: true
