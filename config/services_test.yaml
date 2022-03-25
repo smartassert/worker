@@ -56,6 +56,3 @@ services:
         public: true
         arguments:
             $path: '%compiler_source_directory%'
-
-    App\Services\ManifestFactory:
-        public: true
