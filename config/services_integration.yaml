@@ -70,9 +70,6 @@ services:
             $middlewareFactories:
                 - '@App\Tests\Services\Guzzle\Middleware\Factory\HistoryMiddlewareFactory'
 
-    App\Tests\Services\Asserter\SystemStateAsserter:
-        public: true
-
     App\Tests\Services\ApplicationStateHandler:
         public: true
 
