@@ -7,9 +7,9 @@ namespace App\Tests\Functional\Services;
 use App\Exception\MissingTestSourceException;
 use App\Model\Manifest;
 use App\Model\YamlSourceCollection;
+use App\Services\EntityStore\SourceStore;
 use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Services\Asserter\SourceEntityAsserter;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
@@ -22,7 +22,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     private FileStoreHandler $localSourceStoreHandler;
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
-    private SourceEntityAsserter $sourceEntityAsserter;
+    private SourceStore $sourceStore;
 
     protected function setUp(): void
     {
@@ -45,9 +45,9 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         \assert($fixtureReader instanceof FixtureReader);
         $this->fixtureReader = $fixtureReader;
 
-        $sourceEntityAsserter = self::getContainer()->get(SourceEntityAsserter::class);
-        \assert($sourceEntityAsserter instanceof SourceEntityAsserter);
-        $this->sourceEntityAsserter = $sourceEntityAsserter;
+        $sourceStore = self::getContainer()->get(SourceStore::class);
+        \assert($sourceStore instanceof SourceStore);
+        $this->sourceStore = $sourceStore;
     }
 
     protected function tearDown(): void
@@ -120,7 +120,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                 $this->sourceFileInspector->read($expectedSourcePath)
             );
 
-            $this->sourceEntityAsserter->assertRelativePathsEqual($expectedSourcePaths);
+            self::assertSame($expectedSourcePaths, $this->sourceStore->findAllPaths());
         }
     }
 

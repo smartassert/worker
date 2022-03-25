@@ -18,9 +18,6 @@ services:
         arguments:
             $transport: '@messenger.transport.async'
 
-    App\Tests\Services\Asserter\SourceEntityAsserter:
-        public: true
-
     App\Tests\Services\Asserter\TestEntityAsserter:
         public: true
 
