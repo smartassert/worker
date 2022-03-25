@@ -13,7 +13,6 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
 {
     private SourceFileStore $store;
     private FileStoreHandler $localSourceStoreHandler;
-    private FileStoreHandler $uploadStoreHandler;
     private SourceFileInspector $sourceFileInspector;
 
     protected function setUp(): void
@@ -29,11 +28,6 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
         $this->localSourceStoreHandler = $localSourceStoreHandler;
         $this->localSourceStoreHandler->clear();
 
-        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
-        \assert($uploadStoreHandler instanceof FileStoreHandler);
-        $this->uploadStoreHandler = $uploadStoreHandler;
-        $this->uploadStoreHandler->clear();
-
         $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
         \assert($sourceFileInspector instanceof SourceFileInspector);
         $this->sourceFileInspector = $sourceFileInspector;
@@ -42,7 +36,6 @@ class SourceFileStoreTest extends AbstractBaseFunctionalTest
     protected function tearDown(): void
     {
         $this->localSourceStoreHandler->clear();
-        $this->uploadStoreHandler->clear();
 
         parent::tearDown();
     }

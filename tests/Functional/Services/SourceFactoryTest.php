@@ -20,7 +20,6 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
 {
     private SourceFactory $factory;
     private FileStoreHandler $localSourceStoreHandler;
-    private FileStoreHandler $uploadStoreHandler;
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
     private SourceEntityAsserter $sourceEntityAsserter;
@@ -38,11 +37,6 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $this->localSourceStoreHandler = $localSourceStoreHandler;
         $this->localSourceStoreHandler->clear();
 
-        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
-        \assert($uploadStoreHandler instanceof FileStoreHandler);
-        $this->uploadStoreHandler = $uploadStoreHandler;
-        $this->uploadStoreHandler->clear();
-
         $sourceFileInspector = self::getContainer()->get(SourceFileInspector::class);
         \assert($sourceFileInspector instanceof SourceFileInspector);
         $this->sourceFileInspector = $sourceFileInspector;
@@ -59,7 +53,6 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     protected function tearDown(): void
     {
         $this->localSourceStoreHandler->clear();
-        $this->uploadStoreHandler->clear();
 
         parent::tearDown();
     }
