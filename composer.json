@@ -23,7 +23,6 @@
         "symfony/yaml": "6.0.*",
         "webignition/basil-compiler-models": "^0.16.0",
         "webignition/basil-runner-documents": "^1.0",
-        "webignition/encapsulating-request-resolver-bundle": "^1.1",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
         "webignition/yaml-document": "^0.3",
         "webignition/yaml-document-generator": "^1.0"

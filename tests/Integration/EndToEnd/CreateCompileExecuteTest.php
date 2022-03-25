@@ -98,7 +98,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $timer = new Timer();
         $timer->start();
 
-        $createResponse = $this->clientRequestSender->createCombinedJob($requestPayload);
+        $createResponse = $this->clientRequestSender->create($requestPayload);
 
         $duration = $timer->stop();
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());

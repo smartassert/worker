@@ -10,8 +10,6 @@ use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
-use App\Request\JobCreateRequest;
-use App\Response\BadJobCreateRequestResponse;
 use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
@@ -44,8 +42,8 @@ class JobController
     /**
      * @throws DeserializeException
      */
-    #[Route('/create_combined', name: 'create_combined', methods: ['POST'])]
-    public function createCombined(
+    #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
+    public function create(
         JobFactory $jobFactory,
         YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
@@ -98,34 +96,6 @@ class JobController
         $jobFactory->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
-
-        return new JsonResponse([]);
-    }
-
-    #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
-    public function create(JobFactory $jobFactory, JobCreateRequest $request): JsonResponse
-    {
-        if ('' === $request->getLabel()) {
-            return BadJobCreateRequestResponse::createLabelMissingResponse();
-        }
-
-        if ('' === $request->getCallbackUrl()) {
-            return BadJobCreateRequestResponse::createCallbackUrlMissingResponse();
-        }
-
-        if (null === $request->getMaximumDurationInSeconds()) {
-            return BadJobCreateRequestResponse::createMaximumDurationMissingResponse();
-        }
-
-        if (true === $this->jobStore->has()) {
-            return BadJobCreateRequestResponse::createJobAlreadyExistsResponse();
-        }
-
-        $jobFactory->create(
-            $request->getLabel(),
-            $request->getCallbackUrl(),
-            $request->getMaximumDurationInSeconds()
-        );
 
         return new JsonResponse([]);
     }
