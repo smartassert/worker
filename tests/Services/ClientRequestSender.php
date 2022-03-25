@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Model\UploadedFileKey;
-use App\Request\AddSourcesRequest;
 use App\Request\JobCreateRequest;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 class ClientRequestSender
@@ -37,30 +34,6 @@ class ClientRequestSender
     public function createCombinedJob(array $payload): Response
     {
         $this->client->request('POST', '/create_combined', $payload);
-
-        return $this->client->getResponse();
-    }
-
-    /**
-     * @param UploadedFile[] $sourceUploadedFiles
-     */
-    public function addJobSources(UploadedFile $manifest, array $sourceUploadedFiles): Response
-    {
-        $manifestKey = new UploadedFileKey(AddSourcesRequest::KEY_MANIFEST);
-
-        $requestFiles = array_merge(
-            [
-                $manifestKey->encode() => $manifest,
-            ],
-            $sourceUploadedFiles
-        );
-
-        $this->client->request(
-            'POST',
-            '/add-sources',
-            [],
-            $requestFiles
-        );
 
         return $this->client->getResponse();
     }
