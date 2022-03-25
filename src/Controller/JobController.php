@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Exception\InvalidManifestException;
-use App\Exception\Manifest\ManifestFactoryExceptionInterface;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
-use App\Request\AddSourcesRequest;
 use App\Request\CreateJobRequest;
 use App\Request\JobCreateRequest;
-use App\Response\BadAddSourcesRequestResponse;
 use App\Response\BadJobCreateRequestResponse;
 use App\Response\ErrorResponse;
 use App\Services\CallbackState;
@@ -23,13 +20,11 @@ use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
-use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -131,51 +126,6 @@ class JobController
             $request->getCallbackUrl(),
             $request->getMaximumDurationInSeconds()
         );
-
-        return new JsonResponse([]);
-    }
-
-    #[Route('/add-sources', name: 'add-sources', methods: ['POST'])]
-    public function addSources(
-        ManifestFactory $manifestFactory,
-        SourceStore $sourceStore,
-        SourceFactory $sourceFactory,
-        MessageBusInterface $messageBus,
-        AddSourcesRequest $addSourcesRequest
-    ): JsonResponse {
-        if (false === $this->jobStore->has()) {
-            return BadAddSourcesRequestResponse::createJobMissingResponse();
-        }
-
-        if (true === $sourceStore->hasAny()) {
-            return BadAddSourcesRequestResponse::createSourcesNotEmptyResponse();
-        }
-
-        $manifestUploadedFile = $addSourcesRequest->getManifest();
-        if (!$manifestUploadedFile instanceof UploadedFile) {
-            return BadAddSourcesRequestResponse::createManifestMissingResponse();
-        }
-
-        try {
-            $manifest = $manifestFactory->createFromUploadedFile($manifestUploadedFile);
-        } catch (ManifestFactoryExceptionInterface $manifestFactoryException) {
-            return BadAddSourcesRequestResponse::createInvalidRequestManifest($manifestFactoryException);
-        }
-
-        $manifestTestPaths = $manifest->getTestPaths();
-        if ([] === $manifestTestPaths) {
-            return BadAddSourcesRequestResponse::createManifestEmptyResponse();
-        }
-
-        $uploadedSources = $addSourcesRequest->getUploadedSources();
-
-        try {
-            $sourceFactory->createCollectionFromManifest($manifest, $uploadedSources);
-        } catch (MissingTestSourceException $testSourceException) {
-            return BadAddSourcesRequestResponse::createSourceMissingResponse($testSourceException->getPath());
-        }
-
-        $messageBus->dispatch(new JobReadyMessage());
 
         return new JsonResponse([]);
     }
