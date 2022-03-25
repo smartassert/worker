@@ -12,7 +12,6 @@ abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTest
 {
     protected EntityRemover $entityRemover;
     protected FileStoreHandler $localSourceStoreHandler;
-    protected FileStoreHandler $uploadStoreHandler;
 
     protected function setUp(): void
     {
@@ -25,10 +24,6 @@ abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTest
         $localSourceStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.local_source');
         \assert($localSourceStoreHandler instanceof FileStoreHandler);
         $this->localSourceStoreHandler = $localSourceStoreHandler;
-
-        $uploadStoreHandler = self::getContainer()->get('app.tests.services.file_store_handler.uploaded');
-        \assert($uploadStoreHandler instanceof FileStoreHandler);
-        $this->uploadStoreHandler = $uploadStoreHandler;
 
         $this->clear();
     }
@@ -44,6 +39,5 @@ abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTest
     {
         $this->entityRemover->removeAll();
         $this->localSourceStoreHandler->clear();
-        $this->uploadStoreHandler->clear();
     }
 }
