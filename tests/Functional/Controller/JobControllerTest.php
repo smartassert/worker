@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
-use App\Entity\Job;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
@@ -86,7 +85,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         self::assertFalse($this->jobStore->has());
 
-        $response = $this->clientRequestSender->createCombinedJob($requestPayload);
+        $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
         self::assertFalse($this->jobStore->has());
@@ -375,7 +374,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
 
-        $response = $this->clientRequestSender->createCombinedJob($requestPayload);
+        $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
 
         self::assertTrue($this->jobStore->has());
@@ -470,25 +469,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 ]
             ],
         ];
-    }
-
-    public function testCreate(): void
-    {
-        self::assertFalse($this->jobStore->has());
-
-        $label = md5('label content');
-        $callbackUrl = 'http://example.com/callback';
-        $maximumDurationInSeconds = 600;
-
-        $response = $this->clientRequestSender->createJob($label, $callbackUrl, $maximumDurationInSeconds);
-
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
-
-        self::assertTrue($this->jobStore->has());
-        self::assertEquals(
-            Job::create($label, $callbackUrl, $maximumDurationInSeconds),
-            $this->jobStore->get()
-        );
     }
 
     public function testStatusNoJob(): void

@@ -441,9 +441,6 @@
     "webignition/basil-runner-documents": {
         "version": "1.0"
     },
-    "webignition/encapsulating-request-resolver-bundle": {
-        "version": "0.2"
-    },
     "webignition/error-handler": {
         "version": "0.2"
     },

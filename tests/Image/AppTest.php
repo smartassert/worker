@@ -87,7 +87,7 @@ class AppTest extends TestCase
         $yamlFileCollection = new ArrayCollection($yamlFiles);
         $serializedSource = $this->yamlFileCollectionSerializer->serialize($yamlFileCollection);
 
-        $response = $this->httpClient->post('https://localhost/create_combined', [
+        $response = $this->httpClient->post('https://localhost/job', [
             'form_params' => [
                 'label' => md5('label content'),
                 'callback_url' => 'http://callback-receiver/callback',
