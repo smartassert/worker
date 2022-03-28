@@ -75,7 +75,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider createBadRequestMissingValuesDataProvider
+     * @!dataProvider createBadRequestMissingValuesDataProvider
      * @dataProvider createBadRequestInvalidSourceDataProvider
      *
      * @param array<mixed> $requestPayload
@@ -114,9 +114,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_LABEL => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 200,
-                    'message' => 'label missing',
-                    'type' => 'create',
+                    'error_state' => 'label/missing',
                 ],
             ],
             'missing values: label empty' => [
@@ -124,9 +122,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_LABEL => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 200,
-                    'message' => 'label missing',
-                    'type' => 'create',
+                    'error_state' => 'label/missing',
                 ],
             ],
             'missing values: callback_url missing' => [
@@ -134,9 +130,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_CALLBACK_URL => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 300,
-                    'message' => 'callback_url missing',
-                    'type' => 'create',
+                    'error_state' => 'callback_url/missing',
                 ],
             ],
             'missing values: callback_url empty' => [
@@ -144,9 +138,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_CALLBACK_URL => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 300,
-                    'message' => 'callback_url missing',
-                    'type' => 'create',
+                    'error_state' => 'callback_url/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [
@@ -154,9 +146,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds empty' => [
@@ -164,9 +154,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds not an integer' => [
@@ -174,9 +162,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => 'string',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: source missing' => [
@@ -184,9 +170,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_SOURCE => null
                 ]),
                 'expectedResponseData' => [
-                    'code' => 500,
-                    'message' => 'source missing',
-                    'type' => 'create',
+                    'error_state' => 'source/missing',
                 ],
             ],
             'missing values: source empty' => [
@@ -194,9 +178,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_SOURCE => ''
                 ]),
                 'expectedResponseData' => [
-                    'code' => 500,
-                    'message' => 'source missing',
-                    'type' => 'create',
+                    'error_state' => 'source/missing',
                 ],
             ],
         ];
@@ -224,13 +206,31 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_serialized_source_metadata',
-                        'payload' => [
-                            'file_hashes_content' => '  invalid' . "\n" . 'yaml',
-                            'message' => 'Serialized source metadata cannot be decoded',
-                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
-                        ],
+                    'error_state' => 'source/metadata/invalid',
+                    'payload' => [
+                        'file_hashes_content' => '  invalid' . "\n" . 'yaml',
+                        'message' => 'Serialized source metadata cannot be decoded',
+                        'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                    ],
+                ],
+            ],
+            'invalid source: file hash not found' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    123:
+                        - file.yaml
+                    ...
+                    ---
+                    file1.yaml content
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error_state' => 'source/metadata/invalid',
+                    'payload' => [
+                        'file_hashes_content' => '123:' . "\n" . '    - file.yaml',
+                        'message' => 'Serialized source metadata cannot be decoded',
                     ],
                 ],
             ],
@@ -247,13 +247,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'incomplete_serialized_source_metadata',
-                        'payload' => [
-                            'hash' => '272c8402fa38edc52165379d6d3c356a',
-                            'message' => 'Serialized source metadata is not complete',
-                            'previous_message' => null,
-                        ],
+                    'error_state' => 'source/metadata/incomplete',
+                    'payload' => [
+                        'hash' => '272c8402fa38edc52165379d6d3c356a',
+                        'message' => 'Serialized source metadata is not complete',
                     ],
                 ],
             ],
@@ -269,14 +266,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_manifest',
-                        'payload' => [
-                            'code' => 300,
-                            'message' => 'Manifest is empty',
-                            'previous_message' => null,
-                        ],
-                    ],
+                    'error_state' => 'source/manifest/empty',
                 ],
             ],
             'invalid source: invalid manifest: invalid yaml within manifest' => [
@@ -293,13 +283,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_manifest',
-                        'payload' => [
-                            'code' => 100,
-                            'message' => 'Manifest content is not valid yaml',
-                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
-                        ],
+                    'error_state' => 'source/manifest/invalid',
+                    'payload' => [
+                        'message' => 'Unable to parse at line 1 (near "  invalid").',
                     ],
                 ],
             ],
@@ -316,10 +302,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'missing_manifest',
-                        'payload' => [],
-                    ],
+                    'error_state' => 'source/manifest/missing',
                 ],
             ],
             'invalid source: source file not present' => [
@@ -337,12 +320,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'missing_test_source',
-                        'payload' => [
-                            'message' => 'Test source "Test/chrome-open-index.yml" missing',
-                            'path' => 'Test/chrome-open-index.yml',
-                        ],
+                    'error_state' => 'source/test/missing',
+                    'payload' => [
+                        'path' => 'Test/chrome-open-index.yml',
                     ],
                 ],
             ],

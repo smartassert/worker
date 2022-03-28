@@ -8,15 +8,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorResponse extends JsonResponse
 {
-    public function __construct(string $type, string $message, int $code, int $status)
+    /**
+     * @param array<mixed> $payload
+     */
+    public function __construct(string $errorState, array $payload = [])
     {
-        parent::__construct(
-            [
-                'type' => $type,
-                'message' => $message,
-                'code' => $code,
-            ],
-            $status
-        );
+        $data = ['error_state' => $errorState];
+        if ([] !== $payload) {
+            $data['payload'] = $payload;
+        }
+
+        parent::__construct($data, 400);
     }
 }

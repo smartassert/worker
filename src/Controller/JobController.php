@@ -24,7 +24,6 @@ use App\Services\YamlSourceCollectionFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -53,23 +52,23 @@ class JobController
         CreateJobRequest $request,
     ): JsonResponse {
         if (true === $this->jobStore->has()) {
-            return new ErrorResponse('create', 'job already exists', 100, Response::HTTP_BAD_REQUEST);
+            return new ErrorResponse('job/already_exists');
         }
 
         if ('' === $request->label) {
-            return new ErrorResponse('create', 'label missing', 200, Response::HTTP_BAD_REQUEST);
+            return new ErrorResponse('label/missing');
         }
 
         if ('' === $request->callbackUrl) {
-            return new ErrorResponse('create', 'callback_url missing', 300, Response::HTTP_BAD_REQUEST);
+            return new ErrorResponse('callback_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
-            return new ErrorResponse('create', 'maximum_duration_in_seconds missing', 400, Response::HTTP_BAD_REQUEST);
+            return new ErrorResponse('maximum_duration_in_seconds/missing');
         }
 
         if ('' === trim($request->source)) {
-            return new ErrorResponse('create', 'source missing', 500, Response::HTTP_BAD_REQUEST);
+            return new ErrorResponse('source/missing');
         }
 
         try {
@@ -88,7 +87,7 @@ class JobController
         } catch (InvalidManifestException $exception) {
             return $errorResponseFactory->createFromInvalidManifestException($exception);
         } catch (MissingManifestException $exception) {
-            return $errorResponseFactory->createFromMissingManifestException($exception);
+            return new ErrorResponse('source/manifest/missing');
         } catch (MissingTestSourceException $exception) {
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
