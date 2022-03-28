@@ -10,7 +10,6 @@ use App\Response\ErrorResponse;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
-use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorResponseFactory
@@ -44,13 +43,14 @@ class ErrorResponseFactory
 
     public function createFromInvalidManifestException(InvalidManifestException $exception): JsonResponse
     {
-        $manifestState = 'unknown';
         if (InvalidManifestException::CODE_EMPTY === $exception->getCode()) {
-            $manifestState = 'empty';
+            return new ErrorResponse('source/manifest/empty');
         }
 
         if (InvalidManifestException::CODE_INVALID_YAML === $exception->getCode()) {
-            $manifestState = 'invalid';
+            return new ErrorResponse('source/manifest/invalid', [
+                'message' => $exception->getPrevious()?->getMessage(),
+            ]);
         }
 
         $payload = ['message' => $exception->getMessage()];
@@ -58,21 +58,12 @@ class ErrorResponseFactory
             $payload['previous_message'] = $exception->getPrevious()->getMessage();
         }
 
-        return new ErrorResponse('source/manifest/' . $manifestState, $payload);
-    }
-
-    public function createFromProvisionException(ProvisionException $exception): JsonResponse
-    {
-        return new ErrorResponse('invalid_manifest', [
-            'message' => $exception->getMessage(),
-            'previous_message' => $exception->getPrevious()?->getMessage(),
-        ]);
+        return new ErrorResponse('source/manifest/unknown', $payload);
     }
 
     public function createFromMissingTestSourceException(MissingTestSourceException $exception): JsonResponse
     {
         return new ErrorResponse('source/test/missing', [
-            'message' => sprintf('Test source "%s" missing', $exception->getPath()),
             'path' => $exception->getPath()
         ]);
     }
