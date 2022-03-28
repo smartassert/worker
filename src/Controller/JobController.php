@@ -4,25 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Exception\Manifest\ManifestFactoryExceptionInterface;
+use App\Exception\InvalidManifestException;
+use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
-use App\Request\AddSourcesRequest;
-use App\Request\JobCreateRequest;
-use App\Response\BadAddSourcesRequestResponse;
-use App\Response\BadJobCreateRequestResponse;
+use App\Request\CreateJobRequest;
+use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\EntityFactory\JobFactory;
 use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
+use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
-use App\Services\ManifestFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Services\YamlSourceCollectionFactory;
+use SmartAssert\YamlFile\Collection\Deserializer;
+use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,73 +39,61 @@ class JobController
         $this->jobStore = $jobStore;
     }
 
+    /**
+     * @throws DeserializeException
+     */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
-    public function create(JobFactory $jobFactory, JobCreateRequest $request): JsonResponse
-    {
-        if ('' === $request->getLabel()) {
-            return BadJobCreateRequestResponse::createLabelMissingResponse();
-        }
-
-        if ('' === $request->getCallbackUrl()) {
-            return BadJobCreateRequestResponse::createCallbackUrlMissingResponse();
-        }
-
-        if (null === $request->getMaximumDurationInSeconds()) {
-            return BadJobCreateRequestResponse::createMaximumDurationMissingResponse();
-        }
-
-        if (true === $this->jobStore->has()) {
-            return BadJobCreateRequestResponse::createJobAlreadyExistsResponse();
-        }
-
-        $jobFactory->create(
-            $request->getLabel(),
-            $request->getCallbackUrl(),
-            $request->getMaximumDurationInSeconds()
-        );
-
-        return new JsonResponse([]);
-    }
-
-    #[Route('/add-sources', name: 'add-sources', methods: ['POST'])]
-    public function addSources(
-        ManifestFactory $manifestFactory,
-        SourceStore $sourceStore,
+    public function create(
+        JobFactory $jobFactory,
+        YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
-        AddSourcesRequest $addSourcesRequest
+        ErrorResponseFactory $errorResponseFactory,
+        Deserializer $yamlFileCollectionDeserializer,
+        CreateJobRequest $request,
     ): JsonResponse {
-        if (false === $this->jobStore->has()) {
-            return BadAddSourcesRequestResponse::createJobMissingResponse();
+        if (true === $this->jobStore->has()) {
+            return new ErrorResponse('create', 'job already exists', 100, Response::HTTP_BAD_REQUEST);
         }
 
-        if (true === $sourceStore->hasAny()) {
-            return BadAddSourcesRequestResponse::createSourcesNotEmptyResponse();
+        if ('' === $request->label) {
+            return new ErrorResponse('create', 'label missing', 200, Response::HTTP_BAD_REQUEST);
         }
 
-        $manifestUploadedFile = $addSourcesRequest->getManifest();
-        if (!$manifestUploadedFile instanceof UploadedFile) {
-            return BadAddSourcesRequestResponse::createManifestMissingResponse();
+        if ('' === $request->callbackUrl) {
+            return new ErrorResponse('create', 'callback_url missing', 300, Response::HTTP_BAD_REQUEST);
+        }
+
+        if (null === $request->maximumDurationInSeconds) {
+            return new ErrorResponse('create', 'maximum_duration_in_seconds missing', 400, Response::HTTP_BAD_REQUEST);
+        }
+
+        if ('' === trim($request->source)) {
+            return new ErrorResponse('create', 'source missing', 500, Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $manifest = $manifestFactory->createFromUploadedFile($manifestUploadedFile);
-        } catch (ManifestFactoryExceptionInterface $manifestFactoryException) {
-            return BadAddSourcesRequestResponse::createInvalidRequestManifest($manifestFactoryException);
-        }
+            $provider = $yamlFileCollectionDeserializer->deserialize($request->source);
+        } catch (DeserializeException $exception) {
+            $response = $errorResponseFactory->createFromYamlFileCollectionDeserializeException($exception);
+            if ($response instanceof JsonResponse) {
+                return $response;
+            }
 
-        $manifestTestPaths = $manifest->getTestPaths();
-        if ([] === $manifestTestPaths) {
-            return BadAddSourcesRequestResponse::createManifestEmptyResponse();
+            throw $exception;
         }
-
-        $uploadedSources = $addSourcesRequest->getUploadedSources();
 
         try {
-            $sourceFactory->createCollectionFromManifest($manifest, $uploadedSources);
-        } catch (MissingTestSourceException $testSourceException) {
-            return BadAddSourcesRequestResponse::createSourceMissingResponse($testSourceException->getPath());
+            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollectionFactory->create($provider));
+        } catch (InvalidManifestException $exception) {
+            return $errorResponseFactory->createFromInvalidManifestException($exception);
+        } catch (MissingManifestException $exception) {
+            return $errorResponseFactory->createFromMissingManifestException($exception);
+        } catch (MissingTestSourceException $exception) {
+            return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
+
+        $jobFactory->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
 

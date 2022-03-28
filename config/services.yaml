@@ -117,3 +117,9 @@ services:
     App\Messenger\CallbackMessageRetryStrategy:
         arguments:
             $multiplierRetryStrategy: '@app.messenger.retry_strategy.callback.multiplier'
+
+    webignition\YamlDocumentSetParser\Parser: ~
+
+    SmartAssert\YamlFile\FileHashes\Deserializer: ~
+
+    SmartAssert\YamlFile\Collection\Deserializer: ~

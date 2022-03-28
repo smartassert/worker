@@ -18,9 +18,6 @@ services:
         arguments:
             $transport: '@messenger.transport.async'
 
-    App\Tests\Services\Asserter\SourceEntityAsserter:
-        public: true
-
     App\Tests\Services\Asserter\TestEntityAsserter:
         public: true
 
@@ -48,3 +45,11 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
         factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
+
+    App\Services\YamlSourceCollectionFactory:
+        public: true
+
+    App\Tests\Services\SourceFileInspector:
+        public: true
+        arguments:
+            $path: '%compiler_source_directory%'

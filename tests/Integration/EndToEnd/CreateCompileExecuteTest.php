@@ -5,35 +5,35 @@ declare(strict_types=1);
 namespace App\Tests\Integration\EndToEnd;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Test;
+use App\Request\CreateJobRequest;
 use App\Services\ApplicationState;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\ExecutionState;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
-use App\Tests\Services\ApplicationStateHandler;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
-use App\Tests\Services\Asserter\SystemStateAsserter;
 use App\Tests\Services\CallableInvoker;
 use App\Tests\Services\ClientRequestSender;
+use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
 use App\Tests\Services\IntegrationCallbackRequestFactory;
 use App\Tests\Services\IntegrationJobProperties;
-use App\Tests\Services\UploadedFileFactory;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
 use webignition\HttpHistoryContainer\Collection\RequestCollectionInterface;
 
-class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
+class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 {
     private const MAX_DURATION_IN_SECONDS = 30;
 
     private CallableInvoker $callableInvoker;
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
-    private SystemStateAsserter $systemStateAsserter;
-    private ApplicationStateHandler $applicationStateHandler;
     private IntegrationJobProperties $jobProperties;
+    private CreateJobSourceFactory $createJobSourceFactory;
+    private ApplicationState $applicationState;
 
     protected function setUp(): void
     {
@@ -51,34 +51,35 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
 
-        $systemStateAsserter = self::getContainer()->get(SystemStateAsserter::class);
-        \assert($systemStateAsserter instanceof SystemStateAsserter);
-        $this->systemStateAsserter = $systemStateAsserter;
-
-        $applicationStateHandler = self::getContainer()->get(ApplicationStateHandler::class);
-        \assert($applicationStateHandler instanceof ApplicationStateHandler);
-        $this->applicationStateHandler = $applicationStateHandler;
-
         $jobProperties = self::getContainer()->get(IntegrationJobProperties::class);
         \assert($jobProperties instanceof IntegrationJobProperties);
         $this->jobProperties = $jobProperties;
+
+        $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
+        \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
+        $this->createJobSourceFactory = $createJobSourceFactory;
+
+        $applicationState = self::getContainer()->get(ApplicationState::class);
+        \assert($applicationState instanceof ApplicationState);
+        $this->applicationState = $applicationState;
     }
 
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
+     * @param string[]                  $manifestPaths
      * @param string[]                  $sourcePaths
      * @param CompilationState::STATE_* $expectedCompilationEndState
      * @param ExecutionState::STATE_*   $expectedExecutionEndState
-     * @param ApplicationState::STATE_* $expectedApplicationEndState
+     * @param array<int, array<mixed>>  $expectedTestDataCollection
      */
-    public function testCreateAddSourcesCompileExecute(
-        int $jobMaximumDurationInSeconds,
-        string $manifestPath,
+    public function testCreateCompileExecute(
+        array $manifestPaths,
         array $sourcePaths,
+        int $jobMaximumDurationInSeconds,
         string $expectedCompilationEndState,
         string $expectedExecutionEndState,
-        string $expectedApplicationEndState,
+        array $expectedTestDataCollection,
         ?callable $assertions = null
     ): void {
         $statusResponse = $this->clientRequestSender->getStatus();
@@ -87,68 +88,57 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
         $label = $this->jobProperties->getLabel();
         $callbackUrl = $this->jobProperties->getCallbackUrl();
 
-        $createResponse = $this->clientRequestSender->createJob($label, $callbackUrl, $jobMaximumDurationInSeconds);
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $createResponse);
-
-        $expectedJobProperties = [
-            'label' => $label,
-            'callback_url' => $callbackUrl,
-            'maximum_duration_in_seconds' => $jobMaximumDurationInSeconds,
+        $requestPayload = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
+            CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
-
-        $statusResponse = $this->clientRequestSender->getStatus();
-
-        $expectedResponseData = array_merge(
-            $expectedJobProperties,
-            [
-                'compilation_state' => CompilationState::STATE_AWAITING,
-                'execution_state' => ExecutionState::STATE_AWAITING,
-                'callback_state' => CallbackState::STATE_AWAITING,
-                'sources' => [],
-                'tests' => [],
-            ]
-        );
-        self::assertIsArray($expectedResponseData);
-
-        $this->jsonResponseAsserter->assertJsonResponse(200, $expectedResponseData, $statusResponse);
-
-        $this->systemStateAsserter->assertSystemState(
-            CompilationState::STATE_AWAITING,
-            ExecutionState::STATE_AWAITING,
-            ApplicationState::STATE_AWAITING_SOURCES
-        );
-
-        $uploadedFileFactory = self::getContainer()->get(UploadedFileFactory::class);
-        \assert($uploadedFileFactory instanceof UploadedFileFactory);
-
-        $uploadedFileCollection = $uploadedFileFactory->createCollection(
-            $this->uploadStoreHandler->copyFixtures($sourcePaths)
-        );
-
-        $addSourcesResponse = $this->clientRequestSender->addJobSources(
-            $uploadedFileFactory->createForManifest($manifestPath),
-            $uploadedFileCollection
-        );
-
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $addSourcesResponse);
 
         $timer = new Timer();
         $timer->start();
 
-        $this->applicationStateHandler->waitUntilStateIs([
-            ApplicationState::STATE_COMPLETE,
-            ApplicationState::STATE_TIMED_OUT,
-        ]);
+        $createResponse = $this->clientRequestSender->create($requestPayload);
 
         $duration = $timer->stop();
-
-        $this->systemStateAsserter->assertSystemState(
-            $expectedCompilationEndState,
-            $expectedExecutionEndState,
-            $expectedApplicationEndState
-        );
-
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());
+
+        $this->jsonResponseAsserter->assertJsonResponse(200, [], $createResponse);
+
+        $statusResponse = $this->clientRequestSender->getStatus();
+
+        self::assertSame(200, $statusResponse->getStatusCode());
+        self::assertSame('application/json', $statusResponse->headers->get('content-type'));
+
+        $statusData = json_decode((string) $statusResponse->getContent(), true);
+        self::assertIsArray($statusData);
+
+        self::assertSame($label, $statusData['label']);
+        self::assertSame($callbackUrl, $statusData['callback_url']);
+        self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
+        self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
+        self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
+        self::assertSame(CallbackState::STATE_COMPLETE, $statusData['callback_state']);
+        self::assertSame($sourcePaths, $statusData['sources']);
+
+        $testDataCollection = $statusData['tests'];
+        self::assertIsArray($testDataCollection);
+
+        self::assertCount(count($expectedTestDataCollection), $testDataCollection);
+
+        foreach ($testDataCollection as $index => $testData) {
+            self::assertIsArray($testData);
+            $expectedTestData = $expectedTestDataCollection[$index];
+
+            self::assertSame($expectedTestData['configuration'], $testData['configuration']);
+            self::assertSame($expectedTestData['source'], $testData['source']);
+            self::assertSame($expectedTestData['step_count'], $testData['step_count']);
+            self::assertSame($expectedTestData['state'], $testData['state']);
+            self::assertSame($expectedTestData['position'], $testData['position']);
+            self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
+        }
+
+        self::assertSame(ApplicationState::STATE_COMPLETE, (string) $this->applicationState);
 
         if (is_callable($assertions)) {
             $this->callableInvoker->invoke($assertions);
@@ -161,18 +151,63 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
     public function createAddSourcesCompileExecuteDataProvider(): array
     {
         return [
-            'default' => [
-                'jobMaximumDurationInSeconds' => 60,
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest.yml',
+            'three successful tests' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
+                    'Test/chrome-open-form.yml',
+                ],
                 'sourcePaths' => [
                     'Page/index.yml',
                     'Test/chrome-open-index.yml',
                     'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
+                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_COMPLETE,
-                'expectedApplicationEndState' => ApplicationState::STATE_COMPLETE,
+                'expectedTestDataCollection' => [
+                    [
+                        'configuration' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/index.html',
+                        ],
+                        'source' => 'Test/chrome-open-index.yml',
+                        'step_count' => 1,
+                        'state' => Test::STATE_COMPLETE,
+                        'position' => 1,
+                    ],
+                    [
+                        'configuration' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/index.html',
+                        ],
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_count' => 1,
+                        'state' => Test::STATE_COMPLETE,
+                        'position' => 2,
+                    ],
+                    [
+                        'configuration' => [
+                            'browser' => 'firefox',
+                            'url' => 'http://html-fixtures/index.html',
+                        ],
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_count' => 1,
+                        'state' => Test::STATE_COMPLETE,
+                        'position' => 3,
+                    ],
+                    [
+                        'configuration' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/form.html',
+                        ],
+                        'source' => 'Test/chrome-open-form.yml',
+                        'step_count' => 1,
+                        'state' => Test::STATE_COMPLETE,
+                        'position' => 4,
+                    ],
+                ],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
                     IntegrationJobProperties $jobProperties,
@@ -422,14 +457,27 @@ class CreateAddSourcesCompileExecuteTest extends AbstractBaseIntegrationTest
                 },
             ],
             'step failed' => [
-                'jobMaximumDurationInSeconds' => 60,
-                'manifestPath' => getcwd() . '/tests/Fixtures/Manifest/manifest-step-failure.yml',
+                'manifestPaths' => [
+                    'Test/chrome-open-index-with-step-failure.yml',
+                ],
                 'sourcePaths' => [
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
+                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_CANCELLED,
-                'expectedApplicationEndState' => ApplicationState::STATE_COMPLETE,
+                'expectedTestDataCollection' => [
+                    [
+                        'configuration' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/index.html',
+                        ],
+                        'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                        'step_count' => 2,
+                        'state' => Test::STATE_FAILED,
+                        'position' => 1,
+                    ],
+                ],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
                     IntegrationJobProperties $jobProperties,

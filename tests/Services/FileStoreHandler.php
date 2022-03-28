@@ -9,7 +9,7 @@ use Symfony\Component\Finder\Finder;
 class FileStoreHandler
 {
     public function __construct(
-        private string $fixturesPath,
+        private FixtureReader $fixtureReader,
         private string $path
     ) {
     }
@@ -30,7 +30,6 @@ class FileStoreHandler
 
     public function copyFixture(string $relativePath): string
     {
-        $origin = $this->fixturesPath . '/' . $relativePath;
         $destination = $this->path . '/' . $relativePath;
 
         if (!file_exists($destination)) {
@@ -39,7 +38,7 @@ class FileStoreHandler
                 mkdir($directory, 0777, true);
             }
 
-            copy($origin, $destination);
+            file_put_contents($destination, $this->fixtureReader->read($relativePath));
         }
 
         return $destination;

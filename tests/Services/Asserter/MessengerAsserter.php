@@ -31,7 +31,7 @@ class MessengerAsserter
 
         TestCase::assertInstanceOf(Envelope::class, $envelope);
         if (!$envelope instanceof Envelope) {
-            throw new \InvalidArgumentException('No envelope at position ' . (string) $index);
+            throw new \InvalidArgumentException('No envelope at position ' . $index);
         }
 
         return $envelope;
@@ -55,12 +55,6 @@ class MessengerAsserter
         );
     }
 
-    public function assertEnvelopeNotContainsStampsOfType(Envelope $envelope, string $type): void
-    {
-        $stamps = $envelope->all();
-        TestCase::assertArrayNotHasKey($type, $stamps);
-    }
-
     public function assertEnvelopeContainsStamp(
         Envelope $envelope,
         StampInterface $expectedStamp,
@@ -75,19 +69,5 @@ class MessengerAsserter
         $actualStamp = $typeStamps[$expectedStampIndex] ?? null;
 
         TestCase::assertEquals($expectedStamp, $actualStamp);
-    }
-
-    /**
-     * @param array<string, array<int, StampInterface>> $expectedEnvelopeContainsStampCollections
-     */
-    public function assertEnvelopeContainsStampCollections(
-        Envelope $envelope,
-        array $expectedEnvelopeContainsStampCollections
-    ): void {
-        foreach ($expectedEnvelopeContainsStampCollections as $expectedStampCollection) {
-            foreach ($expectedStampCollection as $expectedStampIndex => $expectedStamp) {
-                $this->assertEnvelopeContainsStamp($envelope, $expectedStamp, $expectedStampIndex);
-            }
-        }
     }
 }
