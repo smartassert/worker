@@ -20,18 +20,22 @@ class ErrorResponseFactory
         $previous = $exception->getPrevious();
 
         if ($previous instanceof ExceptionInterface) {
-            return new ErrorResponse('source/metadata/invalid', [
+            $payload = [
                 'message' => 'Serialized source metadata cannot be decoded',
                 'file_hashes_content' => $previous->getEncodedContent(),
-                'previous_message' => $previous->getPrevious()?->getMessage(),
-            ]);
+            ];
+
+            if ($previous->getPrevious() instanceof \Throwable) {
+                $payload['previous_message'] = $previous->getPrevious()->getMessage();
+            }
+
+            return new ErrorResponse('source/metadata/invalid', $payload);
         }
 
         if ($previous instanceof FilePathNotFoundException) {
             return new ErrorResponse('source/metadata/incomplete', [
                 'message' => 'Serialized source metadata is not complete',
                 'hash' => $previous->getHash(),
-                'previous_message' => $previous->getPrevious()?->getMessage(),
             ]);
         }
 
@@ -49,10 +53,12 @@ class ErrorResponseFactory
             $manifestState = 'invalid';
         }
 
-        return new ErrorResponse('source/manifest/' . $manifestState, [
-            'message' => $exception->getMessage(),
-            'previous_message' => $exception->getPrevious()?->getMessage(),
-        ]);
+        $payload = ['message' => $exception->getMessage()];
+        if ($exception->getPrevious() instanceof \Throwable) {
+            $payload['previous_message'] = $exception->getPrevious()->getMessage();
+        }
+
+        return new ErrorResponse('source/manifest/' . $manifestState, $payload);
     }
 
     public function createFromProvisionException(ProvisionException $exception): JsonResponse
