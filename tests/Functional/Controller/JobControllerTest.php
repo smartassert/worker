@@ -231,7 +231,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'payload' => [
                         'hash' => '272c8402fa38edc52165379d6d3c356a',
                         'message' => 'Serialized source metadata is not complete',
-                        'previous_message' => null,
                     ],
                 ],
             ],
@@ -250,7 +249,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'error_state' => 'source/manifest/empty',
                     'payload' => [
                         'message' => 'Manifest is empty',
-                        'previous_message' => null,
                     ],
                 ],
             ],
