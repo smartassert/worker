@@ -214,6 +214,26 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
+            'invalid source: foo' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    123:
+                        - file.yaml
+                    ...
+                    ---
+                    file1.yaml content
+                    ...
+                    EOT
+                ]),
+                'expectedResponseData' => [
+                    'error_state' => 'source/metadata/invalid',
+                    'payload' => [
+                        'file_hashes_content' => '123:' . "\n" . '    - file.yaml',
+                        'message' => 'Serialized source metadata cannot be decoded',
+                    ],
+                ],
+            ],
             'invalid source: metadata incomplete' => [
                 'requestPayload' => array_merge($nonSourcePayload, [
                     CreateJobRequest::KEY_SOURCE => <<< 'EOT'
@@ -231,7 +251,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'payload' => [
                         'hash' => '272c8402fa38edc52165379d6d3c356a',
                         'message' => 'Serialized source metadata is not complete',
-                        'previous_message' => null,
                     ],
                 ],
             ],

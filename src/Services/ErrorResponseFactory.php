@@ -20,18 +20,22 @@ class ErrorResponseFactory
         $previous = $exception->getPrevious();
 
         if ($previous instanceof ExceptionInterface) {
-            return new ErrorResponse('source/metadata/invalid', [
+            $payload = [
                 'message' => 'Serialized source metadata cannot be decoded',
                 'file_hashes_content' => $previous->getEncodedContent(),
-                'previous_message' => $previous->getPrevious()?->getMessage(),
-            ]);
+            ];
+
+            if ($previous->getPrevious() instanceof \Throwable) {
+                $payload['previous_message'] = $previous->getPrevious()->getMessage();
+            }
+
+            return new ErrorResponse('source/metadata/invalid', $payload);
         }
 
         if ($previous instanceof FilePathNotFoundException) {
             return new ErrorResponse('source/metadata/incomplete', [
                 'message' => 'Serialized source metadata is not complete',
                 'hash' => $previous->getHash(),
-                'previous_message' => $previous->getPrevious()?->getMessage(),
             ]);
         }
 
