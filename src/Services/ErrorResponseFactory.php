@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exception\InvalidManifestException;
-use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Response\ErrorResponse;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
@@ -55,11 +54,6 @@ class ErrorResponseFactory
             'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
         ]);
-    }
-
-    public function createFromMissingManifestException(MissingManifestException $exception): JsonResponse
-    {
-        return new ErrorResponse('source/manifest/missing');
     }
 
     public function createFromProvisionException(ProvisionException $exception): JsonResponse
