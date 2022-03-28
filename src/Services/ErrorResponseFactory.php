@@ -18,14 +18,12 @@ class ErrorResponseFactory
     /**
      * @param array<mixed> $payload
      */
-    public function create(string $type, array $payload = [], int $statusCode = 400): JsonResponse
+    public function create(string $errorState, array $payload = [], int $statusCode = 400): JsonResponse
     {
         return new JsonResponse(
             [
-                'error' => [
-                    'type' => $type,
-                    'payload' => $payload,
-                ],
+                'error_state' => $errorState,
+                'payload' => $payload,
             ],
             $statusCode
         );
@@ -36,7 +34,7 @@ class ErrorResponseFactory
         $previous = $exception->getPrevious();
 
         if ($previous instanceof ExceptionInterface) {
-            return $this->create('invalid_serialized_source_metadata', [
+            return $this->create('source/metadata/invalid', [
                 'message' => 'Serialized source metadata cannot be decoded',
                 'file_hashes_content' => $previous->getEncodedContent(),
                 'previous_message' => $previous->getPrevious()?->getMessage(),
@@ -44,7 +42,7 @@ class ErrorResponseFactory
         }
 
         if ($previous instanceof FilePathNotFoundException) {
-            return $this->create('incomplete_serialized_source_metadata', [
+            return $this->create('source/metadata/incomplete', [
                 'message' => 'Serialized source metadata is not complete',
                 'hash' => $previous->getHash(),
                 'previous_message' => $previous->getPrevious()?->getMessage(),
@@ -56,7 +54,16 @@ class ErrorResponseFactory
 
     public function createFromInvalidManifestException(InvalidManifestException $exception): JsonResponse
     {
-        return $this->create('invalid_manifest', [
+        $manifestState = 'unknown';
+        if (InvalidManifestException::CODE_EMPTY === $exception->getCode()) {
+            $manifestState = 'empty';
+        }
+
+        if (InvalidManifestException::CODE_INVALID_YAML === $exception->getCode()) {
+            $manifestState = 'invalid';
+        }
+
+        return $this->create('source/manifest/' . $manifestState, [
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
@@ -65,7 +72,7 @@ class ErrorResponseFactory
 
     public function createFromMissingManifestException(MissingManifestException $exception): JsonResponse
     {
-        return $this->create('missing_manifest');
+        return $this->create('source/manifest/missing');
     }
 
     public function createFromProvisionException(ProvisionException $exception): JsonResponse
@@ -79,7 +86,7 @@ class ErrorResponseFactory
 
     public function createFromMissingTestSourceException(MissingTestSourceException $exception): JsonResponse
     {
-        return $this->create('missing_test_source', [
+        return $this->create('source/test/missing', [
             'message' => sprintf('Test source "%s" missing', $exception->getPath()),
             'path' => $exception->getPath()
         ]);

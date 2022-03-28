@@ -75,7 +75,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider createBadRequestMissingValuesDataProvider
+     * @!dataProvider createBadRequestMissingValuesDataProvider
      * @dataProvider createBadRequestInvalidSourceDataProvider
      *
      * @param array<mixed> $requestPayload
@@ -206,13 +206,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_serialized_source_metadata',
-                        'payload' => [
-                            'file_hashes_content' => '  invalid' . "\n" . 'yaml',
-                            'message' => 'Serialized source metadata cannot be decoded',
-                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
-                        ],
+                    'error_state' => 'source/metadata/invalid',
+                    'payload' => [
+                        'file_hashes_content' => '  invalid' . "\n" . 'yaml',
+                        'message' => 'Serialized source metadata cannot be decoded',
+                        'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
                     ],
                 ],
             ],
@@ -229,13 +227,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'incomplete_serialized_source_metadata',
-                        'payload' => [
-                            'hash' => '272c8402fa38edc52165379d6d3c356a',
-                            'message' => 'Serialized source metadata is not complete',
-                            'previous_message' => null,
-                        ],
+                    'error_state' => 'source/metadata/incomplete',
+                    'payload' => [
+                        'hash' => '272c8402fa38edc52165379d6d3c356a',
+                        'message' => 'Serialized source metadata is not complete',
+                        'previous_message' => null,
                     ],
                 ],
             ],
@@ -251,13 +247,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_manifest',
-                        'payload' => [
-                            'code' => 300,
-                            'message' => 'Manifest is empty',
-                            'previous_message' => null,
-                        ],
+                    'error_state' => 'source/manifest/empty',
+                    'payload' => [
+                        'code' => 300,
+                        'message' => 'Manifest is empty',
+                        'previous_message' => null,
                     ],
                 ],
             ],
@@ -275,13 +269,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'invalid_manifest',
-                        'payload' => [
-                            'code' => 100,
-                            'message' => 'Manifest content is not valid yaml',
-                            'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
-                        ],
+                    'error_state' => 'source/manifest/invalid',
+                    'payload' => [
+                        'code' => 100,
+                        'message' => 'Manifest content is not valid yaml',
+                        'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
                     ],
                 ],
             ],
@@ -298,10 +290,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'missing_manifest',
-                        'payload' => [],
-                    ],
+                    'error_state' => 'source/manifest/missing',
+                    'payload' => [],
                 ],
             ],
             'invalid source: source file not present' => [
@@ -319,12 +309,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error' => [
-                        'type' => 'missing_test_source',
-                        'payload' => [
-                            'message' => 'Test source "Test/chrome-open-index.yml" missing',
-                            'path' => 'Test/chrome-open-index.yml',
-                        ],
+                    'error_state' => 'source/test/missing',
+                    'payload' => [
+                        'message' => 'Test source "Test/chrome-open-index.yml" missing',
+                        'path' => 'Test/chrome-open-index.yml',
                     ],
                 ],
             ],
