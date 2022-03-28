@@ -206,7 +206,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'invalid_serialized_source_metadata',
+                    'error_state' => 'source/metadata/invalid',
                     'payload' => [
                         'file_hashes_content' => '  invalid' . "\n" . 'yaml',
                         'message' => 'Serialized source metadata cannot be decoded',
@@ -227,7 +227,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'incomplete_serialized_source_metadata',
+                    'error_state' => 'source/metadata/incomplete',
                     'payload' => [
                         'hash' => '272c8402fa38edc52165379d6d3c356a',
                         'message' => 'Serialized source metadata is not complete',
@@ -247,7 +247,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'invalid_manifest',
+                    'error_state' => 'source/manifest/empty',
                     'payload' => [
                         'code' => 300,
                         'message' => 'Manifest is empty',
@@ -269,7 +269,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'invalid_manifest',
+                    'error_state' => 'source/manifest/invalid',
                     'payload' => [
                         'code' => 100,
                         'message' => 'Manifest content is not valid yaml',
@@ -290,7 +290,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'missing_manifest',
+                    'error_state' => 'source/manifest/missing',
                     'payload' => [],
                 ],
             ],
@@ -309,7 +309,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'missing_test_source',
+                    'error_state' => 'source/test/missing',
                     'payload' => [
                         'message' => 'Test source "Test/chrome-open-index.yml" missing',
                         'path' => 'Test/chrome-open-index.yml',
