@@ -114,9 +114,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_LABEL => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 200,
-                    'message' => 'label missing',
-                    'type' => 'create',
+                    'error_state' => 'label/missing',
                 ],
             ],
             'missing values: label empty' => [
@@ -124,9 +122,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_LABEL => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 200,
-                    'message' => 'label missing',
-                    'type' => 'create',
+                    'error_state' => 'label/missing',
                 ],
             ],
             'missing values: callback_url missing' => [
@@ -134,9 +130,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_CALLBACK_URL => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 300,
-                    'message' => 'callback_url missing',
-                    'type' => 'create',
+                    'error_state' => 'callback_url/missing',
                 ],
             ],
             'missing values: callback_url empty' => [
@@ -144,9 +138,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_CALLBACK_URL => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 300,
-                    'message' => 'callback_url missing',
-                    'type' => 'create',
+                    'error_state' => 'callback_url/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [
@@ -154,9 +146,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => null,
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds empty' => [
@@ -164,9 +154,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds not an integer' => [
@@ -174,9 +162,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_MAXIMUM_DURATION => 'string',
                 ]),
                 'expectedResponseData' => [
-                    'code' => 400,
-                    'message' => 'maximum_duration_in_seconds missing',
-                    'type' => 'create',
+                    'error_state' => 'maximum_duration_in_seconds/missing',
                 ],
             ],
             'missing values: source missing' => [
@@ -184,9 +170,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_SOURCE => null
                 ]),
                 'expectedResponseData' => [
-                    'code' => 500,
-                    'message' => 'source missing',
-                    'type' => 'create',
+                    'error_state' => 'source/missing',
                 ],
             ],
             'missing values: source empty' => [
@@ -194,9 +178,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     CreateJobRequest::KEY_SOURCE => ''
                 ]),
                 'expectedResponseData' => [
-                    'code' => 500,
-                    'message' => 'source missing',
-                    'type' => 'create',
+                    'error_state' => 'source/missing',
                 ],
             ],
         ];
