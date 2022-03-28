@@ -291,7 +291,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/missing',
-                    'payload' => [],
                 ],
             ],
             'invalid source: source file not present' => [
