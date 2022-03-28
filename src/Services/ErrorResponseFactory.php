@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
+use App\Response\ErrorResponse;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
@@ -15,26 +16,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorResponseFactory
 {
-    /**
-     * @param array<mixed> $payload
-     */
-    public function create(string $errorState, array $payload = [], int $statusCode = 400): JsonResponse
-    {
-        return new JsonResponse(
-            [
-                'error_state' => $errorState,
-                'payload' => $payload,
-            ],
-            $statusCode
-        );
-    }
-
     public function createFromYamlFileCollectionDeserializeException(DeserializeException $exception): ?JsonResponse
     {
         $previous = $exception->getPrevious();
 
         if ($previous instanceof ExceptionInterface) {
-            return $this->create('source/metadata/invalid', [
+            return new ErrorResponse('source/metadata/invalid', [
                 'message' => 'Serialized source metadata cannot be decoded',
                 'file_hashes_content' => $previous->getEncodedContent(),
                 'previous_message' => $previous->getPrevious()?->getMessage(),
@@ -42,7 +29,7 @@ class ErrorResponseFactory
         }
 
         if ($previous instanceof FilePathNotFoundException) {
-            return $this->create('source/metadata/incomplete', [
+            return new ErrorResponse('source/metadata/incomplete', [
                 'message' => 'Serialized source metadata is not complete',
                 'hash' => $previous->getHash(),
                 'previous_message' => $previous->getPrevious()?->getMessage(),
@@ -63,7 +50,7 @@ class ErrorResponseFactory
             $manifestState = 'invalid';
         }
 
-        return $this->create('source/manifest/' . $manifestState, [
+        return new ErrorResponse('source/manifest/' . $manifestState, [
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
@@ -72,12 +59,12 @@ class ErrorResponseFactory
 
     public function createFromMissingManifestException(MissingManifestException $exception): JsonResponse
     {
-        return $this->create('source/manifest/missing');
+        return new ErrorResponse('source/manifest/missing');
     }
 
     public function createFromProvisionException(ProvisionException $exception): JsonResponse
     {
-        return $this->create('invalid_manifest', [
+        return new ErrorResponse('invalid_manifest', [
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
@@ -86,7 +73,7 @@ class ErrorResponseFactory
 
     public function createFromMissingTestSourceException(MissingTestSourceException $exception): JsonResponse
     {
-        return $this->create('source/test/missing', [
+        return new ErrorResponse('source/test/missing', [
             'message' => sprintf('Test source "%s" missing', $exception->getPath()),
             'path' => $exception->getPath()
         ]);

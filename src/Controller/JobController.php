@@ -10,6 +10,7 @@ use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
+use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\EntityFactory\JobFactory;
@@ -51,23 +52,23 @@ class JobController
         CreateJobRequest $request,
     ): JsonResponse {
         if (true === $this->jobStore->has()) {
-            return new JsonResponse(['error_state' => 'job/already_exists'], 400);
+            return new ErrorResponse('job/already_exists');
         }
 
         if ('' === $request->label) {
-            return new JsonResponse(['error_state' => 'label/missing'], 400);
+            return new ErrorResponse('label/missing');
         }
 
         if ('' === $request->callbackUrl) {
-            return new JsonResponse(['error_state' => 'callback_url/missing'], 400);
+            return new ErrorResponse('callback_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
-            return new JsonResponse(['error_state' => 'maximum_duration_in_seconds/missing'], 400);
+            return new ErrorResponse('maximum_duration_in_seconds/missing');
         }
 
         if ('' === trim($request->source)) {
-            return new JsonResponse(['error_state' => 'source/missing'], 400);
+            return new ErrorResponse('source/missing');
         }
 
         try {
