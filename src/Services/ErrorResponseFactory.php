@@ -51,7 +51,6 @@ class ErrorResponseFactory
 
         return new ErrorResponse('source/manifest/' . $manifestState, [
             'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
         ]);
     }
@@ -60,7 +59,6 @@ class ErrorResponseFactory
     {
         return new ErrorResponse('invalid_manifest', [
             'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
             'previous_message' => $exception->getPrevious()?->getMessage(),
         ]);
     }

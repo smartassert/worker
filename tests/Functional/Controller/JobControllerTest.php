@@ -249,7 +249,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/empty',
                     'payload' => [
-                        'code' => 300,
                         'message' => 'Manifest is empty',
                         'previous_message' => null,
                     ],
@@ -271,7 +270,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/invalid',
                     'payload' => [
-                        'code' => 100,
                         'message' => 'Manifest content is not valid yaml',
                         'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
                     ],
