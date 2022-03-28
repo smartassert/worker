@@ -18,11 +18,11 @@ class ErrorResponseFactory
     /**
      * @param array<mixed> $payload
      */
-    public function create(string $type, array $payload = [], int $statusCode = 400): JsonResponse
+    public function create(string $errorState, array $payload = [], int $statusCode = 400): JsonResponse
     {
         return new JsonResponse(
             [
-                'error_state' => $type,
+                'error_state' => $errorState,
                 'payload' => $payload,
             ],
             $statusCode
