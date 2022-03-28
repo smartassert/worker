@@ -10,6 +10,7 @@ use App\Response\ErrorResponse;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
+use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ErrorResponseFactory
@@ -19,16 +20,18 @@ class ErrorResponseFactory
         $previous = $exception->getPrevious();
 
         if ($previous instanceof ExceptionInterface) {
-            return $this->createForException($previous, 'source/metadata/invalid', [
+            return new ErrorResponse('source/metadata/invalid', [
                 'message' => 'Serialized source metadata cannot be decoded',
                 'file_hashes_content' => $previous->getEncodedContent(),
+                'previous_message' => $previous->getPrevious()?->getMessage(),
             ]);
         }
 
         if ($previous instanceof FilePathNotFoundException) {
-            return $this->createForException($previous, 'source/metadata/incomplete', [
+            return new ErrorResponse('source/metadata/incomplete', [
                 'message' => 'Serialized source metadata is not complete',
                 'hash' => $previous->getHash(),
+                'previous_message' => $previous->getPrevious()?->getMessage(),
             ]);
         }
 
@@ -46,31 +49,25 @@ class ErrorResponseFactory
             $manifestState = 'invalid';
         }
 
-        return $this->createForException($exception, 'source/manifest/' . $manifestState);
+        return new ErrorResponse('source/manifest/' . $manifestState, [
+            'message' => $exception->getMessage(),
+            'previous_message' => $exception->getPrevious()?->getMessage(),
+        ]);
+    }
+
+    public function createFromProvisionException(ProvisionException $exception): JsonResponse
+    {
+        return new ErrorResponse('invalid_manifest', [
+            'message' => $exception->getMessage(),
+            'previous_message' => $exception->getPrevious()?->getMessage(),
+        ]);
     }
 
     public function createFromMissingTestSourceException(MissingTestSourceException $exception): JsonResponse
     {
-        return $this->createForException($exception, 'source/test/missing', [
+        return new ErrorResponse('source/test/missing', [
             'message' => sprintf('Test source "%s" missing', $exception->getPath()),
             'path' => $exception->getPath()
         ]);
-    }
-
-    /**
-     * @param array<mixed> $additionalPayload
-     */
-    private function createForException(
-        \Throwable $exception,
-        string $errorState,
-        array $additionalPayload = []
-    ): ErrorResponse {
-        $payload = ['message' => $exception->getMessage()];
-        $previous = $exception->getPrevious();
-        if ($previous instanceof \Throwable) {
-            $payload['previous_message'] = $previous->getMessage();
-        }
-
-        return new ErrorResponse($errorState, array_merge($payload, $additionalPayload));
     }
 }
