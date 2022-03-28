@@ -22,10 +22,8 @@ class ErrorResponseFactory
     {
         return new JsonResponse(
             [
-                'error' => [
-                    'type' => $type,
-                    'payload' => $payload,
-                ],
+                'error_state' => $type,
+                'payload' => $payload,
             ],
             $statusCode
         );
