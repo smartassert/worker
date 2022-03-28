@@ -269,7 +269,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'error_state' => 'source/manifest/empty',
                     'payload' => [
                         'message' => 'Manifest is empty',
-                        'previous_message' => null,
                     ],
                 ],
             ],

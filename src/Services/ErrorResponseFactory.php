@@ -53,10 +53,12 @@ class ErrorResponseFactory
             $manifestState = 'invalid';
         }
 
-        return new ErrorResponse('source/manifest/' . $manifestState, [
-            'message' => $exception->getMessage(),
-            'previous_message' => $exception->getPrevious()?->getMessage(),
-        ]);
+        $payload = ['message' => $exception->getMessage()];
+        if ($exception->getPrevious() instanceof \Throwable) {
+            $payload['previous_message'] = $exception->getPrevious()->getMessage();
+        }
+
+        return new ErrorResponse('source/manifest/' . $manifestState, $payload);
     }
 
     public function createFromProvisionException(ProvisionException $exception): JsonResponse
