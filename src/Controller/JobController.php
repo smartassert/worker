@@ -87,7 +87,7 @@ class JobController
         } catch (InvalidManifestException $exception) {
             return $errorResponseFactory->createFromInvalidManifestException($exception);
         } catch (MissingManifestException $exception) {
-            return $errorResponseFactory->createFromMissingManifestException($exception);
+            return new ErrorResponse('source/manifest/missing');
         } catch (MissingTestSourceException $exception) {
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
