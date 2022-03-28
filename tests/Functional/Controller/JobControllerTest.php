@@ -214,7 +214,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            'invalid source: foo' => [
+            'invalid source: file hash not found' => [
                 'requestPayload' => array_merge($nonSourcePayload, [
                     CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                     ---
@@ -267,9 +267,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/empty',
-                    'payload' => [
-                        'message' => 'Manifest is empty',
-                    ],
                 ],
             ],
             'invalid source: invalid manifest: invalid yaml within manifest' => [
@@ -288,8 +285,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/invalid',
                     'payload' => [
-                        'message' => 'Manifest content is not valid yaml',
-                        'previous_message' => 'Unable to parse at line 1 (near "  invalid").',
+                        'message' => 'Unable to parse at line 1 (near "  invalid").',
                     ],
                 ],
             ],
@@ -326,7 +322,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 'expectedResponseData' => [
                     'error_state' => 'source/test/missing',
                     'payload' => [
-                        'message' => 'Test source "Test/chrome-open-index.yml" missing',
                         'path' => 'Test/chrome-open-index.yml',
                     ],
                 ],
