@@ -10,7 +10,6 @@ use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
-use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\EntityFactory\JobFactory;
@@ -24,7 +23,6 @@ use App\Services\YamlSourceCollectionFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -53,23 +51,23 @@ class JobController
         CreateJobRequest $request,
     ): JsonResponse {
         if (true === $this->jobStore->has()) {
-            return new ErrorResponse('create', 'job already exists', 100, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error_state' => 'job/already_exists'], 400);
         }
 
         if ('' === $request->label) {
-            return new ErrorResponse('create', 'label missing', 200, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error_state' => 'label/missing'], 400);
         }
 
         if ('' === $request->callbackUrl) {
-            return new ErrorResponse('create', 'callback_url missing', 300, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error_state' => 'callback_url/missing'], 400);
         }
 
         if (null === $request->maximumDurationInSeconds) {
-            return new ErrorResponse('create', 'maximum_duration_in_seconds missing', 400, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error_state' => 'maximum_duration_in_seconds/missing'], 400);
         }
 
         if ('' === trim($request->source)) {
-            return new ErrorResponse('create', 'source missing', 500, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error_state' => 'source/missing'], 400);
         }
 
         try {
