@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Services\EntityPersister;
 use App\Services\EntityStore\JobStore;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 
 class JobStoreTest extends AbstractBaseFunctionalTest
 {
@@ -28,6 +29,11 @@ class JobStoreTest extends AbstractBaseFunctionalTest
         self::assertInstanceOf(EntityPersister::class, $persister);
         if ($persister instanceof EntityPersister) {
             $this->persister = $persister;
+        }
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
         }
     }
 

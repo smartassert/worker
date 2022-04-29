@@ -11,6 +11,7 @@ use App\Services\TestCanceller;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\TestEntityAsserter;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\YamlDocument\Document;
@@ -41,6 +42,11 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $testEntityAsserter = self::getContainer()->get(TestEntityAsserter::class);
         \assert($testEntityAsserter instanceof TestEntityAsserter);
         $this->testEntityAsserter = $testEntityAsserter;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

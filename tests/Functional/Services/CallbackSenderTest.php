@@ -6,10 +6,12 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Services\CallbackSender;
 use App\Services\EntityFactory\JobFactory;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
@@ -35,6 +37,11 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
         $mockHandler = self::getContainer()->get('app.tests.services.guzzle.handler.queuing');
         \assert($mockHandler instanceof MockHandler);
         $this->mockHandler = $mockHandler;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
     }
 
     public function testSendSuccess(): void

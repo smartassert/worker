@@ -11,6 +11,7 @@ use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockSuiteManifest;
+use App\Tests\Services\EntityRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
@@ -74,6 +75,11 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 2
             ),
         ];
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

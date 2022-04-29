@@ -9,6 +9,7 @@ use App\Entity\Callback\CallbackInterface;
 use App\Services\CallbackState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestCallbackFactory;
 
 class CallbackStateTest extends AbstractBaseFunctionalTest
@@ -28,6 +29,11 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
         $testCallbackFactory = self::getContainer()->get(TestCallbackFactory::class);
         \assert($testCallbackFactory instanceof TestCallbackFactory);
         $this->testCallbackFactory = $testCallbackFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+        }
     }
 
     /**

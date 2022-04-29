@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Message\SendCallbackMessage;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -41,6 +43,11 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                 WorkerMessageFailedEvent::class => ['onMessageFailed'],
             ],
         ]);
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);

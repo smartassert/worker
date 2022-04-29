@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Test;
 use App\Services\TestSerializer;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
 
 class TestSerializerTest extends AbstractBaseFunctionalTest
@@ -25,6 +27,11 @@ class TestSerializerTest extends AbstractBaseFunctionalTest
         $testTestFactory = self::getContainer()->get(TestTestFactory::class);
         \assert($testTestFactory instanceof TestTestFactory);
         $this->testTestFactory = $testTestFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

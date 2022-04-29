@@ -5,9 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Entity;
 
 use App\Entity\Callback\CallbackEntity;
+use App\Tests\Services\EntityRemover;
 
 class CallbackEntityTest extends AbstractEntityTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+        }
+    }
+
     public function testEntityMapping(): void
     {
         $repository = $this->entityManager->getRepository(CallbackEntity::class);

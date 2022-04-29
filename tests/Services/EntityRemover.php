@@ -11,21 +11,20 @@ class EntityRemover
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private EntityClassNames $entityClassNames,
     ) {
     }
 
     public function removeAll(): void
     {
-        foreach ($this->entityClassNames->get() as $className) {
-            $this->removeForEntity($className);
+        foreach ($this->entityManager->getMetadataFactory()->getAllMetadata() as $metadata) {
+            $this->removeForEntity($metadata->getName());
         }
     }
 
     /**
      * @param class-string $className
      */
-    private function removeForEntity(string $className): void
+    public function removeForEntity(string $className): void
     {
         $repository = $this->entityManager->getRepository($className);
         if ($repository instanceof ObjectRepository) {

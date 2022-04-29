@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Model\Manifest;
 use App\Model\YamlSourceCollection;
 use App\Services\EntityStore\SourceStore;
 use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
@@ -48,6 +50,11 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         $sourceStore = self::getContainer()->get(SourceStore::class);
         \assert($sourceStore instanceof SourceStore);
         $this->sourceStore = $sourceStore;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Source::class);
+        }
     }
 
     protected function tearDown(): void

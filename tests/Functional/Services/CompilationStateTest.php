@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
+use App\Entity\Source;
+use App\Entity\Test;
 use App\Services\CompilationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
@@ -12,6 +16,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
 class CompilationStateTest extends AbstractBaseFunctionalTest
@@ -31,6 +36,14 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Source::class);
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

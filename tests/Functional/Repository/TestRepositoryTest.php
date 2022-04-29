@@ -9,6 +9,7 @@ use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Repository\TestRepository;
 use App\Services\EntityStore\TestConfigurationStore;
+use App\Tests\Services\EntityRemover;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
@@ -22,6 +23,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         $testConfigurationStore = self::getContainer()->get(TestConfigurationStore::class);
         \assert($testConfigurationStore instanceof TestConfigurationStore);
         $this->testConfigurationStore = $testConfigurationStore;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     public function findOneByDataProvider(): array
