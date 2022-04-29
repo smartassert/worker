@@ -20,7 +20,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
      */
     private const EVENT_TO_CALLBACK_TYPE_MAP = [
         JobReadyEvent::class => CallbackInterface::TYPE_JOB_STARTED,
-        CompilationCompletedEvent::class => CallbackInterface::TYPE_COMPILATION_SUCCEEDED,
+        CompilationCompletedEvent::class => CallbackInterface::TYPE_JOB_COMPILED,
         ExecutionStartedEvent::class => CallbackInterface::TYPE_EXECUTION_STARTED,
         ExecutionCompletedEvent::class => CallbackInterface::TYPE_EXECUTION_COMPLETED,
         JobCompletedEvent::class => CallbackInterface::TYPE_JOB_COMPLETED,

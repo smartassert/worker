@@ -173,7 +173,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             CompilationCompletedEvent::class => [
                 'event' => new CompilationCompletedEvent(),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_SUCCEEDED,
+                'expectedCallbackType' => CallbackInterface::TYPE_JOB_COMPILED,
                 'expectedCallbackPayload' => [],
             ],
             ExecutionStartedEvent::class => [

@@ -254,8 +254,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
-                        'compilation/completed' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_SUCCEEDED,
+                        'job/compiled' => $requestFactory->create(
+                            CallbackInterface::TYPE_JOB_COMPILED,
                             []
                         ),
                         'execution/started' => $requestFactory->create(
