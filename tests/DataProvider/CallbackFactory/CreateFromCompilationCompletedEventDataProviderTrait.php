@@ -19,7 +19,7 @@ trait CreateFromCompilationCompletedEventDataProviderTrait
             CompilationCompletedEvent::class => [
                 'event' => new CompilationCompletedEvent(),
                 'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_COMPILATION_SUCCEEDED)
+                    ->withGetTypeCall(CallbackInterface::TYPE_JOB_COMPILED)
                     ->withGetPayloadCall([])
                     ->getMock(),
             ],
