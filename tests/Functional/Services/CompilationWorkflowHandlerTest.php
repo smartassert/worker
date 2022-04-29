@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Job;
+use App\Entity\Source;
+use App\Entity\Test;
 use App\Event\JobReadyEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Message\CompileSourceMessage;
@@ -18,6 +21,7 @@ use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -61,6 +65,13 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 PassedEvent::class => ['dispatchExecutionStartedEvent'],
             ],
         ]);
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Source::class);
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

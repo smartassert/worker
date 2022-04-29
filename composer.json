@@ -28,7 +28,6 @@
         "webignition/yaml-document-generator": "^1.0"
     },
     "require-dev": {
-        "dama/doctrine-test-bundle": "^6.7",
         "mockery/mockery": "^1.4",
         "monolog/monolog": "^2.2",
         "phpstan/extension-installer": "^1.1",

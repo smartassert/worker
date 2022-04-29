@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services\EntityFactory;
 use App\Entity\Job;
 use App\Services\EntityFactory\JobFactory;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 
 class JobFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -19,6 +20,11 @@ class JobFactoryTest extends AbstractBaseFunctionalTest
         $factory = self::getContainer()->get(JobFactory::class);
         \assert($factory instanceof JobFactory);
         $this->factory = $factory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
     }
 
     public function testCreate(): void

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageHandler;
 
+use App\Entity\Job;
+use App\Entity\Source;
 use App\Event\SourceCompilation\FailedEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\SourceCompilation\StartedEvent;
@@ -18,6 +20,7 @@ use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -43,6 +46,12 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Source::class);
+        }
     }
 
     public function testInvokeNoJob(): void

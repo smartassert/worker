@@ -5,11 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\EntityInterface;
+use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Repository\TestConfigurationRepository;
+use App\Tests\Services\EntityRemover;
 
 class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+            $entityRemover->removeForEntity(TestConfiguration::class);
+        }
+    }
+
     public function findOneByDataProvider(): array
     {
         return [

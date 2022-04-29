@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
+use App\Entity\Callback\CallbackEntity;
+use App\Entity\Job;
 use App\Entity\Source;
+use App\Entity\Test;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
 use App\Services\EntityStore\JobStore;
@@ -17,6 +20,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
@@ -72,6 +76,14 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
         $this->createJobSourceFactory = $createJobSourceFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(Source::class);
+            $entityRemover->removeForEntity(Test::class);
+            $entityRemover->removeForEntity(Job::class);
+        }
     }
 
     /**

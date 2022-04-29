@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Entity\Test;
 use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -21,6 +23,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -67,6 +70,13 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 TestPassedEvent::class => ['dispatchJobCompletedEvent'],
             ],
         ]);
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     public function testDispatchNextExecuteTestMessageNoMessageDispatched(): void

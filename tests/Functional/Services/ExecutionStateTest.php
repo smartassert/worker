@@ -9,6 +9,7 @@ use App\Services\ExecutionState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
 class ExecutionStateTest extends AbstractBaseFunctionalTest
@@ -28,6 +29,11 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
         $this->environmentFactory = $environmentFactory;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+        }
     }
 
     /**

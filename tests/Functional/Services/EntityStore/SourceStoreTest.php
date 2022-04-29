@@ -9,6 +9,7 @@ use App\Services\EntityFactory\SourceFactory;
 use App\Services\EntityPersister;
 use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 
 class SourceStoreTest extends AbstractBaseFunctionalTest
 {
@@ -31,6 +32,11 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
         $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
         $this->entityPersister = $entityPersister;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Source::class);
+        }
     }
 
     public function testHasAny(): void

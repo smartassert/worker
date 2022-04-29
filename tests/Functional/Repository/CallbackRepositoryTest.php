@@ -8,9 +8,20 @@ use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\EntityInterface;
 use App\Repository\CallbackRepository;
+use App\Tests\Services\EntityRemover;
 
 class CallbackRepositoryTest extends AbstractEntityRepositoryTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+        }
+    }
+
     public function findOneByDataProvider(): array
     {
         return [

@@ -6,9 +6,21 @@ namespace App\Tests\Functional\Entity;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Tests\Services\EntityRemover;
 
 class TestTest extends AbstractEntityTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Test::class);
+            $entityRemover->removeForEntity(TestConfiguration::class);
+        }
+    }
+
     public function testEntityMapping(): void
     {
         $repository = $this->entityManager->getRepository(Test::class);

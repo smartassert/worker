@@ -7,9 +7,20 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\EntityInterface;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
+use App\Tests\Services\EntityRemover;
 
 class SourceRepositoryTest extends AbstractEntityRepositoryTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Source::class);
+        }
+    }
+
     public function findOneByDataProvider(): array
     {
         return [

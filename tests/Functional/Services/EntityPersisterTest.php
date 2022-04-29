@@ -11,6 +11,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Services\EntityPersister;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EntityPersisterTest extends AbstractBaseFunctionalTest
@@ -29,6 +30,13 @@ class EntityPersisterTest extends AbstractBaseFunctionalTest
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Source::class);
+        }
     }
 
     /**

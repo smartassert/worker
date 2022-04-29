@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
@@ -16,6 +17,7 @@ use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
+use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Response;
@@ -41,6 +43,11 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         $callbackRepository = self::getContainer()->get(CallbackRepository::class);
         \assert($callbackRepository instanceof CallbackRepository);
         $this->callbackRepository = $callbackRepository;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
 
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
