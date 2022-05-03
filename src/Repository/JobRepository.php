@@ -23,6 +23,11 @@ class JobRepository extends ServiceEntityRepository
         parent::__construct($registry, Job::class);
     }
 
+    public function get(): ?Job
+    {
+        return parent::find(Job::ID);
+    }
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
