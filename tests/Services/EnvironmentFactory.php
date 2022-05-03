@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Repository\JobRepository;
-use App\Services\EntityFactory\SourceFactory;
+use App\Repository\SourceRepository;
 use App\Tests\Model\Environment;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -14,7 +14,7 @@ class EnvironmentFactory
 {
     public function __construct(
         private JobRepository $jobRepository,
-        private SourceFactory $sourceFactory,
+        private SourceRepository $sourceRepository,
         private TestTestFactory $testTestFactory,
         private TestCallbackFactory $testCallbackFactory,
     ) {
@@ -37,7 +37,7 @@ class EnvironmentFactory
 
         $sources = [];
         foreach ($setup->getSourceSetups() as $sourceSetup) {
-            $sources[] = $this->sourceFactory->create($sourceSetup->getType(), $sourceSetup->getPath());
+            $sources[] = $this->sourceRepository->create($sourceSetup->getType(), $sourceSetup->getPath());
         }
 
         $tests = [];

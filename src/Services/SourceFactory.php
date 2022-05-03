@@ -7,18 +7,15 @@ namespace App\Services;
 use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Model\YamlSourceCollection;
-use App\Services\EntityFactory\SourceFactory as SourceEntityFactory;
+use App\Repository\SourceRepository;
 use SmartAssert\YamlFile\YamlFile;
 
 class SourceFactory
 {
-    private SourceFileStore $sourceFileStore;
-    private SourceEntityFactory $sourceEntityFactory;
-
-    public function __construct(SourceFileStore $sourceFileStore, SourceEntityFactory $sourceEntityFactory)
-    {
-        $this->sourceFileStore = $sourceFileStore;
-        $this->sourceEntityFactory = $sourceEntityFactory;
+    public function __construct(
+        private readonly SourceFileStore $sourceFileStore,
+        private readonly SourceRepository $sourceRepository,
+    ) {
     }
 
     /**
@@ -44,7 +41,7 @@ class SourceFactory
             }
 
             $this->sourceFileStore->storeContent($source->content, $sourcePath);
-            $this->sourceEntityFactory->create($sourceType, $sourcePath);
+            $this->sourceRepository->create($sourceType, $sourcePath);
         }
 
         foreach ($manifestTestPaths as $manifestTestPath) {
