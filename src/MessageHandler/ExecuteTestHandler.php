@@ -35,7 +35,8 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
     public function __invoke(ExecuteTestMessage $message): void
     {
-        if (false === $this->jobStore->has()) {
+        $job = $this->jobStore->get();
+        if (null === $job) {
             return;
         }
 
@@ -52,7 +53,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
             return;
         }
 
-        $job = $this->jobStore->get();
         if (false === $job->hasStarted()) {
             $job->setStartDateTime();
             $this->entityPersister->persist($job);

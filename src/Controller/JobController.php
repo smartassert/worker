@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Job;
 use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
@@ -51,7 +52,7 @@ class JobController
         Deserializer $yamlFileCollectionDeserializer,
         CreateJobRequest $request,
     ): JsonResponse {
-        if (true === $this->jobStore->has()) {
+        if ($this->jobStore->get() instanceof Job) {
             return new ErrorResponse('job/already_exists');
         }
 
@@ -108,11 +109,11 @@ class JobController
         ExecutionState $executionState,
         CallbackState $callbackState,
     ): JsonResponse {
-        if (false === $this->jobStore->has()) {
+        $job = $this->jobStore->get();
+        if (null === $job) {
             return new JsonResponse([], 400);
         }
 
-        $job = $this->jobStore->get();
         $tests = $testRepository->findAll();
 
         $data = array_merge(

@@ -75,7 +75,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         ;
 
         $jobStore = (new MockJobStore())
-            ->withHasCall(true)
             ->withGetCall($job)
             ->getMock()
         ;
@@ -124,7 +123,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         ;
 
         $jobStore = (new MockJobStore())
-            ->withHasCall(true)
             ->withGetCall($job)
             ->getMock()
         ;

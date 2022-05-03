@@ -68,7 +68,7 @@ class ExecuteTestHandlerTest extends TestCase
         return [
             'no job' => [
                 'jobStore' => (new MockJobStore())
-                    ->withHasCall(false)
+                    ->withGetCall(null)
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
                     ->getMock(),
@@ -79,7 +79,6 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'execution state not awaiting, not running' => [
                 'jobStore' => (new MockJobStore())
-                    ->withHasCall(true)
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
@@ -92,7 +91,6 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'no test' => [
                 'jobStore' => (new MockJobStore())
-                    ->withHasCall(true)
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
@@ -105,7 +103,6 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'test in wrong state' => [
                 'jobStore' => (new MockJobStore())
-                    ->withHasCall(true)
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())

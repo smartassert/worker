@@ -27,7 +27,7 @@ class CompileSourceHandler implements MessageHandlerInterface
 
     public function __invoke(CompileSourceMessage $message): void
     {
-        if (false === $this->jobStore->has()) {
+        if (null === $this->jobStore->get()) {
             return;
         }
 

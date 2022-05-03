@@ -34,7 +34,7 @@ class ApplicationState implements \Stringable
      */
     public function __toString(): string
     {
-        if (false === $this->jobStore->has()) {
+        if (null === $this->jobStore->get()) {
             return self::STATE_AWAITING_JOB;
         }
 
