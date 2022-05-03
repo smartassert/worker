@@ -8,8 +8,8 @@ use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Exception\NonSuccessfulHttpResponseException;
+use App\Repository\JobRepository;
 use App\Services\CallbackSender;
-use App\Services\EntityFactory\JobFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Exception\ConnectException;
@@ -116,8 +116,8 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
     private function createJob(): void
     {
-        $jobFactory = self::getContainer()->get(JobFactory::class);
-        \assert($jobFactory instanceof JobFactory);
-        $jobFactory->create('label content', 'http://example.com/callback', 10);
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $jobRepository->create('label content', 'http://example.com/callback', 10);
     }
 }
