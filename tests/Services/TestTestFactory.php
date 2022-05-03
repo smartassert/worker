@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\Test;
-use App\Services\EntityFactory\TestFactory;
+use App\Repository\TestRepository;
 use App\Tests\Model\TestSetup;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TestTestFactory
 {
     public function __construct(
-        private TestFactory $testFactory,
+        private TestRepository $testRepository,
         private EntityManagerInterface $entityManager,
         private string $compilerSourceDirectory,
         private string $compilerTargetDirectory,
@@ -27,7 +27,7 @@ class TestTestFactory
         $target = $testSetup->getTarget();
         $target = str_replace('{{ compiler_target_directory }}', $this->compilerTargetDirectory, $target);
 
-        $test = $this->testFactory->create(
+        $test = $this->testRepository->create(
             $testSetup->getConfiguration(),
             $source,
             $target,
