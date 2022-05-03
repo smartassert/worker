@@ -10,7 +10,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
-use App\Services\EntityStore\JobStore;
+use App\Repository\JobRepository;
 use App\Services\ExecutionState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
@@ -64,10 +64,10 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $tests = $environment->getTests();
         $test = $tests[0];
 
-        $jobStore = self::getContainer()->get(JobStore::class);
-        \assert($jobStore instanceof JobStore);
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
 
-        $job = $jobStore->get();
+        $job = $jobRepository->get();
         self::assertInstanceOf(Job::class, $job);
         self::assertFalse($job->hasStarted());
 
