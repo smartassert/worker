@@ -7,13 +7,13 @@ namespace App\MessageHandler;
 use App\Event\JobTimeoutEvent;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
-use App\Services\EntityStore\JobStore;
+use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class TimeoutCheckHandler
 {
     public function __construct(
-        private JobStore $jobStore,
+        private JobRepository $jobRepository,
         private TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
         private EventDispatcherInterface $eventDispatcher
     ) {
@@ -21,7 +21,7 @@ class TimeoutCheckHandler
 
     public function __invoke(TimeoutCheckMessage $timeoutCheck): void
     {
-        $job = $this->jobStore->get();
+        $job = $this->jobRepository->get();
         if (null === $job) {
             return;
         }
