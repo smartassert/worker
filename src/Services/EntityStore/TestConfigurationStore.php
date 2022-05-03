@@ -6,13 +6,11 @@ namespace App\Services\EntityStore;
 
 use App\Entity\TestConfiguration;
 use App\Repository\TestConfigurationRepository;
-use App\Services\EntityFactory\TestConfigurationFactory;
 
 class TestConfigurationStore
 {
     public function __construct(
         private TestConfigurationRepository $repository,
-        private TestConfigurationFactory $factory
     ) {
     }
 
@@ -23,7 +21,7 @@ class TestConfigurationStore
             return $existingConfiguration;
         }
 
-        return $this->factory->create(
+        return $this->repository->create(
             $testConfiguration->getBrowser(),
             $testConfiguration->getUrl()
         );
