@@ -25,11 +25,11 @@ class CallbackSender
      */
     public function send(CallbackInterface $callback): void
     {
-        if (false === $this->jobStore->has()) {
+        $job = $this->jobStore->get();
+        if (null === $job) {
             return;
         }
 
-        $job = $this->jobStore->get();
         $request = new CallbackRequest($callback, $job);
         $response = $this->httpClient->sendRequest($request);
 

@@ -21,11 +21,11 @@ class TimeoutCheckHandler
 
     public function __invoke(TimeoutCheckMessage $timeoutCheck): void
     {
-        if (false === $this->jobStore->has()) {
+        $job = $this->jobStore->get();
+        if (null === $job) {
             return;
         }
 
-        $job = $this->jobStore->get();
         if ($job->hasReachedMaximumDuration()) {
             $this->eventDispatcher->dispatch(new JobTimeoutEvent($job->getMaximumDurationInSeconds()));
         } else {

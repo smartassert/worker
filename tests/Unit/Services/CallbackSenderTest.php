@@ -21,7 +21,7 @@ class CallbackSenderTest extends TestCase
         $httpClient = \Mockery::mock(ClientInterface::class);
 
         $jobStore = (new MockJobStore())
-            ->withHasCall(false)
+            ->withGetCall(null)
             ->getMock()
         ;
 

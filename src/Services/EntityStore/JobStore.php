@@ -9,28 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class JobStore
 {
-    private Job $job;
-
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    public function has(): bool
-    {
-        return $this->fetch() instanceof Job;
-    }
-
-    public function get(): Job
-    {
-        $job = $this->fetch();
-        if ($job instanceof Job) {
-            $this->job = $job;
-        }
-
-        return $this->job;
-    }
-
-    private function fetch(): ?Job
+    public function get(): ?Job
     {
         $job = $this->entityManager->find(Job::class, Job::ID);
 

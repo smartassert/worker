@@ -25,17 +25,7 @@ class MockJobStore
         return $this->jobStore;
     }
 
-    public function withHasCall(bool $return): self
-    {
-        $this->jobStore
-            ->shouldReceive('has')
-            ->andReturn($return)
-        ;
-
-        return $this;
-    }
-
-    public function withGetCall(Job $job): self
+    public function withGetCall(?Job $job): self
     {
         $this->jobStore
             ->shouldReceive('get')
