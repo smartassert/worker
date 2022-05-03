@@ -25,10 +25,8 @@ interface CallbackInterface extends EntityInterface
     public const TYPE_EXECUTION_STARTED = 'execution/started';
     public const TYPE_EXECUTION_COMPLETED = 'execution/completed';
     public const TYPE_TEST_STARTED = 'test/started';
-    public const TYPE_TEST_FINISHED = 'test/finished';
     public const TYPE_TEST_PASSED = 'test/passed';
     public const TYPE_TEST_FAILED = 'test/failed';
-    public const TYPE_STEP_STARTED = 'step/started';
     public const TYPE_STEP_PASSED = 'step/passed';
     public const TYPE_STEP_FAILED = 'step/failed';
 
