@@ -8,9 +8,9 @@ use App\Event\SourceCompilation\FailedEvent as SourceCompilationFailedEvent;
 use App\Event\SourceCompilation\PassedEvent as SourceCompilationPassedEvent;
 use App\Event\SourceCompilation\StartedEvent as SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
+use App\Repository\JobRepository;
 use App\Services\CompilationState;
 use App\Services\Compiler;
-use App\Services\EntityStore\JobStore;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
@@ -19,7 +19,7 @@ class CompileSourceHandler implements MessageHandlerInterface
 {
     public function __construct(
         private Compiler $compiler,
-        private JobStore $jobStore,
+        private readonly JobRepository $jobRepository,
         private CompilationState $compilationState,
         private EventDispatcherInterface $eventDispatcher
     ) {
@@ -27,7 +27,7 @@ class CompileSourceHandler implements MessageHandlerInterface
 
     public function __invoke(CompileSourceMessage $message): void
     {
-        if (null === $this->jobStore->get()) {
+        if (null === $this->jobRepository->get()) {
             return;
         }
 
