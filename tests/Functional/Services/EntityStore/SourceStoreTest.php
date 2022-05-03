@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\EntityStore;
 
 use App\Entity\Source;
-use App\Services\EntityFactory\SourceFactory;
+use App\Repository\SourceRepository;
 use App\Services\EntityPersister;
 use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -14,7 +14,7 @@ use App\Tests\Services\EntityRemover;
 class SourceStoreTest extends AbstractBaseFunctionalTest
 {
     private SourceStore $store;
-    private SourceFactory $factory;
+    private SourceRepository $sourceRepository;
     private EntityPersister $entityPersister;
 
     protected function setUp(): void
@@ -25,9 +25,9 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
         \assert($store instanceof SourceStore);
         $this->store = $store;
 
-        $factory = self::getContainer()->get(SourceFactory::class);
-        \assert($factory instanceof SourceFactory);
-        $this->factory = $factory;
+        $sourceRepository = self::getContainer()->get(SourceRepository::class);
+        \assert($sourceRepository instanceof SourceRepository);
+        $this->sourceRepository = $sourceRepository;
 
         $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
@@ -43,7 +43,7 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
     {
         self::assertFalse($this->store->hasAny());
 
-        $this->factory->create(Source::TYPE_TEST, 'Test/test.yml');
+        $this->sourceRepository->create(Source::TYPE_TEST, 'Test/test.yml');
 
         self::assertTrue($this->store->hasAny());
     }
