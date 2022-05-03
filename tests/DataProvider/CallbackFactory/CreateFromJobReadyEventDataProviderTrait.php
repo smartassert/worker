@@ -18,7 +18,7 @@ trait CreateFromJobReadyEventDataProviderTrait
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []),
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, '', []),
             ],
         ];
     }

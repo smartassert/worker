@@ -260,6 +260,6 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
 
     private function createCallbackEntity(): CallbackEntity
     {
-        return CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
+        return CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, '', []);
     }
 }

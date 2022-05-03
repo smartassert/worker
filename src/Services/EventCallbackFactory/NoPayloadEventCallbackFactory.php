@@ -42,7 +42,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
     public function createForEvent(Event $event): ?CallbackInterface
     {
         if ($this->handles($event)) {
-            return $this->create(self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class], []);
+            return $this->create(self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class], '', []);
         }
 
         return null;

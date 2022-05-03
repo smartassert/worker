@@ -46,7 +46,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
     public function testSendSuccess(): void
     {
-        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, '', []);
         $this->mockHandler->append(new Response(200));
         $this->createJob();
 
@@ -63,7 +63,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
-        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, '', []);
         $this->mockHandler->append($response);
         $this->createJob();
 
@@ -93,7 +93,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendClientException(\Exception $exception): void
     {
-        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, []);
+        $callback = CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, '', []);
         $this->mockHandler->append($exception);
         $this->createJob();
 

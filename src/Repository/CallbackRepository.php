@@ -26,9 +26,9 @@ class CallbackRepository extends ServiceEntityRepository
      * @param CallbackInterface::TYPE_* $type
      * @param array<mixed>              $payload
      */
-    public function create(string $type, array $payload): CallbackInterface
+    public function create(string $type, string $reference, array $payload): CallbackInterface
     {
-        $callback = CallbackEntity::create($type, $payload);
+        $callback = CallbackEntity::create($type, $reference, $payload);
 
         $this->_em->persist($callback);
         $this->_em->flush();

@@ -20,6 +20,7 @@ class CompilationPassedEventCallbackFactory extends AbstractCompilationEventCall
         if ($event instanceof PassedEvent) {
             return $this->create(
                 CallbackInterface::TYPE_COMPILATION_PASSED,
+                '',
                 $this->createPayload($event)
             );
         }

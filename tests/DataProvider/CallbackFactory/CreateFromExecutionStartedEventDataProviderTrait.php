@@ -18,7 +18,7 @@ trait CreateFromExecutionStartedEventDataProviderTrait
         return [
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_EXECUTION_STARTED, []),
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_EXECUTION_STARTED, '', []),
             ],
         ];
     }

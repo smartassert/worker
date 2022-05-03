@@ -25,6 +25,7 @@ trait CreateFromCompilationPassedEventDataProviderTrait
                 ),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_PASSED,
+                    '',
                     [
                         'source' => '/app/source/test.yml',
                     ]

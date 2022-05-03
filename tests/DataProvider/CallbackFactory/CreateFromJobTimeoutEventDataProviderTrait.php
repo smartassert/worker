@@ -20,6 +20,7 @@ trait CreateFromJobTimeoutEventDataProviderTrait
                 'event' => new JobTimeoutEvent(150),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_JOB_TIME_OUT,
+                    '',
                     [
                         'maximum_duration_in_seconds' => 150,
                     ]

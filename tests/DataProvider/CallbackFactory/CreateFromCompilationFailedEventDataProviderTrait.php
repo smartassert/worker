@@ -34,6 +34,7 @@ trait CreateFromCompilationFailedEventDataProviderTrait
                 ),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_FAILED,
+                    '',
                     [
                         'source' => '/app/source/test.yml',
                         'output' => $errorOutputData,

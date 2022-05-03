@@ -18,9 +18,13 @@ class JobTimeoutEventCallbackFactory extends AbstractEventCallbackFactory
     public function createForEvent(Event $event): ?CallbackInterface
     {
         if ($event instanceof JobTimeoutEvent) {
-            return $this->create(CallbackInterface::TYPE_JOB_TIME_OUT, [
-                'maximum_duration_in_seconds' => $event->getJobMaximumDuration(),
-            ]);
+            return $this->create(
+                CallbackInterface::TYPE_JOB_TIME_OUT,
+                '',
+                [
+                    'maximum_duration_in_seconds' => $event->getJobMaximumDuration(),
+                ]
+            );
         }
 
         return null;

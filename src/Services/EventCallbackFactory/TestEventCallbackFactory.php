@@ -35,7 +35,11 @@ class TestEventCallbackFactory extends AbstractEventCallbackFactory
             $documentData = $document->parse();
             $documentData = is_array($documentData) ? $documentData : [];
 
-            return $this->create(self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class], $documentData);
+            return $this->create(
+                self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
+                '',
+                $documentData
+            );
         }
 
         return null;

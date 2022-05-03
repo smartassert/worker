@@ -49,6 +49,8 @@ interface CallbackInterface extends EntityInterface
 
     public function getType(): string;
 
+    public function getReference(): string;
+
     /**
      * @return array<mixed>
      */

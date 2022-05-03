@@ -29,15 +29,15 @@ class CallbackRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testHasForType(): void
     {
-        $callback0 = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
+        $callback0 = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, '', []);
         $callback0->setState(CallbackInterface::STATE_AWAITING);
         $this->persistEntity($callback0);
 
-        $callback1 = CallbackEntity::create(CallbackInterface::TYPE_TEST_STARTED, []);
+        $callback1 = CallbackEntity::create(CallbackInterface::TYPE_TEST_STARTED, '', []);
         $callback1->setState(CallbackInterface::STATE_AWAITING);
         $this->persistEntity($callback1);
 
-        $callback2 = CallbackEntity::create(CallbackInterface::TYPE_JOB_TIME_OUT, []);
+        $callback2 = CallbackEntity::create(CallbackInterface::TYPE_JOB_TIME_OUT, '', []);
         $callback2->setState(CallbackInterface::STATE_COMPLETE);
         $this->persistEntity($callback2);
 
@@ -68,7 +68,7 @@ class CallbackRepositoryTest extends AbstractEntityRepositoryTest
     private function createCallbacksWithTypes(array $types): void
     {
         foreach ($types as $type) {
-            $this->repository->create($type, []);
+            $this->repository->create($type, '', []);
         }
     }
 }

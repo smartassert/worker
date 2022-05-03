@@ -20,6 +20,7 @@ trait CreateFromCompilationStartedEventDataProviderTrait
                 'event' => new StartedEvent('/app/source/test.yml'),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_STARTED,
+                    '',
                     [
                         'source' => '/app/source/test.yml',
                     ]
