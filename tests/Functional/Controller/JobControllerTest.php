@@ -8,9 +8,9 @@ use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
-use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -27,7 +27,7 @@ use App\Tests\Services\SourceFileInspector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
 {
-    private JobStore $jobStore;
+    private JobRepository $jobRepository;
     private ClientRequestSender $clientRequestSender;
     private EnvironmentFactory $environmentFactory;
     private JsonResponseAsserter $jsonResponseAsserter;
@@ -41,9 +41,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $jobStore = self::getContainer()->get(JobStore::class);
-        \assert($jobStore instanceof JobStore);
-        $this->jobStore = $jobStore;
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $this->jobRepository = $jobRepository;
 
         $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
@@ -95,12 +95,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      */
     public function testCreateBadRequest(array $requestPayload, array $expectedResponseData): void
     {
-        self::assertNull($this->jobStore->get());
+        self::assertNull($this->jobRepository->get());
 
         $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
-        self::assertNull($this->jobStore->get());
+        self::assertNull($this->jobRepository->get());
     }
 
     /**
@@ -353,7 +353,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         array $sourcePaths,
         array $expectedStoredSources,
     ): void {
-        self::assertNull($this->jobStore->get());
+        self::assertNull($this->jobRepository->get());
 
         $label = md5((string) rand());
         $callbackUrl = md5((string) rand());
@@ -369,9 +369,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
 
-        self::assertNotNull($this->jobStore->get());
+        self::assertNotNull($this->jobRepository->get());
 
-        $job = $this->jobStore->get();
+        $job = $this->jobRepository->get();
         self::assertSame($label, $job->getLabel());
         self::assertSame($callbackUrl, $job->getCallbackUrl());
         self::assertSame($maximumDuration, $job->getMaximumDurationInSeconds());

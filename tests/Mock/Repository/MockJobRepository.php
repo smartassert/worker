@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Mock\Services;
+namespace App\Tests\Mock\Repository;
 
 use App\Entity\Job;
-use App\Services\EntityStore\JobStore;
+use App\Repository\JobRepository;
 use Mockery\MockInterface;
 
-class MockJobStore
+class MockJobRepository
 {
     /**
-     * @var JobStore|MockInterface
+     * @var JobRepository|MockInterface
      */
-    private JobStore $jobStore;
+    private JobRepository $jobStore;
 
     public function __construct()
     {
-        $this->jobStore = \Mockery::mock(JobStore::class);
+        $this->jobStore = \Mockery::mock(JobRepository::class);
     }
 
-    public function getMock(): JobStore
+    public function getMock(): JobRepository
     {
         return $this->jobStore;
     }

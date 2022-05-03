@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Repository\JobRepository;
 use App\Services\EntityStore\CallbackStore;
-use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 
 class ApplicationState implements \Stringable
@@ -20,7 +20,7 @@ class ApplicationState implements \Stringable
     public const STATE_TIMED_OUT = 'timed-out';
 
     public function __construct(
-        private JobStore $jobStore,
+        private readonly JobRepository $jobRepository,
         private CompilationState $compilationState,
         private ExecutionState $executionState,
         private CallbackState $callbackState,
@@ -34,7 +34,7 @@ class ApplicationState implements \Stringable
      */
     public function __toString(): string
     {
-        if (null === $this->jobStore->get()) {
+        if (null === $this->jobRepository->get()) {
             return self::STATE_AWAITING_JOB;
         }
 

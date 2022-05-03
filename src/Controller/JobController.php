@@ -9,13 +9,12 @@ use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
+use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
-use App\Services\EntityFactory\JobFactory;
-use App\Services\EntityStore\JobStore;
 use App\Services\EntityStore\SourceStore;
 use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
@@ -32,11 +31,9 @@ class JobController
 {
     public const PATH_JOB = '/job';
 
-    private JobStore $jobStore;
-
-    public function __construct(JobStore $jobStore)
-    {
-        $this->jobStore = $jobStore;
+    public function __construct(
+        private readonly JobRepository $jobRepository
+    ) {
     }
 
     /**
@@ -44,7 +41,6 @@ class JobController
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(
-        JobFactory $jobFactory,
         YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
@@ -52,7 +48,7 @@ class JobController
         Deserializer $yamlFileCollectionDeserializer,
         CreateJobRequest $request,
     ): JsonResponse {
-        if ($this->jobStore->get() instanceof Job) {
+        if ($this->jobRepository->get() instanceof Job) {
             return new ErrorResponse('job/already_exists');
         }
 
@@ -93,7 +89,7 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $jobFactory->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
+        $this->jobRepository->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
 
@@ -109,7 +105,7 @@ class JobController
         ExecutionState $executionState,
         CallbackState $callbackState,
     ): JsonResponse {
-        $job = $this->jobStore->get();
+        $job = $this->jobRepository->get();
         if (null === $job) {
             return new JsonResponse([], 400);
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Services\EntityFactory\JobFactory;
+use App\Repository\JobRepository;
 use App\Services\EntityFactory\SourceFactory;
 use App\Tests\Model\Environment;
 use App\Tests\Model\EnvironmentSetup;
@@ -13,7 +13,7 @@ use App\Tests\Model\JobSetup;
 class EnvironmentFactory
 {
     public function __construct(
-        private JobFactory $jobFactory,
+        private JobRepository $jobRepository,
         private SourceFactory $sourceFactory,
         private TestTestFactory $testTestFactory,
         private TestCallbackFactory $testCallbackFactory,
@@ -26,7 +26,7 @@ class EnvironmentFactory
 
         $jobSetup = $setup->getJobSetup();
         if ($jobSetup instanceof JobSetup) {
-            $job = $this->jobFactory->create(
+            $job = $this->jobRepository->create(
                 $jobSetup->getLabel(),
                 $jobSetup->getCallbackUrl(),
                 $jobSetup->getMaximumDurationInSeconds()

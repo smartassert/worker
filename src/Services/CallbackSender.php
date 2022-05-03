@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\Callback\CallbackInterface;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\HttpMessage\CallbackRequest;
-use App\Services\EntityStore\JobStore;
+use App\Repository\JobRepository;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
 
@@ -15,7 +15,7 @@ class CallbackSender
 {
     public function __construct(
         private HttpClientInterface $httpClient,
-        private JobStore $jobStore
+        private readonly JobRepository $jobRepository,
     ) {
     }
 
@@ -25,7 +25,7 @@ class CallbackSender
      */
     public function send(CallbackInterface $callback): void
     {
-        $job = $this->jobStore->get();
+        $job = $this->jobRepository->get();
         if (null === $job) {
             return;
         }

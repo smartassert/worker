@@ -11,7 +11,7 @@ use App\MessageHandler\TimeoutCheckHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\Entity\MockJob;
 use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Mock\Services\MockJobStore;
+use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Services\Asserter\MessengerAsserter;
@@ -74,13 +74,13 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $jobStore = (new MockJobStore())
+        $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
             ->getMock()
         ;
 
         ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobStore', $jobStore);
+        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobRepository', $jobRepository);
 
         $message = new TimeoutCheckMessage();
 
@@ -122,13 +122,13 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $jobStore = (new MockJobStore())
+        $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
             ->getMock()
         ;
 
         ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobStore', $jobStore);
+        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobRepository', $jobRepository);
 
         $message = new TimeoutCheckMessage();
 
