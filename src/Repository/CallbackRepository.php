@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Callback\CallbackEntity;
+use App\Entity\Callback\CallbackInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,20 @@ class CallbackRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CallbackEntity::class);
+    }
+
+    /**
+     * @param CallbackInterface::TYPE_* $type
+     * @param array<mixed>              $payload
+     */
+    public function create(string $type, array $payload): CallbackInterface
+    {
+        $callback = CallbackEntity::create($type, $payload);
+
+        $this->_em->persist($callback);
+        $this->_em->flush();
+
+        return $callback;
     }
 
     public function hasForType(string $type): bool
