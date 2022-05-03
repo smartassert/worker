@@ -40,7 +40,7 @@
         "psr/log": "^1.1",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "6.0.*",
-        "symfony/maker-bundle": "^1.36",
+        "symfony/maker-bundle": "^1.40",
         "symfony/phpunit-bridge": "6.0.*",
         "webignition/http-history-container": "^2.5",
         "webignition/object-reflector": "^1.0"
