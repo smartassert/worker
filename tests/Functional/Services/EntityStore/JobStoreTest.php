@@ -42,7 +42,7 @@ class JobStoreTest extends AbstractBaseFunctionalTest
         self::assertNull($this->store->get());
 
         $this->persister->persist(Job::create('label content', 'http://example.com/callback', 600));
-        self::assertInstanceOf(Job::class, $this->store->get());
+        self::assertNotNull($this->store->get());
     }
 
     public function testGet(): void
