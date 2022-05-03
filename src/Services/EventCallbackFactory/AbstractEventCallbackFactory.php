@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Services\EntityFactory\CallbackFactory as CallbackEntityFactory;
+use App\Repository\CallbackRepository;
 
 abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInterface
 {
-    public function __construct(private CallbackEntityFactory $callbackEntityFactory)
-    {
+    public function __construct(
+        private readonly CallbackRepository $callbackRepository,
+    ) {
     }
 
     /**
@@ -19,6 +20,6 @@ abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInter
      */
     protected function create(string $type, array $data): CallbackInterface
     {
-        return $this->callbackEntityFactory->create($type, $data);
+        return $this->callbackRepository->create($type, $data);
     }
 }

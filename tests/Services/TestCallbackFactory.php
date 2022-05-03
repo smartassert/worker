@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Services\EntityFactory\CallbackFactory as CallbackEntityFactory;
+use App\Repository\CallbackRepository;
 use App\Tests\Model\CallbackSetup;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TestCallbackFactory
 {
     public function __construct(
-        private CallbackEntityFactory $callbackEntityFactory,
+        private readonly CallbackRepository $callbackRepository,
         private EntityManagerInterface $entityManager
     ) {
     }
 
     public function create(CallbackSetup $callbackSetup): CallbackInterface
     {
-        $callback = $this->callbackEntityFactory->create(
+        $callback = $this->callbackRepository->create(
             $callbackSetup->getType(),
             $callbackSetup->getPayload()
         );

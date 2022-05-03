@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services\EntityStore;
 
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
-use App\Services\EntityFactory\CallbackFactory;
+use App\Repository\CallbackRepository;
 use App\Services\EntityPersister;
 use App\Services\EntityStore\CallbackStore;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -15,7 +15,7 @@ use App\Tests\Services\EntityRemover;
 class CallbackStoreTest extends AbstractBaseFunctionalTest
 {
     private CallbackStore $store;
-    private CallbackFactory $factory;
+    private CallbackRepository $callbackRepository;
     private EntityPersister $entityPersister;
 
     protected function setUp(): void
@@ -26,9 +26,9 @@ class CallbackStoreTest extends AbstractBaseFunctionalTest
         \assert($store instanceof CallbackStore);
         $this->store = $store;
 
-        $factory = self::getContainer()->get(CallbackFactory::class);
-        \assert($factory instanceof CallbackFactory);
-        $this->factory = $factory;
+        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
+        \assert($callbackRepository instanceof CallbackRepository);
+        $this->callbackRepository = $callbackRepository;
 
         $entityPersister = self::getContainer()->get(EntityPersister::class);
         \assert($entityPersister instanceof EntityPersister);
@@ -127,7 +127,7 @@ class CallbackStoreTest extends AbstractBaseFunctionalTest
     private function createCallbacksWithStates(array $states): void
     {
         foreach ($states as $state) {
-            $callback = $this->factory->create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
+            $callback = $this->callbackRepository->create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
             $callback->setState($state);
 
             $this->entityPersister->persist($callback);
@@ -140,7 +140,7 @@ class CallbackStoreTest extends AbstractBaseFunctionalTest
     private function createCallbacksWithTypes(array $types): void
     {
         foreach ($types as $type) {
-            $this->factory->create($type, []);
+            $this->callbackRepository->create($type, []);
         }
     }
 }

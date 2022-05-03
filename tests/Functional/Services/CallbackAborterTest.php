@@ -8,14 +8,12 @@ use App\Entity\Callback\CallbackInterface;
 use App\Repository\CallbackRepository;
 use App\Services\CallbackAborter;
 use App\Services\CallbackStateMutator;
-use App\Services\EntityFactory\CallbackFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 
 class CallbackAborterTest extends AbstractBaseFunctionalTest
 {
     private CallbackAborter $aborter;
-    private CallbackFactory $factory;
-    private CallbackRepository $repository;
+    private CallbackRepository $callbackRepository;
     private CallbackStateMutator $stateMutator;
 
     protected function setUp(): void
@@ -26,13 +24,13 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
         \assert($aborter instanceof CallbackAborter);
         $this->aborter = $aborter;
 
-        $factory = self::getContainer()->get(CallbackFactory::class);
-        \assert($factory instanceof CallbackFactory);
-        $this->factory = $factory;
+        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
+        \assert($callbackRepository instanceof CallbackRepository);
+        $this->callbackRepository = $callbackRepository;
 
         $repository = self::getContainer()->get(CallbackRepository::class);
         \assert($repository instanceof CallbackRepository);
-        $this->repository = $repository;
+        $this->callbackRepository = $repository;
 
         $stateMutator = self::getContainer()->get(CallbackStateMutator::class);
         \assert($stateMutator instanceof CallbackStateMutator);
@@ -41,7 +39,7 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
 
     public function testAbort(): void
     {
-        $callback = $this->factory->create(CallbackInterface::TYPE_JOB_COMPLETED, []);
+        $callback = $this->callbackRepository->create(CallbackInterface::TYPE_JOB_COMPLETED, []);
         $this->stateMutator->setQueued($callback);
 
         $id = $callback->getId();
@@ -51,7 +49,7 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
 
         $this->aborter->abort($id);
 
-        $callback = $this->repository->find($id);
+        $callback = $this->callbackRepository->find($id);
         \assert($callback instanceof CallbackInterface);
 
         self::assertSame(CallbackInterface::STATE_FAILED, $callback->getState());
