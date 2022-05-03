@@ -23,6 +23,16 @@ class JobRepository extends ServiceEntityRepository
         parent::__construct($registry, Job::class);
     }
 
+    public function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): Job
+    {
+        $job = Job::create($label, $callbackUrl, $maximumDurationInSeconds);
+
+        $this->_em->persist($job);
+        $this->_em->flush();
+
+        return $job;
+    }
+
     public function get(): ?Job
     {
         return parent::find(Job::ID);

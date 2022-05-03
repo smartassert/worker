@@ -15,7 +15,6 @@ use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
-use App\Services\EntityFactory\JobFactory;
 use App\Services\EntityStore\SourceStore;
 use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
@@ -42,7 +41,6 @@ class JobController
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(
-        JobFactory $jobFactory,
         YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
         MessageBusInterface $messageBus,
@@ -91,7 +89,7 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $jobFactory->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
+        $this->jobRepository->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
 
