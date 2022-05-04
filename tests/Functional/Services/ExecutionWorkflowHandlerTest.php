@@ -8,8 +8,8 @@ use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Entity\Test;
-use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionStartedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\ExecuteTestMessage;
@@ -62,7 +62,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             SendCallbackMessageDispatcher::class => [
                 PassedEvent::class => ['dispatchForEvent'],
-                CompilationCompletedEvent::class => ['dispatchForEvent'],
+                JobCompiledEvent::class => ['dispatchForEvent'],
                 TestPassedEvent::class => ['dispatchForEvent'],
                 ExecutionStartedEvent::class => ['dispatchForEvent'],
             ],
@@ -161,7 +161,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->doCompilationCompleteEventDrivenTest(
             $environmentSetup,
             function () {
-                $this->eventDispatcher->dispatch(new CompilationCompletedEvent());
+                $this->eventDispatcher->dispatch(new JobCompiledEvent());
             },
             1,
         );
