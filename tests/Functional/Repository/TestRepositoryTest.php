@@ -7,15 +7,15 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\EntityInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityStore\TestConfigurationStore;
 use App\Tests\Services\EntityRemover;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
     private TestRepository $repository;
-    private TestConfigurationStore $testConfigurationStore;
+    private TestConfigurationRepository $configurationRepository;
 
     protected function setUp(): void
     {
@@ -25,9 +25,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         \assert($repository instanceof TestRepository);
         $this->repository = $repository;
 
-        $testConfigurationStore = self::getContainer()->get(TestConfigurationStore::class);
-        \assert($testConfigurationStore instanceof TestConfigurationStore);
-        $this->testConfigurationStore = $testConfigurationStore;
+        $configurationRepository = self::getContainer()->get(TestConfigurationRepository::class);
+        \assert($configurationRepository instanceof TestConfigurationRepository);
+        $this->configurationRepository = $configurationRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -346,7 +346,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                 $entity,
                 Test::class,
                 'configuration',
-                $this->testConfigurationStore->get($entity->getConfiguration())
+                $this->configurationRepository->get($entity->getConfiguration())
             );
         }
 
