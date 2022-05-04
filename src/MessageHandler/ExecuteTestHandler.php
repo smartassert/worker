@@ -11,7 +11,6 @@ use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityPersister;
 use App\Services\ExecutionState;
 use App\Services\TestDocumentFactory;
 use App\Services\TestExecutor;
@@ -23,7 +22,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
-        private EntityPersister $entityPersister,
         private TestExecutor $testExecutor,
         private EventDispatcherInterface $eventDispatcher,
         private TestStateMutator $testStateMutator,
@@ -55,7 +53,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         if (false === $job->hasStarted()) {
             $job->setStartDateTime();
-            $this->entityPersister->persist($job);
+            $this->jobRepository->add($job);
         }
 
         $testDocument = $this->testDocumentFactory->create($test);
