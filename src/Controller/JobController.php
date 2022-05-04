@@ -10,12 +10,12 @@ use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Message\JobReadyMessage;
 use App\Repository\JobRepository;
+use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
 use App\Services\CallbackState;
 use App\Services\CompilationState;
-use App\Services\EntityStore\SourceStore;
 use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
 use App\Services\SourceFactory;
@@ -98,7 +98,7 @@ class JobController
 
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]
     public function status(
-        SourceStore $sourceStore,
+        SourceRepository $sourceRepository,
         TestRepository $testRepository,
         TestSerializer $testSerializer,
         CompilationState $compilationState,
@@ -115,7 +115,7 @@ class JobController
         $data = array_merge(
             $job->jsonSerialize(),
             [
-                'sources' => $sourceStore->findAllPaths(),
+                'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => (string) $compilationState,
                 'execution_state' => (string) $executionState,
                 'callback_state' => (string) $callbackState,

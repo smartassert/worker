@@ -33,4 +33,36 @@ class SourceRepository extends ServiceEntityRepository
 
         return $source;
     }
+
+    /**
+     * @param null|Source::TYPE_* $type
+     *
+     * @return string[]
+     */
+    public function findAllPaths(?string $type = null): array
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('Source')
+            ->select('Source.path')
+        ;
+
+        if (is_string($type)) {
+            $queryBuilder
+                ->where('Source.type = :type')
+                ->setParameter('type', $type)
+            ;
+        }
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getArrayResult();
+
+        $paths = [];
+        foreach ($result as $item) {
+            if (is_array($item)) {
+                $paths[] = (string) ($item['path'] ?? null);
+            }
+        }
+
+        return $paths;
+    }
 }
