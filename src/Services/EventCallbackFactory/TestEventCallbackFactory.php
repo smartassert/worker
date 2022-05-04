@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Event\TestEventInterface;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
@@ -27,7 +28,7 @@ class TestEventCallbackFactory extends AbstractEventCallbackFactory
         return $event instanceof TestEventInterface;
     }
 
-    public function createForEvent(Event $event): ?CallbackInterface
+    public function createForEvent(Job $job, Event $event): ?CallbackInterface
     {
         if ($event instanceof TestEventInterface) {
             $document = $event->getDocument();

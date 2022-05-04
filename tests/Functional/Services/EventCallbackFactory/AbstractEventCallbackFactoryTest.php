@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -30,7 +31,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
 
     public function testCreateForEventUnsupportedEvent(): void
     {
-        self::assertNull($this->callbackFactory->createForEvent(new Event()));
+        self::assertNull($this->callbackFactory->createForEvent(new Job(), new Event()));
     }
 
     /**
@@ -38,7 +39,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
      */
     public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
     {
-        $callback = $this->callbackFactory->createForEvent($event);
+        $callback = $this->callbackFactory->createForEvent(new Job(), $event);
 
         self::assertInstanceOf(CallbackInterface::class, $callback);
 
