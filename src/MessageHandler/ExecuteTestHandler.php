@@ -9,9 +9,8 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
+use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityPersister;
-use App\Services\EntityStore\JobStore;
 use App\Services\ExecutionState;
 use App\Services\TestDocumentFactory;
 use App\Services\TestExecutor;
@@ -22,8 +21,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class ExecuteTestHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private JobStore $jobStore,
-        private EntityPersister $entityPersister,
+        private readonly JobRepository $jobRepository,
         private TestExecutor $testExecutor,
         private EventDispatcherInterface $eventDispatcher,
         private TestStateMutator $testStateMutator,
@@ -35,7 +33,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
     public function __invoke(ExecuteTestMessage $message): void
     {
-        $job = $this->jobStore->get();
+        $job = $this->jobRepository->get();
         if (null === $job) {
             return;
         }
@@ -55,7 +53,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         if (false === $job->hasStarted()) {
             $job->setStartDateTime();
-            $this->entityPersister->persist($job);
+            $this->jobRepository->add($job);
         }
 
         $testDocument = $this->testDocumentFactory->create($test);

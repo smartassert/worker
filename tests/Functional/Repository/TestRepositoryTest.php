@@ -7,78 +7,32 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\EntityInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityStore\TestConfigurationStore;
 use App\Tests\Services\EntityRemover;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
-    private TestConfigurationStore $testConfigurationStore;
+    private TestRepository $repository;
+    private TestConfigurationRepository $configurationRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $testConfigurationStore = self::getContainer()->get(TestConfigurationStore::class);
-        \assert($testConfigurationStore instanceof TestConfigurationStore);
-        $this->testConfigurationStore = $testConfigurationStore;
+        $repository = self::getContainer()->get(TestRepository::class);
+        \assert($repository instanceof TestRepository);
+        $this->repository = $repository;
+
+        $configurationRepository = self::getContainer()->get(TestConfigurationRepository::class);
+        \assert($configurationRepository instanceof TestConfigurationRepository);
+        $this->configurationRepository = $configurationRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Test::class);
         }
-    }
-
-    public function findOneByDataProvider(): array
-    {
-        return [
-            'source /app/source/Test/test1.yml' => [
-                'criteria' => [
-                    'source' => '/app/source/Test/test1.yml',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 0,
-            ],
-            'target /app/tests/GeneratedTest2.php' => [
-                'criteria' => [
-                    'target' => '/app/tests/GeneratedTest2.php',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'step count 7' => [
-                'criteria' => [
-                    'stepCount' => 7,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 2,
-            ],
-        ];
-    }
-
-    public function countDataProvider(): array
-    {
-        return [
-            'source /app/source/Test/test1.yml' => [
-                'criteria' => [
-                    'source' => '/app/source/Test/test1.yml',
-                ],
-                'expectedCount' => 2,
-            ],
-            'target /app/tests/GeneratedTest2.php' => [
-                'criteria' => [
-                    'target' => '/app/tests/GeneratedTest2.php',
-                ],
-                'expectedCount' => 1,
-            ],
-            'step count 7' => [
-                'criteria' => [
-                    'stepCount' => 7,
-                ],
-                'expectedCount' => 1,
-            ],
-        ];
     }
 
     /**
@@ -92,10 +46,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             $this->persistEntity($test);
         }
 
-        self::assertInstanceOf(TestRepository::class, $this->repository);
-        if ($this->repository instanceof TestRepository) {
-            self::assertSame($expectedMaxPosition, $this->repository->findMaxPosition());
-        }
+        self::assertSame($expectedMaxPosition, $this->repository->findMaxPosition());
     }
 
     /**
@@ -164,10 +115,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             $this->persistEntity($test);
         }
 
-        self::assertInstanceOf(TestRepository::class, $this->repository);
-        if ($this->repository instanceof TestRepository) {
-            self::assertNull($this->repository->findNextAwaitingId());
-        }
+        self::assertNull($this->repository->findNextAwaitingId());
     }
 
     /**
@@ -200,15 +148,12 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             $this->persistEntity($test);
         }
 
-        self::assertInstanceOf(TestRepository::class, $this->repository);
-        if ($this->repository instanceof TestRepository) {
-            $nextAwaitingId = $this->repository->findNextAwaitingId();
+        $nextAwaitingId = $this->repository->findNextAwaitingId();
 
-            $allTests = $this->findAllTests();
-            $expectedTest = $allTests[$nextAwaitingIndex];
+        $allTests = $this->findAllTests();
+        $expectedTest = $allTests[$nextAwaitingIndex];
 
-            self::assertSame($nextAwaitingId, $expectedTest->getId());
-        }
+        self::assertSame($nextAwaitingId, $expectedTest->getId());
     }
 
     /**
@@ -275,10 +220,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             $this->persistEntity($test);
         }
 
-        self::assertInstanceOf(TestRepository::class, $this->repository);
-        if ($this->repository instanceof TestRepository) {
-            self::assertSame($expectedAwaitingTests, $this->repository->findAllAwaiting());
-        }
+        self::assertSame($expectedAwaitingTests, $this->repository->findAllAwaiting());
     }
 
     /**
@@ -343,10 +285,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             $this->persistEntity($test);
         }
 
-        self::assertInstanceOf(TestRepository::class, $this->repository);
-        if ($this->repository instanceof TestRepository) {
-            self::assertSame($expectedUnfinishedCount, $this->repository->findUnfinishedCount());
-        }
+        self::assertSame($expectedUnfinishedCount, $this->repository->findUnfinishedCount());
     }
 
     /**
@@ -400,16 +339,6 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         ];
     }
 
-    protected function getRepository(): ?TestRepository
-    {
-        $repository = self::getContainer()->get(TestRepository::class);
-        if ($repository instanceof TestRepository) {
-            return $repository;
-        }
-
-        return null;
-    }
-
     protected function persistEntity(EntityInterface $entity): void
     {
         if ($entity instanceof Test) {
@@ -417,49 +346,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                 $entity,
                 Test::class,
                 'configuration',
-                $this->testConfigurationStore->get($entity->getConfiguration())
+                $this->configurationRepository->get($entity->getConfiguration())
             );
         }
 
         parent::persistEntity($entity);
-    }
-
-    protected function createSingleEntity(): EntityInterface
-    {
-        return Test::create(
-            TestConfiguration::create('chrome', 'http://example.com/'),
-            '/app/source/Test/test.yml',
-            '/app/tests/GeneratedTest.php',
-            1,
-            1
-        );
-    }
-
-    protected function createEntityCollection(): array
-    {
-        return [
-            Test::create(
-                TestConfiguration::create('chrome', 'http://example.com/'),
-                '/app/source/Test/test1.yml',
-                '/app/tests/GeneratedTest1.php',
-                4,
-                1
-            ),
-            Test::create(
-                TestConfiguration::create('firefox', 'http://example.com/'),
-                '/app/source/Test/test1.yml',
-                '/app/tests/GeneratedTest2.php',
-                4,
-                2
-            ),
-            Test::create(
-                TestConfiguration::create('chrome', 'http://example.com/'),
-                '/app/source/Test/test2.yml',
-                '/app/tests/GeneratedTest3.php',
-                7,
-                3
-            ),
-        ];
     }
 
     /**
@@ -485,29 +376,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     private function createTestWithStateAndPosition(string $state, int $position): Test
     {
-        return $this->createTest(
+        $test = Test::create(
             TestConfiguration::create('chrome', 'http://example.com/complete'),
             '',
             '',
-            $position,
-            $state
-        );
-    }
-
-    /**
-     * @param Test::STATE_* $state
-     */
-    private function createTest(
-        TestConfiguration $configuration,
-        string $source,
-        string $target,
-        int $position,
-        string $state = Test::STATE_AWAITING
-    ): Test {
-        $test = Test::create(
-            $configuration,
-            $source,
-            $target,
             1,
             $position
         );

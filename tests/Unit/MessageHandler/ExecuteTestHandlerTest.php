@@ -7,17 +7,16 @@ namespace App\Tests\Unit\MessageHandler;
 use App\Entity\Test;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
+use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityPersister;
-use App\Services\EntityStore\JobStore;
 use App\Services\ExecutionState;
 use App\Services\TestDocumentFactory;
 use App\Services\TestStateMutator;
 use App\Tests\Mock\Entity\MockJob;
 use App\Tests\Mock\Entity\MockTest;
+use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Mock\Repository\MockTestRepository;
 use App\Tests\Mock\Services\MockExecutionState;
-use App\Tests\Mock\Services\MockJobStore;
 use App\Tests\Mock\Services\MockTestExecutor;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +30,7 @@ class ExecuteTestHandlerTest extends TestCase
      * @dataProvider invokeNoExecutionDataProvider
      */
     public function testInvokeNoExecution(
-        JobStore $jobStore,
+        JobRepository $jobRepository,
         ExecutionState $executionState,
         ExecuteTestMessage $message,
         TestRepository $testRepository
@@ -42,8 +41,7 @@ class ExecuteTestHandlerTest extends TestCase
         ;
 
         $handler = new ExecuteTestHandler(
-            $jobStore,
-            \Mockery::mock(EntityPersister::class),
+            $jobRepository,
             $testExecutor,
             \Mockery::mock(EventDispatcherInterface::class),
             \Mockery::mock(TestStateMutator::class),
@@ -67,7 +65,7 @@ class ExecuteTestHandlerTest extends TestCase
 
         return [
             'no job' => [
-                'jobStore' => (new MockJobStore())
+                'jobRepository' => (new MockJobRepository())
                     ->withGetCall(null)
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
@@ -78,7 +76,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->getMock(),
             ],
             'execution state not awaiting, not running' => [
-                'jobStore' => (new MockJobStore())
+                'jobRepository' => (new MockJobRepository())
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
@@ -90,7 +88,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->getMock(),
             ],
             'no test' => [
-                'jobStore' => (new MockJobStore())
+                'jobRepository' => (new MockJobRepository())
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())
@@ -102,7 +100,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->getMock(),
             ],
             'test in wrong state' => [
-                'jobStore' => (new MockJobStore())
+                'jobRepository' => (new MockJobRepository())
                     ->withGetCall((new MockJob())->getMock())
                     ->getMock(),
                 'executionState' => (new MockExecutionState())

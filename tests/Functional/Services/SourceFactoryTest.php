@@ -8,7 +8,7 @@ use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Model\Manifest;
 use App\Model\YamlSourceCollection;
-use App\Services\EntityStore\SourceStore;
+use App\Repository\SourceRepository;
 use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\EntityRemover;
@@ -24,7 +24,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     private FileStoreHandler $localSourceStoreHandler;
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
-    private SourceStore $sourceStore;
+    private SourceRepository $sourceRepository;
 
     protected function setUp(): void
     {
@@ -47,9 +47,9 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         \assert($fixtureReader instanceof FixtureReader);
         $this->fixtureReader = $fixtureReader;
 
-        $sourceStore = self::getContainer()->get(SourceStore::class);
-        \assert($sourceStore instanceof SourceStore);
-        $this->sourceStore = $sourceStore;
+        $sourceRepository = self::getContainer()->get(SourceRepository::class);
+        \assert($sourceRepository instanceof SourceRepository);
+        $this->sourceRepository = $sourceRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -127,7 +127,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                 $this->sourceFileInspector->read($expectedSourcePath)
             );
 
-            self::assertSame($expectedSourcePaths, $this->sourceStore->findAllPaths());
+            self::assertSame($expectedSourcePaths, $this->sourceRepository->findAllPaths());
         }
     }
 

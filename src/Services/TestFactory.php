@@ -7,13 +7,13 @@ namespace App\Services;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Event\SourceCompilation\PassedEvent;
-use App\Services\EntityFactory\TestFactory as TestEntityFactory;
+use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use webignition\BasilCompilerModels\TestManifest;
 
 class TestFactory implements EventSubscriberInterface
 {
-    public function __construct(private TestEntityFactory $testEntityFactory)
+    public function __construct(private TestRepository $repository)
     {
     }
 
@@ -61,7 +61,7 @@ class TestFactory implements EventSubscriberInterface
     {
         $manifestConfiguration = $manifest->getConfiguration();
 
-        return $this->testEntityFactory->create(
+        return $this->repository->create(
             TestConfiguration::create(
                 $manifestConfiguration->getBrowser(),
                 $manifestConfiguration->getUrl()

@@ -6,12 +6,13 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Event\TestStepFailedEvent;
+use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TestStateMutator implements EventSubscriberInterface
 {
     public function __construct(
-        private EntityPersister $entityPersister
+        private readonly TestRepository $testRepository,
     ) {
     }
 
@@ -60,6 +61,6 @@ class TestStateMutator implements EventSubscriberInterface
     private function set(Test $test, string $state): void
     {
         $test->setState($state);
-        $this->entityPersister->persist($test);
+        $this->testRepository->add($test);
     }
 }

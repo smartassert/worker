@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Repository;
 
-use App\Entity\EntityInterface;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
 use App\Tests\Services\EntityRemover;
 
 class SourceRepositoryTest extends AbstractEntityRepositoryTest
 {
+    private SourceRepository $repository;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $repository = self::getContainer()->get(SourceRepository::class);
+        \assert($repository instanceof SourceRepository);
+        $this->repository = $repository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -21,106 +26,113 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
         }
     }
 
-    public function findOneByDataProvider(): array
+    /**
+     * @dataProvider findAllPathsDataProvider
+     *
+     * @param Source[]            $sources
+     * @param null|Source::TYPE_* $type
+     * @param string[]            $expectedPaths
+     */
+    public function testFindAllPaths(array $sources, ?string $type, array $expectedPaths): void
     {
-        return [
-            'type test' => [
-                'criteria' => [
-                    'type' => Source::TYPE_TEST,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 0,
-            ],
-            'type resource' => [
-                'criteria' => [
-                    'type' => Source::TYPE_RESOURCE,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 2,
-            ],
-            'path Test/test2.yml' => [
-                'criteria' => [
-                    'path' => 'Test/test2.yml',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'type test and path Test/test2.yml' => [
-                'criteria' => [
-                    'type' => Source::TYPE_TEST,
-                    'path' => 'Test/test2.yml',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'invalid type' => [
-                'criteria' => [
-                    'type' => 'Invalid',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => null,
-            ],
-        ];
-    }
-
-    public function countDataProvider(): array
-    {
-        return [
-            'type test' => [
-                'criteria' => [
-                    'type' => Source::TYPE_TEST,
-                ],
-                'expectedCount' => 2,
-            ],
-            'type resource' => [
-                'criteria' => [
-                    'type' => Source::TYPE_RESOURCE,
-                ],
-                'expectedCount' => 1,
-            ],
-            'path Test/test2.yml' => [
-                'criteria' => [
-                    'path' => 'Test/test2.yml',
-                ],
-                'expectedCount' => 1,
-            ],
-            'type test and path Test/test2.yml' => [
-                'criteria' => [
-                    'type' => Source::TYPE_TEST,
-                    'path' => 'Test/test2.yml',
-                ],
-                'expectedCount' => 1,
-            ],
-            'invalid type' => [
-                'criteria' => [
-                    'type' => 'Invalid',
-                ],
-                'expectedCount' => 0,
-            ],
-        ];
-    }
-
-    protected function getRepository(): ?SourceRepository
-    {
-        $repository = self::getContainer()->get(SourceRepository::class);
-        if ($repository instanceof SourceRepository) {
-            return $repository;
+        foreach ($sources as $source) {
+            if ($source instanceof Source) {
+                $this->entityManager->persist($source);
+            }
         }
+        $this->entityManager->flush();
 
-        return null;
+        self::assertSame($expectedPaths, $this->repository->findAllPaths($type));
     }
 
-    protected function createSingleEntity(): EntityInterface
-    {
-        return Source::create(Source::TYPE_TEST, 'Test/test.yml');
-    }
-
-    protected function createEntityCollection(): array
+    /**
+     * @return array<mixed>
+     */
+    public function findAllPathsDataProvider(): array
     {
         return [
-            Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
-            Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
-            Source::create(Source::TYPE_RESOURCE, 'Page/page.yml'),
+            'no sources' => [
+                'sources' => [],
+                'type' => null,
+                'expectedPaths' => [],
+            ],
+            'test-only sources, type=test' => [
+                'sources' => [
+                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                ],
+                'type' => Source::TYPE_TEST,
+                'expectedPaths' => [
+                    'Test/test1.yml',
+                    'Test/test2.yml',
+                ],
+            ],
+            'test-only sources, type=resource' => [
+                'sources' => [
+                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                ],
+                'type' => Source::TYPE_RESOURCE,
+                'expectedPaths' => [],
+            ],
+            'resource-only sources, type=resource' => [
+                'sources' => [
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                ],
+                'type' => Source::TYPE_RESOURCE,
+                'expectedPaths' => [
+                    'Page/page1.yml',
+                    'Page/page2.yml',
+                ],
+            ],
+            'resource-only sources, type=test' => [
+                'sources' => [
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                ],
+                'type' => Source::TYPE_TEST,
+                'expectedPaths' => [],
+            ],
+            'mixed-type sources, type=null' => [
+                'sources' => [
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                ],
+                'type' => null,
+                'expectedPaths' => [
+                    'Page/page1.yml',
+                    'Test/test1.yml',
+                    'Page/page2.yml',
+                    'Test/test2.yml',
+                ],
+            ],
+            'mixed-type sources, type=test' => [
+                'sources' => [
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                ],
+                'type' => Source::TYPE_TEST,
+                'expectedPaths' => [
+                    'Test/test1.yml',
+                    'Test/test2.yml',
+                ],
+            ],
+            'mixed-type sources, type=resource' => [
+                'sources' => [
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                ],
+                'type' => Source::TYPE_RESOURCE,
+                'expectedPaths' => [
+                    'Page/page1.yml',
+                    'Page/page2.yml',
+                ],
+            ],
         ];
     }
 }

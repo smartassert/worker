@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Repository;
 
-use App\Entity\EntityInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Repository\TestConfigurationRepository;
@@ -12,9 +11,15 @@ use App\Tests\Services\EntityRemover;
 
 class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
 {
+    private TestConfigurationRepository $repository;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $repository = self::getContainer()->get(TestConfigurationRepository::class);
+        \assert($repository instanceof TestConfigurationRepository);
+        $this->repository = $repository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -23,93 +28,17 @@ class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
         }
     }
 
-    public function findOneByDataProvider(): array
+    public function testGet(): void
     {
-        return [
-            'browser chrome' => [
-                'criteria' => [
-                    'browser' => 'chrome',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 0,
-            ],
-            'browser firefox' => [
-                'criteria' => [
-                    'browser' => 'firefox',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'url http://example.com/1' => [
-                'criteria' => [
-                    'url' => 'http://example.com/1',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 2,
-            ],
-            'browser firefox and url http://example.com/0' => [
-                'criteria' => [
-                    'browser' => 'firefox',
-                    'url' => 'http://example.com/0',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-        ];
-    }
+        $configuration = TestConfiguration::create('chrome', 'http://example.com');
+        self::assertNull($configuration->getId());
 
-    public function countDataProvider(): array
-    {
-        return [
-            'browser chrome' => [
-                'criteria' => [
-                    'browser' => 'chrome',
-                ],
-                'expectedCount' => 2,
-            ],
-            'browser firefox' => [
-                'criteria' => [
-                    'browser' => 'firefox',
-                ],
-                'expectedCount' => 1,
-            ],
-            'url http://example.com/1' => [
-                'criteria' => [
-                    'url' => 'http://example.com/1',
-                ],
-                'expectedCount' => 1,
-            ],
-            'browser firefox and url http://example.com/0' => [
-                'criteria' => [
-                    'browser' => 'firefox',
-                    'url' => 'http://example.com/0',
-                ],
-                'expectedCount' => 1,
-            ],
-        ];
-    }
+        $retrievedConfiguration = $this->repository->get($configuration);
 
-    protected function getRepository(): ?TestConfigurationRepository
-    {
-        $repository = self::getContainer()->get(TestConfigurationRepository::class);
-        if ($repository instanceof TestConfigurationRepository) {
-            return $repository;
-        }
+        self::assertIsInt($retrievedConfiguration->getId());
+        self::assertSame($configuration->getBrowser(), $retrievedConfiguration->getBrowser());
+        self::assertSame($configuration->getUrl(), $retrievedConfiguration->getUrl());
 
-        return null;
-    }
-
-    protected function createSingleEntity(): EntityInterface
-    {
-        return TestConfiguration::create('chrome', 'http://example.com');
-    }
-
-    protected function createEntityCollection(): array
-    {
-        return [
-            TestConfiguration::create('chrome', 'http://example.com/0'),
-            TestConfiguration::create('firefox', 'http://example.com/0'),
-            TestConfiguration::create('chrome', 'http://example.com/1'),
-        ];
+        self::assertSame($retrievedConfiguration, $this->repository->get($retrievedConfiguration));
     }
 }

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Source;
+use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityStore\SourceStore;
 use Symfony\Component\String\UnicodeString;
 
 class SourcePathFinder
 {
     public function __construct(
         private TestRepository $testRepository,
-        private SourceStore $sourceStore,
+        private SourceRepository $sourceRepository,
         private string $compilerSourceDirectory,
     ) {
     }
@@ -30,7 +30,7 @@ class SourcePathFinder
 
     public function findNextNonCompiledPath(): ?string
     {
-        $sourcePaths = $this->sourceStore->findAllPaths(Source::TYPE_TEST);
+        $sourcePaths = $this->sourceRepository->findAllPaths(Source::TYPE_TEST);
         $testPaths = $this->testRepository->findAllSources();
         $testPaths = $this->removeCompilerSourceDirectoryPrefixFromPaths($testPaths);
 

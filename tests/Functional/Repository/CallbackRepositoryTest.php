@@ -6,15 +6,20 @@ namespace App\Tests\Functional\Repository;
 
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
-use App\Entity\EntityInterface;
 use App\Repository\CallbackRepository;
 use App\Tests\Services\EntityRemover;
 
 class CallbackRepositoryTest extends AbstractEntityRepositoryTest
 {
+    private CallbackRepository $repository;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $repository = self::getContainer()->get(CallbackRepository::class);
+        \assert($repository instanceof CallbackRepository);
+        $this->repository = $repository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -22,143 +27,48 @@ class CallbackRepositoryTest extends AbstractEntityRepositoryTest
         }
     }
 
-    public function findOneByDataProvider(): array
-    {
-        return [
-            'state awaiting' => [
-                'criteria' => [
-                    'state' => CallbackInterface::STATE_AWAITING,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 0,
-            ],
-            'type compile failure' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_COMPILATION_FAILED,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 0,
-            ],
-            'type execute document received' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_TEST_STARTED,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'state awaiting and type execute document received' => [
-                'criteria' => [
-                    'state' => CallbackInterface::STATE_AWAITING,
-                    'type' => CallbackInterface::TYPE_TEST_STARTED,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 1,
-            ],
-            'type job timeout' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_JOB_TIME_OUT,
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => 2,
-            ],
-            'invalid type' => [
-                'criteria' => [
-                    'type' => 'Invalid',
-                ],
-                'orderBy' => null,
-                'expectedEntityIndex' => null,
-            ],
-        ];
-    }
-
-    public function countDataProvider(): array
-    {
-        return [
-            'state awaiting' => [
-                'criteria' => [
-                    'state' => CallbackInterface::STATE_AWAITING,
-                ],
-                'expectedCount' => 2,
-            ],
-            'type compile failure' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_COMPILATION_FAILED,
-                ],
-                'expectedCount' => 1,
-            ],
-            'type execute document received' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_TEST_STARTED,
-                ],
-                'expectedCount' => 1,
-            ],
-            'state awaiting and type execute document received' => [
-                'criteria' => [
-                    'state' => CallbackInterface::STATE_AWAITING,
-                    'type' => CallbackInterface::TYPE_TEST_STARTED,
-                ],
-                'expectedCount' => 1,
-            ],
-            'type job timeout' => [
-                'criteria' => [
-                    'type' => CallbackInterface::TYPE_JOB_TIME_OUT,
-                ],
-                'expectedCount' => 1,
-            ],
-            'invalid type' => [
-                'criteria' => [
-                    'type' => 'Invalid',
-                ],
-                'expectedCount' => 0,
-            ],
-        ];
-    }
-
     public function testHasForType(): void
-    {
-        self::assertInstanceOf(CallbackRepository::class, $this->repository);
-
-        $entities = $this->createEntityCollection();
-        foreach ($entities as $entity) {
-            $this->persistEntity($entity);
-        }
-
-        if ($this->repository instanceof CallbackRepository) {
-            self::assertTrue($this->repository->hasForType(CallbackInterface::TYPE_COMPILATION_FAILED));
-            self::assertFalse($this->repository->hasForType(CallbackInterface::TYPE_STEP_PASSED));
-        }
-    }
-
-    protected function getRepository(): ?CallbackRepository
-    {
-        $repository = self::getContainer()->get(CallbackRepository::class);
-        if ($repository instanceof CallbackRepository) {
-            return $repository;
-        }
-
-        return null;
-    }
-
-    protected function createSingleEntity(): EntityInterface
-    {
-        return CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
-    }
-
-    protected function createEntityCollection(): array
     {
         $callback0 = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, []);
         $callback0->setState(CallbackInterface::STATE_AWAITING);
+        $this->persistEntity($callback0);
 
         $callback1 = CallbackEntity::create(CallbackInterface::TYPE_TEST_STARTED, []);
         $callback1->setState(CallbackInterface::STATE_AWAITING);
+        $this->persistEntity($callback1);
 
         $callback2 = CallbackEntity::create(CallbackInterface::TYPE_JOB_TIME_OUT, []);
         $callback2->setState(CallbackInterface::STATE_COMPLETE);
+        $this->persistEntity($callback2);
 
-        return [
-            $callback0,
-            $callback1,
-            $callback2,
-        ];
+        self::assertTrue($this->repository->hasForType(CallbackInterface::TYPE_COMPILATION_FAILED));
+        self::assertFalse($this->repository->hasForType(CallbackInterface::TYPE_STEP_PASSED));
+    }
+
+    public function testGetTypeCount(): void
+    {
+        $this->createCallbacksWithTypes([
+            CallbackInterface::TYPE_JOB_STARTED,
+            CallbackInterface::TYPE_STEP_PASSED,
+            CallbackInterface::TYPE_STEP_PASSED,
+            CallbackInterface::TYPE_COMPILATION_PASSED,
+            CallbackInterface::TYPE_COMPILATION_PASSED,
+            CallbackInterface::TYPE_COMPILATION_PASSED,
+        ]);
+
+        self::assertSame(0, $this->repository->getTypeCount(CallbackInterface::TYPE_EXECUTION_COMPLETED));
+        self::assertSame(1, $this->repository->getTypeCount(CallbackInterface::TYPE_JOB_STARTED));
+        self::assertSame(2, $this->repository->getTypeCount(CallbackInterface::TYPE_STEP_PASSED));
+        self::assertSame(3, $this->repository->getTypeCount(CallbackInterface::TYPE_COMPILATION_PASSED));
+    }
+
+    /**
+     * @param array<CallbackInterface::TYPE_*> $types
+     */
+    private function createCallbacksWithTypes(array $types): void
+    {
+        foreach ($types as $type) {
+            $this->repository->create($type, []);
+        }
     }
 }
