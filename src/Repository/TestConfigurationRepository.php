@@ -21,21 +21,20 @@ class TestConfigurationRepository extends ServiceEntityRepository
         parent::__construct($registry, TestConfiguration::class);
     }
 
-    public function create(string $browser, string $url): TestConfiguration
+    public function get(TestConfiguration $configuration): TestConfiguration
     {
-        $configuration = TestConfiguration::create($browser, $url);
+        $existingConfiguration = $this->findOneBy([
+            'browser' => $configuration->getBrowser(),
+            'url' => $configuration->getUrl(),
+        ]);
+
+        if ($existingConfiguration instanceof TestConfiguration) {
+            return $existingConfiguration;
+        }
 
         $this->_em->persist($configuration);
         $this->_em->flush();
 
         return $configuration;
-    }
-
-    public function findOneByConfiguration(TestConfiguration $configuration): ?TestConfiguration
-    {
-        return $this->findOneBy([
-            'browser' => $configuration->getBrowser(),
-            'url' => $configuration->getUrl(),
-        ]);
     }
 }

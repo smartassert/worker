@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Services\EntityStore\TestConfigurationStore;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -24,7 +23,7 @@ class TestRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        private readonly TestConfigurationStore $configurationStore,
+        private readonly TestConfigurationRepository $configurationRepository,
     ) {
         parent::__construct($registry, Test::class);
     }
@@ -36,7 +35,7 @@ class TestRepository extends ServiceEntityRepository
         int $stepCount
     ): Test {
         $test = Test::create(
-            $this->configurationStore->get($configuration),
+            $this->configurationRepository->get($configuration),
             $source,
             $target,
             $stepCount,
