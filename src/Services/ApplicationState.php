@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\Callback\CallbackInterface;
 use App\Repository\CallbackRepository;
 use App\Repository\JobRepository;
-use App\Services\EntityStore\SourceStore;
+use App\Repository\SourceRepository;
 
 class ApplicationState implements \Stringable
 {
@@ -25,7 +25,7 @@ class ApplicationState implements \Stringable
         private ExecutionState $executionState,
         private CallbackState $callbackState,
         private CallbackRepository $callbackRepository,
-        private SourceStore $sourceStore
+        private SourceRepository $sourceRepository,
     ) {
     }
 
@@ -42,7 +42,7 @@ class ApplicationState implements \Stringable
             return self::STATE_TIMED_OUT;
         }
 
-        if (false === $this->sourceStore->hasAny()) {
+        if (0 === $this->sourceRepository->count([])) {
             return self::STATE_AWAITING_SOURCES;
         }
 

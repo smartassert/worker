@@ -13,11 +13,6 @@ class SourceStore
     {
     }
 
-    public function hasAny(): bool
-    {
-        return $this->repository->count([]) > 0;
-    }
-
     /**
      * @param null|Source::TYPE_* $type
      *
