@@ -11,7 +11,6 @@ use App\Entity\Test;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
-use App\Services\EntityStore\SourceStore;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -31,7 +30,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private ClientRequestSender $clientRequestSender;
     private EnvironmentFactory $environmentFactory;
     private JsonResponseAsserter $jsonResponseAsserter;
-    private SourceStore $sourceStore;
     private SourceRepository $sourceRepository;
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
@@ -56,10 +54,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
-
-        $sourceStore = self::getContainer()->get(SourceStore::class);
-        \assert($sourceStore instanceof SourceStore);
-        $this->sourceStore = $sourceStore;
 
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
@@ -376,7 +370,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         self::assertSame($callbackUrl, $job->getCallbackUrl());
         self::assertSame($maximumDuration, $job->getMaximumDurationInSeconds());
 
-        self::assertSame(array_keys($expectedStoredSources), $this->sourceStore->findAllPaths());
+        self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 
         foreach ($this->sourceRepository->findAll() as $source) {
             $expectedSourceData = $expectedStoredSources[$source->getPath()];

@@ -2,30 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\EntityStore;
+namespace App\Tests\Functional\Repository;
 
 use App\Entity\Source;
-use App\Services\EntityPersister;
-use App\Services\EntityStore\SourceStore;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Repository\SourceRepository;
 use App\Tests\Services\EntityRemover;
 
-class SourceStoreTest extends AbstractBaseFunctionalTest
+class SourceRepositoryTest extends AbstractEntityRepositoryTest
 {
-    private SourceStore $store;
-    private EntityPersister $entityPersister;
+    private SourceRepository $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $store = self::getContainer()->get(SourceStore::class);
-        \assert($store instanceof SourceStore);
-        $this->store = $store;
-
-        $entityPersister = self::getContainer()->get(EntityPersister::class);
-        \assert($entityPersister instanceof EntityPersister);
-        $this->entityPersister = $entityPersister;
+        $repository = self::getContainer()->get(SourceRepository::class);
+        \assert($repository instanceof SourceRepository);
+        $this->repository = $repository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -44,11 +37,12 @@ class SourceStoreTest extends AbstractBaseFunctionalTest
     {
         foreach ($sources as $source) {
             if ($source instanceof Source) {
-                $this->entityPersister->persist($source);
+                $this->entityManager->persist($source);
             }
         }
+        $this->entityManager->flush();
 
-        self::assertSame($expectedPaths, $this->store->findAllPaths($type));
+        self::assertSame($expectedPaths, $this->repository->findAllPaths($type));
     }
 
     /**
