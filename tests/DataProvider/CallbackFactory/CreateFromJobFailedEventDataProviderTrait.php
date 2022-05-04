@@ -18,6 +18,7 @@ trait CreateFromJobFailedEventDataProviderTrait
         return [
             JobFailedEvent::class => [
                 'event' => new JobFailedEvent(),
+                'expectedReferenceSource' => '',
                 'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_JOB_FAILED, '', []),
             ],
         ];

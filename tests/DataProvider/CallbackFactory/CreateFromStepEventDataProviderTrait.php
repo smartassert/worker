@@ -34,6 +34,7 @@ trait CreateFromStepEventDataProviderTrait
                         new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
                     )
                 ),
+                'expectedReferenceSource' => '',
                 'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, '', $documentData),
             ],
             StepFailedEvent::class => [
@@ -44,6 +45,7 @@ trait CreateFromStepEventDataProviderTrait
                         new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
                     )
                 ),
+                'expectedReferenceSource' => '',
                 'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_FAILED, '', $documentData),
             ],
         ];

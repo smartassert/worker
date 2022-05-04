@@ -37,17 +37,24 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
-    {
-        $callback = $this->callbackFactory->createForEvent(new Job(), $event);
+    public function testCreateForEvent(
+        Event $event,
+        string $expectedReferenceSource,
+        CallbackInterface $expectedCallback
+    ): void {
+        $jobLabel = md5((string) rand());
+        $job = Job::create($jobLabel, '', 600);
+
+        $callback = $this->callbackFactory->createForEvent($job, $event);
+
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedReferenceSource);
+        $expectedReference = '' === $expectedReferenceSource ? '' : md5($expectedReferenceSource);
 
         self::assertInstanceOf(CallbackInterface::class, $callback);
-
-        if ($callback instanceof CallbackInterface) {
-            self::assertNotNull($callback->getId());
-            self::assertSame($expectedCallback->getType(), $callback->getType());
-            self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
-        }
+        self::assertNotNull($callback->getId());
+        self::assertSame($expectedCallback->getType(), $callback->getType());
+        self::assertSame($expectedReference, $callback->getReference());
+        self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 
     abstract protected function getCallbackFactory(): ?EventCallbackFactoryInterface;

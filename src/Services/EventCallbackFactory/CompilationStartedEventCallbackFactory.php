@@ -9,7 +9,7 @@ use App\Entity\Job;
 use App\Event\SourceCompilation\StartedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationStartedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
+class CompilationStartedEventCallbackFactory extends AbstractTestEventCallbackFactory
 {
     public function handles(Event $event): bool
     {
@@ -21,7 +21,7 @@ class CompilationStartedEventCallbackFactory extends AbstractCompilationEventCal
         if ($event instanceof StartedEvent) {
             return $this->create(
                 CallbackInterface::TYPE_COMPILATION_STARTED,
-                '',
+                $this->createCallbackReference($job, $event),
                 $this->createPayload($event)
             );
         }

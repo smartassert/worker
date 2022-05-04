@@ -26,15 +26,15 @@ trait CreateFromCompilationFailedEventDataProviderTrait
             ->andReturn($errorOutputData)
         ;
 
+        $source = '/app/source/test.yml';
+
         return [
             FailedEvent::class => [
-                'event' => new FailedEvent(
-                    '/app/source/test.yml',
-                    $errorOutput
-                ),
+                'event' => new FailedEvent($source, $errorOutput),
+                'expectedReferenceSource' => '{{ job_label }}' . $source,
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_FAILED,
-                    '',
+                    '{{ job_label }}' . $source,
                     [
                         'source' => '/app/source/test.yml',
                         'output' => $errorOutputData,
