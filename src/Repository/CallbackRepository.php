@@ -40,4 +40,14 @@ class CallbackRepository extends ServiceEntityRepository
     {
         return $this->count(['type' => $type]) > 0;
     }
+
+    /**
+     * @param CallbackInterface::TYPE_* $type
+     */
+    public function getTypeCount(string $type): int
+    {
+        return $this->count([
+            'type' => $type,
+        ]);
+    }
 }
