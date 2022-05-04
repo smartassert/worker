@@ -41,16 +41,6 @@ class CallbackRepository extends ServiceEntityRepository
         return $this->count(['type' => $type]) > 0;
     }
 
-    public function getFinishedCount(): int
-    {
-        return $this->count([
-            'state' => [
-                CallbackInterface::STATE_FAILED,
-                CallbackInterface::STATE_COMPLETE,
-            ],
-        ]);
-    }
-
     /**
      * @param CallbackInterface::TYPE_* $type
      */
