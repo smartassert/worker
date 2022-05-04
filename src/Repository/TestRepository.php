@@ -28,24 +28,27 @@ class TestRepository extends ServiceEntityRepository
         parent::__construct($registry, Test::class);
     }
 
+    public function add(Test $test): Test
+    {
+        $this->_em->persist($test);
+        $this->_em->flush();
+
+        return $test;
+    }
+
     public function create(
         TestConfiguration $configuration,
         string $source,
         string $target,
         int $stepCount
     ): Test {
-        $test = Test::create(
+        return $this->add(Test::create(
             $this->configurationRepository->get($configuration),
             $source,
             $target,
             $stepCount,
             $this->findMaxPosition() + 1
-        );
-
-        $this->_em->persist($test);
-        $this->_em->flush();
-
-        return $test;
+        ));
     }
 
     /**

@@ -9,7 +9,6 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\EntityPersister;
 use App\Services\ExecutionState;
 use App\Services\TestDocumentFactory;
 use App\Services\TestStateMutator;
@@ -43,7 +42,6 @@ class ExecuteTestHandlerTest extends TestCase
 
         $handler = new ExecuteTestHandler(
             $jobRepository,
-            \Mockery::mock(EntityPersister::class),
             $testExecutor,
             \Mockery::mock(EventDispatcherInterface::class),
             \Mockery::mock(TestStateMutator::class),

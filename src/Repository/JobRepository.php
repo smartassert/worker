@@ -23,31 +23,22 @@ class JobRepository extends ServiceEntityRepository
         parent::__construct($registry, Job::class);
     }
 
-    public function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): Job
+    public function add(Job $job): Job
     {
-        $job = Job::create($label, $callbackUrl, $maximumDurationInSeconds);
-
         $this->_em->persist($job);
         $this->_em->flush();
 
         return $job;
     }
 
+    public function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): Job
+    {
+        return $this->add(Job::create($label, $callbackUrl, $maximumDurationInSeconds));
+    }
+
     public function get(): ?Job
     {
         return parent::find(Job::ID);
-    }
-
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function add(Job $entity, bool $flush = true): void
-    {
-        $this->_em->persist($entity);
-        if ($flush) {
-            $this->_em->flush();
-        }
     }
 
     /**
