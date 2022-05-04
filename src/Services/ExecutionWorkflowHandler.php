@@ -6,9 +6,9 @@ namespace App\Services;
 
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
-use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\TestPassedEvent;
 use App\Message\ExecuteTestMessage;
 use App\Repository\CallbackRepository;
@@ -38,7 +38,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
                 ['dispatchNextExecuteTestMessageFromTestPassedEvent', 0],
                 ['dispatchExecutionCompletedEvent', 10],
             ],
-            CompilationCompletedEvent::class => [
+            JobCompiledEvent::class => [
                 ['dispatchNextExecuteTestMessage', 0],
                 ['dispatchExecutionStartedEvent', 50],
             ],

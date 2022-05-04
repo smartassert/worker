@@ -7,8 +7,8 @@ namespace App\Tests\Functional\MessageDispatcher;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
-use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionStartedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
@@ -73,7 +73,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 PassedEvent::class => ['createFromSourceCompileSuccessEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                CompilationCompletedEvent::class => ['dispatchExecutionStartedEvent'],
+                JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
             ],
             TimeoutCheckMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatch'],
@@ -177,8 +177,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            CompilationCompletedEvent::class => [
-                'event' => new CompilationCompletedEvent(),
+            JobCompiledEvent::class => [
+                'event' => new JobCompiledEvent(),
                 'expectedCallbackType' => CallbackInterface::TYPE_JOB_COMPILED,
                 'expectedCallbackPayload' => [],
             ],

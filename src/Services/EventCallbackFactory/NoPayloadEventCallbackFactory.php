@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
@@ -20,7 +20,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
      */
     private const EVENT_TO_CALLBACK_TYPE_MAP = [
         JobReadyEvent::class => CallbackInterface::TYPE_JOB_STARTED,
-        CompilationCompletedEvent::class => CallbackInterface::TYPE_JOB_COMPILED,
+        JobCompiledEvent::class => CallbackInterface::TYPE_JOB_COMPILED,
         ExecutionStartedEvent::class => CallbackInterface::TYPE_EXECUTION_STARTED,
         ExecutionCompletedEvent::class => CallbackInterface::TYPE_EXECUTION_COMPLETED,
         JobCompletedEvent::class => CallbackInterface::TYPE_JOB_COMPLETED,
@@ -31,7 +31,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
     {
         return
             $event instanceof JobReadyEvent
-            || $event instanceof CompilationCompletedEvent
+            || $event instanceof JobCompiledEvent
             || $event instanceof ExecutionStartedEvent
             || $event instanceof ExecutionCompletedEvent
             || $event instanceof JobCompletedEvent

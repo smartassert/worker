@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Event\CompilationCompletedEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
@@ -55,7 +55,7 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            CompilationCompletedEvent::class => [
+            JobCompiledEvent::class => [
                 ['dispatchForEvent', 100],
             ],
             ExecutionStartedEvent::class => [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Event\CompilationCompletedEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\JobReadyEvent;
 use App\Event\SourceCompilation\PassedEvent as SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
@@ -52,7 +52,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
     public function dispatchCompilationCompletedEvent(): void
     {
         if (CompilationState::STATE_COMPLETE === (string) $this->compilationState) {
-            $this->eventDispatcher->dispatch(new CompilationCompletedEvent());
+            $this->eventDispatcher->dispatch(new JobCompiledEvent());
         }
     }
 }

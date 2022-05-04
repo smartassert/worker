@@ -7,12 +7,12 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Callback\CallbackInterface;
 use App\Services\CallbackFactory;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationFailedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationPassedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationStartedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionStartedEventDataProviderTrait;
+use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompiledEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobFailedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobReadyEventDataProviderTrait;
@@ -31,7 +31,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     use CreateFromJobTimeoutEventDataProviderTrait;
     use CreateFromJobCompletedEventDataProviderTrait;
     use CreateFromJobReadyEventDataProviderTrait;
-    use CreateFromCompilationCompletedEventDataProviderTrait;
+    use CreateFromJobCompiledEventDataProviderTrait;
     use CreateFromExecutionStartedEventDataProviderTrait;
     use CreateFromExecutionCompletedEventDataProviderTrait;
     use CreateFromJobFailedEventDataProviderTrait;
@@ -56,7 +56,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromCompilationStartedEventDataProvider
      * @dataProvider createFromCompilationPassedEventDataProvider
      * @dataProvider createFromCompilationFailedEventDataProvider
-     * @dataProvider createFromCompilationCompletedEventDataProvider
+     * @dataProvider createFromJobCompiledEventDataProvider
      * @dataProvider createFromExecutionStartedEventDataProvider
      * @dataProvider createFromTestEventEventDataProvider
      * @dataProvider createFromJobTimeoutEventDataProvider
