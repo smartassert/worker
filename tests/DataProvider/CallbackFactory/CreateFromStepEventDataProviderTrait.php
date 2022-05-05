@@ -7,6 +7,7 @@ namespace App\Tests\DataProvider\CallbackFactory;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
+use App\Entity\TestConfiguration;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
@@ -19,34 +20,38 @@ trait CreateFromStepEventDataProviderTrait
      */
     public function createFromStepEventDataProvider(): array
     {
-        $documentData = [
-            'document-key' => 'document-value',
-        ];
+        $testConfiguration = \Mockery::mock(TestConfiguration::class);
 
-        $document = new Document((string) json_encode($documentData));
+        $passingStepSource = 'Test/passing-step.yml';
+        $passingStepName = 'passing step';
+
+        $failingStepSource = 'Test/failing-step.yml';
+        $failingStepName = 'failing step';
+
+        $passingStepData = ['type' => 'step', 'payload' => ['name' => $passingStepName]];
+        $failingStepData = ['type' => 'step', 'payload' => ['name' => $failingStepName]];
+
+        $passingStepDocument = new Document((string) json_encode($passingStepData));
+        $failingStepDocument = new Document((string) json_encode($failingStepData));
 
         return [
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
-                    new Test(),
-                    $document,
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
-                    )
+                    Test::create($testConfiguration, $passingStepSource, '', 1, 1),
+                    $passingStepDocument,
+                    new Step($passingStepDocument)
                 ),
-                'expectedReferenceSource' => '',
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, '', $documentData),
+                'expectedReferenceSource' => '{{ job_label }}' . $passingStepSource . $passingStepName,
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, '', $passingStepData),
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    new Test(),
-                    $document,
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
-                    )
+                    Test::create($testConfiguration, $failingStepSource, '', 1, 1),
+                    $failingStepDocument,
+                    new Step($failingStepDocument)
                 ),
-                'expectedReferenceSource' => '',
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_FAILED, '', $documentData),
+                'expectedReferenceSource' => '{{ job_label }}' . $failingStepSource . $failingStepName,
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_FAILED, '', $failingStepData),
             ],
         ];
     }

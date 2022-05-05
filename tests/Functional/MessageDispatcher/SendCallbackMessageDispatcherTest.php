@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
+use App\Entity\TestConfiguration;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
@@ -133,6 +134,11 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
+        $testConfiguration = \Mockery::mock(TestConfiguration::class);
+
+        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
+        $failingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "failing step" }');
+
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
@@ -191,11 +197,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
-                    new Test(),
-                    new Document('type: step' . "\n" . 'payload: { name: "passing step" }'),
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
-                    )
+                    Test::create($testConfiguration, '', '', 1, 1),
+                    $passingStepDocument,
+                    new Step($passingStepDocument)
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_PASSED,
                 'expectedCallbackPayload' => [
@@ -207,11 +211,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    (new Test())->setState(Test::STATE_FAILED),
-                    new Document('type: step' . "\n" . 'payload: { name: "failing step" }'),
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
-                    )
+                    (Test::create($testConfiguration, '', '', 1, 1))->setState(Test::STATE_FAILED),
+                    $failingStepDocument,
+                    new Step($failingStepDocument)
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_FAILED,
                 'expectedCallbackPayload' => [

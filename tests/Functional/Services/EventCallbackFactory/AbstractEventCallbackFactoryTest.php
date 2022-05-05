@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
+use App\Event\StepEventInterface;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;

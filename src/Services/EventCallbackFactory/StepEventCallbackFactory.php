@@ -9,6 +9,7 @@ use App\Entity\Job;
 use App\Event\StepEventInterface;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
+use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class StepEventCallbackFactory extends AbstractEventCallbackFactory
@@ -34,9 +35,18 @@ class StepEventCallbackFactory extends AbstractEventCallbackFactory
             $documentData = $document->parse();
             $documentData = is_array($documentData) ? $documentData : [];
 
-            return $this->create(self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class], '', $documentData);
+            return $this->create(
+                self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
+                $this->createCallbackReference($job, $event),
+                $documentData
+            );
         }
 
         return null;
+    }
+
+    private function createCallbackReference(Job $job, StepEventInterface $event): string
+    {
+        return md5($job->getLabel() . $event->getTest()->getSource() . $event->getStep()->getName());
     }
 }
