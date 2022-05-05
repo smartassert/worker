@@ -16,6 +16,7 @@ abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInter
 
     /**
      * @param CallbackInterface::TYPE_* $type
+     * @param non-empty-string          $reference
      * @param array<mixed>              $data
      */
     protected function create(string $type, string $reference, array $data): CallbackInterface

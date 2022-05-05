@@ -45,6 +45,9 @@ class StepEventCallbackFactory extends AbstractEventCallbackFactory
         return null;
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function createCallbackReference(Job $job, StepEventInterface $event): string
     {
         return md5($job->getLabel() . $event->getTest()->getSource() . $event->getStep()->getName());

@@ -26,6 +26,10 @@ class CallbackSenderTest extends TestCase
         ;
 
         $callbackSender = new CallbackSender($httpClient, $jobRepository);
-        $callbackSender->send(CallbackEntity::create(CallbackInterface::TYPE_JOB_STARTED, '', []));
+        $callbackSender->send(CallbackEntity::create(
+            CallbackInterface::TYPE_JOB_STARTED,
+            'non-empty reference',
+            []
+        ));
     }
 }

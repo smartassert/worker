@@ -12,7 +12,12 @@ class CallbackEntityTest extends TestCase
 {
     public function testHasState(): void
     {
-        $callback = CallbackEntity::create(CallbackInterface::TYPE_COMPILATION_FAILED, '', []);
+        $callback = CallbackEntity::create(
+            CallbackInterface::TYPE_COMPILATION_FAILED,
+            'non-empty reference',
+            []
+        )
+        ;
         self::assertTrue($callback->hasState(CallbackInterface::STATE_AWAITING));
         self::assertFalse($callback->hasState(CallbackInterface::STATE_COMPLETE));
 

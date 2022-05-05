@@ -45,8 +45,9 @@ class CallbackEntity implements CallbackInterface
     private array $payload;
 
     /**
-     * @param self::TYPE_* $type
-     * @param array<mixed> $payload
+     * @param self::TYPE_*     $type
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
      */
     public static function create(string $type, string $reference, array $payload): self
     {

@@ -31,6 +31,9 @@ class JobTimeoutEventCallbackFactory extends AbstractEventCallbackFactory
         return null;
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function createCallbackReference(Job $job): string
     {
         return md5((string) $job->getLabel());

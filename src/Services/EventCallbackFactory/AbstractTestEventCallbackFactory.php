@@ -11,6 +11,9 @@ use App\Event\SourceCompilation\StartedEvent;
 
 abstract class AbstractTestEventCallbackFactory extends AbstractCompilationEventCallbackFactory
 {
+    /**
+     * @return non-empty-string
+     */
     protected function createCallbackReference(Job $job, StartedEvent | PassedEvent | FailedEvent $event): string
     {
         return md5($job->getLabel() . $event->getSource());

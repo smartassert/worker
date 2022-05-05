@@ -46,6 +46,9 @@ class TestEventCallbackFactory extends AbstractEventCallbackFactory
         return null;
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function createCallbackReference(Job $job, TestEventInterface $event): string
     {
         return md5($job->getLabel() . $event->getTest()->getSource());

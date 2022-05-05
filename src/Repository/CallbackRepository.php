@@ -24,6 +24,7 @@ class CallbackRepository extends ServiceEntityRepository
 
     /**
      * @param CallbackInterface::TYPE_* $type
+     * @param non-empty-string          $reference
      * @param array<mixed>              $payload
      */
     public function create(string $type, string $reference, array $payload): CallbackInterface
