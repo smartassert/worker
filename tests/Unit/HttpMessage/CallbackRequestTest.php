@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\HttpMessage\CallbackRequest;
-use App\Tests\Mock\Entity\MockJob;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
@@ -16,12 +16,7 @@ class CallbackRequestTest extends TestCase
     {
         $jobCallbackUrl = 'http://example.com/callback';
         $jobLabel = 'label content';
-
-        $job = (new MockJob())
-            ->withGetCallbackUrlCall($jobCallbackUrl)
-            ->withGetLabelCall($jobLabel)
-            ->getMock()
-        ;
+        $job = Job::create($jobLabel, $jobCallbackUrl, 600);
 
         $callbackType = 'callback type';
         $callbackData = [
