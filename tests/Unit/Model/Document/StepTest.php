@@ -144,4 +144,63 @@ class StepTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider getNameDataProvider
+     */
+    public function testGetName(Step $step, ?string $expectedName): void
+    {
+        self::assertSame($expectedName, $step->getName());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getNameDataProvider(): array
+    {
+        return [
+            'empty' => [
+                'step' => new Step(
+                    new Document()
+                ),
+                'expectedName' => null,
+            ],
+            'document has no type' => [
+                'step' => new Step(
+                    new Document('key: value')
+                ),
+                'expectedName' => null,
+            ],
+            'not a step' => [
+                'step' => new Step(
+                    new Document('type: test')
+                ),
+                'expectedName' => null,
+            ],
+            'no name' => [
+                'step' => new Step(
+                    new Document('type: step')
+                ),
+                'expectedName' => null,
+            ],
+            'null name' => [
+                'step' => new Step(
+                    new Document('type: step' . "\n" . 'payload: { name: ~ }')
+                ),
+                'expectedName' => null,
+            ],
+            'empty name' => [
+                'step' => new Step(
+                    new Document('type: step' . "\n" . 'payload: { name: "" }')
+                ),
+                'expectedName' => '',
+            ],
+            'non-empty name' => [
+                'step' => new Step(
+                    new Document('type: step' . "\n" . 'payload: { name: "non-empty name" }')
+                ),
+                'expectedName' => 'non-empty name',
+            ],
+        ];
+    }
 }
