@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\DataProvider\CallbackFactory;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Event\SourceCompilation\StartedEvent;
-use App\Tests\Mock\Entity\MockCallback;
 
 trait CreateFromCompilationStartedEventDataProviderTrait
 {
@@ -18,12 +18,12 @@ trait CreateFromCompilationStartedEventDataProviderTrait
         return [
             StartedEvent::class => [
                 'event' => new StartedEvent('/app/source/test.yml'),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_COMPILATION_STARTED)
-                    ->withGetPayloadCall([
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_COMPILATION_STARTED,
+                    [
                         'source' => '/app/source/test.yml',
-                    ])
-                    ->getMock(),
+                    ]
+                ),
             ],
         ];
     }

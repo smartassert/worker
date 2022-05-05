@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Test;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\TestFailedEvent;
@@ -14,7 +15,6 @@ use App\Services\ApplicationState;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Entity\MockTest;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockApplicationState;
 use App\Tests\Model\ExpectedDispatchedEvent;
@@ -84,7 +84,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            (new MockTest())->getMock(),
+            new Test(),
             new Document(''),
         ));
 
@@ -128,7 +128,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            (new MockTest())->getMock(),
+            new Test(),
             new Document(''),
         ));
     }
@@ -154,7 +154,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestFailedEvent(
-            (new MockTest())->getMock(),
+            new Test(),
             new Document(''),
         ));
     }

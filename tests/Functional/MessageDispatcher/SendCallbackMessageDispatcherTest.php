@@ -28,7 +28,6 @@ use App\Services\ExecutionWorkflowHandler;
 use App\Services\TestFactory;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Entity\MockTest;
 use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
@@ -182,7 +181,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent(
-                    (new MockTest())->getMock(),
+                    new Test(),
                     new Document('document-key: value')
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_STARTED,
@@ -192,7 +191,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
-                    (new MockTest())->getMock(),
+                    new Test(),
                     new Document('type: step' . "\n" . 'payload: { name: "passing step" }'),
                     new Step(
                         new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
@@ -208,9 +207,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    (new MockTest())
-                        ->withSetStateCall(Test::STATE_FAILED)
-                        ->getMock(),
+                    (new Test())->setState(Test::STATE_FAILED),
                     new Document('type: step' . "\n" . 'payload: { name: "failing step" }'),
                     new Step(
                         new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
@@ -226,9 +223,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    (new MockTest())
-                        ->withHasStateCall(Test::STATE_COMPLETE, false)
-                        ->getMock(),
+                    (new Test())->setState(Test::STATE_COMPLETE),
                     new Document('document-key: value')
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_PASSED,
@@ -238,9 +233,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent(
-                    (new MockTest())
-                        ->withHasStateCall(Test::STATE_COMPLETE, false)
-                        ->getMock(),
+                    (new Test())->setState(Test::STATE_FAILED),
                     new Document('document-key: value')
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_FAILED,

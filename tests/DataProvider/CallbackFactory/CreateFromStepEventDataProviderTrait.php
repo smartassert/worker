@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\DataProvider\CallbackFactory;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
-use App\Tests\Mock\Entity\MockCallback;
-use App\Tests\Mock\Entity\MockTest;
 use webignition\YamlDocument\Document;
 
 trait CreateFromStepEventDataProviderTrait
@@ -28,29 +28,23 @@ trait CreateFromStepEventDataProviderTrait
         return [
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
-                    (new MockTest())->getMock(),
+                    new Test(),
                     $document,
                     new Step(
                         new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
                     )
                 ),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_STEP_PASSED)
-                    ->withGetPayloadCall($documentData)
-                    ->getMock(),
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, $documentData),
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    (new MockTest())->getMock(),
+                    new Test(),
                     $document,
                     new Step(
                         new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
                     )
                 ),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_STEP_FAILED)
-                    ->withGetPayloadCall($documentData)
-                    ->getMock(),
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_FAILED, $documentData),
             ],
         ];
     }

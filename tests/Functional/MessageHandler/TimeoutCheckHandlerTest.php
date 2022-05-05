@@ -9,7 +9,6 @@ use App\Event\JobTimeoutEvent;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Entity\MockJob;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Model\ExpectedDispatchedEvent;
@@ -69,10 +68,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $job = (new MockJob())
-            ->withHasReachedMaximumDurationCall(false)
-            ->getMock()
-        ;
+        $job = Job::create('', '', 600);
 
         $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
@@ -116,11 +112,13 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $job = (new MockJob())
-            ->withHasReachedMaximumDurationCall(true)
-            ->withGetMaximumDurationInSecondsCall($jobMaximumDuration)
-            ->getMock()
-        ;
+        $job = Job::create('', '', $jobMaximumDuration);
+        ObjectReflector::setProperty(
+            $job,
+            Job::class,
+            'startDateTime',
+            new \DateTimeImmutable('-' . $jobMaximumDuration . ' second')
+        );
 
         $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
