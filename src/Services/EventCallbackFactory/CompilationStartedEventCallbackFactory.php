@@ -20,8 +20,9 @@ class CompilationStartedEventCallbackFactory extends AbstractCompilationEventCal
     {
         if ($event instanceof StartedEvent) {
             return $this->create(
+                $job,
+                $event,
                 CallbackInterface::TYPE_COMPILATION_STARTED,
-                $this->callbackReferenceFactory->createForEvent($job, $event),
                 $this->createPayload($event)
             );
         }

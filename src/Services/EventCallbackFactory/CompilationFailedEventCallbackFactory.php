@@ -20,8 +20,9 @@ class CompilationFailedEventCallbackFactory extends AbstractCompilationEventCall
     {
         if ($event instanceof FailedEvent) {
             return $this->create(
+                $job,
+                $event,
                 CallbackInterface::TYPE_COMPILATION_FAILED,
-                $this->callbackReferenceFactory->createForEvent($job, $event),
                 $this->createPayload($event, [
                     'output' => $event->getOutput()->getData(),
                 ])
