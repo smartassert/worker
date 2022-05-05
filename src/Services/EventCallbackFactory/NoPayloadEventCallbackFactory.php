@@ -16,18 +16,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
 {
-    /**
-     * @var array<class-string, CallbackInterface::TYPE_*>
-     */
-    private const EVENT_TO_CALLBACK_TYPE_MAP = [
-        JobReadyEvent::class => CallbackInterface::TYPE_JOB_STARTED,
-        JobCompiledEvent::class => CallbackInterface::TYPE_JOB_COMPILED,
-        ExecutionStartedEvent::class => CallbackInterface::TYPE_EXECUTION_STARTED,
-        ExecutionCompletedEvent::class => CallbackInterface::TYPE_EXECUTION_COMPLETED,
-        JobCompletedEvent::class => CallbackInterface::TYPE_JOB_COMPLETED,
-        JobFailedEvent::class => CallbackInterface::TYPE_JOB_FAILED,
-    ];
-
     public function handles(Event $event): bool
     {
         return
@@ -43,12 +31,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
     public function createForEvent(Job $job, Event $event): ?CallbackInterface
     {
         if ($this->handles($event)) {
-            return $this->create(
-                $job,
-                $event,
-                self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
-                []
-            );
+            return $this->create($job, $event, []);
         }
 
         return null;

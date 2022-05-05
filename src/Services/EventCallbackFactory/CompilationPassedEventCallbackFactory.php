@@ -19,12 +19,7 @@ class CompilationPassedEventCallbackFactory extends AbstractCompilationEventCall
     public function createForEvent(Job $job, Event $event): ?CallbackInterface
     {
         if ($event instanceof PassedEvent) {
-            return $this->create(
-                $job,
-                $event,
-                CallbackInterface::TYPE_COMPILATION_PASSED,
-                $this->createPayload($event)
-            );
+            return $this->create($job, $event, $this->createPayload($event));
         }
 
         return null;

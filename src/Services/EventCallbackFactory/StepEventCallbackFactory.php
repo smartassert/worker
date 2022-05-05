@@ -7,21 +7,10 @@ namespace App\Services\EventCallbackFactory;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Event\StepEventInterface;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
-use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class StepEventCallbackFactory extends AbstractEventCallbackFactory
 {
-    /**
-     * @var array<class-string, CallbackInterface::TYPE_STEP_*>
-     */
-    private const EVENT_TO_CALLBACK_TYPE_MAP = [
-        StepPassedEvent::class => CallbackInterface::TYPE_STEP_PASSED,
-        StepFailedEvent::class => CallbackInterface::TYPE_STEP_FAILED,
-    ];
-
     public function handles(Event $event): bool
     {
         return $event instanceof StepEventInterface;
@@ -35,12 +24,7 @@ class StepEventCallbackFactory extends AbstractEventCallbackFactory
             $documentData = $document->parse();
             $documentData = is_array($documentData) ? $documentData : [];
 
-            return $this->create(
-                $job,
-                $event,
-                self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
-                $documentData
-            );
+            return $this->create($job, $event, $documentData);
         }
 
         return null;
