@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageHandler;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Exception\NonSuccessfulHttpResponseException;
@@ -12,7 +13,6 @@ use App\MessageHandler\SendCallbackHandler;
 use App\Repository\CallbackRepository;
 use App\Services\CallbackSender;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Entity\MockCallback;
 use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
@@ -126,7 +126,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         return [
             'HTTP 400' => [
                 'callbackSenderException' => new NonSuccessfulHttpResponseException(
-                    (new MockCallback())->getMock(),
+                    new CallbackEntity(),
                     new Response(400)
                 ),
                 'expectedCallbackState' => CallbackInterface::STATE_SENDING,

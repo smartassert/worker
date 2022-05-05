@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\DataProvider\CallbackFactory;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Event\ExecutionCompletedEvent;
-use App\Tests\Mock\Entity\MockCallback;
 
 trait CreateFromExecutionCompletedEventDataProviderTrait
 {
@@ -18,10 +18,7 @@ trait CreateFromExecutionCompletedEventDataProviderTrait
         return [
             ExecutionCompletedEvent::class => [
                 'event' => new ExecutionCompletedEvent(),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_EXECUTION_COMPLETED)
-                    ->withGetPayloadCall([])
-                    ->getMock(),
+                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_EXECUTION_COMPLETED, []),
             ],
         ];
     }
