@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Event\TestStepFailedEvent;
+use App\Event\StepFailedEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,13 +22,13 @@ class TestStateMutator implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestStepFailedEvent::class => [
-                ['setFailedFromTestStepFailedEvent', 50],
+            StepFailedEvent::class => [
+                ['setFailedFromStepFailedEvent', 50],
             ],
         ];
     }
 
-    public function setFailedFromTestStepFailedEvent(TestStepFailedEvent $event): void
+    public function setFailedFromStepFailedEvent(StepFailedEvent $event): void
     {
         $this->setFailed($event->getTest());
     }

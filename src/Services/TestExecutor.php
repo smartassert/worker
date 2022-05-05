@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Event\TestStepFailedEvent;
-use App\Event\TestStepPassedEvent;
+use App\Event\StepFailedEvent;
+use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
@@ -57,11 +57,11 @@ class TestExecutor
 
         if ($step->isStep()) {
             if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new TestStepPassedEvent($test, $document));
+                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $document, $step));
             }
 
             if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new TestStepFailedEvent($test, $document));
+                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $document, $step));
             }
         }
     }
