@@ -18,7 +18,7 @@ trait CreateFromJobCompletedEventDataProviderTrait
         return [
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
-                'expectedReferenceSource' => '',
+                'expectedReferenceSource' => '{{ job_label }}',
                 'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_JOB_COMPLETED, '', []),
             ],
         ];
