@@ -36,18 +36,27 @@ trait CreateFromTestEventDataProviderTrait
         return [
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent($test, $document),
-                'expectedReferenceSource' => '{{ job_label }}' . $testSource,
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_STARTED, '', $documentData),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_STARTED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent($test, $document),
-                'expectedReferenceSource' => '{{ job_label }}' . $testSource,
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_PASSED, '', $documentData),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_PASSED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent($test, $document),
-                'expectedReferenceSource' => '{{ job_label }}' . $testSource,
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_FAILED, '', $documentData),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_FAILED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
         ];
     }

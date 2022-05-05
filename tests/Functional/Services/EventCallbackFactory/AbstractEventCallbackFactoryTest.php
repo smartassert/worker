@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\EventCallbackFactory;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
-use App\Event\StepEventInterface;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
+use webignition\ObjectReflector\ObjectReflector;
 
 abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -38,23 +39,25 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreateForEvent(
-        Event $event,
-        string $expectedReferenceSource,
-        CallbackInterface $expectedCallback
-    ): void {
+    public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
+    {
         $jobLabel = md5((string) rand());
         $job = Job::create($jobLabel, '', 600);
 
         $callback = $this->callbackFactory->createForEvent($job, $event);
 
-        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedReferenceSource);
-        $expectedReference = '' === $expectedReferenceSource ? '' : md5($expectedReferenceSource);
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
+        ObjectReflector::setProperty(
+            $expectedCallback,
+            CallbackEntity::class,
+            'reference',
+            md5($expectedReferenceSource)
+        );
 
         self::assertInstanceOf(CallbackInterface::class, $callback);
         self::assertNotNull($callback->getId());
         self::assertSame($expectedCallback->getType(), $callback->getType());
-        self::assertSame($expectedReference, $callback->getReference());
+        self::assertSame($expectedCallback->getReference(), $callback->getReference());
         self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 

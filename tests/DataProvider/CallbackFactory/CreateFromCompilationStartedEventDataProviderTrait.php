@@ -20,7 +20,6 @@ trait CreateFromCompilationStartedEventDataProviderTrait
         return [
             StartedEvent::class => [
                 'event' => new StartedEvent($source),
-                'expectedReferenceSource' => '{{ job_label }}' . $source,
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_STARTED,
                     '{{ job_label }}' . $source,

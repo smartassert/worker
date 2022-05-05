@@ -31,7 +31,6 @@ trait CreateFromCompilationFailedEventDataProviderTrait
         return [
             FailedEvent::class => [
                 'event' => new FailedEvent($source, $errorOutput),
-                'expectedReferenceSource' => '{{ job_label }}' . $source,
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_FAILED,
                     '{{ job_label }}' . $source,

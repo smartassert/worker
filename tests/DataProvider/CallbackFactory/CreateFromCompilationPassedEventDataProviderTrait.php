@@ -22,7 +22,6 @@ trait CreateFromCompilationPassedEventDataProviderTrait
         return [
             FailedEvent::class => [
                 'event' => new PassedEvent($source, (new MockSuiteManifest())->getMock()),
-                'expectedReferenceSource' => '{{ job_label }}' . $source,
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_PASSED,
                     '{{ job_label }}' . $source,

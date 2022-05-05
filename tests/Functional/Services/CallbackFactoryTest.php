@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Repository\JobRepository;
@@ -27,6 +28,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Contracts\EventDispatcher\Event;
+use webignition\ObjectReflector\ObjectReflector;
 
 class CallbackFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -98,11 +100,8 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromExecutionCompletedEventDataProvider
      * @dataProvider createFromJobFailedEventDataProvider
      */
-    public function testCreateForEvent(
-        Event $event,
-        string $expectedReferenceSource,
-        CallbackInterface $expectedCallback
-    ): void {
+    public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
+    {
         $jobLabel = md5((string) rand());
 
         $this->environmentFactory->create((new EnvironmentSetup())->withJobSetup(
@@ -112,13 +111,18 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
 
         $callback = $this->callbackFactory->createForEvent($event);
 
-        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedReferenceSource);
-        $expectedReference = '' === $expectedReferenceSource ? '' : md5($expectedReferenceSource);
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
+        ObjectReflector::setProperty(
+            $expectedCallback,
+            CallbackEntity::class,
+            'reference',
+            md5($expectedReferenceSource)
+        );
 
         self::assertInstanceOf(CallbackInterface::class, $callback);
         self::assertNotNull($callback->getId());
         self::assertSame($expectedCallback->getType(), $callback->getType());
-        self::assertSame($expectedReference, $callback->getReference());
+        self::assertSame($expectedCallback->getReference(), $callback->getReference());
         self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 }

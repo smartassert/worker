@@ -18,10 +18,9 @@ trait CreateFromJobTimeoutEventDataProviderTrait
         return [
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(150),
-                'expectedReferenceSource' => '{{ job_label }}',
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_JOB_TIME_OUT,
-                    '',
+                    '{{ job_label }}',
                     [
                         'maximum_duration_in_seconds' => 150,
                     ]

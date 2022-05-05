@@ -41,8 +41,11 @@ trait CreateFromStepEventDataProviderTrait
                     $passingStepDocument,
                     new Step($passingStepDocument)
                 ),
-                'expectedReferenceSource' => '{{ job_label }}' . $passingStepSource . $passingStepName,
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, '', $passingStepData),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_STEP_PASSED,
+                    '{{ job_label }}' . $passingStepSource . $passingStepName,
+                    $passingStepData
+                ),
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
@@ -50,8 +53,11 @@ trait CreateFromStepEventDataProviderTrait
                     $failingStepDocument,
                     new Step($failingStepDocument)
                 ),
-                'expectedReferenceSource' => '{{ job_label }}' . $failingStepSource . $failingStepName,
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_STEP_FAILED, '', $failingStepData),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_STEP_FAILED,
+                    '{{ job_label }}' . $failingStepSource . $failingStepName,
+                    $failingStepData
+                ),
             ],
         ];
     }
