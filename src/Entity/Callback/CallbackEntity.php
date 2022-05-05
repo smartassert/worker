@@ -33,6 +33,11 @@ class CallbackEntity implements CallbackInterface
     private string $type;
 
     /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private string $reference;
+
+    /**
      * @ORM\Column(type="json")
      *
      * @var array<mixed>
@@ -40,14 +45,16 @@ class CallbackEntity implements CallbackInterface
     private array $payload;
 
     /**
-     * @param self::TYPE_* $type
-     * @param array<mixed> $payload
+     * @param self::TYPE_*     $type
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
      */
-    public static function create(string $type, array $payload): self
+    public static function create(string $type, string $reference, array $payload): self
     {
         $callback = new CallbackEntity();
         $callback->state = self::STATE_AWAITING;
         $callback->type = $type;
+        $callback->reference = $reference;
         $callback->payload = $payload;
 
         return $callback;
@@ -90,6 +97,11 @@ class CallbackEntity implements CallbackInterface
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getReference(): string
+    {
+        return $this->reference;
     }
 
     /**

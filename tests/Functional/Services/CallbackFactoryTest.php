@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
+use App\Repository\JobRepository;
 use App\Services\CallbackFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationFailedEventDataProviderTrait;
@@ -19,8 +22,13 @@ use App\Tests\DataProvider\CallbackFactory\CreateFromJobReadyEventDataProviderTr
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobTimeoutEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromStepEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromTestEventDataProviderTrait;
+use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\JobSetup;
+use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Contracts\EventDispatcher\Event;
+use webignition\ObjectReflector\ObjectReflector;
 
 class CallbackFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -39,6 +47,8 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     use CreateFromStepEventDataProviderTrait;
 
     private CallbackFactory $callbackFactory;
+    private EnvironmentFactory $environmentFactory;
+    private JobRepository $jobRepository;
 
     protected function setUp(): void
     {
@@ -47,10 +57,32 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
         $callbackFactory = self::getContainer()->get(CallbackFactory::class);
         \assert($callbackFactory instanceof CallbackFactory);
         $this->callbackFactory = $callbackFactory;
+
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $this->environmentFactory = $environmentFactory;
+
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $this->jobRepository = $jobRepository;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
+    }
+
+    public function testCreateReturnsNullIfNoJob(): void
+    {
+        self::assertNull($this->jobRepository->get());
+        self::assertNull($this->callbackFactory->createForEvent(new Event()));
     }
 
     public function testCreateForEventUnsupportedEvent(): void
     {
+        $this->environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+
+        self::assertNotNull($this->jobRepository->get());
         self::assertNull($this->callbackFactory->createForEvent(new Event()));
     }
 
@@ -70,14 +102,27 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
      */
     public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
     {
+        $jobLabel = md5((string) rand());
+
+        $this->environmentFactory->create((new EnvironmentSetup())->withJobSetup(
+            (new JobSetup())->withLabel($jobLabel)
+        ));
+        self::assertNotNull($this->jobRepository->get());
+
         $callback = $this->callbackFactory->createForEvent($event);
 
-        self::assertInstanceOf(CallbackInterface::class, $callback);
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
+        ObjectReflector::setProperty(
+            $expectedCallback,
+            CallbackEntity::class,
+            'reference',
+            md5($expectedReferenceSource)
+        );
 
-        if ($callback instanceof CallbackInterface) {
-            self::assertNotNull($callback->getId());
-            self::assertSame($expectedCallback->getType(), $callback->getType());
-            self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
-        }
+        self::assertInstanceOf(CallbackInterface::class, $callback);
+        self::assertNotNull($callback->getId());
+        self::assertSame($expectedCallback->getType(), $callback->getType());
+        self::assertSame($expectedCallback->getReference(), $callback->getReference());
+        self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 }

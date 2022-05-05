@@ -7,6 +7,7 @@ namespace App\Tests\DataProvider\CallbackFactory;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
+use App\Entity\TestConfiguration;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
@@ -19,24 +20,43 @@ trait CreateFromTestEventDataProviderTrait
      */
     public function createFromTestEventEventDataProvider(): array
     {
+        $testSource = 'Test/' . md5((string) rand()) . '.yml';
+
         $documentData = [
-            'document-key' => 'document-value',
+            'type' => 'test',
+            'payload' => [
+                'path' => $testSource,
+            ],
         ];
 
         $document = new Document((string) json_encode($documentData));
 
+        $test = Test::create(\Mockery::mock(TestConfiguration::class), $testSource, '', 1, 1);
+
         return [
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent(new Test(), $document),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_STARTED, $documentData),
+                'event' => new TestStartedEvent($test, $document),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_STARTED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
             TestPassedEvent::class => [
-                'event' => new TestPassedEvent(new Test(), $document),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_PASSED, $documentData),
+                'event' => new TestPassedEvent($test, $document),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_PASSED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent(new Test(), $document),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_TEST_FAILED, $documentData),
+                'event' => new TestFailedEvent($test, $document),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_TEST_FAILED,
+                    '{{ job_label }}' . $testSource,
+                    $documentData
+                ),
             ],
         ];
     }

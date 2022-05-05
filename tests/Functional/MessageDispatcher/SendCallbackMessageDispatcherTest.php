@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
+use App\Entity\TestConfiguration;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
@@ -133,6 +134,13 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
+        $testConfiguration = \Mockery::mock(TestConfiguration::class);
+
+        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
+        $failingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "failing step" }');
+
+        $genericTest = Test::create($testConfiguration, 'Test/test.yml', '', 1, 1);
+
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
@@ -180,23 +188,14 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedCallbackPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent(
-                    new Test(),
-                    new Document('document-key: value')
-                ),
+                'event' => new TestStartedEvent($genericTest, new Document('document-key: value')),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_STARTED,
                 'expectedCallbackPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent(
-                    new Test(),
-                    new Document('type: step' . "\n" . 'payload: { name: "passing step" }'),
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
-                    )
-                ),
+                'event' => new StepPassedEvent($genericTest, $passingStepDocument, new Step($passingStepDocument)),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_PASSED,
                 'expectedCallbackPayload' => [
                     'type' => 'step',
@@ -207,11 +206,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    (new Test())->setState(Test::STATE_FAILED),
-                    new Document('type: step' . "\n" . 'payload: { name: "failing step" }'),
-                    new Step(
-                        new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
-                    )
+                    $genericTest->setState(Test::STATE_FAILED),
+                    $failingStepDocument,
+                    new Step($failingStepDocument)
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_FAILED,
                 'expectedCallbackPayload' => [
@@ -223,7 +220,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    (new Test())->setState(Test::STATE_COMPLETE),
+                    $genericTest->setState(Test::STATE_COMPLETE),
                     new Document('document-key: value')
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_PASSED,
@@ -233,7 +230,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent(
-                    (new Test())->setState(Test::STATE_FAILED),
+                    $genericTest->setState(Test::STATE_FAILED),
                     new Document('document-key: value')
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_FAILED,

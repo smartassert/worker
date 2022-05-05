@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\EventCallbackFactory;
 
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
+use App\Entity\Job;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
+use webignition\ObjectReflector\ObjectReflector;
 
 abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -30,7 +33,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
 
     public function testCreateForEventUnsupportedEvent(): void
     {
-        self::assertNull($this->callbackFactory->createForEvent(new Event()));
+        self::assertNull($this->callbackFactory->createForEvent(new Job(), new Event()));
     }
 
     /**
@@ -38,15 +41,24 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
      */
     public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
     {
-        $callback = $this->callbackFactory->createForEvent($event);
+        $jobLabel = md5((string) rand());
+        $job = Job::create($jobLabel, '', 600);
+
+        $callback = $this->callbackFactory->createForEvent($job, $event);
+
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
+        ObjectReflector::setProperty(
+            $expectedCallback,
+            CallbackEntity::class,
+            'reference',
+            md5($expectedReferenceSource)
+        );
 
         self::assertInstanceOf(CallbackInterface::class, $callback);
-
-        if ($callback instanceof CallbackInterface) {
-            self::assertNotNull($callback->getId());
-            self::assertSame($expectedCallback->getType(), $callback->getType());
-            self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
-        }
+        self::assertNotNull($callback->getId());
+        self::assertSame($expectedCallback->getType(), $callback->getType());
+        self::assertSame($expectedCallback->getReference(), $callback->getReference());
+        self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 
     abstract protected function getCallbackFactory(): ?EventCallbackFactoryInterface;

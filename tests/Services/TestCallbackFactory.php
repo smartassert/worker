@@ -21,6 +21,7 @@ class TestCallbackFactory
     {
         $callback = $this->callbackRepository->create(
             $callbackSetup->getType(),
+            'non-empty reference',
             $callbackSetup->getPayload()
         );
 

@@ -30,6 +30,8 @@ interface CallbackInterface extends EntityInterface
     public const TYPE_STEP_PASSED = 'step/passed';
     public const TYPE_STEP_FAILED = 'step/failed';
 
+    public const TYPE_UNKNOWN = 'unknown';
+
     public function getEntity(): CallbackEntity;
 
     /**
@@ -48,6 +50,8 @@ interface CallbackInterface extends EntityInterface
     public function setState(string $state): void;
 
     public function getType(): string;
+
+    public function getReference(): string;
 
     /**
      * @return array<mixed>

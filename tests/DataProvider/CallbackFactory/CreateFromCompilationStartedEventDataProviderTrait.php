@@ -15,13 +15,16 @@ trait CreateFromCompilationStartedEventDataProviderTrait
      */
     public function createFromCompilationStartedEventDataProvider(): array
     {
+        $source = '/app/source/test.yml';
+
         return [
             StartedEvent::class => [
-                'event' => new StartedEvent('/app/source/test.yml'),
+                'event' => new StartedEvent($source),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_STARTED,
+                    '{{ job_label }}' . $source,
                     [
-                        'source' => '/app/source/test.yml',
+                        'source' => $source,
                     ]
                 ),
             ],

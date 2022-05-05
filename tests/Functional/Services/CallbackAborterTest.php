@@ -39,7 +39,11 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
 
     public function testAbort(): void
     {
-        $callback = $this->callbackRepository->create(CallbackInterface::TYPE_JOB_COMPLETED, []);
+        $callback = $this->callbackRepository->create(
+            CallbackInterface::TYPE_JOB_COMPLETED,
+            'non-empty reference',
+            []
+        );
         $this->stateMutator->setQueued($callback);
 
         $id = $callback->getId();

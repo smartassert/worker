@@ -18,7 +18,11 @@ trait CreateFromExecutionCompletedEventDataProviderTrait
         return [
             ExecutionCompletedEvent::class => [
                 'event' => new ExecutionCompletedEvent(),
-                'expectedCallback' => CallbackEntity::create(CallbackInterface::TYPE_EXECUTION_COMPLETED, []),
+                'expectedCallback' => CallbackEntity::create(
+                    CallbackInterface::TYPE_EXECUTION_COMPLETED,
+                    '{{ job_label }}',
+                    []
+                ),
             ],
         ];
     }

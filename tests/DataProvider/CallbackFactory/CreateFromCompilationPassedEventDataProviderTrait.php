@@ -17,16 +17,16 @@ trait CreateFromCompilationPassedEventDataProviderTrait
      */
     public function createFromCompilationPassedEventDataProvider(): array
     {
+        $source = '/app/source/test.yml';
+
         return [
             FailedEvent::class => [
-                'event' => new PassedEvent(
-                    '/app/source/test.yml',
-                    (new MockSuiteManifest())->getMock()
-                ),
+                'event' => new PassedEvent($source, (new MockSuiteManifest())->getMock()),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_COMPILATION_PASSED,
+                    '{{ job_label }}' . $source,
                     [
-                        'source' => '/app/source/test.yml',
+                        'source' => $source,
                     ]
                 ),
             ],

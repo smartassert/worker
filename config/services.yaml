@@ -90,10 +90,9 @@ services:
                 - '@App\Services\EventCallbackFactory\CompilationStartedEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\CompilationPassedEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\CompilationFailedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\TestEventCallbackFactory'
+                - '@App\Services\EventCallbackFactory\TestAndStepEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\StepEventCallbackFactory'
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
