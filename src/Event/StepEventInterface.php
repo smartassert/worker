@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test;
+use App\Model\Document\Step;
 use webignition\YamlDocument\Document;
 
 interface StepEventInterface
@@ -13,5 +14,5 @@ interface StepEventInterface
 
     public function getDocument(): Document;
 
-    public function getStepName(): ?string;
+    public function getStep(): Step;
 }

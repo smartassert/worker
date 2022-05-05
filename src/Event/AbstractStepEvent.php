@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test;
+use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\YamlDocument\Document;
 
@@ -13,7 +14,7 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface
     public function __construct(
         private readonly Test $test,
         private readonly Document $document,
-        private readonly ?string $stepName,
+        private readonly Step $step,
     ) {
     }
 
@@ -27,8 +28,8 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface
         return $this->document;
     }
 
-    public function getStepName(): ?string
+    public function getStep(): Step
     {
-        return $this->stepName;
+        return $this->step;
     }
 }
