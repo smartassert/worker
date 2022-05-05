@@ -13,7 +13,6 @@ use App\Services\ExecutionState;
 use App\Services\TestDocumentFactory;
 use App\Services\TestStateMutator;
 use App\Tests\Mock\Entity\MockJob;
-use App\Tests\Mock\Entity\MockTest;
 use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Mock\Repository\MockTestRepository;
 use App\Tests\Mock\Services\MockExecutionState;
@@ -58,10 +57,7 @@ class ExecuteTestHandlerTest extends TestCase
      */
     public function invokeNoExecutionDataProvider(): array
     {
-        $testInWrongState = (new MockTest())
-            ->withHasStateCall(Test::STATE_AWAITING, false)
-            ->getMock()
-        ;
+        $testInWrongState = (new Test())->setState(Test::STATE_CANCELLED);
 
         return [
             'no job' => [

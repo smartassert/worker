@@ -115,9 +115,11 @@ class Test implements \JsonSerializable, EntityInterface
     /**
      * @param self::STATE_* $state
      */
-    public function setState(string $state): void
+    public function setState(string $state): self
     {
         $this->state = $state;
+
+        return $this;
     }
 
     public function getSource(): ?string
