@@ -13,5 +13,5 @@ interface StepEventInterface
 
     public function getDocument(): Document;
 
-    public function getStepName(): string;
+    public function getStepName(): ?string;
 }
