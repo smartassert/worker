@@ -6,11 +6,13 @@ namespace App\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
 use App\Repository\CallbackRepository;
+use App\Services\CallbackReferenceFactory;
 
 abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInterface
 {
     public function __construct(
         private readonly CallbackRepository $callbackRepository,
+        protected readonly CallbackReferenceFactory $callbackReferenceFactory,
     ) {
     }
 

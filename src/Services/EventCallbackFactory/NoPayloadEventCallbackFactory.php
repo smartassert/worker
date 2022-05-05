@@ -45,19 +45,11 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
         if ($this->handles($event)) {
             return $this->create(
                 self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
-                $this->createCallbackReference($job),
+                $this->callbackReferenceFactory->createForEvent($job, $event),
                 []
             );
         }
 
         return null;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    private function createCallbackReference(Job $job): string
-    {
-        return md5((string) $job->getLabel());
     }
 }

@@ -9,7 +9,7 @@ use App\Entity\Job;
 use App\Event\SourceCompilation\PassedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationPassedEventCallbackFactory extends AbstractTestEventCallbackFactory
+class CompilationPassedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
 {
     public function handles(Event $event): bool
     {
@@ -21,7 +21,7 @@ class CompilationPassedEventCallbackFactory extends AbstractTestEventCallbackFac
         if ($event instanceof PassedEvent) {
             return $this->create(
                 CallbackInterface::TYPE_COMPILATION_PASSED,
-                $this->createCallbackReference($job, $event),
+                $this->callbackReferenceFactory->createForEvent($job, $event),
                 $this->createPayload($event)
             );
         }

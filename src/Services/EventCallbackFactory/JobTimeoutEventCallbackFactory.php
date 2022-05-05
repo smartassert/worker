@@ -21,7 +21,7 @@ class JobTimeoutEventCallbackFactory extends AbstractEventCallbackFactory
         if ($event instanceof JobTimeoutEvent) {
             return $this->create(
                 CallbackInterface::TYPE_JOB_TIME_OUT,
-                $this->createCallbackReference($job),
+                $this->callbackReferenceFactory->createForEvent($job, $event),
                 [
                     'maximum_duration_in_seconds' => $event->getJobMaximumDuration(),
                 ]
@@ -29,13 +29,5 @@ class JobTimeoutEventCallbackFactory extends AbstractEventCallbackFactory
         }
 
         return null;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    private function createCallbackReference(Job $job): string
-    {
-        return md5((string) $job->getLabel());
     }
 }

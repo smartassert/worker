@@ -9,7 +9,7 @@ use App\Entity\Job;
 use App\Event\SourceCompilation\FailedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationFailedEventCallbackFactory extends AbstractTestEventCallbackFactory
+class CompilationFailedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
 {
     public function handles(Event $event): bool
     {
@@ -21,7 +21,7 @@ class CompilationFailedEventCallbackFactory extends AbstractTestEventCallbackFac
         if ($event instanceof FailedEvent) {
             return $this->create(
                 CallbackInterface::TYPE_COMPILATION_FAILED,
-                $this->createCallbackReference($job, $event),
+                $this->callbackReferenceFactory->createForEvent($job, $event),
                 $this->createPayload($event, [
                     'output' => $event->getOutput()->getData(),
                 ])

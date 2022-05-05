@@ -38,19 +38,11 @@ class TestEventCallbackFactory extends AbstractEventCallbackFactory
 
             return $this->create(
                 self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class],
-                $this->createCallbackReference($job, $event),
+                $this->callbackReferenceFactory->createForEvent($job, $event),
                 $documentData
             );
         }
 
         return null;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    private function createCallbackReference(Job $job, TestEventInterface $event): string
-    {
-        return md5($job->getLabel() . $event->getTest()->getSource());
     }
 }
