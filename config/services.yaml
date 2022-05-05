@@ -93,6 +93,7 @@ services:
                 - '@App\Services\EventCallbackFactory\TestEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
                 - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
+                - '@App\Services\EventCallbackFactory\StepEventCallbackFactory'
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator

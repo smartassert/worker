@@ -8,8 +8,6 @@ use App\Entity\Callback\CallbackInterface;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
-use App\Event\TestStepFailedEvent;
-use App\Event\TestStepPassedEvent;
 use App\Tests\Mock\Entity\MockCallback;
 use App\Tests\Mock\Entity\MockTest;
 use webignition\YamlDocument\Document;
@@ -32,20 +30,6 @@ trait CreateFromTestEventDataProviderTrait
                 'event' => new TestStartedEvent((new MockTest())->getMock(), $document),
                 'expectedCallback' => (new MockCallback())
                     ->withGetTypeCall(CallbackInterface::TYPE_TEST_STARTED)
-                    ->withGetPayloadCall($documentData)
-                    ->getMock(),
-            ],
-            TestStepPassedEvent::class => [
-                'event' => new TestStepPassedEvent((new MockTest())->getMock(), $document),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_STEP_PASSED)
-                    ->withGetPayloadCall($documentData)
-                    ->getMock(),
-            ],
-            TestStepFailedEvent::class => [
-                'event' => new TestStepFailedEvent((new MockTest())->getMock(), $document),
-                'expectedCallback' => (new MockCallback())
-                    ->withGetTypeCall(CallbackInterface::TYPE_STEP_FAILED)
                     ->withGetPayloadCall($documentData)
                     ->getMock(),
             ],

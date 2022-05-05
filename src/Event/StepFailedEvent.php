@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-class TestStepPassedEvent extends AbstractTestEvent
+class StepFailedEvent extends AbstractStepEvent
 {
 }

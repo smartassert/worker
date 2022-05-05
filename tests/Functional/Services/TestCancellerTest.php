@@ -6,7 +6,8 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Event\JobTimeoutEvent;
-use App\Event\TestStepFailedEvent;
+use App\Event\StepFailedEvent;
+use App\Model\Document\Step;
 use App\Services\TestCanceller;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
@@ -188,18 +189,18 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider cancelAwaitingFromTestStepFailedEventDataProvider
+     * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
      *
      * @param array<Test::STATE_*> $states
      * @param array<Test::STATE_*> $expectedStates
      */
-    public function testCancelAwaitingFromTestStepFailedEvent(
+    public function testCancelAwaitingFromStepFailedEvent(
         array $states,
         array $expectedStates
     ): void {
         $this->doTestStepFailedEventDrivenTest(
             $states,
-            function (TestStepFailedEvent $event) {
+            function (StepFailedEvent $event) {
                 $this->testCanceller->cancelAwaitingFromTestFailedEvent($event);
             },
             $expectedStates
@@ -207,18 +208,18 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider cancelAwaitingFromTestStepFailedEventDataProvider
+     * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
      *
      * @param array<Test::STATE_*> $states
      * @param array<Test::STATE_*> $expectedStates
      */
-    public function testSubscribesToTestStepFailedEvent(
+    public function testSubscribesToStepFailedEvent(
         array $states,
         array $expectedStates
     ): void {
         $this->doTestStepFailedEventDrivenTest(
             $states,
-            function (TestStepFailedEvent $event) {
+            function (StepFailedEvent $event) {
                 $this->eventDispatcher->dispatch($event);
             },
             $expectedStates
@@ -228,7 +229,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @return array<mixed>
      */
-    public function cancelAwaitingFromTestStepFailedEventDataProvider(): array
+    public function cancelAwaitingFromStepFailedEventDataProvider(): array
     {
         return [
             'no awaiting tests, test failed' => [
@@ -338,7 +339,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
 
         $stepDocument = new Document();
 
-        $event = new TestStepFailedEvent($test, $stepDocument);
+        $event = new StepFailedEvent($test, $stepDocument, new Step($stepDocument));
         $execute($event);
 
         $this->testEntityAsserter->assertTestStates($expectedStates);

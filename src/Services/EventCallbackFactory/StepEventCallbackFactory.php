@@ -5,31 +5,29 @@ declare(strict_types=1);
 namespace App\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Event\TestEventInterface;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
+use App\Event\StepEventInterface;
+use App\Event\StepFailedEvent;
+use App\Event\StepPassedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TestEventCallbackFactory extends AbstractEventCallbackFactory
+class StepEventCallbackFactory extends AbstractEventCallbackFactory
 {
     /**
-     * @var array<class-string, CallbackInterface::TYPE_TEST_*>
+     * @var array<class-string, CallbackInterface::TYPE_STEP_*>
      */
     private const EVENT_TO_CALLBACK_TYPE_MAP = [
-        TestStartedEvent::class => CallbackInterface::TYPE_TEST_STARTED,
-        TestPassedEvent::class => CallbackInterface::TYPE_TEST_PASSED,
-        TestFailedEvent::class => CallbackInterface::TYPE_TEST_FAILED,
+        StepPassedEvent::class => CallbackInterface::TYPE_STEP_PASSED,
+        StepFailedEvent::class => CallbackInterface::TYPE_STEP_FAILED,
     ];
 
     public function handles(Event $event): bool
     {
-        return $event instanceof TestEventInterface;
+        return $event instanceof StepEventInterface;
     }
 
     public function createForEvent(Event $event): ?CallbackInterface
     {
-        if ($event instanceof TestEventInterface) {
+        if ($event instanceof StepEventInterface) {
             $document = $event->getDocument();
 
             $documentData = $document->parse();

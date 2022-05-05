@@ -17,6 +17,7 @@ use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompletedEventDataProvid
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobFailedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobReadyEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobTimeoutEventDataProviderTrait;
+use App\Tests\DataProvider\CallbackFactory\CreateFromStepEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromTestEventDataProviderTrait;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -35,6 +36,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     use CreateFromExecutionStartedEventDataProviderTrait;
     use CreateFromExecutionCompletedEventDataProviderTrait;
     use CreateFromJobFailedEventDataProviderTrait;
+    use CreateFromStepEventDataProviderTrait;
 
     private CallbackFactory $callbackFactory;
 
@@ -59,6 +61,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromJobCompiledEventDataProvider
      * @dataProvider createFromExecutionStartedEventDataProvider
      * @dataProvider createFromTestEventEventDataProvider
+     * @dataProvider createFromStepEventDataProvider
      * @dataProvider createFromJobTimeoutEventDataProvider
      * @dataProvider createFromJobCompletedEventDataProvider
      * @dataProvider createFromJobReadyEventDataProvider

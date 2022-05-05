@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageDispatcher;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
 use App\Event\ExecutionStartedEvent;
@@ -15,13 +14,14 @@ use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilation\FailedEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\SourceCompilation\StartedEvent;
+use App\Event\StepFailedEvent;
+use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
-use App\Event\TestStepFailedEvent;
-use App\Event\TestStepPassedEvent;
 use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
+use App\Model\Document\Step;
 use App\Repository\CallbackRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -67,7 +67,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             TestStateMutator::class => [
-                TestStepFailedEvent::class => ['setFailedFromTestStepFailedEvent'],
+                StepFailedEvent::class => ['setFailedFromStepFailedEvent'],
             ],
             TestFactory::class => [
                 PassedEvent::class => ['createFromSourceCompileSuccessEvent'],
@@ -126,13 +126,6 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
      */
     public function subscribesToEventDataProvider(): array
     {
-        $httpExceptionEventCallback = CallbackEntity::create(
-            CallbackInterface::TYPE_COMPILATION_FAILED,
-            [
-                'http-exception-event-key' => 'value',
-            ]
-        );
-
         $sourceCompileFailureEventOutput = \Mockery::mock(ErrorOutputInterface::class);
         $sourceCompileFailureEventOutput
             ->shouldReceive('getData')
@@ -197,26 +190,38 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'document-key' => 'value',
                 ],
             ],
-            TestStepPassedEvent::class => [
-                'event' => new TestStepPassedEvent(
+            StepPassedEvent::class => [
+                'event' => new StepPassedEvent(
                     (new MockTest())->getMock(),
-                    new Document('document-key: value')
+                    new Document('type: step' . "\n" . 'payload: { name: "passing step" }'),
+                    new Step(
+                        new Document('type: step' . "\n" . 'payload: { name: "passing step" }')
+                    )
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_PASSED,
                 'expectedCallbackPayload' => [
-                    'document-key' => 'value',
+                    'type' => 'step',
+                    'payload' => [
+                        'name' => 'passing step',
+                    ],
                 ],
             ],
-            TestStepFailedEvent::class => [
-                'event' => new TestStepFailedEvent(
+            StepFailedEvent::class => [
+                'event' => new StepFailedEvent(
                     (new MockTest())
                         ->withSetStateCall(Test::STATE_FAILED)
                         ->getMock(),
-                    new Document('document-key: value')
+                    new Document('type: step' . "\n" . 'payload: { name: "failing step" }'),
+                    new Step(
+                        new Document('type: step' . "\n" . 'payload: { name: "failing step" }')
+                    )
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_FAILED,
                 'expectedCallbackPayload' => [
-                    'document-key' => 'value',
+                    'type' => 'step',
+                    'payload' => [
+                        'name' => 'failing step',
+                    ],
                 ],
             ],
             TestPassedEvent::class => [

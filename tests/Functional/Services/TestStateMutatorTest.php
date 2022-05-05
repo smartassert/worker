@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
-use App\Event\TestStepFailedEvent;
+use App\Event\StepFailedEvent;
+use App\Model\Document\Step;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
@@ -88,28 +89,28 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider handleTestStepFailedEventDataProvider
+     * @dataProvider handleStepFailedEventDataProvider
      */
-    public function testSetFailedFromTestStepFailedEventEvent(Document $document, string $expectedState): void
+    public function testSetFailedFromStepFailedEventEvent(Document $document, string $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $document,
             $expectedState,
-            function (TestStepFailedEvent $event) {
-                $this->mutator->setFailedFromTestStepFailedEvent($event);
+            function (StepFailedEvent $event) {
+                $this->mutator->setFailedFromStepFailedEvent($event);
             }
         );
     }
 
     /**
-     * @dataProvider handleTestStepFailedEventDataProvider
+     * @dataProvider handleStepFailedEventDataProvider
      */
-    public function testSubscribesToTestStepFailedEvent(Document $document, string $expectedState): void
+    public function testSubscribesToStepFailedEvent(Document $document, string $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $document,
             $expectedState,
-            function (TestStepFailedEvent $event) {
+            function (StepFailedEvent $event) {
                 $this->eventDispatcher->dispatch($event);
             }
         );
@@ -118,7 +119,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @return array<mixed>
      */
-    public function handleTestStepFailedEventDataProvider(): array
+    public function handleStepFailedEventDataProvider(): array
     {
         return [
             'step failed' => [
@@ -135,7 +136,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     ): void {
         self::assertSame(Test::STATE_AWAITING, $this->test->getState());
 
-        $event = new TestStepFailedEvent($this->test, $document);
+        $event = new StepFailedEvent($this->test, $document, new Step($document));
         $execute($event);
 
         self::assertSame($expectedState, $this->test->getState());
