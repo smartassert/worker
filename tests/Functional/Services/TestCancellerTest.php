@@ -339,7 +339,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
 
         $document = new Document();
 
-        $event = new StepFailedEvent($test, new Step($document));
+        $event = new StepFailedEvent($test, new Step($document), '');
         $execute($event);
 
         $this->testEntityAsserter->assertTestStates($expectedStates);

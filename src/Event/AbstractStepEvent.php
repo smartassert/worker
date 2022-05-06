@@ -13,6 +13,7 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface
     public function __construct(
         private readonly Test $test,
         private readonly Step $step,
+        private readonly string $path,
     ) {
     }
 
@@ -24,5 +25,10 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface
     public function getDocument(): Step
     {
         return $this->step;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
     }
 }
