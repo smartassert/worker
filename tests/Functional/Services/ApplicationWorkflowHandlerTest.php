@@ -86,6 +86,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestPassedEvent(
             new Test(),
             new Document(''),
+            'Test/test.yml'
         ));
 
         $this->messengerAsserter->assertQueueCount(1);
@@ -130,6 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestPassedEvent(
             new Test(),
             new Document(''),
+            'Test/test.yml'
         ));
     }
 
@@ -156,6 +158,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestFailedEvent(
             new Test(),
             new Document(''),
+            'Test/test.yml'
         ));
     }
 }

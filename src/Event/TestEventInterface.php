@@ -12,4 +12,6 @@ interface TestEventInterface
     public function getTest(): Test;
 
     public function getDocument(): Document;
+
+    public function getPath(): string;
 }

@@ -181,7 +181,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent($test, \Mockery::mock(Document::class));
+        $event = new TestPassedEvent($test, \Mockery::mock(Document::class), 'Test/test.yml');
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -278,7 +278,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $environment = $this->environmentFactory->create($environmentSetup);
         $tests = $environment->getTests();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document('')));
+        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document(''), 'Test/test1.yml'));
 
         $this->messengerAsserter->assertQueueCount(1);
 
@@ -308,7 +308,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $environment = $this->environmentFactory->create($environmentSetup);
         $tests = $environment->getTests();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document('')));
+        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document(''), 'Test/test1.yml'));
 
         $this->messengerAsserter->assertQueueCount(1);
 
