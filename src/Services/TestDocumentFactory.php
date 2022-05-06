@@ -14,7 +14,7 @@ class TestDocumentFactory
 {
     public function __construct(
         private readonly YamlGenerator $yamlGenerator,
-        private readonly TestDocumentMutator $testDocumentMutator
+        private readonly TestPathMutator $testPathMutator
     ) {
     }
 
@@ -24,8 +24,17 @@ class TestDocumentFactory
         $runnerTestString = $this->yamlGenerator->generate($runnerTest->getData());
 
         $document = new Document($runnerTestString);
-        $mutatedDocument = $this->testDocumentMutator->removeCompilerSourceDirectoryFromPath($document);
+        $testDocument = new TestDocument($document);
 
-        return new TestDocument($mutatedDocument);
+        if ($testDocument->isTest()) {
+            $path = $testDocument->getPath();
+            $mutatedPath = $this->testPathMutator->removeCompilerSourceDirectoryFromPath($testDocument->getPath());
+
+            if ($mutatedPath !== $path) {
+                $testDocument->setPath($mutatedPath);
+            }
+        }
+
+        return $testDocument;
     }
 }

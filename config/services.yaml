@@ -47,7 +47,7 @@ services:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
 
-    App\Services\TestDocumentMutator:
+    App\Services\TestPathMutator:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
 

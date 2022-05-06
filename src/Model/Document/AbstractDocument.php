@@ -63,4 +63,15 @@ abstract class AbstractDocument
 
         return is_string($value) ? $value : null;
     }
+
+    protected function setPayloadStringValue(string $key, string $value): void
+    {
+        $payload = $this->getPayload();
+
+        if (array_key_exists($key, $payload)) {
+            $payload[$key] = $value;
+
+            $this->data[self::KEY_PAYLOAD] = $payload;
+        }
+    }
 }
