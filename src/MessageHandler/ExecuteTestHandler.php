@@ -9,7 +9,6 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
-use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Services\ExecutionState;
@@ -57,19 +56,18 @@ class ExecuteTestHandler implements MessageHandlerInterface
             $this->jobRepository->add($job);
         }
 
-        $document = $this->testDocumentFactory->create($test);
-        $testDocument = new TestDocument($document);
+        $testDocument = $this->testDocumentFactory->create($test);
 
-        $this->eventDispatcher->dispatch(new TestStartedEvent($test, $document, $testDocument->getPath()));
+        $this->eventDispatcher->dispatch(new TestStartedEvent($test, $testDocument));
 
         $this->testStateMutator->setRunning($test);
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if ($test->hasState(Test::STATE_COMPLETE)) {
-            $this->eventDispatcher->dispatch(new TestPassedEvent($test, $document, $testDocument->getPath()));
+            $this->eventDispatcher->dispatch(new TestPassedEvent($test, $testDocument));
         } else {
-            $this->eventDispatcher->dispatch(new TestFailedEvent($test, $document, $testDocument->getPath()));
+            $this->eventDispatcher->dispatch(new TestFailedEvent($test, $testDocument));
         }
     }
 }

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Test;
+use App\Entity\Test as TestEntity;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationState;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -84,9 +85,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new Test(),
-            new Document(''),
-            'Test/test.yml'
+            new TestEntity(),
+            new TestDocument(new Document())
         ));
 
         $this->messengerAsserter->assertQueueCount(1);
@@ -129,9 +129,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new Test(),
-            new Document(''),
-            'Test/test.yml'
+            new TestEntity(),
+            new TestDocument(new Document())
         ));
     }
 
@@ -155,10 +154,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $this->eventDispatcher->dispatch(new TestFailedEvent(
-            new Test(),
-            new Document(''),
-            'Test/test.yml'
-        ));
+        $this->eventDispatcher->dispatch(new TestFailedEvent(new TestEntity(), new TestDocument(new Document())));
     }
 }

@@ -79,7 +79,7 @@ abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInter
         }
 
         if ($event instanceof TestEventInterface) {
-            $referenceComponents[] = $event->getPath();
+            $referenceComponents[] = $event->getDocument()->getPath();
         }
 
         if ($event instanceof StepEventInterface) {
