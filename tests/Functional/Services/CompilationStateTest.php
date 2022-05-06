@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
@@ -93,7 +92,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackInterface::TYPE_COMPILATION_FAILED),
+                            ->withType(CallbackEntity::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::STATE_FAILED,
             ],
@@ -191,7 +190,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackInterface::TYPE_COMPILATION_FAILED),
+                            ->withType(CallbackEntity::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::STATE_FAILED,

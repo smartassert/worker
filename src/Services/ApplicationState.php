@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Repository\CallbackRepository;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
@@ -38,7 +38,7 @@ class ApplicationState implements \Stringable
             return self::STATE_AWAITING_JOB;
         }
 
-        if (0 !== $this->callbackRepository->getTypeCount(CallbackInterface::TYPE_JOB_TIME_OUT)) {
+        if (0 !== $this->callbackRepository->getTypeCount(CallbackEntity::TYPE_JOB_TIME_OUT)) {
             return self::STATE_TIMED_OUT;
         }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Services\CallbackState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
@@ -39,7 +38,7 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      *
-     * @param array<CallbackInterface::STATE_*> $callbackStates
+     * @param array<CallbackEntity::STATE_*> $callbackStates
      */
     public function testGet(array $callbackStates, string $expectedState): void
     {
@@ -62,37 +61,37 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
-                    CallbackInterface::STATE_COMPLETE,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
+                    CallbackEntity::STATE_COMPLETE,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
-                    CallbackInterface::STATE_FAILED,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
+                    CallbackEntity::STATE_FAILED,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'two complete, three failed' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_COMPLETE,
-                    CallbackInterface::STATE_COMPLETE,
-                    CallbackInterface::STATE_FAILED,
-                    CallbackInterface::STATE_FAILED,
-                    CallbackInterface::STATE_FAILED,
+                    CallbackEntity::STATE_COMPLETE,
+                    CallbackEntity::STATE_COMPLETE,
+                    CallbackEntity::STATE_FAILED,
+                    CallbackEntity::STATE_FAILED,
+                    CallbackEntity::STATE_FAILED,
                 ],
                 'expectedState' => CallbackState::STATE_COMPLETE,
             ],
@@ -102,9 +101,9 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<CallbackInterface::STATE_*> $callbackStates
-     * @param array<CallbackState::STATE_*>     $expectedIsStates
-     * @param array<CallbackState::STATE_*>     $expectedIsNotStates
+     * @param array<CallbackEntity::STATE_*> $callbackStates
+     * @param array<CallbackState::STATE_*>  $expectedIsStates
+     * @param array<CallbackState::STATE_*>  $expectedIsNotStates
      */
     public function testIs(array $callbackStates, array $expectedIsStates, array $expectedIsNotStates): void
     {
@@ -134,9 +133,9 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -148,10 +147,10 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, complete' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
-                    CallbackInterface::STATE_COMPLETE,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
+                    CallbackEntity::STATE_COMPLETE,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -163,10 +162,10 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, failed' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_AWAITING,
-                    CallbackInterface::STATE_QUEUED,
-                    CallbackInterface::STATE_SENDING,
-                    CallbackInterface::STATE_FAILED,
+                    CallbackEntity::STATE_AWAITING,
+                    CallbackEntity::STATE_QUEUED,
+                    CallbackEntity::STATE_SENDING,
+                    CallbackEntity::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -178,11 +177,11 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'two complete, three failed' => [
                 'callbackStates' => [
-                    CallbackInterface::STATE_COMPLETE,
-                    CallbackInterface::STATE_COMPLETE,
-                    CallbackInterface::STATE_FAILED,
-                    CallbackInterface::STATE_FAILED,
-                    CallbackInterface::STATE_FAILED,
+                    CallbackEntity::STATE_COMPLETE,
+                    CallbackEntity::STATE_COMPLETE,
+                    CallbackEntity::STATE_FAILED,
+                    CallbackEntity::STATE_FAILED,
+                    CallbackEntity::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_COMPLETE,
@@ -198,12 +197,12 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @param CallbackEntity::STATE_* $state
      */
-    private function createCallbackEntity(string $state): CallbackInterface
+    private function createCallbackEntity(string $state): CallbackEntity
     {
         $callbackSetup = (new CallbackSetup())->withState($state);
 
         return $this->testCallbackFactory->create($callbackSetup);
-//        $entity = CallbackEntity::create(CallbackInterface::TYPE_STEP_PASSED, []);
+//        $entity = CallbackEntity::create(CallbackEntity::TYPE_STEP_PASSED, []);
 //        $entity->setState($state);
 //
 //        $this->entityManager->persist($entity);

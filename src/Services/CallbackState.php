@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Repository\CallbackRepository;
 
 class CallbackState implements \Stringable
@@ -26,8 +26,8 @@ class CallbackState implements \Stringable
         $callbackCount = $this->repository->count([]);
         $finishedCallbackCount = $this->repository->count([
             'state' => [
-                CallbackInterface::STATE_FAILED,
-                CallbackInterface::STATE_COMPLETE,
+                CallbackEntity::STATE_FAILED,
+                CallbackEntity::STATE_COMPLETE,
             ],
         ]);
 

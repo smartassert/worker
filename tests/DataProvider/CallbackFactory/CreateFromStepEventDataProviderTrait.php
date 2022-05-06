@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\CallbackFactory;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Event\StepFailedEvent;
@@ -44,7 +43,7 @@ trait CreateFromStepEventDataProviderTrait
                     $passingStepPath
                 ),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_STEP_PASSED,
+                    CallbackEntity::TYPE_STEP_PASSED,
                     '{{ job_label }}' . $passingStepPath . $passingStepName,
                     $passingStepData
                 ),
@@ -56,7 +55,7 @@ trait CreateFromStepEventDataProviderTrait
                     $failingStepPath
                 ),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_STEP_FAILED,
+                    CallbackEntity::TYPE_STEP_FAILED,
                     '{{ job_label }}' . $failingStepPath . $failingStepName,
                     $failingStepData
                 ),
