@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Repository\CallbackRepository;
 use App\Tests\Model\CallbackSetup;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +17,7 @@ class TestCallbackFactory
     ) {
     }
 
-    public function create(CallbackSetup $callbackSetup): CallbackInterface
+    public function create(CallbackSetup $callbackSetup): CallbackEntity
     {
         $callback = $this->callbackRepository->create(
             $callbackSetup->getType(),

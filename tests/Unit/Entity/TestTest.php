@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ class TestTest extends TestCase
         self::assertTrue($test->hasState(Test::STATE_AWAITING));
         self::assertFalse($test->hasState(Test::STATE_COMPLETE));
 
-        $test->setState(CallbackInterface::STATE_COMPLETE);
+        $test->setState(CallbackEntity::STATE_COMPLETE);
         self::assertFalse($test->hasState(Test::STATE_AWAITING));
         self::assertTrue($test->hasState(Test::STATE_COMPLETE));
     }

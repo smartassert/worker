@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Message\SendCallbackMessage;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -26,7 +26,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private EventDispatcherInterface $eventDispatcher;
-    private CallbackInterface $callback;
+    private CallbackEntity $callback;
 
     protected function setUp(): void
     {
@@ -55,12 +55,12 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
             ->withJobSetup(new JobSetup())
             ->withCallbackSetups([
                 (new CallbackSetup())
-                    ->withState(CallbackInterface::STATE_QUEUED),
+                    ->withState(CallbackEntity::STATE_QUEUED),
             ]));
 
         $callbacks = $environment->getCallbacks();
         $callback = $callbacks[0];
-        self::assertInstanceOf(CallbackInterface::class, $callback);
+        self::assertInstanceOf(CallbackEntity::class, $callback);
 
         $this->callback = $callback;
     }
@@ -68,11 +68,11 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider handleEventDataProvider
      *
-     * @param callable(CallbackInterface): WorkerMessageFailedEvent $eventCreator
+     * @param callable(CallbackEntity): WorkerMessageFailedEvent $eventCreator
      */
     public function testHandleEvent(callable $eventCreator, string $expectedCallbackState): void
     {
-        self::assertSame(CallbackInterface::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(CallbackEntity::STATE_QUEUED, $this->callback->getState());
 
         $this->eventDispatcher->dispatch(
             $eventCreator($this->callback)
@@ -88,7 +88,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
     {
         return [
             'non-retryable due to unrecoverable exception' => [
-                'eventCreator' => function (CallbackInterface $callback): WorkerMessageFailedEvent {
+                'eventCreator' => function (CallbackEntity $callback): WorkerMessageFailedEvent {
                     $message = new SendCallbackMessage((int) $callback->getId());
                     $envelope = new Envelope($message);
 
@@ -98,10 +98,10 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new UnrecoverableMessageHandlingException()
                     );
                 },
-                'expectedCallbackState' => CallbackInterface::STATE_FAILED,
+                'expectedCallbackState' => CallbackEntity::STATE_FAILED,
             ],
             'non-retryable due to retry attempt exhaustion' => [
-                'eventCreator' => function (CallbackInterface $callback): WorkerMessageFailedEvent {
+                'eventCreator' => function (CallbackEntity $callback): WorkerMessageFailedEvent {
                     $message = new SendCallbackMessage((int) $callback->getId());
                     $envelope = new Envelope($message, [
                         new RedeliveryStamp(3)
@@ -113,7 +113,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new \RuntimeException('Unfortunate event')
                     );
                 },
-                'expectedCallbackState' => CallbackInterface::STATE_FAILED,
+                'expectedCallbackState' => CallbackEntity::STATE_FAILED,
             ],
         ];
     }

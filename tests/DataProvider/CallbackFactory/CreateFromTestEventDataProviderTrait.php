@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\CallbackFactory;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Event\TestFailedEvent;
@@ -37,7 +36,7 @@ trait CreateFromTestEventDataProviderTrait
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent($test, $document),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_TEST_STARTED,
+                    CallbackEntity::TYPE_TEST_STARTED,
                     '{{ job_label }}' . $testSource,
                     $documentData
                 ),
@@ -45,7 +44,7 @@ trait CreateFromTestEventDataProviderTrait
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent($test, $document),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_TEST_PASSED,
+                    CallbackEntity::TYPE_TEST_PASSED,
                     '{{ job_label }}' . $testSource,
                     $documentData
                 ),
@@ -53,7 +52,7 @@ trait CreateFromTestEventDataProviderTrait
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent($test, $document),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_TEST_FAILED,
+                    CallbackEntity::TYPE_TEST_FAILED,
                     '{{ job_label }}' . $testSource,
                     $documentData
                 ),

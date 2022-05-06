@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\EventCallbackFactory;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -39,7 +38,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreateForEvent(Event $event, CallbackInterface $expectedCallback): void
+    public function testCreateForEvent(Event $event, CallbackEntity $expectedCallback): void
     {
         $jobLabel = md5((string) rand());
         $job = Job::create($jobLabel, '', 600);
@@ -54,7 +53,7 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
             md5($expectedReferenceSource)
         );
 
-        self::assertInstanceOf(CallbackInterface::class, $callback);
+        self::assertInstanceOf(CallbackEntity::class, $callback);
         self::assertNotNull($callback->getId());
         self::assertSame($expectedCallback->getType(), $callback->getType());
         self::assertSame($expectedCallback->getReference(), $callback->getReference());

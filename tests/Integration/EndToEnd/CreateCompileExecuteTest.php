@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Test;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationState;
@@ -215,55 +215,55 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ) {
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            CallbackInterface::TYPE_JOB_STARTED,
+                            CallbackEntity::TYPE_JOB_STARTED,
                             []
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_STARTED,
+                            CallbackEntity::TYPE_COMPILATION_STARTED,
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_PASSED,
+                            CallbackEntity::TYPE_COMPILATION_PASSED,
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_STARTED,
+                            CallbackEntity::TYPE_COMPILATION_STARTED,
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_PASSED,
+                            CallbackEntity::TYPE_COMPILATION_PASSED,
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_STARTED,
+                            CallbackEntity::TYPE_COMPILATION_STARTED,
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-form' => $requestFactory->create(
-                            CallbackInterface::TYPE_COMPILATION_PASSED,
+                            CallbackEntity::TYPE_COMPILATION_PASSED,
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
                         'job/compiled' => $requestFactory->create(
-                            CallbackInterface::TYPE_JOB_COMPILED,
+                            CallbackEntity::TYPE_JOB_COMPILED,
                             []
                         ),
                         'execution/started' => $requestFactory->create(
-                            CallbackInterface::TYPE_EXECUTION_STARTED,
+                            CallbackEntity::TYPE_EXECUTION_STARTED,
                             []
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_STARTED,
+                            CallbackEntity::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -276,7 +276,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
-                            CallbackInterface::TYPE_STEP_PASSED,
+                            CallbackEntity::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -299,7 +299,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_PASSED,
+                            CallbackEntity::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -312,7 +312,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_STARTED,
+                            CallbackEntity::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -325,7 +325,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
-                            CallbackInterface::TYPE_STEP_PASSED,
+                            CallbackEntity::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -342,7 +342,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_PASSED,
+                            CallbackEntity::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -355,7 +355,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_STARTED,
+                            CallbackEntity::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -368,7 +368,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
-                            CallbackInterface::TYPE_STEP_PASSED,
+                            CallbackEntity::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -385,7 +385,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_PASSED,
+                            CallbackEntity::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -398,7 +398,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_STARTED,
+                            CallbackEntity::TYPE_TEST_STARTED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -411,7 +411,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
-                            CallbackInterface::TYPE_STEP_PASSED,
+                            CallbackEntity::TYPE_STEP_PASSED,
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -428,7 +428,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_PASSED,
+                            CallbackEntity::TYPE_TEST_PASSED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -441,11 +441,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'execution/completed' => $requestFactory->create(
-                            CallbackInterface::TYPE_EXECUTION_COMPLETED,
+                            CallbackEntity::TYPE_EXECUTION_COMPLETED,
                             []
                         ),
                         'job/completed' => $requestFactory->create(
-                            CallbackInterface::TYPE_JOB_COMPLETED,
+                            CallbackEntity::TYPE_JOB_COMPLETED,
                             []
                         ),
                     ]);
@@ -488,7 +488,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
-                            CallbackInterface::TYPE_STEP_FAILED,
+                            CallbackEntity::TYPE_STEP_FAILED,
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -522,7 +522,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/failed' => $requestFactory->create(
-                            CallbackInterface::TYPE_TEST_FAILED,
+                            CallbackEntity::TYPE_TEST_FAILED,
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -535,7 +535,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'job/failed' => $requestFactory->create(
-                            CallbackInterface::TYPE_JOB_FAILED,
+                            CallbackEntity::TYPE_JOB_FAILED,
                             []
                         ),
                     ]);

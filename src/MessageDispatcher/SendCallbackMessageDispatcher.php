@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -94,14 +94,14 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
     public function dispatchForEvent(Event $event): ?Envelope
     {
         $callback = $this->callbackFactory->createForEvent($event);
-        if ($callback instanceof CallbackInterface) {
+        if ($callback instanceof CallbackEntity) {
             return $this->dispatch($callback);
         }
 
         return null;
     }
 
-    public function dispatch(CallbackInterface $callback): Envelope
+    public function dispatch(CallbackEntity $callback): Envelope
     {
         $this->callbackStateMutator->setQueued($callback);
 

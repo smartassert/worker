@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,11 +22,11 @@ class CallbackRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param CallbackInterface::TYPE_* $type
-     * @param non-empty-string          $reference
-     * @param array<mixed>              $payload
+     * @param CallbackEntity::TYPE_* $type
+     * @param non-empty-string       $reference
+     * @param array<mixed>           $payload
      */
-    public function create(string $type, string $reference, array $payload): CallbackInterface
+    public function create(string $type, string $reference, array $payload): CallbackEntity
     {
         $callback = CallbackEntity::create($type, $reference, $payload);
 
@@ -43,7 +42,7 @@ class CallbackRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param CallbackInterface::TYPE_* $type
+     * @param CallbackEntity::TYPE_* $type
      */
     public function getTypeCount(string $type): int
     {

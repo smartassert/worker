@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Source implements EntityInterface
+class Source
 {
     public const TYPE_TEST = 'test';
     public const TYPE_RESOURCE = 'resource';

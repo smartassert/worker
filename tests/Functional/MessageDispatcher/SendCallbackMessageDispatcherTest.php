@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageDispatcher;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Event\ExecutionStartedEvent;
@@ -112,9 +112,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         if ($message instanceof SendCallbackMessage) {
             $callback = $this->callbackRepository->find($message->getCallbackId());
-            self::assertInstanceOf(CallbackInterface::class, $callback);
+            self::assertInstanceOf(CallbackEntity::class, $callback);
 
-            if ($callback instanceof CallbackInterface) {
+            if ($callback instanceof CallbackEntity) {
                 self::assertSame($expectedCallbackType, $callback->getType());
                 self::assertSame($expectedCallbackPayload, $callback->getPayload());
             }
@@ -144,12 +144,12 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
-                'expectedCallbackType' => CallbackInterface::TYPE_JOB_STARTED,
+                'expectedCallbackType' => CallbackEntity::TYPE_JOB_STARTED,
                 'expectedCallbackPayload' => [],
             ],
             StartedEvent::class => [
                 'event' => new StartedEvent('/app/source/Test/test.yml'),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_STARTED,
+                'expectedCallbackType' => CallbackEntity::TYPE_COMPILATION_STARTED,
                 'expectedCallbackPayload' => [
                     'source' => '/app/source/Test/test.yml',
                 ],
@@ -159,7 +159,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     '/app/source/Test/test.yml',
                     (new MockSuiteManifest())->getMock()
                 ),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_PASSED,
+                'expectedCallbackType' => CallbackEntity::TYPE_COMPILATION_PASSED,
                 'expectedCallbackPayload' => [
                     'source' => '/app/source/Test/test.yml',
                 ],
@@ -169,7 +169,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     '/app/source/Test/test.yml',
                     $sourceCompileFailureEventOutput
                 ),
-                'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_FAILED,
+                'expectedCallbackType' => CallbackEntity::TYPE_COMPILATION_FAILED,
                 'expectedCallbackPayload' => [
                     'source' => '/app/source/Test/test.yml',
                     'output' => [
@@ -179,24 +179,24 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             JobCompiledEvent::class => [
                 'event' => new JobCompiledEvent(),
-                'expectedCallbackType' => CallbackInterface::TYPE_JOB_COMPILED,
+                'expectedCallbackType' => CallbackEntity::TYPE_JOB_COMPILED,
                 'expectedCallbackPayload' => [],
             ],
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
-                'expectedCallbackType' => CallbackInterface::TYPE_EXECUTION_STARTED,
+                'expectedCallbackType' => CallbackEntity::TYPE_EXECUTION_STARTED,
                 'expectedCallbackPayload' => [],
             ],
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent($genericTest, new Document('document-key: value')),
-                'expectedCallbackType' => CallbackInterface::TYPE_TEST_STARTED,
+                'expectedCallbackType' => CallbackEntity::TYPE_TEST_STARTED,
                 'expectedCallbackPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent($genericTest, $passingStepDocument, new Step($passingStepDocument)),
-                'expectedCallbackType' => CallbackInterface::TYPE_STEP_PASSED,
+                'expectedCallbackType' => CallbackEntity::TYPE_STEP_PASSED,
                 'expectedCallbackPayload' => [
                     'type' => 'step',
                     'payload' => [
@@ -210,7 +210,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $failingStepDocument,
                     new Step($failingStepDocument)
                 ),
-                'expectedCallbackType' => CallbackInterface::TYPE_STEP_FAILED,
+                'expectedCallbackType' => CallbackEntity::TYPE_STEP_FAILED,
                 'expectedCallbackPayload' => [
                     'type' => 'step',
                     'payload' => [
@@ -223,7 +223,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(Test::STATE_COMPLETE),
                     new Document('document-key: value')
                 ),
-                'expectedCallbackType' => CallbackInterface::TYPE_TEST_PASSED,
+                'expectedCallbackType' => CallbackEntity::TYPE_TEST_PASSED,
                 'expectedCallbackPayload' => [
                     'document-key' => 'value',
                 ],
@@ -233,21 +233,21 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(Test::STATE_FAILED),
                     new Document('document-key: value')
                 ),
-                'expectedCallbackType' => CallbackInterface::TYPE_TEST_FAILED,
+                'expectedCallbackType' => CallbackEntity::TYPE_TEST_FAILED,
                 'expectedCallbackPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),
-                'expectedCallbackType' => CallbackInterface::TYPE_JOB_TIME_OUT,
+                'expectedCallbackType' => CallbackEntity::TYPE_JOB_TIME_OUT,
                 'expectedCallbackPayload' => [
                     'maximum_duration_in_seconds' => 10,
                 ],
             ],
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
-                'expectedCallbackType' => CallbackInterface::TYPE_JOB_COMPLETED,
+                'expectedCallbackType' => CallbackEntity::TYPE_JOB_COMPLETED,
                 'expectedCallbackPayload' => [],
             ],
         ];

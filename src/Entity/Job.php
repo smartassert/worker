@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Job implements \JsonSerializable, EntityInterface
+class Job implements \JsonSerializable
 {
     public const ID = 1;
 

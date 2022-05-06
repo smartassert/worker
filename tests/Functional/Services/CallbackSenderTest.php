@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
@@ -47,7 +46,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     public function testSendSuccess(): void
     {
         $callback = CallbackEntity::create(
-            CallbackInterface::TYPE_JOB_STARTED,
+            CallbackEntity::TYPE_JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -68,7 +67,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
         $callback = CallbackEntity::create(
-            CallbackInterface::TYPE_JOB_STARTED,
+            CallbackEntity::TYPE_JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -102,7 +101,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
     public function testSendClientException(\Exception $exception): void
     {
         $callback = CallbackEntity::create(
-            CallbackInterface::TYPE_JOB_STARTED,
+            CallbackEntity::TYPE_JOB_STARTED,
             'non-empty reference',
             []
         );

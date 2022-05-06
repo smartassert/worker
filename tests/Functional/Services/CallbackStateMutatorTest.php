@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Services\CallbackStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,8 +30,8 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider setQueuedDataProvider
      *
-     * @param CallbackInterface::STATE_* $initialState
-     * @param CallbackInterface::STATE_* $expectedState
+     * @param CallbackEntity::STATE_* $initialState
+     * @param CallbackEntity::STATE_* $expectedState
      */
     public function testSetQueued(string $initialState, string $expectedState): void
     {
@@ -41,7 +40,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
                 $callback,
                 $initialState,
                 $expectedState,
-                function (CallbackInterface $callback) {
+                function (CallbackEntity $callback) {
                     $this->callbackStateMutator->setQueued($callback);
                 }
             );
@@ -54,25 +53,25 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     public function setQueuedDataProvider(): array
     {
         return [
-            CallbackInterface::STATE_AWAITING => [
-                'initialState' => CallbackInterface::STATE_AWAITING,
-                'expectedState' => CallbackInterface::STATE_QUEUED,
+            CallbackEntity::STATE_AWAITING => [
+                'initialState' => CallbackEntity::STATE_AWAITING,
+                'expectedState' => CallbackEntity::STATE_QUEUED,
             ],
-            CallbackInterface::STATE_QUEUED => [
-                'initialState' => CallbackInterface::STATE_QUEUED,
-                'expectedState' => CallbackInterface::STATE_QUEUED,
+            CallbackEntity::STATE_QUEUED => [
+                'initialState' => CallbackEntity::STATE_QUEUED,
+                'expectedState' => CallbackEntity::STATE_QUEUED,
             ],
-            CallbackInterface::STATE_SENDING => [
-                'initialState' => CallbackInterface::STATE_SENDING,
-                'expectedState' => CallbackInterface::STATE_QUEUED,
+            CallbackEntity::STATE_SENDING => [
+                'initialState' => CallbackEntity::STATE_SENDING,
+                'expectedState' => CallbackEntity::STATE_QUEUED,
             ],
-            CallbackInterface::STATE_FAILED => [
-                'initialState' => CallbackInterface::STATE_FAILED,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_FAILED => [
+                'initialState' => CallbackEntity::STATE_FAILED,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_COMPLETE => [
-                'initialState' => CallbackInterface::STATE_COMPLETE,
-                'expectedState' => CallbackInterface::STATE_COMPLETE,
+            CallbackEntity::STATE_COMPLETE => [
+                'initialState' => CallbackEntity::STATE_COMPLETE,
+                'expectedState' => CallbackEntity::STATE_COMPLETE,
             ],
         ];
     }
@@ -80,8 +79,8 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider setSendingDataProvider
      *
-     * @param CallbackInterface::STATE_* $initialState
-     * @param CallbackInterface::STATE_* $expectedState
+     * @param CallbackEntity::STATE_* $initialState
+     * @param CallbackEntity::STATE_* $expectedState
      */
     public function testSetSending(string $initialState, string $expectedState): void
     {
@@ -90,7 +89,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
                 $callback,
                 $initialState,
                 $expectedState,
-                function (CallbackInterface $callback) {
+                function (CallbackEntity $callback) {
                     $this->callbackStateMutator->setSending($callback);
                 }
             );
@@ -103,25 +102,25 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     public function setSendingDataProvider(): array
     {
         return [
-            CallbackInterface::STATE_AWAITING => [
-                'initialState' => CallbackInterface::STATE_AWAITING,
-                'expectedState' => CallbackInterface::STATE_AWAITING,
+            CallbackEntity::STATE_AWAITING => [
+                'initialState' => CallbackEntity::STATE_AWAITING,
+                'expectedState' => CallbackEntity::STATE_AWAITING,
             ],
-            CallbackInterface::STATE_QUEUED => [
-                'initialState' => CallbackInterface::STATE_QUEUED,
-                'expectedState' => CallbackInterface::STATE_SENDING,
+            CallbackEntity::STATE_QUEUED => [
+                'initialState' => CallbackEntity::STATE_QUEUED,
+                'expectedState' => CallbackEntity::STATE_SENDING,
             ],
-            CallbackInterface::STATE_SENDING => [
-                'initialState' => CallbackInterface::STATE_SENDING,
-                'expectedState' => CallbackInterface::STATE_SENDING,
+            CallbackEntity::STATE_SENDING => [
+                'initialState' => CallbackEntity::STATE_SENDING,
+                'expectedState' => CallbackEntity::STATE_SENDING,
             ],
-            CallbackInterface::STATE_FAILED => [
-                'initialState' => CallbackInterface::STATE_FAILED,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_FAILED => [
+                'initialState' => CallbackEntity::STATE_FAILED,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_COMPLETE => [
-                'initialState' => CallbackInterface::STATE_COMPLETE,
-                'expectedState' => CallbackInterface::STATE_COMPLETE,
+            CallbackEntity::STATE_COMPLETE => [
+                'initialState' => CallbackEntity::STATE_COMPLETE,
+                'expectedState' => CallbackEntity::STATE_COMPLETE,
             ],
         ];
     }
@@ -129,8 +128,8 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider setFailedDataProvider
      *
-     * @param CallbackInterface::STATE_* $initialState
-     * @param CallbackInterface::STATE_* $expectedState
+     * @param CallbackEntity::STATE_* $initialState
+     * @param CallbackEntity::STATE_* $expectedState
      */
     public function testSetFailed(string $initialState, string $expectedState): void
     {
@@ -139,7 +138,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
                 $callback,
                 $initialState,
                 $expectedState,
-                function (CallbackInterface $callback) {
+                function (CallbackEntity $callback) {
                     $this->callbackStateMutator->setFailed($callback);
                 }
             );
@@ -152,25 +151,25 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     public function setFailedDataProvider(): array
     {
         return [
-            CallbackInterface::STATE_AWAITING => [
-                'initialState' => CallbackInterface::STATE_AWAITING,
-                'expectedState' => CallbackInterface::STATE_AWAITING,
+            CallbackEntity::STATE_AWAITING => [
+                'initialState' => CallbackEntity::STATE_AWAITING,
+                'expectedState' => CallbackEntity::STATE_AWAITING,
             ],
-            CallbackInterface::STATE_QUEUED => [
-                'initialState' => CallbackInterface::STATE_QUEUED,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_QUEUED => [
+                'initialState' => CallbackEntity::STATE_QUEUED,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_SENDING => [
-                'initialState' => CallbackInterface::STATE_SENDING,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_SENDING => [
+                'initialState' => CallbackEntity::STATE_SENDING,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_FAILED => [
-                'initialState' => CallbackInterface::STATE_FAILED,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_FAILED => [
+                'initialState' => CallbackEntity::STATE_FAILED,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_COMPLETE => [
-                'initialState' => CallbackInterface::STATE_COMPLETE,
-                'expectedState' => CallbackInterface::STATE_COMPLETE,
+            CallbackEntity::STATE_COMPLETE => [
+                'initialState' => CallbackEntity::STATE_COMPLETE,
+                'expectedState' => CallbackEntity::STATE_COMPLETE,
             ],
         ];
     }
@@ -178,8 +177,8 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider setCompleteDataProvider
      *
-     * @param CallbackInterface::STATE_* $initialState
-     * @param CallbackInterface::STATE_* $expectedState
+     * @param CallbackEntity::STATE_* $initialState
+     * @param CallbackEntity::STATE_* $expectedState
      */
     public function testSetComplete(string $initialState, string $expectedState): void
     {
@@ -188,7 +187,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
                 $callback,
                 $initialState,
                 $expectedState,
-                function (CallbackInterface $callback) {
+                function (CallbackEntity $callback) {
                     $this->callbackStateMutator->setComplete($callback);
                 }
             );
@@ -201,25 +200,25 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     public function setCompleteDataProvider(): array
     {
         return [
-            CallbackInterface::STATE_AWAITING => [
-                'initialState' => CallbackInterface::STATE_AWAITING,
-                'expectedState' => CallbackInterface::STATE_AWAITING,
+            CallbackEntity::STATE_AWAITING => [
+                'initialState' => CallbackEntity::STATE_AWAITING,
+                'expectedState' => CallbackEntity::STATE_AWAITING,
             ],
-            CallbackInterface::STATE_QUEUED => [
-                'initialState' => CallbackInterface::STATE_QUEUED,
-                'expectedState' => CallbackInterface::STATE_QUEUED,
+            CallbackEntity::STATE_QUEUED => [
+                'initialState' => CallbackEntity::STATE_QUEUED,
+                'expectedState' => CallbackEntity::STATE_QUEUED,
             ],
-            CallbackInterface::STATE_SENDING => [
-                'initialState' => CallbackInterface::STATE_SENDING,
-                'expectedState' => CallbackInterface::STATE_COMPLETE,
+            CallbackEntity::STATE_SENDING => [
+                'initialState' => CallbackEntity::STATE_SENDING,
+                'expectedState' => CallbackEntity::STATE_COMPLETE,
             ],
-            CallbackInterface::STATE_FAILED => [
-                'initialState' => CallbackInterface::STATE_FAILED,
-                'expectedState' => CallbackInterface::STATE_FAILED,
+            CallbackEntity::STATE_FAILED => [
+                'initialState' => CallbackEntity::STATE_FAILED,
+                'expectedState' => CallbackEntity::STATE_FAILED,
             ],
-            CallbackInterface::STATE_COMPLETE => [
-                'initialState' => CallbackInterface::STATE_COMPLETE,
-                'expectedState' => CallbackInterface::STATE_COMPLETE,
+            CallbackEntity::STATE_COMPLETE => [
+                'initialState' => CallbackEntity::STATE_COMPLETE,
+                'expectedState' => CallbackEntity::STATE_COMPLETE,
             ],
         ];
     }
@@ -227,11 +226,11 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider setSendingDataProvider
      *
-     * @param CallbackInterface::STATE_* $initialState
-     * @param CallbackInterface::STATE_* $expectedState
+     * @param CallbackEntity::STATE_* $initialState
+     * @param CallbackEntity::STATE_* $expectedState
      */
     private function doSetAsStateTest(
-        CallbackInterface $callback,
+        CallbackEntity $callback,
         string $initialState,
         string $expectedState,
         callable $setter
@@ -249,7 +248,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @return CallbackInterface[]
+     * @return CallbackEntity[]
      */
     private function createCallbacks(): array
     {
@@ -261,7 +260,7 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
     private function createCallbackEntity(): CallbackEntity
     {
         return CallbackEntity::create(
-            CallbackInterface::TYPE_COMPILATION_FAILED,
+            CallbackEntity::TYPE_COMPILATION_FAILED,
             'non-empty reference',
             []
         );

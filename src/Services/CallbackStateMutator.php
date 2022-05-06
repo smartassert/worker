@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CallbackStateMutator
@@ -13,38 +13,38 @@ class CallbackStateMutator
     {
     }
 
-    public function setQueued(CallbackInterface $callback): void
+    public function setQueued(CallbackEntity $callback): void
     {
-        if (in_array($callback->getState(), [CallbackInterface::STATE_AWAITING, CallbackInterface::STATE_SENDING])) {
-            $this->set($callback, CallbackInterface::STATE_QUEUED);
+        if (in_array($callback->getState(), [CallbackEntity::STATE_AWAITING, CallbackEntity::STATE_SENDING])) {
+            $this->set($callback, CallbackEntity::STATE_QUEUED);
         }
     }
 
-    public function setSending(CallbackInterface $callback): void
+    public function setSending(CallbackEntity $callback): void
     {
-        if (CallbackInterface::STATE_QUEUED === $callback->getState()) {
-            $this->set($callback, CallbackInterface::STATE_SENDING);
+        if (CallbackEntity::STATE_QUEUED === $callback->getState()) {
+            $this->set($callback, CallbackEntity::STATE_SENDING);
         }
     }
 
-    public function setFailed(CallbackInterface $callback): void
+    public function setFailed(CallbackEntity $callback): void
     {
-        if (in_array($callback->getState(), [CallbackInterface::STATE_QUEUED, CallbackInterface::STATE_SENDING])) {
-            $this->set($callback, CallbackInterface::STATE_FAILED);
+        if (in_array($callback->getState(), [CallbackEntity::STATE_QUEUED, CallbackEntity::STATE_SENDING])) {
+            $this->set($callback, CallbackEntity::STATE_FAILED);
         }
     }
 
-    public function setComplete(CallbackInterface $callback): void
+    public function setComplete(CallbackEntity $callback): void
     {
-        if (CallbackInterface::STATE_SENDING === $callback->getState()) {
-            $this->set($callback, CallbackInterface::STATE_COMPLETE);
+        if (CallbackEntity::STATE_SENDING === $callback->getState()) {
+            $this->set($callback, CallbackEntity::STATE_COMPLETE);
         }
     }
 
     /**
-     * @param CallbackInterface::STATE_* $state
+     * @param CallbackEntity::STATE_* $state
      */
-    private function set(CallbackInterface $callback, string $state): void
+    private function set(CallbackEntity $callback, string $state): void
     {
         $callback->setState($state);
 
