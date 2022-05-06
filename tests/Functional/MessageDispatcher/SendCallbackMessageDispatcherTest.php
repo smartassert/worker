@@ -139,7 +139,10 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
         $failingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "failing step" }');
 
-        $genericTest = Test::create($testConfiguration, 'Test/test.yml', '', 1, 1);
+        $relativeTestSource = 'Test/test.yml';
+        $testSource = '/app/source/' . $relativeTestSource;
+
+        $genericTest = Test::create($testConfiguration, $testSource, '', 1, 1);
 
         return [
             JobReadyEvent::class => [
@@ -148,30 +151,24 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedCallbackPayload' => [],
             ],
             StartedEvent::class => [
-                'event' => new StartedEvent('/app/source/Test/test.yml'),
+                'event' => new StartedEvent($testSource),
                 'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_STARTED,
                 'expectedCallbackPayload' => [
-                    'source' => '/app/source/Test/test.yml',
+                    'source' => $testSource,
                 ],
             ],
             PassedEvent::class => [
-                'event' => new PassedEvent(
-                    '/app/source/Test/test.yml',
-                    (new MockSuiteManifest())->getMock()
-                ),
+                'event' => new PassedEvent($testSource, (new MockSuiteManifest())->getMock()),
                 'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_PASSED,
                 'expectedCallbackPayload' => [
-                    'source' => '/app/source/Test/test.yml',
+                    'source' => $testSource,
                 ],
             ],
             FailedEvent::class => [
-                'event' => new FailedEvent(
-                    '/app/source/Test/test.yml',
-                    $sourceCompileFailureEventOutput
-                ),
+                'event' => new FailedEvent($testSource, $sourceCompileFailureEventOutput),
                 'expectedCallbackType' => CallbackInterface::TYPE_COMPILATION_FAILED,
                 'expectedCallbackPayload' => [
-                    'source' => '/app/source/Test/test.yml',
+                    'source' => $testSource,
                     'output' => [
                         'compile-failure-key' => 'value',
                     ],
@@ -188,7 +185,11 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedCallbackPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent($genericTest, new Document('document-key: value')),
+                'event' => new TestStartedEvent(
+                    $genericTest,
+                    new Document('document-key: value'),
+                    $relativeTestSource
+                ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_STARTED,
                 'expectedCallbackPayload' => [
                     'document-key' => 'value',
@@ -221,7 +222,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
                     $genericTest->setState(Test::STATE_COMPLETE),
-                    new Document('document-key: value')
+                    new Document('document-key: value'),
+                    $relativeTestSource
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_PASSED,
                 'expectedCallbackPayload' => [
@@ -231,7 +233,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent(
                     $genericTest->setState(Test::STATE_FAILED),
-                    new Document('document-key: value')
+                    new Document('document-key: value'),
+                    $relativeTestSource
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_FAILED,
                 'expectedCallbackPayload' => [

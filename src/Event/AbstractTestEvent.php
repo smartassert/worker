@@ -10,8 +10,11 @@ use webignition\YamlDocument\Document;
 
 abstract class AbstractTestEvent extends Event implements TestEventInterface
 {
-    public function __construct(private Test $test, private Document $document)
-    {
+    public function __construct(
+        private readonly Test $test,
+        private readonly Document $document,
+        private readonly string $path
+    ) {
     }
 
     public function getTest(): Test
@@ -22,5 +25,10 @@ abstract class AbstractTestEvent extends Event implements TestEventInterface
     public function getDocument(): Document
     {
         return $this->document;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
     }
 }
