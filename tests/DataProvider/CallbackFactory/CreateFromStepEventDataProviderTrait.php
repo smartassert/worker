@@ -38,7 +38,6 @@ trait CreateFromStepEventDataProviderTrait
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
                     Test::create($testConfiguration, $passingStepSource, '', 1, 1),
-                    $passingStepDocument,
                     new Step($passingStepDocument)
                 ),
                 'expectedCallback' => CallbackEntity::create(
@@ -50,7 +49,6 @@ trait CreateFromStepEventDataProviderTrait
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
                     Test::create($testConfiguration, $failingStepSource, '', 1, 1),
-                    $failingStepDocument,
                     new Step($failingStepDocument)
                 ),
                 'expectedCallback' => CallbackEntity::create(

@@ -196,7 +196,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent($genericTest, $passingStepDocument, new Step($passingStepDocument)),
+                'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument)),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_PASSED,
                 'expectedCallbackPayload' => [
                     'type' => 'step',
@@ -208,7 +208,6 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
                     $genericTest->setState(TestEntity::STATE_FAILED),
-                    $failingStepDocument,
                     new Step($failingStepDocument)
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_STEP_FAILED,
