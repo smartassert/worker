@@ -18,7 +18,7 @@ class TestExecutor
     public function __construct(
         private readonly Client $delegatorClient,
         private readonly YamlDocumentFactory $yamlDocumentFactory,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private EventDispatcherInterface $eventDispatcher,
         private readonly TestPathMutator $testPathMutator,
     ) {
     }
