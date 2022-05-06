@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\HttpMessage;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\HttpMessage\CallbackRequest;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class CallbackRequestTest extends TestCase
             'key2' => 'value2',
         ];
 
-        $callback = \Mockery::mock(CallbackInterface::class);
+        $callback = \Mockery::mock(CallbackEntity::class);
         $callback
             ->shouldReceive('getType')
             ->andReturn($callbackType)

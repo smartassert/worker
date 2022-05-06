@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Repository\CallbackRepository;
 
 class CompilationState implements \Stringable
@@ -31,7 +31,7 @@ class CompilationState implements \Stringable
      */
     public function __toString(): string
     {
-        if (0 !== $this->callbackRepository->getTypeCount(CallbackInterface::TYPE_COMPILATION_FAILED)) {
+        if (0 !== $this->callbackRepository->getTypeCount(CallbackEntity::TYPE_COMPILATION_FAILED)) {
             return CompilationState::STATE_FAILED;
         }
 

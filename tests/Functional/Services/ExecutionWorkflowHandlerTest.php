@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Event\ExecutionStartedEvent;
@@ -351,7 +350,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $callbacks = $callbackRepository->findAll();
         $expectedCallback = array_pop($callbacks);
 
-        self::assertInstanceOf(CallbackInterface::class, $expectedCallback);
+        self::assertInstanceOf(CallbackEntity::class, $expectedCallback);
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,

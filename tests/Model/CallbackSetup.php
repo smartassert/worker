@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 
 class CallbackSetup
 {
     /**
-     * @var CallbackInterface::TYPE_*
+     * @var CallbackEntity::TYPE_*
      */
     private string $type;
 
@@ -19,19 +19,19 @@ class CallbackSetup
     private array $payload;
 
     /**
-     * @var CallbackInterface::STATE_*
+     * @var CallbackEntity::STATE_*
      */
     private string $state;
 
     public function __construct()
     {
-        $this->type = CallbackInterface::TYPE_COMPILATION_FAILED;
+        $this->type = CallbackEntity::TYPE_COMPILATION_FAILED;
         $this->payload = [];
-        $this->state = CallbackInterface::STATE_AWAITING;
+        $this->state = CallbackEntity::STATE_AWAITING;
     }
 
     /**
-     * @return CallbackInterface::TYPE_*
+     * @return CallbackEntity::TYPE_*
      */
     public function getType(): string
     {
@@ -47,7 +47,7 @@ class CallbackSetup
     }
 
     /**
-     * @return CallbackInterface::STATE_*
+     * @return CallbackEntity::STATE_*
      */
     public function getState(): string
     {
@@ -55,7 +55,7 @@ class CallbackSetup
     }
 
     /**
-     * @param CallbackInterface::STATE_* $state
+     * @param CallbackEntity::STATE_* $state
      *
      * @return $this
      */
@@ -68,7 +68,7 @@ class CallbackSetup
     }
 
     /**
-     * @param CallbackInterface::TYPE_* $type
+     * @param CallbackEntity::TYPE_* $type
      *
      * @return $this
      */

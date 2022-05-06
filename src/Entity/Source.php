@@ -8,7 +8,7 @@ use App\Repository\SourceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SourceRepository::class)]
-class Source implements EntityInterface
+class Source
 {
     public const TYPE_TEST = 'test';
     public const TYPE_RESOURCE = 'resource';

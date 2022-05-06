@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
@@ -24,7 +24,7 @@ class Environment
     private array $tests = [];
 
     /**
-     * @var CallbackInterface[]
+     * @var CallbackEntity[]
      */
     private array $callbacks = [];
 
@@ -50,7 +50,7 @@ class Environment
     }
 
     /**
-     * @return CallbackInterface[]
+     * @return CallbackEntity[]
      */
     public function getCallbacks(): array
     {
@@ -88,7 +88,7 @@ class Environment
     }
 
     /**
-     * @param CallbackInterface[] $callbacks
+     * @param CallbackEntity[] $callbacks
      */
     public function withCallbacks(array $callbacks): self
     {

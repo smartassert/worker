@@ -8,7 +8,7 @@ use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
-class Job implements \JsonSerializable, EntityInterface
+class Job implements \JsonSerializable
 {
     public const ID = 1;
 

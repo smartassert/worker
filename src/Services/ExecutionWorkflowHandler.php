@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Test;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -72,7 +72,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         $executionStateComplete = $this->executionState->is(ExecutionState::STATE_COMPLETE);
         $hasExecutionCompletedCallback = $this->callbackRepository->hasForType(
-            CallbackInterface::TYPE_EXECUTION_COMPLETED
+            CallbackEntity::TYPE_EXECUTION_COMPLETED
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedCallback) {

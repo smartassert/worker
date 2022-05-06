@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Repository;
 
-use App\Entity\EntityInterface;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Repository\TestConfigurationRepository;
@@ -339,7 +338,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         ];
     }
 
-    protected function persistEntity(EntityInterface $entity): void
+    protected function persistEntity(object $entity): void
     {
         if ($entity instanceof Test) {
             ObjectReflector::setProperty(

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TestConfigurationRepository::class)]
 #[ORM\Table(name: 'test_configuration')]
 #[ORM\UniqueConstraint(name: 'browser_url_idx', columns: ['browser', 'url'])]
-class TestConfiguration implements \JsonSerializable, EntityInterface
+class TestConfiguration implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\CallbackFactory;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Event\JobCompletedEvent;
 
 trait CreateFromJobCompletedEventDataProviderTrait
@@ -19,7 +18,7 @@ trait CreateFromJobCompletedEventDataProviderTrait
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
                 'expectedCallback' => CallbackEntity::create(
-                    CallbackInterface::TYPE_JOB_COMPLETED,
+                    CallbackEntity::TYPE_JOB_COMPLETED,
                     '{{ job_label }}',
                     []
                 ),

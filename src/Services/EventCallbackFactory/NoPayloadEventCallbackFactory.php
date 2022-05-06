@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\EventCallbackFactory;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -28,7 +28,7 @@ class NoPayloadEventCallbackFactory extends AbstractEventCallbackFactory
             ;
     }
 
-    public function createForEvent(Job $job, Event $event): ?CallbackInterface
+    public function createForEvent(Job $job, Event $event): ?CallbackEntity
     {
         if ($this->handles($event)) {
             return $this->create($job, $event, []);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
+use App\Entity\Callback\CallbackEntity;
 use App\Repository\JobRepository;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -28,7 +28,7 @@ class CallbackFactory
         });
     }
 
-    public function createForEvent(Event $event): ?CallbackInterface
+    public function createForEvent(Event $event): ?CallbackEntity
     {
         $job = $this->jobRepository->get();
         if (null === $job) {
