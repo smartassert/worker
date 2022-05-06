@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageHandler;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
@@ -29,7 +29,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
     private SendCallbackHandler $handler;
     private CallbackRepository $callbackRepository;
-    private CallbackEntity $callback;
+    private WorkerEvent $callback;
 
     protected function setUp(): void
     {
@@ -52,7 +52,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
             ->withJobSetup(new JobSetup())
             ->withCallbackSetups([
                 (new CallbackSetup())
-                    ->withState(CallbackEntity::STATE_QUEUED),
+                    ->withState(WorkerEvent::STATE_QUEUED),
             ])
         ;
 
@@ -64,7 +64,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         self::assertCount(1, $callbacks);
 
         $callback = $callbacks[0];
-        self::assertInstanceOf(CallbackEntity::class, $callback);
+        self::assertInstanceOf(WorkerEvent::class, $callback);
 
         $this->callback = $callback;
     }
@@ -72,7 +72,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeSuccess(): void
     {
         $expectedSentCallback = clone $this->callback;
-        $expectedSentCallback->setState(CallbackEntity::STATE_SENDING);
+        $expectedSentCallback->setState(WorkerEvent::STATE_SENDING);
 
         $this->setCallbackSender((new MockCallbackSender())
             ->withSendCall($expectedSentCallback)
@@ -80,13 +80,13 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
         $message = new SendCallbackMessage((int) $this->callback->getId());
 
-        self::assertSame(CallbackEntity::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(WorkerEvent::STATE_QUEUED, $this->callback->getState());
 
         ($this->handler)($message);
 
         $callback = $this->callbackRepository->find($this->callback->getId());
-        self::assertInstanceOf(CallbackEntity::class, $callback);
-        self::assertSame(CallbackEntity::STATE_COMPLETE, $this->callback->getState());
+        self::assertInstanceOf(WorkerEvent::class, $callback);
+        self::assertSame(WorkerEvent::STATE_COMPLETE, $this->callback->getState());
     }
 
     /**
@@ -95,7 +95,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeFailure(\Exception $callbackSenderException, string $expectedCallbackState): void
     {
         $expectedSentCallback = clone $this->callback;
-        $expectedSentCallback->setState(CallbackEntity::STATE_SENDING);
+        $expectedSentCallback->setState(WorkerEvent::STATE_SENDING);
 
         $this->setCallbackSender((new MockCallbackSender())
             ->withSendCall($expectedSentCallback, $callbackSenderException)
@@ -103,7 +103,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
         $message = new SendCallbackMessage((int) $this->callback->getId());
 
-        self::assertSame(CallbackEntity::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(WorkerEvent::STATE_QUEUED, $this->callback->getState());
 
         try {
             ($this->handler)($message);
@@ -113,7 +113,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         }
 
         $callback = $this->callbackRepository->find($this->callback->getId());
-        self::assertInstanceOf(CallbackEntity::class, $callback);
+        self::assertInstanceOf(WorkerEvent::class, $callback);
         self::assertSame($expectedCallbackState, $this->callback->getState());
     }
 
@@ -125,14 +125,14 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         return [
             'HTTP 400' => [
                 'callbackSenderException' => new NonSuccessfulHttpResponseException(
-                    new CallbackEntity(),
+                    new WorkerEvent(),
                     new Response(400)
                 ),
-                'expectedCallbackState' => CallbackEntity::STATE_SENDING,
+                'expectedCallbackState' => WorkerEvent::STATE_SENDING,
             ],
             'Guzzle ConnectException' => [
                 'callbackSenderException' => \Mockery::mock(ConnectException::class),
-                'expectedCallbackState' => CallbackEntity::STATE_SENDING,
+                'expectedCallbackState' => WorkerEvent::STATE_SENDING,
             ],
         ];
     }

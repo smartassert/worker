@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\Repository\CallbackRepository;
@@ -30,7 +30,7 @@ class SendCallbackHandler implements MessageHandlerInterface
     {
         $callback = $this->repository->find($message->getCallbackId());
 
-        if ($callback instanceof CallbackEntity) {
+        if ($callback instanceof WorkerEvent) {
             $this->stateMutator->setSending($callback);
             $this->sender->send($callback);
             $this->stateMutator->setComplete($callback);

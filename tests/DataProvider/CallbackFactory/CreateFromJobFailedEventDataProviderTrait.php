@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\DataProvider\CallbackFactory;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Event\JobFailedEvent;
 
 trait CreateFromJobFailedEventDataProviderTrait
@@ -17,8 +17,8 @@ trait CreateFromJobFailedEventDataProviderTrait
         return [
             JobFailedEvent::class => [
                 'event' => new JobFailedEvent(),
-                'expectedCallback' => CallbackEntity::create(
-                    CallbackEntity::TYPE_JOB_FAILED,
+                'expectedCallback' => WorkerEvent::create(
+                    WorkerEvent::TYPE_JOB_FAILED,
                     '{{ job_label }}',
                     []
                 ),

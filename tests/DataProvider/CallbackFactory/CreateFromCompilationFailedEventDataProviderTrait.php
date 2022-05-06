@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\DataProvider\CallbackFactory;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
@@ -30,8 +30,8 @@ trait CreateFromCompilationFailedEventDataProviderTrait
         return [
             FailedEvent::class => [
                 'event' => new FailedEvent($source, $errorOutput),
-                'expectedCallback' => CallbackEntity::create(
-                    CallbackEntity::TYPE_COMPILATION_FAILED,
+                'expectedCallback' => WorkerEvent::create(
+                    WorkerEvent::TYPE_COMPILATION_FAILED,
                     '{{ job_label }}' . $source,
                     [
                         'source' => '/app/source/test.yml',

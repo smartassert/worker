@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
@@ -16,9 +16,9 @@ class IntegrationCallbackRequestFactory
     }
 
     /**
-     * @param CallbackEntity::TYPE_* $type
-     * @param non-empty-string       $reference
-     * @param array<mixed>           $payload
+     * @param WorkerEvent::TYPE_* $type
+     * @param non-empty-string    $reference
+     * @param array<mixed>        $payload
      */
     public function create(string $type, string $reference, array $payload): RequestInterface
     {

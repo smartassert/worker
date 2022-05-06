@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Callback;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class CallbackEntity
+class WorkerEvent
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_QUEUED = 'queued';
@@ -75,7 +75,7 @@ class CallbackEntity
      */
     public static function create(string $type, string $reference, array $payload): self
     {
-        $callback = new CallbackEntity();
+        $callback = new WorkerEvent();
         $callback->state = self::STATE_AWAITING;
         $callback->type = $type;
         $callback->reference = $reference;
@@ -84,7 +84,7 @@ class CallbackEntity
         return $callback;
     }
 
-    public function getEntity(): CallbackEntity
+    public function getEntity(): WorkerEvent
     {
         return $this;
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
 use App\Services\CallbackFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -99,7 +99,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromExecutionCompletedEventDataProvider
      * @dataProvider createFromJobFailedEventDataProvider
      */
-    public function testCreateForEvent(Event $event, CallbackEntity $expectedCallback): void
+    public function testCreateForEvent(Event $event, WorkerEvent $expectedCallback): void
     {
         $jobLabel = md5((string) rand());
 
@@ -113,12 +113,12 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
         $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
         ObjectReflector::setProperty(
             $expectedCallback,
-            CallbackEntity::class,
+            WorkerEvent::class,
             'reference',
             md5($expectedReferenceSource)
         );
 
-        self::assertInstanceOf(CallbackEntity::class, $callback);
+        self::assertInstanceOf(WorkerEvent::class, $callback);
         self::assertNotNull($callback->getId());
         self::assertSame($expectedCallback->getType(), $callback->getType());
         self::assertSame($expectedCallback->getReference(), $callback->getReference());

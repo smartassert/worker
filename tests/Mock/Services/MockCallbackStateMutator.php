@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Services\CallbackStateMutator;
 use Mockery\MockInterface;
 
@@ -48,7 +48,7 @@ class MockCallbackStateMutator
         return $this;
     }
 
-    public function withSetSendingCall(CallbackEntity $callback): self
+    public function withSetSendingCall(WorkerEvent $callback): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
