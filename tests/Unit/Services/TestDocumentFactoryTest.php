@@ -51,7 +51,7 @@ class TestDocumentFactoryTest extends TestCase
                     ],
                 ],
             ],
-            $document->parse()
+            $document->getData()
         );
     }
 }

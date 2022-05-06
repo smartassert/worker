@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Callback\CallbackInterface;
-use App\Entity\Test;
+use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -23,6 +23,7 @@ use App\Event\TestStartedEvent;
 use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Step;
+use App\Model\Document\Test as TestDocument;
 use App\Repository\CallbackRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -86,7 +87,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(Test::class);
+            $entityRemover->removeForEntity(TestEntity::class);
         }
     }
 
@@ -142,7 +143,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
 
-        $genericTest = Test::create($testConfiguration, $testSource, '', 1, 1);
+        $genericTest = TestEntity::create($testConfiguration, $testSource, '', 1, 1);
 
         return [
             JobReadyEvent::class => [
@@ -187,8 +188,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent(
                     $genericTest,
-                    new Document('document-key: value'),
-                    $relativeTestSource
+                    new TestDocument(new Document('document-key: value'))
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_STARTED,
                 'expectedCallbackPayload' => [
@@ -207,7 +207,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    $genericTest->setState(Test::STATE_FAILED),
+                    $genericTest->setState(TestEntity::STATE_FAILED),
                     $failingStepDocument,
                     new Step($failingStepDocument)
                 ),
@@ -221,9 +221,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    $genericTest->setState(Test::STATE_COMPLETE),
-                    new Document('document-key: value'),
-                    $relativeTestSource
+                    $genericTest->setState(TestEntity::STATE_COMPLETE),
+                    new TestDocument(new Document('document-key: value'))
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_PASSED,
                 'expectedCallbackPayload' => [
@@ -232,9 +231,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent(
-                    $genericTest->setState(Test::STATE_FAILED),
-                    new Document('document-key: value'),
-                    $relativeTestSource
+                    $genericTest->setState(TestEntity::STATE_FAILED),
+                    new TestDocument(new Document('document-key: value'))
                 ),
                 'expectedCallbackType' => CallbackInterface::TYPE_TEST_FAILED,
                 'expectedCallbackPayload' => [

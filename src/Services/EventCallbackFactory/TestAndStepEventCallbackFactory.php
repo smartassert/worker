@@ -19,7 +19,11 @@ class TestAndStepEventCallbackFactory extends AbstractEventCallbackFactory
 
     public function createForEvent(Job $job, Event $event): ?CallbackInterface
     {
-        if ($event instanceof TestEventInterface || $event instanceof StepEventInterface) {
+        if ($event instanceof TestEventInterface) {
+            return $this->create($job, $event, $event->getDocument()->getData());
+        }
+
+        if ($event instanceof StepEventInterface) {
             $document = $event->getDocument();
 
             $documentData = $document->parse();
