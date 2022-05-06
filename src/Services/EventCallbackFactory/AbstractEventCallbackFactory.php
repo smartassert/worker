@@ -84,10 +84,7 @@ abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInter
 
         if ($event instanceof StepEventInterface) {
             $referenceComponents[] = $event->getTest()->getSource();
-        }
-
-        if ($event instanceof StepEventInterface) {
-            $referenceComponents[] = $event->getStep()->getName();
+            $referenceComponents[] = $event->getDocument()->getName();
         }
 
         return md5(implode('', $referenceComponents));

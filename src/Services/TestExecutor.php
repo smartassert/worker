@@ -57,11 +57,11 @@ class TestExecutor
 
         if ($step->isStep()) {
             if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $document, $step));
+                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $step));
             }
 
             if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $document, $step));
+                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $step));
             }
         }
     }

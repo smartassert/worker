@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Test;
-use App\Model\Document\Step;
-use webignition\YamlDocument\Document;
+use App\Entity\Test as TestEntity;
+use App\Model\Document\Step as StepDocument;
 
 interface StepEventInterface
 {
-    public function getTest(): Test;
+    public function getTest(): TestEntity;
 
-    public function getDocument(): Document;
-
-    public function getStep(): Step;
+    public function getDocument(): StepDocument;
 }
