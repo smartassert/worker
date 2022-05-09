@@ -6,7 +6,7 @@
 parameters:
     compiler_source_directory: '%env(COMPILER_SOURCE_DIRECTORY)%'
     compiler_target_directory: '%env(COMPILER_TARGET_DIRECTORY)%'
-    callback_retry_limit: '%env(int:CALLBACK_RETRY_LIMIT)%'
+    event_delivery_retry_limit: '%env(int:EVENT_DELIVERY_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(JOB_TIMEOUT_CHECK_PERIOD_MS)%'
 
 services:
@@ -109,7 +109,7 @@ services:
     app.messenger.retry_strategy.callback.multiplier:
         class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
         arguments:
-            $maxRetries: '%callback_retry_limit%'
+            $maxRetries: '%event_delivery_retry_limit%'
             $delayMilliseconds: 1000
             $multiplier: 2
             $maxDelayMilliseconds: 0
