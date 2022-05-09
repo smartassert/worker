@@ -26,7 +26,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private EventDispatcherInterface $eventDispatcher;
-    private WorkerEvent $callback;
+    private WorkerEvent $workerEvent;
 
     protected function setUp(): void
     {
@@ -58,11 +58,11 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                     ->withState(WorkerEvent::STATE_QUEUED),
             ]));
 
-        $callbacks = $environment->getCallbacks();
-        $callback = $callbacks[0];
-        self::assertInstanceOf(WorkerEvent::class, $callback);
+        $workerEvents = $environment->getWorkerEvents();
+        $workerEvent = $workerEvents[0];
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
 
-        $this->callback = $callback;
+        $this->workerEvent = $workerEvent;
     }
 
     /**
@@ -70,15 +70,15 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
      *
      * @param callable(WorkerEvent): WorkerMessageFailedEvent $eventCreator
      */
-    public function testHandleEvent(callable $eventCreator, string $expectedCallbackState): void
+    public function testHandleEvent(callable $eventCreator, string $expectedWorkerEventState): void
     {
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
 
         $this->eventDispatcher->dispatch(
-            $eventCreator($this->callback)
+            $eventCreator($this->workerEvent)
         );
 
-        self::assertSame($expectedCallbackState, $this->callback->getState());
+        self::assertSame($expectedWorkerEventState, $this->workerEvent->getState());
     }
 
     /**
@@ -88,8 +88,8 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
     {
         return [
             'non-retryable due to unrecoverable exception' => [
-                'eventCreator' => function (WorkerEvent $callback): WorkerMessageFailedEvent {
-                    $message = new SendCallbackMessage((int) $callback->getId());
+                'eventCreator' => function (WorkerEvent $workerEvent): WorkerMessageFailedEvent {
+                    $message = new SendCallbackMessage((int) $workerEvent->getId());
                     $envelope = new Envelope($message);
 
                     return new WorkerMessageFailedEvent(
@@ -98,11 +98,11 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new UnrecoverableMessageHandlingException()
                     );
                 },
-                'expectedCallbackState' => WorkerEvent::STATE_FAILED,
+                'expectedWorkerEventState' => WorkerEvent::STATE_FAILED,
             ],
             'non-retryable due to retry attempt exhaustion' => [
-                'eventCreator' => function (WorkerEvent $callback): WorkerMessageFailedEvent {
-                    $message = new SendCallbackMessage((int) $callback->getId());
+                'eventCreator' => function (WorkerEvent $workerEvent): WorkerMessageFailedEvent {
+                    $message = new SendCallbackMessage((int) $workerEvent->getId());
                     $envelope = new Envelope($message, [
                         new RedeliveryStamp(3)
                     ]);
@@ -113,7 +113,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new \RuntimeException('Unfortunate event')
                     );
                 },
-                'expectedCallbackState' => WorkerEvent::STATE_FAILED,
+                'expectedWorkerEventState' => WorkerEvent::STATE_FAILED,
             ],
         ];
     }

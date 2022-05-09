@@ -11,8 +11,8 @@ use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\TestPassedEvent;
 use App\Message\ExecuteTestMessage;
-use App\Repository\CallbackRepository;
 use App\Repository\TestRepository;
+use App\Repository\WorkerEventRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -23,7 +23,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         private MessageBusInterface $messageBus,
         private TestRepository $testRepository,
         private ExecutionState $executionState,
-        private CallbackRepository $callbackRepository,
+        private WorkerEventRepository $workerEventRepository,
         private EventDispatcherInterface $eventDispatcher
     ) {
     }
@@ -71,11 +71,11 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public function dispatchExecutionCompletedEvent(): void
     {
         $executionStateComplete = $this->executionState->is(ExecutionState::STATE_COMPLETE);
-        $hasExecutionCompletedCallback = $this->callbackRepository->hasForType(
+        $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             WorkerEvent::TYPE_EXECUTION_COMPLETED
         );
 
-        if (true === $executionStateComplete && false === $hasExecutionCompletedCallback) {
+        if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $this->eventDispatcher->dispatch(new ExecutionCompletedEvent());
         }
     }

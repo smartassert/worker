@@ -8,9 +8,9 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationState;
-use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\ExecutionState;
+use App\Services\WorkerEventState;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\CallableInvoker;
@@ -118,7 +118,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
-        self::assertSame(CallbackState::STATE_COMPLETE, $statusData['callback_state']);
+        self::assertSame(WorkerEventState::STATE_COMPLETE, $statusData['callback_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
 
         $testDataCollection = $statusData['tests'];

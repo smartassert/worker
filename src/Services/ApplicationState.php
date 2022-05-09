@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
+use App\Repository\WorkerEventRepository;
 
 class ApplicationState implements \Stringable
 {
@@ -23,8 +23,8 @@ class ApplicationState implements \Stringable
         private readonly JobRepository $jobRepository,
         private CompilationState $compilationState,
         private ExecutionState $executionState,
-        private CallbackState $callbackState,
-        private CallbackRepository $callbackRepository,
+        private WorkerEventState $workerEventState,
+        private WorkerEventRepository $workerEventRepository,
         private SourceRepository $sourceRepository,
     ) {
     }
@@ -38,7 +38,7 @@ class ApplicationState implements \Stringable
             return self::STATE_AWAITING_JOB;
         }
 
-        if (0 !== $this->callbackRepository->getTypeCount(WorkerEvent::TYPE_JOB_TIME_OUT)) {
+        if (0 !== $this->workerEventRepository->getTypeCount(WorkerEvent::TYPE_JOB_TIME_OUT)) {
             return self::STATE_TIMED_OUT;
         }
 
@@ -54,7 +54,7 @@ class ApplicationState implements \Stringable
             return self::STATE_EXECUTING;
         }
 
-        if ($this->callbackState->is(CallbackState::STATE_AWAITING, CallbackState::STATE_RUNNING)) {
+        if ($this->workerEventState->is(WorkerEventState::STATE_AWAITING, WorkerEventState::STATE_RUNNING)) {
             return self::STATE_COMPLETING_CALLBACKS;
         }
 
