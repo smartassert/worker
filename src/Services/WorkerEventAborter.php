@@ -11,7 +11,7 @@ class WorkerEventAborter
 {
     public function __construct(
         private CallbackRepository $repository,
-        private CallbackStateMutator $stateMutator,
+        private WorkerEventStateMutator $workerEventStateMutator,
     ) {
     }
 
@@ -19,7 +19,7 @@ class WorkerEventAborter
     {
         $callback = $this->repository->find($id);
         if ($callback instanceof WorkerEvent) {
-            $this->stateMutator->setFailed($callback);
+            $this->workerEventStateMutator->setFailed($callback);
         }
     }
 }

@@ -21,8 +21,8 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\SendCallbackMessage;
-use App\Services\CallbackStateMutator;
 use App\Services\WorkerEventFactory;
+use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -32,7 +32,7 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-        private CallbackStateMutator $callbackStateMutator,
+        private WorkerEventStateMutator $workerEventStateMutator,
         private WorkerEventFactory $callbackFactory
     ) {
     }
@@ -103,7 +103,7 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
 
     public function dispatch(WorkerEvent $callback): Envelope
     {
-        $this->callbackStateMutator->setQueued($callback);
+        $this->workerEventStateMutator->setQueued($callback);
 
         return $this->messageBus->dispatch(new SendCallbackMessage((int) $callback->getId()));
     }

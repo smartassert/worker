@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Tests\Mock\Services;
 
 use App\Entity\WorkerEvent;
-use App\Services\CallbackStateMutator;
+use App\Services\WorkerEventStateMutator;
 use Mockery\MockInterface;
 
 class MockCallbackStateMutator
 {
-    private CallbackStateMutator $mock;
+    private WorkerEventStateMutator $mock;
 
     public function __construct()
     {
-        $this->mock = \Mockery::mock(CallbackStateMutator::class);
+        $this->mock = \Mockery::mock(WorkerEventStateMutator::class);
     }
 
-    public function getMock(): CallbackStateMutator
+    public function getMock(): WorkerEventStateMutator
     {
         return $this->mock;
     }

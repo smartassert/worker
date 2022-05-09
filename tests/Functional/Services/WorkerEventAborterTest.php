@@ -6,15 +6,15 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
-use App\Services\CallbackStateMutator;
 use App\Services\WorkerEventAborter;
+use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 
 class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 {
     private WorkerEventAborter $aborter;
     private CallbackRepository $callbackRepository;
-    private CallbackStateMutator $stateMutator;
+    private WorkerEventStateMutator $stateMutator;
 
     protected function setUp(): void
     {
@@ -32,8 +32,8 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         \assert($repository instanceof CallbackRepository);
         $this->callbackRepository = $repository;
 
-        $stateMutator = self::getContainer()->get(CallbackStateMutator::class);
-        \assert($stateMutator instanceof CallbackStateMutator);
+        $stateMutator = self::getContainer()->get(WorkerEventStateMutator::class);
+        \assert($stateMutator instanceof WorkerEventStateMutator);
         $this->stateMutator = $stateMutator;
     }
 

@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
-use App\Services\CallbackStateMutator;
+use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
+class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
 {
-    private CallbackStateMutator $callbackStateMutator;
+    private WorkerEventStateMutator $stateMutator;
     private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $callbackStateMutator = self::getContainer()->get(CallbackStateMutator::class);
-        \assert($callbackStateMutator instanceof CallbackStateMutator);
-        $this->callbackStateMutator = $callbackStateMutator;
+        $stateMutator = self::getContainer()->get(WorkerEventStateMutator::class);
+        \assert($stateMutator instanceof WorkerEventStateMutator);
+        $this->stateMutator = $stateMutator;
 
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
@@ -35,13 +35,13 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
      */
     public function testSetQueued(string $initialState, string $expectedState): void
     {
-        foreach ($this->createCallbacks() as $callback) {
+        foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
-                $callback,
+                $workerEvent,
                 $initialState,
                 $expectedState,
-                function (WorkerEvent $callback) {
-                    $this->callbackStateMutator->setQueued($callback);
+                function (WorkerEvent $workerEvent) {
+                    $this->stateMutator->setQueued($workerEvent);
                 }
             );
         }
@@ -84,13 +84,13 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
      */
     public function testSetSending(string $initialState, string $expectedState): void
     {
-        foreach ($this->createCallbacks() as $callback) {
+        foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
-                $callback,
+                $workerEvent,
                 $initialState,
                 $expectedState,
-                function (WorkerEvent $callback) {
-                    $this->callbackStateMutator->setSending($callback);
+                function (WorkerEvent $workerEvent) {
+                    $this->stateMutator->setSending($workerEvent);
                 }
             );
         }
@@ -133,13 +133,13 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
      */
     public function testSetFailed(string $initialState, string $expectedState): void
     {
-        foreach ($this->createCallbacks() as $callback) {
+        foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
-                $callback,
+                $workerEvent,
                 $initialState,
                 $expectedState,
-                function (WorkerEvent $callback) {
-                    $this->callbackStateMutator->setFailed($callback);
+                function (WorkerEvent $workerEvent) {
+                    $this->stateMutator->setFailed($workerEvent);
                 }
             );
         }
@@ -182,13 +182,13 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
      */
     public function testSetComplete(string $initialState, string $expectedState): void
     {
-        foreach ($this->createCallbacks() as $callback) {
+        foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
-                $callback,
+                $workerEvent,
                 $initialState,
                 $expectedState,
-                function (WorkerEvent $callback) {
-                    $this->callbackStateMutator->setComplete($callback);
+                function (WorkerEvent $workerEvent) {
+                    $this->stateMutator->setComplete($workerEvent);
                 }
             );
         }
@@ -230,34 +230,34 @@ class CallbackStateMutatorTest extends AbstractBaseFunctionalTest
      * @param WorkerEvent::STATE_* $expectedState
      */
     private function doSetAsStateTest(
-        WorkerEvent $callback,
+        WorkerEvent $workerEvent,
         string $initialState,
         string $expectedState,
         callable $setter
     ): void {
-        $callback->setState($initialState);
+        $workerEvent->setState($initialState);
 
-        $this->entityManager->persist($callback);
+        $this->entityManager->persist($workerEvent);
         $this->entityManager->flush();
 
-        self::assertSame($initialState, $callback->getState());
+        self::assertSame($initialState, $workerEvent->getState());
 
-        $setter($callback);
+        $setter($workerEvent);
 
-        self::assertSame($expectedState, $callback->getState());
+        self::assertSame($expectedState, $workerEvent->getState());
     }
 
     /**
      * @return WorkerEvent[]
      */
-    private function createCallbacks(): array
+    private function createEntities(): array
     {
         return [
-            'default entity' => $this->createCallbackEntity(),
+            'default entity' => $this->createEntity(),
         ];
     }
 
-    private function createCallbackEntity(): WorkerEvent
+    private function createEntity(): WorkerEvent
     {
         return WorkerEvent::create(
             WorkerEvent::TYPE_COMPILATION_FAILED,
