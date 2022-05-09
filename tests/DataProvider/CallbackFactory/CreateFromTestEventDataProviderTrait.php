@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\CallbackFactory;
 
 use App\Entity\Callback\CallbackEntity;
-use App\Entity\TestConfiguration;
 use App\Entity\Test as TestEntity;
+use App\Entity\TestConfiguration;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
