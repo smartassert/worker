@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Repository;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
 use Mockery\MockInterface;
 
@@ -35,7 +35,7 @@ class MockCallbackRepository
         return $this;
     }
 
-    public function withFindCall(int $callbackId, ?CallbackEntity $callback): self
+    public function withFindCall(int $callbackId, ?WorkerEvent $callback): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;

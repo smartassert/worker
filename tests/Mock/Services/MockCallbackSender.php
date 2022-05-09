@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Services\CallbackSender;
 use Mockery\MockInterface;
 
@@ -22,7 +22,7 @@ class MockCallbackSender
         return $this->mock;
     }
 
-    public function withSendCall(CallbackEntity $callback, ?\Exception $exception = null): self
+    public function withSendCall(WorkerEvent $callback, ?\Exception $exception = null): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
@@ -31,7 +31,7 @@ class MockCallbackSender
         if ($exception instanceof \Throwable) {
             $this->mock
                 ->shouldReceive('send')
-                ->withArgs(function (CallbackEntity $callbackArg) use ($callback) {
+                ->withArgs(function (WorkerEvent $callbackArg) use ($callback) {
                     return $callbackArg->getId() === $callback->getId();
                 })
                 ->andThrow($exception)
@@ -39,7 +39,7 @@ class MockCallbackSender
         } else {
             $this->mock
                 ->shouldReceive('send')
-                ->withArgs(function (CallbackEntity $callbackArg) use ($callback) {
+                ->withArgs(function (WorkerEvent $callbackArg) use ($callback) {
                     return $callbackArg->getId() === $callback->getId();
                 })
             ;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
 use App\Services\CallbackAborter;
 use App\Services\CallbackStateMutator;
@@ -40,7 +40,7 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
     public function testAbort(): void
     {
         $callback = $this->callbackRepository->create(
-            CallbackEntity::TYPE_JOB_COMPLETED,
+            WorkerEvent::TYPE_JOB_COMPLETED,
             'non-empty reference',
             []
         );
@@ -49,13 +49,13 @@ class CallbackAborterTest extends AbstractBaseFunctionalTest
         $id = $callback->getId();
 
         self::assertIsInt($id);
-        self::assertNotSame(CallbackEntity::STATE_FAILED, $callback->getState());
+        self::assertNotSame(WorkerEvent::STATE_FAILED, $callback->getState());
 
         $this->aborter->abort($id);
 
         $callback = $this->callbackRepository->find($id);
-        \assert($callback instanceof CallbackEntity);
+        \assert($callback instanceof WorkerEvent);
 
-        self::assertSame(CallbackEntity::STATE_FAILED, $callback->getState());
+        self::assertSame(WorkerEvent::STATE_FAILED, $callback->getState());
     }
 }

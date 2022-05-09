@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Entity\WorkerEvent;
 use App\Services\ApplicationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
@@ -37,7 +37,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Source::class);
             $entityRemover->removeForEntity(Test::class);
@@ -132,7 +132,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
@@ -151,8 +151,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_SENDING)
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_SENDING)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETING_CALLBACKS,
             ],
@@ -171,8 +171,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE)
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETE,
             ],
@@ -181,8 +181,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackEntity::TYPE_JOB_TIME_OUT)
-                            ->withState(CallbackEntity::STATE_COMPLETE),
+                            ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
+                            ->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_TIMED_OUT,
             ],
@@ -344,7 +344,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_EXECUTING,
@@ -373,8 +373,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_SENDING)
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_SENDING)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETING_CALLBACKS,
@@ -403,8 +403,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withCallbackSetups([
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(CallbackEntity::STATE_COMPLETE)
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETE,
@@ -423,8 +423,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackEntity::TYPE_JOB_TIME_OUT)
-                            ->withState(CallbackEntity::STATE_COMPLETE),
+                            ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
+                            ->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_TIMED_OUT,

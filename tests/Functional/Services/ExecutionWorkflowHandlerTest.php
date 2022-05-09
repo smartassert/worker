@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Test as TestEntity;
+use App\Entity\WorkerEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilation\PassedEvent;
@@ -73,7 +73,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(TestEntity::class);
         }
@@ -350,7 +350,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $callbacks = $callbackRepository->findAll();
         $expectedCallback = array_pop($callbacks);
 
-        self::assertInstanceOf(CallbackEntity::class, $expectedCallback);
+        self::assertInstanceOf(WorkerEvent::class, $expectedCallback);
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 
 class CallbackSetup
 {
     /**
-     * @var CallbackEntity::TYPE_*
+     * @var WorkerEvent::TYPE_*
      */
     private string $type;
 
@@ -19,19 +19,19 @@ class CallbackSetup
     private array $payload;
 
     /**
-     * @var CallbackEntity::STATE_*
+     * @var WorkerEvent::STATE_*
      */
     private string $state;
 
     public function __construct()
     {
-        $this->type = CallbackEntity::TYPE_COMPILATION_FAILED;
+        $this->type = WorkerEvent::TYPE_COMPILATION_FAILED;
         $this->payload = [];
-        $this->state = CallbackEntity::STATE_AWAITING;
+        $this->state = WorkerEvent::STATE_AWAITING;
     }
 
     /**
-     * @return CallbackEntity::TYPE_*
+     * @return WorkerEvent::TYPE_*
      */
     public function getType(): string
     {
@@ -47,7 +47,7 @@ class CallbackSetup
     }
 
     /**
-     * @return CallbackEntity::STATE_*
+     * @return WorkerEvent::STATE_*
      */
     public function getState(): string
     {
@@ -55,7 +55,7 @@ class CallbackSetup
     }
 
     /**
-     * @param CallbackEntity::STATE_* $state
+     * @param WorkerEvent::STATE_* $state
      *
      * @return $this
      */
@@ -68,7 +68,7 @@ class CallbackSetup
     }
 
     /**
-     * @param CallbackEntity::TYPE_* $type
+     * @param WorkerEvent::TYPE_* $type
      *
      * @return $this
      */

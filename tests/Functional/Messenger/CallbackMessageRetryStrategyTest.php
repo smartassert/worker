@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Messenger;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\Messenger\CallbackMessageRetryStrategy;
@@ -107,7 +107,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
             'throwable has response with no retry-after header, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
                 'throwable' => new NonSuccessfulHttpResponseException(
-                    new CallbackEntity(),
+                    new WorkerEvent(),
                     new Response()
                 ),
                 'expected' => 4000,
@@ -115,7 +115,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
             'throwable has response with date-based retry-after header, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
                 'throwable' => new NonSuccessfulHttpResponseException(
-                    new CallbackEntity(),
+                    new WorkerEvent(),
                     new Response(200, [
                         'retry-after' => (new \DateTime())->format('Y-m-d H:i:s'),
                     ])
@@ -125,7 +125,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
             'throwable has response with int-based retry-after header 10' => [
                 'retryCount' => self::MAX_RETRIES - 1,
                 'throwable' => new NonSuccessfulHttpResponseException(
-                    new CallbackEntity(),
+                    new WorkerEvent(),
                     new Response(200, [
                         'retry-after' => '10',
                     ])
@@ -135,7 +135,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
             'throwable has response with int-based retry-after header 20' => [
                 'retryCount' => self::MAX_RETRIES - 1,
                 'throwable' => new NonSuccessfulHttpResponseException(
-                    new CallbackEntity(),
+                    new WorkerEvent(),
                     new Response(200, [
                         'retry-after' => '20',
                     ])

@@ -2,33 +2,33 @@
 
 namespace App\Repository;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method null|CallbackEntity find($id, $lockMode = null, $lockVersion = null)
- * @method null|CallbackEntity findOneBy(array $criteria, array $orderBy = null)
- * @method CallbackEntity[]    findAll()
- * @method CallbackEntity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method null|WorkerEvent find($id, $lockMode = null, $lockVersion = null)
+ * @method null|WorkerEvent findOneBy(array $criteria, array $orderBy = null)
+ * @method WorkerEvent[]    findAll()
+ * @method WorkerEvent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
- * @extends ServiceEntityRepository<CallbackEntity>
+ * @extends ServiceEntityRepository<WorkerEvent>
  */
 class CallbackRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CallbackEntity::class);
+        parent::__construct($registry, WorkerEvent::class);
     }
 
     /**
-     * @param CallbackEntity::TYPE_* $type
-     * @param non-empty-string       $reference
-     * @param array<mixed>           $payload
+     * @param WorkerEvent::TYPE_* $type
+     * @param non-empty-string    $reference
+     * @param array<mixed>        $payload
      */
-    public function create(string $type, string $reference, array $payload): CallbackEntity
+    public function create(string $type, string $reference, array $payload): WorkerEvent
     {
-        $callback = CallbackEntity::create($type, $reference, $payload);
+        $callback = WorkerEvent::create($type, $reference, $payload);
 
         $this->_em->persist($callback);
         $this->_em->flush();
@@ -42,7 +42,7 @@ class CallbackRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param CallbackEntity::TYPE_* $type
+     * @param WorkerEvent::TYPE_* $type
      */
     public function getTypeCount(string $type): int
     {
