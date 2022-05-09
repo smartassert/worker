@@ -216,54 +216,64 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
                             CallbackInterface::TYPE_JOB_STARTED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_COMPILATION_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
                         'job/compiled' => $requestFactory->create(
                             CallbackInterface::TYPE_JOB_COMPILED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                         'execution/started' => $requestFactory->create(
                             CallbackInterface::TYPE_EXECUTION_STARTED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -277,6 +287,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
                             CallbackInterface::TYPE_STEP_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml' . 'verify page is open'),
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -300,6 +311,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -313,6 +325,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -326,6 +339,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
                             CallbackInterface::TYPE_STEP_PASSED,
+                            md5(
+                                $jobProperties->getLabel() .
+                                'Test/chrome-firefox-open-index.yml' .
+                                'verify page is open'
+                            ),
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -343,6 +361,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -356,6 +375,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -369,6 +389,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
                             CallbackInterface::TYPE_STEP_PASSED,
+                            md5(
+                                $jobProperties->getLabel() .
+                                'Test/chrome-firefox-open-index.yml' .
+                                'verify page is open'
+                            ),
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -386,6 +411,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -399,6 +425,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_STARTED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -412,6 +439,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
                             CallbackInterface::TYPE_STEP_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml' . 'verify page is open'),
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -429,6 +457,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_PASSED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -442,10 +471,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'execution/completed' => $requestFactory->create(
                             CallbackInterface::TYPE_EXECUTION_COMPLETED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                         'job/completed' => $requestFactory->create(
                             CallbackInterface::TYPE_JOB_COMPLETED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                     ]);
@@ -489,6 +520,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
                             CallbackInterface::TYPE_STEP_FAILED,
+                            md5(
+                                $jobProperties->getLabel() .
+                                'Test/chrome-open-index-with-step-failure.yml' .
+                                'fail on intentionally-missing element'
+                            ),
                             [
                                 'type' => 'step',
                                 'payload' => [
@@ -523,6 +559,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/failed' => $requestFactory->create(
                             CallbackInterface::TYPE_TEST_FAILED,
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-with-step-failure.yml'),
                             [
                                 'type' => 'test',
                                 'payload' => [
@@ -536,6 +573,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'job/failed' => $requestFactory->create(
                             CallbackInterface::TYPE_JOB_FAILED,
+                            md5($jobProperties->getLabel()),
                             []
                         ),
                     ]);

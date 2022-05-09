@@ -36,7 +36,8 @@ class CallbackRequestTest extends TestCase
         ;
         $callback
             ->shouldReceive('getReference')
-            ->andReturn($callbackReference);
+            ->andReturn($callbackReference)
+        ;
 
         $request = new CallbackRequest($callback, $job);
 
