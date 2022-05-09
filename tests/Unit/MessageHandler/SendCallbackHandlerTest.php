@@ -7,7 +7,7 @@ namespace App\Tests\Unit\MessageHandler;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\WorkerEventRepository;
-use App\Tests\Mock\Services\MockCallbackStateMutator;
+use App\Services\WorkerEventStateMutator;
 use App\Tests\Mock\Services\MockWorkerEventSender;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -33,11 +33,9 @@ class SendCallbackHandlerTest extends TestCase
             ->getMock()
         ;
 
-        $stateMutator = (new MockCallbackStateMutator())
-            ->withoutSetSendingCall()
-            ->withoutSetCompleteCall()
-            ->getMock()
-        ;
+        $stateMutator = \Mockery::mock(WorkerEventStateMutator::class);
+        $stateMutator->shouldNotReceive('setSending');
+        $stateMutator->shouldNotReceive('setComplete');
 
         $handler = new SendCallbackHandler($repository, $sender, $stateMutator);
 
