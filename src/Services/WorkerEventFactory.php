@@ -9,7 +9,7 @@ use App\Repository\JobRepository;
 use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CallbackFactory
+class WorkerEventFactory
 {
     /**
      * @var EventCallbackFactoryInterface[]

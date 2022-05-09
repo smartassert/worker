@@ -84,7 +84,7 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
-    App\Services\CallbackFactory:
+    App\Services\WorkerEventFactory:
         arguments:
             $eventCallbackFactories:
                 - '@App\Services\EventCallbackFactory\CompilationStartedEventCallbackFactory'

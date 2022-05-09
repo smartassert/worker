@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\CallbackFactory;
+use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationFailedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationPassedEventDataProviderTrait;
@@ -29,7 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
-class CallbackFactoryTest extends AbstractBaseFunctionalTest
+class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
     use CreateFromCompilationStartedEventDataProviderTrait;
@@ -45,7 +45,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     use CreateFromJobFailedEventDataProviderTrait;
     use CreateFromStepEventDataProviderTrait;
 
-    private CallbackFactory $callbackFactory;
+    private WorkerEventFactory $workerEventFactory;
     private EnvironmentFactory $environmentFactory;
     private JobRepository $jobRepository;
 
@@ -53,9 +53,9 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $callbackFactory = self::getContainer()->get(CallbackFactory::class);
-        \assert($callbackFactory instanceof CallbackFactory);
-        $this->callbackFactory = $callbackFactory;
+        $workerEventFactory = self::getContainer()->get(WorkerEventFactory::class);
+        \assert($workerEventFactory instanceof WorkerEventFactory);
+        $this->workerEventFactory = $workerEventFactory;
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
@@ -74,7 +74,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
     public function testCreateReturnsNullIfNoJob(): void
     {
         self::assertNull($this->jobRepository->get());
-        self::assertNull($this->callbackFactory->createForEvent(new Event()));
+        self::assertNull($this->workerEventFactory->createForEvent(new Event()));
     }
 
     public function testCreateForEventUnsupportedEvent(): void
@@ -82,7 +82,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
         $this->environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
 
         self::assertNotNull($this->jobRepository->get());
-        self::assertNull($this->callbackFactory->createForEvent(new Event()));
+        self::assertNull($this->workerEventFactory->createForEvent(new Event()));
     }
 
     /**
@@ -108,7 +108,7 @@ class CallbackFactoryTest extends AbstractBaseFunctionalTest
         ));
         self::assertNotNull($this->jobRepository->get());
 
-        $callback = $this->callbackFactory->createForEvent($event);
+        $callback = $this->workerEventFactory->createForEvent($event);
 
         $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
         ObjectReflector::setProperty(
