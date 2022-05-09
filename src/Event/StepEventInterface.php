@@ -12,4 +12,6 @@ interface StepEventInterface
     public function getTest(): TestEntity;
 
     public function getDocument(): StepDocument;
+
+    public function getPath(): string;
 }

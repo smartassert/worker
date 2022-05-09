@@ -16,9 +16,10 @@ use webignition\YamlDocument\Document;
 class TestExecutor
 {
     public function __construct(
-        private Client $delegatorClient,
-        private YamlDocumentFactory $yamlDocumentFactory,
+        private readonly Client $delegatorClient,
+        private readonly YamlDocumentFactory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
+        private readonly TestPathMutator $testPathMutator,
     ) {
     }
 
@@ -56,12 +57,14 @@ class TestExecutor
         $step = new Step($document);
 
         if ($step->isStep()) {
+            $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
+
             if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $step));
+                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $step, $path));
             }
 
             if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $step));
+                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $step, $path));
             }
         }
     }
