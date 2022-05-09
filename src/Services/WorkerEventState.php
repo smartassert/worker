@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 
 class WorkerEventState implements \Stringable
 {
@@ -14,7 +14,7 @@ class WorkerEventState implements \Stringable
     public const STATE_COMPLETE = 'complete';
 
     public function __construct(
-        private CallbackRepository $repository
+        private WorkerEventRepository $repository
     ) {
     }
 

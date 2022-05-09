@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Tests\Model\CallbackSetup;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TestCallbackFactory
 {
     public function __construct(
-        private readonly CallbackRepository $callbackRepository,
+        private readonly WorkerEventRepository $callbackRepository,
         private EntityManagerInterface $entityManager
     ) {
     }

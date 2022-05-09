@@ -24,7 +24,7 @@ use App\Event\TestEventInterface;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEventFactory implements EventFactoryInterface
@@ -51,7 +51,7 @@ abstract class AbstractEventFactory implements EventFactoryInterface
     ];
 
     public function __construct(
-        private readonly CallbackRepository $callbackRepository,
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
 
@@ -60,7 +60,7 @@ abstract class AbstractEventFactory implements EventFactoryInterface
      */
     protected function create(Job $job, Event $event, array $data): WorkerEvent
     {
-        return $this->callbackRepository->create(
+        return $this->workerEventRepository->create(
             self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class] ?? WorkerEvent::TYPE_UNKNOWN,
             $this->createReference($job, $event),
             $data

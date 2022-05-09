@@ -24,7 +24,7 @@ use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Services\TestFactory;
@@ -46,7 +46,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
     private EventDispatcherInterface $eventDispatcher;
     private MessengerAsserter $messengerAsserter;
-    private CallbackRepository $callbackRepository;
+    private WorkerEventRepository $callbackRepository;
 
     protected function setUp(): void
     {
@@ -60,8 +60,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRepository instanceof CallbackRepository);
+        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($callbackRepository instanceof WorkerEventRepository);
         $this->callbackRepository = $callbackRepository;
 
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);

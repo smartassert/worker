@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -13,7 +13,7 @@ use App\Tests\AbstractBaseFunctionalTest;
 class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 {
     private WorkerEventAborter $aborter;
-    private CallbackRepository $callbackRepository;
+    private WorkerEventRepository $callbackRepository;
     private WorkerEventStateMutator $stateMutator;
 
     protected function setUp(): void
@@ -24,12 +24,12 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         \assert($aborter instanceof WorkerEventAborter);
         $this->aborter = $aborter;
 
-        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRepository instanceof CallbackRepository);
+        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($callbackRepository instanceof WorkerEventRepository);
         $this->callbackRepository = $callbackRepository;
 
-        $repository = self::getContainer()->get(CallbackRepository::class);
-        \assert($repository instanceof CallbackRepository);
+        $repository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($repository instanceof WorkerEventRepository);
         $this->callbackRepository = $repository;
 
         $stateMutator = self::getContainer()->get(WorkerEventStateMutator::class);

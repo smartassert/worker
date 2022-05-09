@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @extends ServiceEntityRepository<WorkerEvent>
  */
-class CallbackRepository extends ServiceEntityRepository
+class WorkerEventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

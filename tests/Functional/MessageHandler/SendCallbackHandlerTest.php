@@ -9,7 +9,7 @@ use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\Services\MockCallbackSender;
@@ -28,7 +28,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private SendCallbackHandler $handler;
-    private CallbackRepository $callbackRepository;
+    private WorkerEventRepository $callbackRepository;
     private WorkerEvent $callback;
 
     protected function setUp(): void
@@ -39,8 +39,8 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         \assert($sendCallbackHandler instanceof SendCallbackHandler);
         $this->handler = $sendCallbackHandler;
 
-        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRepository instanceof CallbackRepository);
+        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($callbackRepository instanceof WorkerEventRepository);
         $this->callbackRepository = $callbackRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);

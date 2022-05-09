@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Tests\Services\EntityRemover;
 
-class CallbackRepositoryTest extends AbstractEntityRepositoryTest
+class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 {
-    private CallbackRepository $repository;
+    private WorkerEventRepository $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $repository = self::getContainer()->get(CallbackRepository::class);
-        \assert($repository instanceof CallbackRepository);
+        $repository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($repository instanceof WorkerEventRepository);
         $this->repository = $repository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);

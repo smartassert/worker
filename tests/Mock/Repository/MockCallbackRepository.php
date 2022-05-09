@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Tests\Mock\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use Mockery\MockInterface;
 
 class MockCallbackRepository
 {
-    private CallbackRepository $mock;
+    private WorkerEventRepository $mock;
 
     public function __construct()
     {
-        $this->mock = \Mockery::mock(CallbackRepository::class);
+        $this->mock = \Mockery::mock(WorkerEventRepository::class);
     }
 
-    public function getMock(): CallbackRepository
+    public function getMock(): WorkerEventRepository
     {
         return $this->mock;
     }

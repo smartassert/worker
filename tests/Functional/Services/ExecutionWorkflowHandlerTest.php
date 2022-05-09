@@ -15,7 +15,7 @@ use App\Message\ExecuteTestMessage;
 use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\SendCallbackMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -345,8 +345,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueCount(1);
 
-        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRepository instanceof CallbackRepository);
+        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($callbackRepository instanceof WorkerEventRepository);
         $callbacks = $callbackRepository->findAll();
         $expectedCallback = array_pop($callbacks);
 
