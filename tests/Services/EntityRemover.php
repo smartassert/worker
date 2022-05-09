@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use App\Entity\Callback\CallbackEntity;
+use App\Entity\Job;
+use App\Entity\Source;
+use App\Entity\Test;
+use App\Entity\TestConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 
@@ -16,9 +21,11 @@ class EntityRemover
 
     public function removeAll(): void
     {
-        foreach ($this->entityManager->getMetadataFactory()->getAllMetadata() as $metadata) {
-            $this->removeForEntity($metadata->getName());
-        }
+        $this->removeForEntity(CallbackEntity::class);
+        $this->removeForEntity(Job::class);
+        $this->removeForEntity(Source::class);
+        $this->removeForEntity(Test::class);
+        $this->removeForEntity(TestConfiguration::class);
     }
 
     /**

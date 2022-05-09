@@ -18,4 +18,9 @@ class Test extends AbstractDocument
     {
         return (string) $this->getPayloadStringValue(self::KEY_PAYLOAD_PATH);
     }
+
+    public function setPath(string $path): void
+    {
+        $this->setPayloadStringValue(self::KEY_PAYLOAD_PATH, $path);
+    }
 }

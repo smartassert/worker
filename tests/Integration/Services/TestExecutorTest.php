@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Services;
 
 use App\Event\StepPassedEvent;
+use App\Model\Document\Step;
 use App\Services\Compiler;
 use App\Services\TestExecutor;
 use App\Services\TestFactory;
@@ -94,21 +95,26 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (Event $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Document(
-                                'type: step' . "\n" .
-                                'payload:' . "\n" .
-                                '  name: \'verify page is open\'' . "\n" .
-                                '  status: passed' . "\n" .
-                                '  statements:' . "\n" .
-                                '    -' . "\n" .
-                                '      type: assertion' . "\n" .
-                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '      status: passed' . "\n" .
-                                '      transformations:' . "\n" .
-                                '        -' . "\n" .
-                                '          type: resolution' . "\n" .
-                                '          source: \'$page.url is $index.url\'' . "\n"
-                            );
+                            $expectedDocument = new Step(new Document((string) json_encode([
+                                'type' => 'step',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                            'transformations' => [
+                                                [
+                                                    'type' => 'resolution',
+                                                    'source' => '$page.url is $index.url',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ])));
 
                             if ($event instanceof StepPassedEvent) {
                                 self::assertEquals($expectedDocument, $event->getDocument());
@@ -129,17 +135,20 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (Event $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Document(
-                                'type: step' . "\n" .
-                                'payload:' . "\n" .
-                                '  name: \'verify page is open\'' . "\n" .
-                                '  status: passed' . "\n" .
-                                '  statements:' . "\n" .
-                                '    -' . "\n" .
-                                '      type: assertion' . "\n" .
-                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '      status: passed' . "\n"
-                            );
+                            $expectedDocument = new Step(new Document((string) json_encode([
+                                'type' => 'step',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                        ],
+                                    ],
+                                ],
+                            ])));
 
                             if ($event instanceof StepPassedEvent) {
                                 self::assertEquals($event->getDocument(), $expectedDocument);
@@ -160,17 +169,20 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (Event $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Document(
-                                'type: step' . "\n" .
-                                'payload:' . "\n" .
-                                '  name: \'verify page is open\'' . "\n" .
-                                '  status: passed' . "\n" .
-                                '  statements:' . "\n" .
-                                '    -' . "\n" .
-                                '      type: assertion' . "\n" .
-                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '      status: passed' . "\n"
-                            );
+                            $expectedDocument = new Step(new Document((string) json_encode([
+                                'type' => 'step',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                        ],
+                                    ],
+                                ],
+                            ])));
 
                             if ($event instanceof StepPassedEvent) {
                                 self::assertEquals($event->getDocument(), $expectedDocument);
@@ -183,17 +195,20 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (Event $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Document(
-                                'type: step' . "\n" .
-                                'payload:' . "\n" .
-                                '  name: \'verify page is open\'' . "\n" .
-                                '  status: passed' . "\n" .
-                                '  statements:' . "\n" .
-                                '    -' . "\n" .
-                                '      type: assertion' . "\n" .
-                                '      source: \'$page.url is "http://html-fixtures/index.html"\'' . "\n" .
-                                '      status: passed' . "\n"
-                            );
+                            $expectedDocument = new Step(new Document((string) json_encode([
+                                'type' => 'step',
+                                'payload' => [
+                                    'name' => 'verify page is open',
+                                    'status' => 'passed',
+                                    'statements' => [
+                                        [
+                                            'type' => 'assertion',
+                                            'source' => '$page.url is "http://html-fixtures/index.html"',
+                                            'status' => 'passed',
+                                        ],
+                                    ],
+                                ],
+                            ])));
 
                             if ($event instanceof StepPassedEvent) {
                                 self::assertEquals($event->getDocument(), $expectedDocument);

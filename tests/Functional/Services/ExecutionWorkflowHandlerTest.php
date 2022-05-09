@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Callback\CallbackEntity;
 use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
-use App\Entity\Test;
+use App\Entity\Test as TestEntity;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilation\PassedEvent;
@@ -15,6 +15,7 @@ use App\Event\TestPassedEvent;
 use App\Message\ExecuteTestMessage;
 use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\Model\Document\Test as TestDocument;
 use App\Repository\CallbackRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -75,7 +76,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(CallbackEntity::class);
             $entityRemover->removeForEntity(Job::class);
-            $entityRemover->removeForEntity(Test::class);
+            $entityRemover->removeForEntity(TestEntity::class);
         }
     }
 
@@ -122,7 +123,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestEntity::STATE_COMPLETE),
                         (new TestSetup())->withSource('/app/source/Test/test2.yml'),
                         (new TestSetup())->withSource('/app/source/Test/test3.yml'),
                     ]),
@@ -134,10 +135,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestEntity::STATE_COMPLETE),
                         (new TestSetup())
                             ->withSource('/app/source/Test/test2.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestEntity::STATE_COMPLETE),
                         (new TestSetup())->withSource('/app/source/Test/test3.yml'),
                     ]),
                 'expectedNextTestIndex' => 2,
@@ -152,7 +153,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             ->withTestSetups([
                 (new TestSetup())
                     ->withSource('/app/source/Test/test1.yml')
-                    ->withState(Test::STATE_COMPLETE),
+                    ->withState(TestEntity::STATE_COMPLETE),
                 (new TestSetup())
                     ->withSource('/app/source/Test/test2.yml'),
             ])
@@ -181,7 +182,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent($test, \Mockery::mock(Document::class));
+        $event = new TestPassedEvent(
+            $test,
+            new TestDocument(new Document())
+        );
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -189,7 +193,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         if (is_int($expectedNextTestIndex)) {
             $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
-            self::assertInstanceOf(Test::class, $expectedNextTest);
+            self::assertInstanceOf(TestEntity::class, $expectedNextTest);
 
             $this->messengerAsserter->assertMessageAtPositionEquals(
                 0,
@@ -210,7 +214,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_FAILED),
+                            ->withState(TestEntity::STATE_FAILED),
                     ]),
                 'eventTestIndex' => 0,
                 'expectedQueuedMessageCount' => 0,
@@ -222,7 +226,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_CANCELLED),
+                            ->withState(TestEntity::STATE_CANCELLED),
                     ]),
                 'eventTestIndex' => 0,
                 'expectedQueuedMessageCount' => 0,
@@ -234,10 +238,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_FAILED),
+                            ->withState(TestEntity::STATE_FAILED),
                         (new TestSetup())
                             ->withSource('/app/source/Test/test2.yml')
-                            ->withState(Test::STATE_AWAITING),
+                            ->withState(TestEntity::STATE_AWAITING),
                     ]),
                 'eventTestIndex' => 0,
                 'expectedQueuedMessageCount' => 0,
@@ -249,10 +253,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('/app/source/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestEntity::STATE_COMPLETE),
                         (new TestSetup())
                             ->withSource('/app/source/Test/test2.yml')
-                            ->withState(Test::STATE_AWAITING),
+                            ->withState(TestEntity::STATE_AWAITING),
                     ]),
                 'eventTestIndex' => 0,
                 'expectedQueuedMessageCount' => 1,
@@ -263,27 +267,42 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventExecutionNotComplete(): void
     {
+        $test0RelativeSource = 'Test/test1.yml';
+        $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
+
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test1.yml')
-                    ->withState(Test::STATE_COMPLETE),
+                    ->withSource($test0AbsoluteSource)
+                    ->withState(TestEntity::STATE_COMPLETE),
                 (new TestSetup())
                     ->withSource('/app/source/Test/test2.yml')
-                    ->withState(Test::STATE_AWAITING),
+                    ->withState(TestEntity::STATE_AWAITING),
             ])
         ;
 
         $environment = $this->environmentFactory->create($environmentSetup);
         $tests = $environment->getTests();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document('')));
+        $this->eventDispatcher->dispatch(
+            new TestPassedEvent(
+                $tests[0],
+                new TestDocument(
+                    new Document((string) json_encode([
+                        'type' => 'test',
+                        'payload' => [
+                            'path' => $test0RelativeSource,
+                        ],
+                    ]))
+                )
+            )
+        );
 
         $this->messengerAsserter->assertQueueCount(1);
 
         $expectedNextTest = $tests[1] ?? null;
-        self::assertInstanceOf(Test::class, $expectedNextTest);
+        self::assertInstanceOf(TestEntity::class, $expectedNextTest);
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,
@@ -293,28 +312,43 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventExecutionComplete(): void
     {
+        $test0RelativeSource = 'Test/test1.yml';
+        $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
+
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test1.yml')
-                    ->withState(Test::STATE_COMPLETE),
+                    ->withSource($test0AbsoluteSource)
+                    ->withState(TestEntity::STATE_COMPLETE),
                 (new TestSetup())
                     ->withSource('/app/source/Test/test2.yml')
-                    ->withState(Test::STATE_COMPLETE),
+                    ->withState(TestEntity::STATE_COMPLETE),
             ])
         ;
 
         $environment = $this->environmentFactory->create($environmentSetup);
         $tests = $environment->getTests();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent($tests[0], new Document('')));
+        $this->eventDispatcher->dispatch(
+            new TestPassedEvent(
+                $tests[0],
+                new TestDocument(
+                    new Document((string) json_encode([
+                        'type' => 'test',
+                        'payload' => [
+                            'path' => $test0RelativeSource,
+                        ],
+                    ]))
+                )
+            )
+        );
 
         $this->messengerAsserter->assertQueueCount(1);
 
-        $callbackRespository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRespository instanceof CallbackRepository);
-        $callbacks = $callbackRespository->findAll();
+        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
+        \assert($callbackRepository instanceof CallbackRepository);
+        $callbacks = $callbackRepository->findAll();
         $expectedCallback = array_pop($callbacks);
 
         self::assertInstanceOf(CallbackInterface::class, $expectedCallback);
@@ -340,7 +374,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueCount(1);
 
         $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
-        self::assertInstanceOf(Test::class, $expectedNextTest);
+        self::assertInstanceOf(TestEntity::class, $expectedNextTest);
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,

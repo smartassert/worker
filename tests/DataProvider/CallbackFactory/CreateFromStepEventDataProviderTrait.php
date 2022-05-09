@@ -22,10 +22,12 @@ trait CreateFromStepEventDataProviderTrait
     {
         $testConfiguration = \Mockery::mock(TestConfiguration::class);
 
-        $passingStepSource = 'Test/passing-step.yml';
+        $passingStepSource = '/app/source/Test/passing-step.yml';
+        $passingStepPath = 'Test/passing-step.yml';
         $passingStepName = 'passing step';
 
-        $failingStepSource = 'Test/failing-step.yml';
+        $failingStepSource = '/app/source/Test/failing-step.yml';
+        $failingStepPath = 'Test/failing-step.yml';
         $failingStepName = 'failing step';
 
         $passingStepData = ['type' => 'step', 'payload' => ['name' => $passingStepName]];
@@ -38,24 +40,24 @@ trait CreateFromStepEventDataProviderTrait
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent(
                     Test::create($testConfiguration, $passingStepSource, '', 1, 1),
-                    $passingStepDocument,
-                    new Step($passingStepDocument)
+                    new Step($passingStepDocument),
+                    $passingStepPath
                 ),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_STEP_PASSED,
-                    '{{ job_label }}' . $passingStepSource . $passingStepName,
+                    '{{ job_label }}' . $passingStepPath . $passingStepName,
                     $passingStepData
                 ),
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
                     Test::create($testConfiguration, $failingStepSource, '', 1, 1),
-                    $failingStepDocument,
-                    new Step($failingStepDocument)
+                    new Step($failingStepDocument),
+                    $failingStepPath
                 ),
                 'expectedCallback' => CallbackEntity::create(
                     CallbackInterface::TYPE_STEP_FAILED,
-                    '{{ job_label }}' . $failingStepSource . $failingStepName,
+                    '{{ job_label }}' . $failingStepPath . $failingStepName,
                     $failingStepData
                 ),
             ],

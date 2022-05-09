@@ -337,9 +337,9 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $test = $tests[0];
         self::assertInstanceOf(Test::class, $test);
 
-        $stepDocument = new Document();
+        $document = new Document();
 
-        $event = new StepFailedEvent($test, $stepDocument, new Step($stepDocument));
+        $event = new StepFailedEvent($test, new Step($document), '');
         $execute($event);
 
         $this->testEntityAsserter->assertTestStates($expectedStates);

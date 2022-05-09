@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services;
 
-use App\Entity\Test;
+use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
+use App\Model\Document\Test as TestDocument;
 use App\Services\TestDocumentFactory;
-use App\Services\TestDocumentMutator;
+use App\Services\TestPathMutator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Dumper;
+use webignition\YamlDocument\Document;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class TestDocumentFactoryTest extends TestCase
@@ -24,34 +25,66 @@ class TestDocumentFactoryTest extends TestCase
 
         $this->factory = new TestDocumentFactory(
             new YamlGenerator(),
-            new TestDocumentMutator(new Dumper(), self::COMPILER_SOURCE_DIRECTORY)
+            new TestPathMutator(self::COMPILER_SOURCE_DIRECTORY)
         );
     }
 
-    public function testCreate(): void
+    /**
+     * @dataProvider createDataProvider
+     */
+    public function testCreate(TestEntity $test, TestDocument $expected): void
     {
-        $test = Test::create(
+        self::assertEquals($expected, $this->factory->create($test));
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createDataProvider(): array
+    {
+        $transformedPath = 'Test/test.yml';
+        $transformablePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $transformedPath;
+
+        return [
+            'test with already-transformed path' => [
+                'test' => $this->createTestEntity($transformedPath),
+                'expectedTest' => $this->createTestDocument($transformedPath),
+            ],
+            'test with transformable path' => [
+                'test' => $this->createTestEntity($transformablePath),
+                'expectedTest' => $this->createTestDocument($transformedPath),
+            ],
+            'test with non-transformable absolute path' => [
+                'test' => $this->createTestEntity('/app/Test/non-transformable.yml'),
+                'expectedTest' => $this->createTestDocument('/app/Test/non-transformable.yml'),
+            ],
+        ];
+    }
+
+    private function createTestEntity(string $path): TestEntity
+    {
+        return TestEntity::create(
             TestConfiguration::create('chrome', 'http://example.com'),
-            '/app/source/test.yml',
+            $path,
             '/app/target/GeneratedTest.php',
             2,
             1
         );
+    }
 
-        $document = $this->factory->create($test);
-
-        self::assertSame(
-            [
+    private function createTestDocument(string $path): TestDocument
+    {
+        return new TestDocument(
+            new Document((string) json_encode([
                 'type' => 'test',
                 'payload' => [
-                    'path' => 'test.yml',
+                    'path' => $path,
                     'config' => [
                         'browser' => 'chrome',
                         'url' => 'http://example.com',
                     ],
                 ],
-            ],
-            $document->parse()
+            ]))
         );
     }
 }
