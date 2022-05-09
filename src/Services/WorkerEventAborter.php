@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
 
-class CallbackAborter
+class WorkerEventAborter
 {
     public function __construct(
         private CallbackRepository $repository,

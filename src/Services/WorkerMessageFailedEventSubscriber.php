@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private CallbackAborter $callbackAborter,
+        private WorkerEventAborter $workerEventAborter,
     ) {
     }
 
@@ -32,7 +32,7 @@ class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
         $message = $event->getEnvelope()->getMessage();
 
         if ($message instanceof SendCallbackMessage && false === $event->willRetry()) {
-            $this->callbackAborter->abort($message->getCallbackId());
+            $this->workerEventAborter->abort($message->getCallbackId());
         }
     }
 }
