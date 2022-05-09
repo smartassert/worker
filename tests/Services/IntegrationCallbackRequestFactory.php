@@ -11,15 +11,16 @@ use Psr\Http\Message\RequestInterface;
 class IntegrationCallbackRequestFactory
 {
     public function __construct(
-        private IntegrationJobProperties $jobProperties,
+        private readonly IntegrationJobProperties $jobProperties,
     ) {
     }
 
     /**
      * @param CallbackInterface::TYPE_* $type
+     * @param non-empty-string          $reference
      * @param array<mixed>              $payload
      */
-    public function create(string $type, array $payload): RequestInterface
+    public function create(string $type, string $reference, array $payload): RequestInterface
     {
         return new Request(
             'POST',
@@ -30,6 +31,7 @@ class IntegrationCallbackRequestFactory
             (string) json_encode([
                 'label' => $this->jobProperties->getLabel(),
                 'type' => $type,
+                'reference' => $reference,
                 'payload' => $payload,
             ])
         );
