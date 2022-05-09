@@ -6,7 +6,7 @@ namespace App\Tests\Services;
 
 use App\Entity\WorkerEvent;
 use App\Repository\WorkerEventRepository;
-use App\Tests\Model\CallbackSetup;
+use App\Tests\Model\WorkerEventSetup;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TestCallbackFactory
@@ -17,15 +17,15 @@ class TestCallbackFactory
     ) {
     }
 
-    public function create(CallbackSetup $callbackSetup): WorkerEvent
+    public function create(WorkerEventSetup $workerEventSetup): WorkerEvent
     {
         $workerEvent = $this->workerEventRepository->create(
-            $callbackSetup->getType(),
+            $workerEventSetup->getType(),
             'non-empty reference',
-            $callbackSetup->getPayload()
+            $workerEventSetup->getPayload()
         );
 
-        $workerEvent->setState($callbackSetup->getState());
+        $workerEvent->setState($workerEventSetup->getState());
         $this->entityManager->flush();
 
         return $workerEvent;

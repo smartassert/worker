@@ -10,11 +10,11 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Services\ApplicationState;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
@@ -131,8 +131,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
@@ -150,9 +150,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
                             ->withState(Test::STATE_COMPLETE),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_SENDING)
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_SENDING)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETING_CALLBACKS,
             ],
@@ -170,17 +170,17 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
                             ->withState(Test::STATE_COMPLETE),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE)
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETE,
             ],
             'has a job-timeout callback' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
                             ->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
@@ -343,8 +343,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_EXECUTING,
@@ -372,9 +372,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
                             ->withState(Test::STATE_COMPLETE),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_SENDING)
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_SENDING)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETING_CALLBACKS,
@@ -402,9 +402,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
                             ->withState(Test::STATE_COMPLETE),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new CallbackSetup())->withState(WorkerEvent::STATE_COMPLETE)
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETE,
@@ -421,8 +421,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
             'has a job-timeout callback' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
                             ->withState(WorkerEvent::STATE_COMPLETE),
                     ]),

@@ -6,7 +6,7 @@ namespace App\Tests\Model;
 
 use App\Entity\WorkerEvent;
 
-class CallbackSetup
+class WorkerEventSetup
 {
     /**
      * @var WorkerEvent::TYPE_*

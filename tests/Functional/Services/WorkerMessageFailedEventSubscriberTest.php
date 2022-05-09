@@ -8,9 +8,9 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Message\SendCallbackMessage;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
@@ -53,8 +53,8 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
         \assert($environmentFactory instanceof EnvironmentFactory);
         $environment = $environmentFactory->create((new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
-            ->withCallbackSetups([
-                (new CallbackSetup())
+            ->withWorkerEventSetups([
+                (new WorkerEventSetup())
                     ->withState(WorkerEvent::STATE_QUEUED),
             ]));
 
