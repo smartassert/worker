@@ -10,7 +10,7 @@ use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\CallbackRepository;
-use App\Services\CallbackSender;
+use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Model\CallbackSetup;
@@ -137,7 +137,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         ];
     }
 
-    private function setCallbackSender(CallbackSender $callbackSender): void
+    private function setCallbackSender(WorkerEventSender $callbackSender): void
     {
         ObjectReflector::setProperty($this->handler, $this->handler::class, 'sender', $callbackSender);
     }

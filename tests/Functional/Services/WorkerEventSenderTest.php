@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
-use App\Services\CallbackSender;
+use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Exception\ConnectException;
@@ -18,20 +18,20 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class CallbackSenderTest extends AbstractBaseFunctionalTest
+class WorkerEventSenderTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
 
-    private CallbackSender $callbackSender;
+    private WorkerEventSender $sender;
     private MockHandler $mockHandler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $callbackSender = self::getContainer()->get(CallbackSender::class);
-        \assert($callbackSender instanceof CallbackSender);
-        $this->callbackSender = $callbackSender;
+        $sender = self::getContainer()->get(WorkerEventSender::class);
+        \assert($sender instanceof WorkerEventSender);
+        $this->sender = $sender;
 
         $mockHandler = self::getContainer()->get('app.tests.services.guzzle.handler.queuing');
         \assert($mockHandler instanceof MockHandler);
@@ -54,7 +54,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
         $this->createJob();
 
         try {
-            $this->callbackSender->send($callback);
+            $this->sender->send($callback);
             $this->expectNotToPerformAssertions();
         } catch (NonSuccessfulHttpResponseException | ClientExceptionInterface $e) {
             $this->fail($e::class);
@@ -76,7 +76,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
         $this->expectExceptionObject(new NonSuccessfulHttpResponseException($callback, $response));
 
-        $this->callbackSender->send($callback);
+        $this->sender->send($callback);
     }
 
     /**
@@ -110,7 +110,7 @@ class CallbackSenderTest extends AbstractBaseFunctionalTest
 
         $this->expectExceptionObject($exception);
 
-        $this->callbackSender->send($callback);
+        $this->sender->send($callback);
     }
 
     /**

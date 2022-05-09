@@ -11,7 +11,7 @@ use App\Repository\JobRepository;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
 
-class CallbackSender
+class WorkerEventSender
 {
     public function __construct(
         private HttpClientInterface $httpClient,

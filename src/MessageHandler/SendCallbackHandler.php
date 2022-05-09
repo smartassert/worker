@@ -8,8 +8,8 @@ use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\SendCallbackMessage;
 use App\Repository\CallbackRepository;
-use App\Services\CallbackSender;
 use App\Services\CallbackStateMutator;
+use App\Services\WorkerEventSender;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -17,7 +17,7 @@ class SendCallbackHandler implements MessageHandlerInterface
 {
     public function __construct(
         private CallbackRepository $repository,
-        private CallbackSender $sender,
+        private WorkerEventSender $sender,
         private CallbackStateMutator $stateMutator
     ) {
     }

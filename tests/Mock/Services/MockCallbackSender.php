@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Tests\Mock\Services;
 
 use App\Entity\WorkerEvent;
-use App\Services\CallbackSender;
+use App\Services\WorkerEventSender;
 use Mockery\MockInterface;
 
 class MockCallbackSender
 {
-    private CallbackSender $mock;
+    private WorkerEventSender $mock;
 
     public function __construct()
     {
-        $this->mock = \Mockery::mock(CallbackSender::class);
+        $this->mock = \Mockery::mock(WorkerEventSender::class);
     }
 
-    public function getMock(): CallbackSender
+    public function getMock(): WorkerEventSender
     {
         return $this->mock;
     }
