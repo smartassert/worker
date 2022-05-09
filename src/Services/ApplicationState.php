@@ -15,7 +15,7 @@ class ApplicationState implements \Stringable
     public const STATE_AWAITING_SOURCES = 'awaiting-sources';
     public const STATE_COMPILING = 'compiling';
     public const STATE_EXECUTING = 'executing';
-    public const STATE_COMPLETING_CALLBACKS = 'completing-callbacks';
+    public const STATE_COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
     public const STATE_COMPLETE = 'complete';
     public const STATE_TIMED_OUT = 'timed-out';
 
@@ -55,7 +55,7 @@ class ApplicationState implements \Stringable
         }
 
         if ($this->workerEventState->is(WorkerEventState::STATE_AWAITING, WorkerEventState::STATE_RUNNING)) {
-            return self::STATE_COMPLETING_CALLBACKS;
+            return self::STATE_COMPLETING_EVENT_DELIVERY;
         }
 
         return self::STATE_COMPLETE;
