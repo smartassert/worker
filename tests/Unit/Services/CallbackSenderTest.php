@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\WorkerEvent;
-use App\Services\CallbackSender;
+use App\Services\WorkerEventSender;
 use App\Tests\Mock\Repository\MockJobRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ class CallbackSenderTest extends TestCase
             ->getMock()
         ;
 
-        $callbackSender = new CallbackSender($httpClient, $jobRepository);
+        $callbackSender = new WorkerEventSender($httpClient, $jobRepository);
         $callbackSender->send(WorkerEvent::create(
             WorkerEvent::TYPE_JOB_STARTED,
             'non-empty reference',

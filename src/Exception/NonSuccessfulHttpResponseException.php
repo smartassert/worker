@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 class NonSuccessfulHttpResponseException extends \Exception
 {
     public function __construct(
-        private WorkerEvent $callback,
+        private WorkerEvent $workerEvent,
         private ResponseInterface $response
     ) {
         $code = $response->getStatusCode();
@@ -21,9 +21,9 @@ class NonSuccessfulHttpResponseException extends \Exception
         );
     }
 
-    public function getCallback(): WorkerEvent
+    public function getWorkerEvent(): WorkerEvent
     {
-        return $this->callback;
+        return $this->workerEvent;
     }
 
     public function getResponse(): ResponseInterface

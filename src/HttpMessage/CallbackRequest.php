@@ -12,7 +12,7 @@ class CallbackRequest extends GuzzleRequest
 {
     private const METHOD = 'POST';
 
-    public function __construct(WorkerEvent $callback, Job $job)
+    public function __construct(WorkerEvent $workerEvent, Job $job)
     {
         parent::__construct(
             self::METHOD,
@@ -22,9 +22,9 @@ class CallbackRequest extends GuzzleRequest
             ],
             (string) json_encode([
                 'label' => $job->getLabel(),
-                'type' => $callback->getType(),
-                'reference' => $callback->getReference(),
-                'payload' => $callback->getPayload(),
+                'type' => $workerEvent->getType(),
+                'reference' => $workerEvent->getReference(),
+                'payload' => $workerEvent->getPayload(),
             ])
         );
     }

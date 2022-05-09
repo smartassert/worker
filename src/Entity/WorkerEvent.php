@@ -75,13 +75,13 @@ class WorkerEvent
      */
     public static function create(string $type, string $reference, array $payload): self
     {
-        $callback = new WorkerEvent();
-        $callback->state = self::STATE_AWAITING;
-        $callback->type = $type;
-        $callback->reference = $reference;
-        $callback->payload = $payload;
+        $entity = new WorkerEvent();
+        $entity->state = self::STATE_AWAITING;
+        $entity->type = $type;
+        $entity->reference = $reference;
+        $entity->payload = $payload;
 
-        return $callback;
+        return $entity;
     }
 
     public function getEntity(): WorkerEvent

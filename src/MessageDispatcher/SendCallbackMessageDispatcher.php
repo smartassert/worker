@@ -21,8 +21,8 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\SendCallbackMessage;
-use App\Services\CallbackFactory;
-use App\Services\CallbackStateMutator;
+use App\Services\WorkerEventFactory;
+use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -32,8 +32,8 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-        private CallbackStateMutator $callbackStateMutator,
-        private CallbackFactory $callbackFactory
+        private WorkerEventStateMutator $workerEventStateMutator,
+        private WorkerEventFactory $workerEventFactory
     ) {
     }
 
@@ -93,18 +93,18 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
 
     public function dispatchForEvent(Event $event): ?Envelope
     {
-        $callback = $this->callbackFactory->createForEvent($event);
-        if ($callback instanceof WorkerEvent) {
-            return $this->dispatch($callback);
+        $workerEvent = $this->workerEventFactory->createForEvent($event);
+        if ($workerEvent instanceof WorkerEvent) {
+            return $this->dispatch($workerEvent);
         }
 
         return null;
     }
 
-    public function dispatch(WorkerEvent $callback): Envelope
+    public function dispatch(WorkerEvent $workerEvent): Envelope
     {
-        $this->callbackStateMutator->setQueued($callback);
+        $this->workerEventStateMutator->setQueued($workerEvent);
 
-        return $this->messageBus->dispatch(new SendCallbackMessage((int) $callback->getId()));
+        return $this->messageBus->dispatch(new SendCallbackMessage((int) $workerEvent->getId()));
     }
 }

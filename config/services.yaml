@@ -84,15 +84,15 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
-    App\Services\CallbackFactory:
+    App\Services\WorkerEventFactory:
         arguments:
             $eventCallbackFactories:
-                - '@App\Services\EventCallbackFactory\CompilationStartedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationPassedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationFailedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\TestAndStepEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\CompilationStartedEventFactory'
+                - '@App\Services\WorkerEventFactory\CompilationPassedEventFactory'
+                - '@App\Services\WorkerEventFactory\CompilationFailedEventFactory'
+                - '@App\Services\WorkerEventFactory\TestAndStepEventFactory'
+                - '@App\Services\WorkerEventFactory\JobTimeoutEventFactory'
+                - '@App\Services\WorkerEventFactory\NoPayloadEventFactory'
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
