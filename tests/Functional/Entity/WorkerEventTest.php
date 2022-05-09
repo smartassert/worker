@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Entity;
 use App\Entity\WorkerEvent;
 use App\Tests\Services\EntityRemover;
 
-class CallbackEntityTest extends AbstractEntityTest
+class WorkerEventTest extends AbstractEntityTest
 {
     protected function setUp(): void
     {
@@ -24,13 +24,13 @@ class CallbackEntityTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(WorkerEvent::class);
         self::assertCount(0, $repository->findAll());
 
-        $callback = WorkerEvent::create(
+        $workerEvent = WorkerEvent::create(
             WorkerEvent::TYPE_COMPILATION_FAILED,
             'non-empty reference',
             []
         );
 
-        $this->entityManager->persist($callback);
+        $this->entityManager->persist($workerEvent);
         $this->entityManager->flush();
 
         self::assertCount(1, $repository->findAll());
