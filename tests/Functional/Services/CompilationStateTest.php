@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Entity\WorkerEvent;
 use App\Services\CompilationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
@@ -38,7 +38,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Source::class);
             $entityRemover->removeForEntity(Test::class);
@@ -92,7 +92,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackEntity::TYPE_COMPILATION_FAILED),
+                            ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::STATE_FAILED,
             ],
@@ -190,7 +190,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withCallbackSetups([
                         (new CallbackSetup())
-                            ->withType(CallbackEntity::TYPE_COMPILATION_FAILED),
+                            ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::STATE_FAILED,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
 
 class CallbackAborter
@@ -18,7 +18,7 @@ class CallbackAborter
     public function abort(int $id): void
     {
         $callback = $this->repository->find($id);
-        if ($callback instanceof CallbackEntity) {
+        if ($callback instanceof WorkerEvent) {
             $this->stateMutator->setFailed($callback);
         }
     }

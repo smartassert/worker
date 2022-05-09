@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use Psr\Http\Message\ResponseInterface;
 
 class NonSuccessfulHttpResponseException extends \Exception
 {
     public function __construct(
-        private CallbackEntity $callback,
+        private WorkerEvent $callback,
         private ResponseInterface $response
     ) {
         $code = $response->getStatusCode();
@@ -21,7 +21,7 @@ class NonSuccessfulHttpResponseException extends \Exception
         );
     }
 
-    public function getCallback(): CallbackEntity
+    public function getCallback(): WorkerEvent
     {
         return $this->callback;
     }

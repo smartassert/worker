@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\HttpMessage\CallbackRequest;
 use App\Repository\JobRepository;
@@ -23,7 +23,7 @@ class CallbackSender
      * @throws ClientExceptionInterface
      * @throws NonSuccessfulHttpResponseException
      */
-    public function send(CallbackEntity $callback): void
+    public function send(WorkerEvent $callback): void
     {
         $job = $this->jobRepository->get();
         if (null === $job) {

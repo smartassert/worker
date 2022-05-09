@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Entity;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Tests\Services\EntityRemover;
 
 class CallbackEntityTest extends AbstractEntityTest
@@ -15,17 +15,17 @@ class CallbackEntityTest extends AbstractEntityTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
         }
     }
 
     public function testEntityMapping(): void
     {
-        $repository = $this->entityManager->getRepository(CallbackEntity::class);
+        $repository = $this->entityManager->getRepository(WorkerEvent::class);
         self::assertCount(0, $repository->findAll());
 
-        $callback = CallbackEntity::create(
-            CallbackEntity::TYPE_COMPILATION_FAILED,
+        $callback = WorkerEvent::create(
+            WorkerEvent::TYPE_COMPILATION_FAILED,
             'non-empty reference',
             []
         );

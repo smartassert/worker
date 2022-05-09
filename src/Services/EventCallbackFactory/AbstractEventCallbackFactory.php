@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\EventCallbackFactory;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -30,24 +30,24 @@ use Symfony\Contracts\EventDispatcher\Event;
 abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInterface
 {
     /**
-     * @var array<class-string, CallbackEntity::TYPE_*>
+     * @var array<class-string, WorkerEvent::TYPE_*>
      */
     private const EVENT_TO_CALLBACK_TYPE_MAP = [
-        CompilationStartedEvent::class => CallbackEntity::TYPE_COMPILATION_STARTED,
-        CompilationFailedEvent::class => CallbackEntity::TYPE_COMPILATION_FAILED,
-        CompilationPassedEvent::class => CallbackEntity::TYPE_COMPILATION_PASSED,
-        JobTimeoutEvent::class => CallbackEntity::TYPE_JOB_TIME_OUT,
-        JobReadyEvent::class => CallbackEntity::TYPE_JOB_STARTED,
-        JobCompiledEvent::class => CallbackEntity::TYPE_JOB_COMPILED,
-        ExecutionStartedEvent::class => CallbackEntity::TYPE_EXECUTION_STARTED,
-        ExecutionCompletedEvent::class => CallbackEntity::TYPE_EXECUTION_COMPLETED,
-        JobCompletedEvent::class => CallbackEntity::TYPE_JOB_COMPLETED,
-        JobFailedEvent::class => CallbackEntity::TYPE_JOB_FAILED,
-        StepPassedEvent::class => CallbackEntity::TYPE_STEP_PASSED,
-        StepFailedEvent::class => CallbackEntity::TYPE_STEP_FAILED,
-        TestStartedEvent::class => CallbackEntity::TYPE_TEST_STARTED,
-        TestPassedEvent::class => CallbackEntity::TYPE_TEST_PASSED,
-        TestFailedEvent::class => CallbackEntity::TYPE_TEST_FAILED,
+        CompilationStartedEvent::class => WorkerEvent::TYPE_COMPILATION_STARTED,
+        CompilationFailedEvent::class => WorkerEvent::TYPE_COMPILATION_FAILED,
+        CompilationPassedEvent::class => WorkerEvent::TYPE_COMPILATION_PASSED,
+        JobTimeoutEvent::class => WorkerEvent::TYPE_JOB_TIME_OUT,
+        JobReadyEvent::class => WorkerEvent::TYPE_JOB_STARTED,
+        JobCompiledEvent::class => WorkerEvent::TYPE_JOB_COMPILED,
+        ExecutionStartedEvent::class => WorkerEvent::TYPE_EXECUTION_STARTED,
+        ExecutionCompletedEvent::class => WorkerEvent::TYPE_EXECUTION_COMPLETED,
+        JobCompletedEvent::class => WorkerEvent::TYPE_JOB_COMPLETED,
+        JobFailedEvent::class => WorkerEvent::TYPE_JOB_FAILED,
+        StepPassedEvent::class => WorkerEvent::TYPE_STEP_PASSED,
+        StepFailedEvent::class => WorkerEvent::TYPE_STEP_FAILED,
+        TestStartedEvent::class => WorkerEvent::TYPE_TEST_STARTED,
+        TestPassedEvent::class => WorkerEvent::TYPE_TEST_PASSED,
+        TestFailedEvent::class => WorkerEvent::TYPE_TEST_FAILED,
     ];
 
     public function __construct(
@@ -58,10 +58,10 @@ abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInter
     /**
      * @param array<mixed> $data
      */
-    protected function create(Job $job, Event $event, array $data): CallbackEntity
+    protected function create(Job $job, Event $event, array $data): WorkerEvent
     {
         return $this->callbackRepository->create(
-            self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class] ?? CallbackEntity::TYPE_UNKNOWN,
+            self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class] ?? WorkerEvent::TYPE_UNKNOWN,
             $this->createReference($job, $event),
             $data
         );

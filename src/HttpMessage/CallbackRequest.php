@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\HttpMessage;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 class CallbackRequest extends GuzzleRequest
 {
     private const METHOD = 'POST';
 
-    public function __construct(CallbackEntity $callback, Job $job)
+    public function __construct(WorkerEvent $callback, Job $job)
     {
         parent::__construct(
             self::METHOD,

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
@@ -73,7 +73,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Source::class);
             $entityRemover->removeForEntity(Test::class);
             $entityRemover->removeForEntity(Job::class);

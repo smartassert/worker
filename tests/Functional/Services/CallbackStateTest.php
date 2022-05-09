@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use App\Services\CallbackState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
@@ -31,14 +31,14 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
         }
     }
 
     /**
      * @dataProvider getDataProvider
      *
-     * @param array<CallbackEntity::STATE_*> $callbackStates
+     * @param array<WorkerEvent::STATE_*> $callbackStates
      */
     public function testGet(array $callbackStates, string $expectedState): void
     {
@@ -61,37 +61,37 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
-                    CallbackEntity::STATE_COMPLETE,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
+                    WorkerEvent::STATE_COMPLETE,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
-                    CallbackEntity::STATE_FAILED,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
+                    WorkerEvent::STATE_FAILED,
                 ],
                 'expectedState' => CallbackState::STATE_RUNNING,
             ],
             'two complete, three failed' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_COMPLETE,
-                    CallbackEntity::STATE_COMPLETE,
-                    CallbackEntity::STATE_FAILED,
-                    CallbackEntity::STATE_FAILED,
-                    CallbackEntity::STATE_FAILED,
+                    WorkerEvent::STATE_COMPLETE,
+                    WorkerEvent::STATE_COMPLETE,
+                    WorkerEvent::STATE_FAILED,
+                    WorkerEvent::STATE_FAILED,
+                    WorkerEvent::STATE_FAILED,
                 ],
                 'expectedState' => CallbackState::STATE_COMPLETE,
             ],
@@ -101,9 +101,9 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<CallbackEntity::STATE_*> $callbackStates
-     * @param array<CallbackState::STATE_*>  $expectedIsStates
-     * @param array<CallbackState::STATE_*>  $expectedIsNotStates
+     * @param array<WorkerEvent::STATE_*>   $callbackStates
+     * @param array<CallbackState::STATE_*> $expectedIsStates
+     * @param array<CallbackState::STATE_*> $expectedIsNotStates
      */
     public function testIs(array $callbackStates, array $expectedIsStates, array $expectedIsNotStates): void
     {
@@ -133,9 +133,9 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -147,10 +147,10 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, complete' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
-                    CallbackEntity::STATE_COMPLETE,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
+                    WorkerEvent::STATE_COMPLETE,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -162,10 +162,10 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, failed' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_AWAITING,
-                    CallbackEntity::STATE_QUEUED,
-                    CallbackEntity::STATE_SENDING,
-                    CallbackEntity::STATE_FAILED,
+                    WorkerEvent::STATE_AWAITING,
+                    WorkerEvent::STATE_QUEUED,
+                    WorkerEvent::STATE_SENDING,
+                    WorkerEvent::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_RUNNING,
@@ -177,11 +177,11 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
             ],
             'two complete, three failed' => [
                 'callbackStates' => [
-                    CallbackEntity::STATE_COMPLETE,
-                    CallbackEntity::STATE_COMPLETE,
-                    CallbackEntity::STATE_FAILED,
-                    CallbackEntity::STATE_FAILED,
-                    CallbackEntity::STATE_FAILED,
+                    WorkerEvent::STATE_COMPLETE,
+                    WorkerEvent::STATE_COMPLETE,
+                    WorkerEvent::STATE_FAILED,
+                    WorkerEvent::STATE_FAILED,
+                    WorkerEvent::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
                     CallbackState::STATE_COMPLETE,
@@ -195,9 +195,9 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @param CallbackEntity::STATE_* $state
+     * @param WorkerEvent::STATE_* $state
      */
-    private function createCallbackEntity(string $state): CallbackEntity
+    private function createCallbackEntity(string $state): WorkerEvent
     {
         $callbackSetup = (new CallbackSetup())->withState($state);
 

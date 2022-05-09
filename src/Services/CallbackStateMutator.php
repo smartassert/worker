@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackEntity;
+use App\Entity\WorkerEvent;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CallbackStateMutator
@@ -13,38 +13,38 @@ class CallbackStateMutator
     {
     }
 
-    public function setQueued(CallbackEntity $callback): void
+    public function setQueued(WorkerEvent $callback): void
     {
-        if (in_array($callback->getState(), [CallbackEntity::STATE_AWAITING, CallbackEntity::STATE_SENDING])) {
-            $this->set($callback, CallbackEntity::STATE_QUEUED);
+        if (in_array($callback->getState(), [WorkerEvent::STATE_AWAITING, WorkerEvent::STATE_SENDING])) {
+            $this->set($callback, WorkerEvent::STATE_QUEUED);
         }
     }
 
-    public function setSending(CallbackEntity $callback): void
+    public function setSending(WorkerEvent $callback): void
     {
-        if (CallbackEntity::STATE_QUEUED === $callback->getState()) {
-            $this->set($callback, CallbackEntity::STATE_SENDING);
+        if (WorkerEvent::STATE_QUEUED === $callback->getState()) {
+            $this->set($callback, WorkerEvent::STATE_SENDING);
         }
     }
 
-    public function setFailed(CallbackEntity $callback): void
+    public function setFailed(WorkerEvent $callback): void
     {
-        if (in_array($callback->getState(), [CallbackEntity::STATE_QUEUED, CallbackEntity::STATE_SENDING])) {
-            $this->set($callback, CallbackEntity::STATE_FAILED);
+        if (in_array($callback->getState(), [WorkerEvent::STATE_QUEUED, WorkerEvent::STATE_SENDING])) {
+            $this->set($callback, WorkerEvent::STATE_FAILED);
         }
     }
 
-    public function setComplete(CallbackEntity $callback): void
+    public function setComplete(WorkerEvent $callback): void
     {
-        if (CallbackEntity::STATE_SENDING === $callback->getState()) {
-            $this->set($callback, CallbackEntity::STATE_COMPLETE);
+        if (WorkerEvent::STATE_SENDING === $callback->getState()) {
+            $this->set($callback, WorkerEvent::STATE_COMPLETE);
         }
     }
 
     /**
-     * @param CallbackEntity::STATE_* $state
+     * @param WorkerEvent::STATE_* $state
      */
-    private function set(CallbackEntity $callback, string $state): void
+    private function set(WorkerEvent $callback, string $state): void
     {
         $callback->setState($state);
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\EventCallbackFactory;
 
-use App\Entity\Callback\CallbackEntity;
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Event\JobTimeoutEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -16,7 +16,7 @@ class JobTimeoutEventCallbackFactory extends AbstractEventCallbackFactory
         return $event instanceof JobTimeoutEvent;
     }
 
-    public function createForEvent(Job $job, Event $event): ?CallbackEntity
+    public function createForEvent(Job $job, Event $event): ?WorkerEvent
     {
         if ($event instanceof JobTimeoutEvent) {
             return $this->create($job, $event, [
