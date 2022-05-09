@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
-use App\Services\CallbackState;
+use App\Services\WorkerEventState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestCallbackFactory;
 
-class CallbackStateTest extends AbstractBaseFunctionalTest
+class WorkerEventStateTest extends AbstractBaseFunctionalTest
 {
-    private CallbackState $callbackState;
+    private WorkerEventState $workerEventState;
     private TestCallbackFactory $testCallbackFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $callbackState = self::getContainer()->get(CallbackState::class);
-        if ($callbackState instanceof CallbackState) {
-            $this->callbackState = $callbackState;
+        $workerEventState = self::getContainer()->get(WorkerEventState::class);
+        if ($workerEventState instanceof WorkerEventState) {
+            $this->workerEventState = $workerEventState;
         }
 
         $testCallbackFactory = self::getContainer()->get(TestCallbackFactory::class);
@@ -38,15 +38,15 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      *
-     * @param array<WorkerEvent::STATE_*> $callbackStates
+     * @param array<WorkerEvent::STATE_*> $states
      */
-    public function testGet(array $callbackStates, string $expectedState): void
+    public function testGet(array $states, string $expectedState): void
     {
-        foreach ($callbackStates as $callbackState) {
-            $this->createCallbackEntity($callbackState);
+        foreach ($states as $callbackState) {
+            $this->createWorkerEventEntity($callbackState);
         }
 
-        self::assertSame($expectedState, (string) $this->callbackState);
+        self::assertSame($expectedState, (string) $this->workerEventState);
     }
 
     /**
@@ -55,45 +55,45 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     public function getDataProvider(): array
     {
         return [
-            'no callbacks' => [
-                'callbackStates' => [],
-                'expectedState' => CallbackState::STATE_AWAITING,
+            'no events' => [
+                'states' => [],
+                'expectedState' => WorkerEventState::STATE_AWAITING,
             ],
             'awaiting, sending, queued' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                 ],
-                'expectedState' => CallbackState::STATE_RUNNING,
+                'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                     WorkerEvent::STATE_COMPLETE,
                 ],
-                'expectedState' => CallbackState::STATE_RUNNING,
+                'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                     WorkerEvent::STATE_FAILED,
                 ],
-                'expectedState' => CallbackState::STATE_RUNNING,
+                'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'two complete, three failed' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_COMPLETE,
                     WorkerEvent::STATE_COMPLETE,
                     WorkerEvent::STATE_FAILED,
                     WorkerEvent::STATE_FAILED,
                     WorkerEvent::STATE_FAILED,
                 ],
-                'expectedState' => CallbackState::STATE_COMPLETE,
+                'expectedState' => WorkerEventState::STATE_COMPLETE,
             ],
         ];
     }
@@ -101,18 +101,18 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<WorkerEvent::STATE_*>   $callbackStates
-     * @param array<CallbackState::STATE_*> $expectedIsStates
-     * @param array<CallbackState::STATE_*> $expectedIsNotStates
+     * @param array<WorkerEvent::STATE_*>      $states
+     * @param array<WorkerEventState::STATE_*> $expectedIsStates
+     * @param array<WorkerEventState::STATE_*> $expectedIsNotStates
      */
-    public function testIs(array $callbackStates, array $expectedIsStates, array $expectedIsNotStates): void
+    public function testIs(array $states, array $expectedIsStates, array $expectedIsNotStates): void
     {
-        foreach ($callbackStates as $callbackState) {
-            $this->createCallbackEntity($callbackState);
+        foreach ($states as $state) {
+            $this->createWorkerEventEntity($state);
         }
 
-        self::assertTrue($this->callbackState->is(...$expectedIsStates));
-        self::assertFalse($this->callbackState->is(...$expectedIsNotStates));
+        self::assertTrue($this->workerEventState->is(...$expectedIsStates));
+        self::assertFalse($this->workerEventState->is(...$expectedIsNotStates));
     }
 
     /**
@@ -122,61 +122,61 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     {
         return [
             'no callbacks' => [
-                'callbackStates' => [],
+                'states' => [],
                 'expectedIsStates' => [
-                    CallbackState::STATE_AWAITING,
+                    WorkerEventState::STATE_AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    CallbackState::STATE_RUNNING,
-                    CallbackState::STATE_COMPLETE,
+                    WorkerEventState::STATE_RUNNING,
+                    WorkerEventState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                 ],
                 'expectedIsStates' => [
-                    CallbackState::STATE_RUNNING,
+                    WorkerEventState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    CallbackState::STATE_AWAITING,
-                    CallbackState::STATE_COMPLETE,
+                    WorkerEventState::STATE_AWAITING,
+                    WorkerEventState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, complete' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                     WorkerEvent::STATE_COMPLETE,
                 ],
                 'expectedIsStates' => [
-                    CallbackState::STATE_RUNNING,
+                    WorkerEventState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    CallbackState::STATE_AWAITING,
-                    CallbackState::STATE_COMPLETE,
+                    WorkerEventState::STATE_AWAITING,
+                    WorkerEventState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, failed' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_AWAITING,
                     WorkerEvent::STATE_QUEUED,
                     WorkerEvent::STATE_SENDING,
                     WorkerEvent::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
-                    CallbackState::STATE_RUNNING,
+                    WorkerEventState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    CallbackState::STATE_AWAITING,
-                    CallbackState::STATE_COMPLETE,
+                    WorkerEventState::STATE_AWAITING,
+                    WorkerEventState::STATE_COMPLETE,
                 ],
             ],
             'two complete, three failed' => [
-                'callbackStates' => [
+                'states' => [
                     WorkerEvent::STATE_COMPLETE,
                     WorkerEvent::STATE_COMPLETE,
                     WorkerEvent::STATE_FAILED,
@@ -184,11 +184,11 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
                     WorkerEvent::STATE_FAILED,
                 ],
                 'expectedIsStates' => [
-                    CallbackState::STATE_COMPLETE,
+                    WorkerEventState::STATE_COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    CallbackState::STATE_AWAITING,
-                    CallbackState::STATE_RUNNING,
+                    WorkerEventState::STATE_AWAITING,
+                    WorkerEventState::STATE_RUNNING,
                 ],
             ],
         ];
@@ -197,17 +197,10 @@ class CallbackStateTest extends AbstractBaseFunctionalTest
     /**
      * @param WorkerEvent::STATE_* $state
      */
-    private function createCallbackEntity(string $state): WorkerEvent
+    private function createWorkerEventEntity(string $state): void
     {
-        $callbackSetup = (new CallbackSetup())->withState($state);
-
-        return $this->testCallbackFactory->create($callbackSetup);
-//        $entity = CallbackEntity::create(CallbackEntity::TYPE_STEP_PASSED, []);
-//        $entity->setState($state);
-//
-//        $this->entityManager->persist($entity);
-//        $this->entityManager->flush();
-//
-//        return $entity;
+        $this->testCallbackFactory->create(
+            (new CallbackSetup())->withState($state)
+        );
     }
 }

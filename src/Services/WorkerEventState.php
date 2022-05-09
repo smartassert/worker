@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEvent;
 use App\Repository\CallbackRepository;
 
-class CallbackState implements \Stringable
+class WorkerEventState implements \Stringable
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -41,7 +41,7 @@ class CallbackState implements \Stringable
     }
 
     /**
-     * @param CallbackState::STATE_* ...$states
+     * @param WorkerEventState::STATE_* ...$states
      */
     public function is(...$states): bool
     {

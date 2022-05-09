@@ -14,12 +14,12 @@ use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
-use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\ErrorResponseFactory;
 use App\Services\ExecutionState;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
+use App\Services\WorkerEventState;
 use App\Services\YamlSourceCollectionFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
@@ -103,7 +103,7 @@ class JobController
         TestSerializer $testSerializer,
         CompilationState $compilationState,
         ExecutionState $executionState,
-        CallbackState $callbackState,
+        WorkerEventState $workerEventState,
     ): JsonResponse {
         $job = $this->jobRepository->get();
         if (null === $job) {
@@ -118,7 +118,7 @@ class JobController
                 'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => (string) $compilationState,
                 'execution_state' => (string) $executionState,
-                'callback_state' => (string) $callbackState,
+                'callback_state' => (string) $workerEventState,
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );

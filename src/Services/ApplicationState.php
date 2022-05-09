@@ -23,7 +23,7 @@ class ApplicationState implements \Stringable
         private readonly JobRepository $jobRepository,
         private CompilationState $compilationState,
         private ExecutionState $executionState,
-        private CallbackState $callbackState,
+        private WorkerEventState $workerEventState,
         private CallbackRepository $callbackRepository,
         private SourceRepository $sourceRepository,
     ) {
@@ -54,7 +54,7 @@ class ApplicationState implements \Stringable
             return self::STATE_EXECUTING;
         }
 
-        if ($this->callbackState->is(CallbackState::STATE_AWAITING, CallbackState::STATE_RUNNING)) {
+        if ($this->workerEventState->is(WorkerEventState::STATE_AWAITING, WorkerEventState::STATE_RUNNING)) {
             return self::STATE_COMPLETING_CALLBACKS;
         }
 
