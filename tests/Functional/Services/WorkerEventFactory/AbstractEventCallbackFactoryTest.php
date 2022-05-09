@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\EventCallbackFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;

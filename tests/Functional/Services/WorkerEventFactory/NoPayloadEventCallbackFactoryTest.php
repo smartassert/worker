@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\EventCallbackFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory;
 
-use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
-use App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory;
+use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\NoPayloadEventCallbackFactory;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionStartedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompiledEventDataProviderTrait;

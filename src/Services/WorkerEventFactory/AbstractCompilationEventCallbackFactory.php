@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\EventCallbackFactory;
+namespace App\Services\WorkerEventFactory;
 
 use App\Event\SourceCompilation\EventInterface;
 

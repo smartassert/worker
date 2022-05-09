@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\EventCallbackFactory;
+namespace App\Services\WorkerEventFactory;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;

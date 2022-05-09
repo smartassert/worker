@@ -87,12 +87,12 @@ services:
     App\Services\WorkerEventFactory:
         arguments:
             $eventCallbackFactories:
-                - '@App\Services\EventCallbackFactory\CompilationStartedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationPassedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationFailedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\TestAndStepEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\CompilationStartedEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\CompilationPassedEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\CompilationFailedEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\TestAndStepEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\JobTimeoutEventCallbackFactory'
+                - '@App\Services\WorkerEventFactory\NoPayloadEventCallbackFactory'
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator

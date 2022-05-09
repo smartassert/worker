@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Services\EventCallbackFactory;
+namespace App\Services\WorkerEventFactory;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\SourceCompilation\StartedEvent;
+use App\Event\SourceCompilation\PassedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationStartedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
+class CompilationPassedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
 {
     public function handles(Event $event): bool
     {
-        return $event instanceof StartedEvent;
+        return $event instanceof PassedEvent;
     }
 
     public function createForEvent(Job $job, Event $event): ?WorkerEvent
     {
-        if ($event instanceof StartedEvent) {
+        if ($event instanceof PassedEvent) {
             return $this->create($job, $event, $this->createPayload($event));
         }
 

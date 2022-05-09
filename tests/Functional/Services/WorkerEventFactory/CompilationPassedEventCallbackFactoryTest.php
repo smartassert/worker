@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\EventCallbackFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory;
 
-use App\Services\EventCallbackFactory\CompilationPassedEventCallbackFactory;
-use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\CompilationPassedEventCallbackFactory;
+use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
 use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationPassedEventDataProviderTrait;
 
 class CompilationPassedEventCallbackFactoryTest extends AbstractEventCallbackFactoryTest

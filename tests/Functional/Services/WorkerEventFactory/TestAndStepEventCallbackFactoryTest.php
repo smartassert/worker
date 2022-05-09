@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\EventCallbackFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory;
 
-use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
-use App\Services\EventCallbackFactory\TestAndStepEventCallbackFactory;
+use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\TestAndStepEventCallbackFactory;
 use App\Tests\DataProvider\CallbackFactory\CreateFromStepEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromTestEventDataProviderTrait;
 

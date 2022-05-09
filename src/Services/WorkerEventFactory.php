@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\EventCallbackFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class WorkerEventFactory
