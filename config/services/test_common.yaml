@@ -13,7 +13,7 @@ services:
             $compilerSourceDirectory: '%compiler_source_directory%'
             $compilerTargetDirectory: '%compiler_target_directory%'
 
-    App\Tests\Services\TestCallbackFactory:
+    App\Tests\Services\TestWorkerEventFactory:
         public: true
 
     App\Tests\Services\EnvironmentFactory:

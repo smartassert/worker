@@ -9,12 +9,12 @@ use App\Services\WorkerEventState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
-use App\Tests\Services\TestCallbackFactory;
+use App\Tests\Services\TestWorkerEventFactory;
 
 class WorkerEventStateTest extends AbstractBaseFunctionalTest
 {
     private WorkerEventState $workerEventState;
-    private TestCallbackFactory $testCallbackFactory;
+    private TestWorkerEventFactory $testWorkerEventFactory;
 
     protected function setUp(): void
     {
@@ -25,9 +25,9 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             $this->workerEventState = $workerEventState;
         }
 
-        $testCallbackFactory = self::getContainer()->get(TestCallbackFactory::class);
-        \assert($testCallbackFactory instanceof TestCallbackFactory);
-        $this->testCallbackFactory = $testCallbackFactory;
+        $testWorkerEventFactory = self::getContainer()->get(TestWorkerEventFactory::class);
+        \assert($testWorkerEventFactory instanceof TestWorkerEventFactory);
+        $this->testWorkerEventFactory = $testWorkerEventFactory;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -199,7 +199,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
      */
     private function createWorkerEventEntity(string $state): void
     {
-        $this->testCallbackFactory->create(
+        $this->testWorkerEventFactory->create(
             (new WorkerEventSetup())->withState($state)
         );
     }

@@ -9,7 +9,7 @@ use App\Repository\WorkerEventRepository;
 use App\Tests\Model\WorkerEventSetup;
 use Doctrine\ORM\EntityManagerInterface;
 
-class TestCallbackFactory
+class TestWorkerEventFactory
 {
     public function __construct(
         private readonly WorkerEventRepository $workerEventRepository,
