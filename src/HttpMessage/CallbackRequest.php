@@ -23,6 +23,7 @@ class CallbackRequest extends GuzzleRequest
             (string) json_encode([
                 'label' => $job->getLabel(),
                 'type' => $callback->getType(),
+                'reference' => $callback->getReference(),
                 'payload' => $callback->getPayload(),
             ])
         );

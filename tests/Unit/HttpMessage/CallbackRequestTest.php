@@ -19,6 +19,7 @@ class CallbackRequestTest extends TestCase
         $job = Job::create($jobLabel, $jobCallbackUrl, 600);
 
         $callbackType = 'callback type';
+        $callbackReference = 'reference value';
         $callbackData = [
             'key1' => 'value1',
             'key2' => 'value2',
@@ -33,6 +34,9 @@ class CallbackRequestTest extends TestCase
             ->shouldReceive('getPayload')
             ->andReturn($callbackData)
         ;
+        $callback
+            ->shouldReceive('getReference')
+            ->andReturn($callbackReference);
 
         $request = new CallbackRequest($callback, $job);
 
@@ -44,6 +48,7 @@ class CallbackRequestTest extends TestCase
             [
                 'label' => $jobLabel,
                 'type' => $callbackType,
+                'reference' => $callbackReference,
                 'payload' => $callbackData,
             ],
             json_decode((string) $request->getBody(), true)
