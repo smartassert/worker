@@ -17,9 +17,9 @@ class WorkerEventAborter
 
     public function abort(int $id): void
     {
-        $callback = $this->repository->find($id);
-        if ($callback instanceof WorkerEvent) {
-            $this->workerEventStateMutator->setFailed($callback);
+        $workerEvent = $this->repository->find($id);
+        if ($workerEvent instanceof WorkerEvent) {
+            $this->workerEventStateMutator->setFailed($workerEvent);
         }
     }
 }

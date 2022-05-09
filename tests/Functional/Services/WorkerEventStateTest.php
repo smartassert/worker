@@ -42,8 +42,8 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
      */
     public function testGet(array $states, string $expectedState): void
     {
-        foreach ($states as $callbackState) {
-            $this->createWorkerEventEntity($callbackState);
+        foreach ($states as $workerEventState) {
+            $this->createWorkerEventEntity($workerEventState);
         }
 
         self::assertSame($expectedState, (string) $this->workerEventState);

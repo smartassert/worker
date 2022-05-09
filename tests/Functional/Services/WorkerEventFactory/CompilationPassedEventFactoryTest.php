@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services\WorkerEventFactory;
 
 use App\Services\WorkerEventFactory\CompilationPassedEventFactory;
 use App\Services\WorkerEventFactory\EventFactoryInterface;
-use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationPassedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
 
 class CompilationPassedEventFactoryTest extends AbstractEventFactoryTest
 {
@@ -17,12 +17,10 @@ class CompilationPassedEventFactoryTest extends AbstractEventFactoryTest
         return $this->createFromCompilationPassedEventDataProvider();
     }
 
-    protected function getCallbackFactory(): ?EventFactoryInterface
+    protected function getFactory(): ?EventFactoryInterface
     {
-        $callbackFactory = self::getContainer()->get(CompilationPassedEventFactory::class);
+        $factory = self::getContainer()->get(CompilationPassedEventFactory::class);
 
-        return $callbackFactory instanceof CompilationPassedEventFactory
-            ? $callbackFactory
-            : null;
+        return $factory instanceof CompilationPassedEventFactory ? $factory : null;
     }
 }

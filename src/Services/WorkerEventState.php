@@ -23,7 +23,7 @@ class WorkerEventState implements \Stringable
      */
     public function __toString(): string
     {
-        $callbackCount = $this->repository->count([]);
+        $workerEventCount = $this->repository->count([]);
         $finishedCallbackCount = $this->repository->count([
             'state' => [
                 WorkerEvent::STATE_FAILED,
@@ -31,11 +31,11 @@ class WorkerEventState implements \Stringable
             ],
         ]);
 
-        if (0 === $callbackCount) {
+        if (0 === $workerEventCount) {
             return self::STATE_AWAITING;
         }
 
-        return $finishedCallbackCount === $callbackCount
+        return $finishedCallbackCount === $workerEventCount
             ? self::STATE_COMPLETE
             : self::STATE_RUNNING;
     }

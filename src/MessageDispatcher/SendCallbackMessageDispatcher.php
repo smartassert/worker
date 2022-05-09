@@ -33,7 +33,7 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
     public function __construct(
         private MessageBusInterface $messageBus,
         private WorkerEventStateMutator $workerEventStateMutator,
-        private WorkerEventFactory $callbackFactory
+        private WorkerEventFactory $workerEventFactory
     ) {
     }
 
@@ -93,18 +93,18 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
 
     public function dispatchForEvent(Event $event): ?Envelope
     {
-        $callback = $this->callbackFactory->createForEvent($event);
-        if ($callback instanceof WorkerEvent) {
-            return $this->dispatch($callback);
+        $workerEvent = $this->workerEventFactory->createForEvent($event);
+        if ($workerEvent instanceof WorkerEvent) {
+            return $this->dispatch($workerEvent);
         }
 
         return null;
     }
 
-    public function dispatch(WorkerEvent $callback): Envelope
+    public function dispatch(WorkerEvent $workerEvent): Envelope
     {
-        $this->workerEventStateMutator->setQueued($callback);
+        $this->workerEventStateMutator->setQueued($workerEvent);
 
-        return $this->messageBus->dispatch(new SendCallbackMessage((int) $callback->getId()));
+        return $this->messageBus->dispatch(new SendCallbackMessage((int) $workerEvent->getId()));
     }
 }

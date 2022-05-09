@@ -6,8 +6,8 @@ namespace App\Tests\Functional\Services\WorkerEventFactory;
 
 use App\Services\WorkerEventFactory\EventFactoryInterface;
 use App\Services\WorkerEventFactory\TestAndStepEventFactory;
-use App\Tests\DataProvider\CallbackFactory\CreateFromStepEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromTestEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromStepEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromTestEventDataProviderTrait;
 
 class TestAndStepEventFactoryTest extends AbstractEventFactoryTest
 {
@@ -22,12 +22,10 @@ class TestAndStepEventFactoryTest extends AbstractEventFactoryTest
         );
     }
 
-    protected function getCallbackFactory(): ?EventFactoryInterface
+    protected function getFactory(): ?EventFactoryInterface
     {
-        $callbackFactory = self::getContainer()->get(TestAndStepEventFactory::class);
+        $factory = self::getContainer()->get(TestAndStepEventFactory::class);
 
-        return $callbackFactory instanceof TestAndStepEventFactory
-            ? $callbackFactory
-            : null;
+        return $factory instanceof TestAndStepEventFactory ? $factory : null;
     }
 }

@@ -9,18 +9,18 @@ use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationFailedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationPassedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromCompilationStartedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionCompletedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionStartedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompiledEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompletedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromJobFailedEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromJobReadyEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromJobTimeoutEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromStepEventDataProviderTrait;
-use App\Tests\DataProvider\CallbackFactory\CreateFromTestEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationStartedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionCompletedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionStartedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobCompiledEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobCompletedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobFailedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobReadyEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobTimeoutEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromStepEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromTestEventDataProviderTrait;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
@@ -99,7 +99,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromExecutionCompletedEventDataProvider
      * @dataProvider createFromJobFailedEventDataProvider
      */
-    public function testCreateForEvent(Event $event, WorkerEvent $expectedCallback): void
+    public function testCreateForEvent(Event $event, WorkerEvent $expectedWorkerEvent): void
     {
         $jobLabel = md5((string) rand());
 
@@ -108,20 +108,20 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
         ));
         self::assertNotNull($this->jobRepository->get());
 
-        $callback = $this->workerEventFactory->createForEvent($event);
+        $workerEvent = $this->workerEventFactory->createForEvent($event);
 
-        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedCallback->getReference());
+        $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedWorkerEvent->getReference());
         ObjectReflector::setProperty(
-            $expectedCallback,
+            $expectedWorkerEvent,
             WorkerEvent::class,
             'reference',
             md5($expectedReferenceSource)
         );
 
-        self::assertInstanceOf(WorkerEvent::class, $callback);
-        self::assertNotNull($callback->getId());
-        self::assertSame($expectedCallback->getType(), $callback->getType());
-        self::assertSame($expectedCallback->getReference(), $callback->getReference());
-        self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
+        self::assertNotNull($workerEvent->getId());
+        self::assertSame($expectedWorkerEvent->getType(), $workerEvent->getType());
+        self::assertSame($expectedWorkerEvent->getReference(), $workerEvent->getReference());
+        self::assertSame($expectedWorkerEvent->getPayload(), $workerEvent->getPayload());
     }
 }

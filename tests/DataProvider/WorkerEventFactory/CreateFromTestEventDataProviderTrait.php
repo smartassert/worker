@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\DataProvider\CallbackFactory;
+namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
@@ -39,7 +39,7 @@ trait CreateFromTestEventDataProviderTrait
         return [
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent($test, $testDocument),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_TEST_STARTED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData
@@ -47,7 +47,7 @@ trait CreateFromTestEventDataProviderTrait
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent($test, $testDocument),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_TEST_PASSED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData
@@ -55,7 +55,7 @@ trait CreateFromTestEventDataProviderTrait
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent($test, $testDocument),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_TEST_FAILED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData

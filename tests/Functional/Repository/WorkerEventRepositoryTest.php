@@ -28,30 +28,30 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testHasForType(): void
     {
-        $callback0 = WorkerEvent::create(
+        $workerEvent0 = WorkerEvent::create(
             WorkerEvent::TYPE_COMPILATION_FAILED,
             'non-empty reference',
             []
         )
         ;
-        $callback0->setState(WorkerEvent::STATE_AWAITING);
-        $this->persistEntity($callback0);
+        $workerEvent0->setState(WorkerEvent::STATE_AWAITING);
+        $this->persistEntity($workerEvent0);
 
-        $callback1 = WorkerEvent::create(
+        $workerEvent1 = WorkerEvent::create(
             WorkerEvent::TYPE_TEST_STARTED,
             'non-empty reference',
             []
         );
-        $callback1->setState(WorkerEvent::STATE_AWAITING);
-        $this->persistEntity($callback1);
+        $workerEvent1->setState(WorkerEvent::STATE_AWAITING);
+        $this->persistEntity($workerEvent1);
 
-        $callback2 = WorkerEvent::create(
+        $workerEvent2 = WorkerEvent::create(
             WorkerEvent::TYPE_JOB_TIME_OUT,
             'non-empty reference',
             []
         );
-        $callback2->setState(WorkerEvent::STATE_COMPLETE);
-        $this->persistEntity($callback2);
+        $workerEvent2->setState(WorkerEvent::STATE_COMPLETE);
+        $this->persistEntity($workerEvent2);
 
         self::assertTrue($this->repository->hasForType(WorkerEvent::TYPE_COMPILATION_FAILED));
         self::assertFalse($this->repository->hasForType(WorkerEvent::TYPE_STEP_PASSED));
@@ -59,7 +59,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testGetTypeCount(): void
     {
-        $this->createCallbacksWithTypes([
+        $this->createWorkerEventsWithTypes([
             WorkerEvent::TYPE_JOB_STARTED,
             WorkerEvent::TYPE_STEP_PASSED,
             WorkerEvent::TYPE_STEP_PASSED,
@@ -77,7 +77,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
     /**
      * @param array<WorkerEvent::TYPE_*> $types
      */
-    private function createCallbacksWithTypes(array $types): void
+    private function createWorkerEventsWithTypes(array $types): void
     {
         foreach ($types as $type) {
             $this->repository->create($type, 'non-empty reference', []);

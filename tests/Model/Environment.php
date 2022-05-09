@@ -26,7 +26,7 @@ class Environment
     /**
      * @var WorkerEvent[]
      */
-    private array $callbacks = [];
+    private array $workerEvents = [];
 
     public function getJob(): ?Job
     {
@@ -52,9 +52,9 @@ class Environment
     /**
      * @return WorkerEvent[]
      */
-    public function getCallbacks(): array
+    public function getWorkerEvents(): array
     {
-        return $this->callbacks;
+        return $this->workerEvents;
     }
 
     public function withJob(Job $job): self
@@ -88,12 +88,12 @@ class Environment
     }
 
     /**
-     * @param WorkerEvent[] $callbacks
+     * @param WorkerEvent[] $workerEvents
      */
-    public function withCallbacks(array $callbacks): self
+    public function withWorkerEvents(array $workerEvents): self
     {
         $new = clone $this;
-        $new->callbacks = $callbacks;
+        $new->workerEvents = $workerEvents;
 
         return $new;
     }

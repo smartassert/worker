@@ -28,12 +28,12 @@ class SendCallbackHandler implements MessageHandlerInterface
      */
     public function __invoke(SendCallbackMessage $message): void
     {
-        $callback = $this->repository->find($message->getCallbackId());
+        $workerEvent = $this->repository->find($message->getCallbackId());
 
-        if ($callback instanceof WorkerEvent) {
-            $this->workerEventStateMutator->setSending($callback);
-            $this->sender->send($callback);
-            $this->workerEventStateMutator->setComplete($callback);
+        if ($workerEvent instanceof WorkerEvent) {
+            $this->workerEventStateMutator->setSending($workerEvent);
+            $this->sender->send($workerEvent);
+            $this->workerEventStateMutator->setComplete($workerEvent);
         }
     }
 }

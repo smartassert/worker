@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\DataProvider\CallbackFactory;
+namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
@@ -21,7 +21,7 @@ trait CreateFromCompilationPassedEventDataProviderTrait
         return [
             FailedEvent::class => [
                 'event' => new PassedEvent($source, (new MockSuiteManifest())->getMock()),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_COMPILATION_PASSED,
                     '{{ job_label }}' . $source,
                     [

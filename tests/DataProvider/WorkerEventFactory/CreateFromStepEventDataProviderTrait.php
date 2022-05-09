@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\DataProvider\CallbackFactory;
+namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
@@ -42,7 +42,7 @@ trait CreateFromStepEventDataProviderTrait
                     new Step($passingStepDocument),
                     $passingStepPath
                 ),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_STEP_PASSED,
                     '{{ job_label }}' . $passingStepPath . $passingStepName,
                     $passingStepData
@@ -54,7 +54,7 @@ trait CreateFromStepEventDataProviderTrait
                     new Step($failingStepDocument),
                     $failingStepPath
                 ),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_STEP_FAILED,
                     '{{ job_label }}' . $failingStepPath . $failingStepName,
                     $failingStepData

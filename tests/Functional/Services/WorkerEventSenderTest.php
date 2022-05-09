@@ -45,7 +45,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
 
     public function testSendSuccess(): void
     {
-        $callback = WorkerEvent::create(
+        $workerEvent = WorkerEvent::create(
             WorkerEvent::TYPE_JOB_STARTED,
             'non-empty reference',
             []
@@ -54,7 +54,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $this->createJob();
 
         try {
-            $this->sender->send($callback);
+            $this->sender->send($workerEvent);
             $this->expectNotToPerformAssertions();
         } catch (NonSuccessfulHttpResponseException | ClientExceptionInterface $e) {
             $this->fail($e::class);
@@ -66,7 +66,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
-        $callback = WorkerEvent::create(
+        $workerEvent = WorkerEvent::create(
             WorkerEvent::TYPE_JOB_STARTED,
             'non-empty reference',
             []
@@ -74,9 +74,9 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $this->mockHandler->append($response);
         $this->createJob();
 
-        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($callback, $response));
+        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($workerEvent, $response));
 
-        $this->sender->send($callback);
+        $this->sender->send($workerEvent);
     }
 
     /**
@@ -100,7 +100,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendClientException(\Exception $exception): void
     {
-        $callback = WorkerEvent::create(
+        $workerEvent = WorkerEvent::create(
             WorkerEvent::TYPE_JOB_STARTED,
             'non-empty reference',
             []
@@ -110,7 +110,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
 
         $this->expectExceptionObject($exception);
 
-        $this->sender->send($callback);
+        $this->sender->send($workerEvent);
     }
 
     /**

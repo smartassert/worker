@@ -23,18 +23,18 @@ class WorkerEventSender
      * @throws ClientExceptionInterface
      * @throws NonSuccessfulHttpResponseException
      */
-    public function send(WorkerEvent $callback): void
+    public function send(WorkerEvent $workerEvent): void
     {
         $job = $this->jobRepository->get();
         if (null === $job) {
             return;
         }
 
-        $request = new CallbackRequest($callback, $job);
+        $request = new CallbackRequest($workerEvent, $job);
         $response = $this->httpClient->sendRequest($request);
 
         if ($response->getStatusCode() >= 300) {
-            throw new NonSuccessfulHttpResponseException($callback, $response);
+            throw new NonSuccessfulHttpResponseException($workerEvent, $response);
         }
     }
 }

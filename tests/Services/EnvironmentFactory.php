@@ -53,7 +53,7 @@ class EnvironmentFactory
         return $environment
             ->withSources($sources)
             ->withTests($tests)
-            ->withCallbacks($callbacks)
+            ->withWorkerEvents($callbacks)
         ;
     }
 }

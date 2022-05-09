@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\DataProvider\CallbackFactory;
+namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
@@ -30,7 +30,7 @@ trait CreateFromCompilationFailedEventDataProviderTrait
         return [
             FailedEvent::class => [
                 'event' => new FailedEvent($source, $errorOutput),
-                'expectedCallback' => WorkerEvent::create(
+                'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEvent::TYPE_COMPILATION_FAILED,
                     '{{ job_label }}' . $source,
                     [

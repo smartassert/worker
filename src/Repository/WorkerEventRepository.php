@@ -28,12 +28,12 @@ class WorkerEventRepository extends ServiceEntityRepository
      */
     public function create(string $type, string $reference, array $payload): WorkerEvent
     {
-        $callback = WorkerEvent::create($type, $reference, $payload);
+        $entity = WorkerEvent::create($type, $reference, $payload);
 
-        $this->_em->persist($callback);
+        $this->_em->persist($entity);
         $this->_em->flush();
 
-        return $callback;
+        return $entity;
     }
 
     public function hasForType(string $type): bool

@@ -71,11 +71,11 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public function dispatchExecutionCompletedEvent(): void
     {
         $executionStateComplete = $this->executionState->is(ExecutionState::STATE_COMPLETE);
-        $hasExecutionCompletedCallback = $this->workerEventRepository->hasForType(
+        $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             WorkerEvent::TYPE_EXECUTION_COMPLETED
         );
 
-        if (true === $executionStateComplete && false === $hasExecutionCompletedCallback) {
+        if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $this->eventDispatcher->dispatch(new ExecutionCompletedEvent());
         }
     }

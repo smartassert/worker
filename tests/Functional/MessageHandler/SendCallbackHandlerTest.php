@@ -28,8 +28,8 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private SendCallbackHandler $handler;
-    private WorkerEventRepository $callbackRepository;
-    private WorkerEvent $callback;
+    private WorkerEventRepository $workerEventRepository;
+    private WorkerEvent $workerEvent;
 
     protected function setUp(): void
     {
@@ -39,9 +39,9 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         \assert($sendCallbackHandler instanceof SendCallbackHandler);
         $this->handler = $sendCallbackHandler;
 
-        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($callbackRepository instanceof WorkerEventRepository);
-        $this->callbackRepository = $callbackRepository;
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -60,61 +60,61 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         \assert($environmentFactory instanceof EnvironmentFactory);
         $environment = $environmentFactory->create($environmentSetup);
 
-        $callbacks = $environment->getCallbacks();
-        self::assertCount(1, $callbacks);
+        $workerEvents = $environment->getWorkerEvents();
+        self::assertCount(1, $workerEvents);
 
-        $callback = $callbacks[0];
-        self::assertInstanceOf(WorkerEvent::class, $callback);
+        $workerEvent = $workerEvents[0];
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
 
-        $this->callback = $callback;
+        $this->workerEvent = $workerEvent;
     }
 
     public function testInvokeSuccess(): void
     {
-        $expectedSentCallback = clone $this->callback;
-        $expectedSentCallback->setState(WorkerEvent::STATE_SENDING);
+        $expectedSentWorkerEvent = clone $this->workerEvent;
+        $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
 
-        $this->setCallbackSender((new MockCallbackSender())
-            ->withSendCall($expectedSentCallback)
+        $this->setWorkerEventSender((new MockCallbackSender())
+            ->withSendCall($expectedSentWorkerEvent)
             ->getMock());
 
-        $message = new SendCallbackMessage((int) $this->callback->getId());
+        $message = new SendCallbackMessage((int) $this->workerEvent->getId());
 
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
 
         ($this->handler)($message);
 
-        $callback = $this->callbackRepository->find($this->callback->getId());
-        self::assertInstanceOf(WorkerEvent::class, $callback);
-        self::assertSame(WorkerEvent::STATE_COMPLETE, $this->callback->getState());
+        $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
+        self::assertSame(WorkerEvent::STATE_COMPLETE, $this->workerEvent->getState());
     }
 
     /**
      * @dataProvider invokeFailureDataProvider
      */
-    public function testInvokeFailure(\Exception $callbackSenderException, string $expectedCallbackState): void
+    public function testInvokeFailure(\Exception $workerEventSenderException, string $expectedWorkerEventState): void
     {
-        $expectedSentCallback = clone $this->callback;
-        $expectedSentCallback->setState(WorkerEvent::STATE_SENDING);
+        $expectedSentWorkerEvent = clone $this->workerEvent;
+        $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
 
-        $this->setCallbackSender((new MockCallbackSender())
-            ->withSendCall($expectedSentCallback, $callbackSenderException)
+        $this->setWorkerEventSender((new MockCallbackSender())
+            ->withSendCall($expectedSentWorkerEvent, $workerEventSenderException)
             ->getMock());
 
-        $message = new SendCallbackMessage((int) $this->callback->getId());
+        $message = new SendCallbackMessage((int) $this->workerEvent->getId());
 
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->callback->getState());
+        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
 
         try {
             ($this->handler)($message);
-            $this->fail($callbackSenderException::class . ' not thrown');
+            $this->fail($workerEventSenderException::class . ' not thrown');
         } catch (\Throwable $exception) {
-            self::assertSame($callbackSenderException, $exception);
+            self::assertSame($workerEventSenderException, $exception);
         }
 
-        $callback = $this->callbackRepository->find($this->callback->getId());
-        self::assertInstanceOf(WorkerEvent::class, $callback);
-        self::assertSame($expectedCallbackState, $this->callback->getState());
+        $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
+        self::assertSame($expectedWorkerEventState, $this->workerEvent->getState());
     }
 
     /**
@@ -124,21 +124,21 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     {
         return [
             'HTTP 400' => [
-                'callbackSenderException' => new NonSuccessfulHttpResponseException(
+                'workerEventSenderException' => new NonSuccessfulHttpResponseException(
                     new WorkerEvent(),
                     new Response(400)
                 ),
-                'expectedCallbackState' => WorkerEvent::STATE_SENDING,
+                'expectedWorkerEventState' => WorkerEvent::STATE_SENDING,
             ],
             'Guzzle ConnectException' => [
-                'callbackSenderException' => \Mockery::mock(ConnectException::class),
-                'expectedCallbackState' => WorkerEvent::STATE_SENDING,
+                'workerEventSenderException' => \Mockery::mock(ConnectException::class),
+                'expectedWorkerEventState' => WorkerEvent::STATE_SENDING,
             ],
         ];
     }
 
-    private function setCallbackSender(WorkerEventSender $callbackSender): void
+    private function setWorkerEventSender(WorkerEventSender $workerEventSender): void
     {
-        ObjectReflector::setProperty($this->handler, $this->handler::class, 'sender', $callbackSender);
+        ObjectReflector::setProperty($this->handler, $this->handler::class, 'sender', $workerEventSender);
     }
 }

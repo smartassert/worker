@@ -32,7 +32,7 @@ abstract class AbstractEventFactory implements EventFactoryInterface
     /**
      * @var array<class-string, WorkerEvent::TYPE_*>
      */
-    private const EVENT_TO_CALLBACK_TYPE_MAP = [
+    private const EVENT_TO_TYPE_MAP = [
         CompilationStartedEvent::class => WorkerEvent::TYPE_COMPILATION_STARTED,
         CompilationFailedEvent::class => WorkerEvent::TYPE_COMPILATION_FAILED,
         CompilationPassedEvent::class => WorkerEvent::TYPE_COMPILATION_PASSED,
@@ -61,7 +61,7 @@ abstract class AbstractEventFactory implements EventFactoryInterface
     protected function create(Job $job, Event $event, array $data): WorkerEvent
     {
         return $this->workerEventRepository->create(
-            self::EVENT_TO_CALLBACK_TYPE_MAP[$event::class] ?? WorkerEvent::TYPE_UNKNOWN,
+            self::EVENT_TO_TYPE_MAP[$event::class] ?? WorkerEvent::TYPE_UNKNOWN,
             $this->createReference($job, $event),
             $data
         );

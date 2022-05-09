@@ -13,7 +13,7 @@ use App\Tests\AbstractBaseFunctionalTest;
 class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 {
     private WorkerEventAborter $aborter;
-    private WorkerEventRepository $callbackRepository;
+    private WorkerEventRepository $workerEventRepository;
     private WorkerEventStateMutator $stateMutator;
 
     protected function setUp(): void
@@ -24,13 +24,13 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         \assert($aborter instanceof WorkerEventAborter);
         $this->aborter = $aborter;
 
-        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($callbackRepository instanceof WorkerEventRepository);
-        $this->callbackRepository = $callbackRepository;
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
 
         $repository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($repository instanceof WorkerEventRepository);
-        $this->callbackRepository = $repository;
+        $this->workerEventRepository = $repository;
 
         $stateMutator = self::getContainer()->get(WorkerEventStateMutator::class);
         \assert($stateMutator instanceof WorkerEventStateMutator);
@@ -39,23 +39,23 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 
     public function testAbort(): void
     {
-        $callback = $this->callbackRepository->create(
+        $workerEvent = $this->workerEventRepository->create(
             WorkerEvent::TYPE_JOB_COMPLETED,
             'non-empty reference',
             []
         );
-        $this->stateMutator->setQueued($callback);
+        $this->stateMutator->setQueued($workerEvent);
 
-        $id = $callback->getId();
+        $id = $workerEvent->getId();
 
         self::assertIsInt($id);
-        self::assertNotSame(WorkerEvent::STATE_FAILED, $callback->getState());
+        self::assertNotSame(WorkerEvent::STATE_FAILED, $workerEvent->getState());
 
         $this->aborter->abort($id);
 
-        $callback = $this->callbackRepository->find($id);
-        \assert($callback instanceof WorkerEvent);
+        $workerEvent = $this->workerEventRepository->find($id);
+        \assert($workerEvent instanceof WorkerEvent);
 
-        self::assertSame(WorkerEvent::STATE_FAILED, $callback->getState());
+        self::assertSame(WorkerEvent::STATE_FAILED, $workerEvent->getState());
     }
 }

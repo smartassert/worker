@@ -12,22 +12,22 @@ use Doctrine\ORM\EntityManagerInterface;
 class TestCallbackFactory
 {
     public function __construct(
-        private readonly WorkerEventRepository $callbackRepository,
+        private readonly WorkerEventRepository $workerEventRepository,
         private EntityManagerInterface $entityManager
     ) {
     }
 
     public function create(CallbackSetup $callbackSetup): WorkerEvent
     {
-        $callback = $this->callbackRepository->create(
+        $workerEvent = $this->workerEventRepository->create(
             $callbackSetup->getType(),
             'non-empty reference',
             $callbackSetup->getPayload()
         );
 
-        $callback->setState($callbackSetup->getState());
+        $workerEvent->setState($callbackSetup->getState());
         $this->entityManager->flush();
 
-        return $callback;
+        return $workerEvent;
     }
 }

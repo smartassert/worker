@@ -46,7 +46,7 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
     private EventDispatcherInterface $eventDispatcher;
     private MessengerAsserter $messengerAsserter;
-    private WorkerEventRepository $callbackRepository;
+    private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
@@ -60,9 +60,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         \assert($messengerAsserter instanceof MessengerAsserter);
         $this->messengerAsserter = $messengerAsserter;
 
-        $callbackRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($callbackRepository instanceof WorkerEventRepository);
-        $this->callbackRepository = $callbackRepository;
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
 
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
@@ -94,12 +94,12 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider subscribesToEventDataProvider
      *
-     * @param array<mixed> $expectedCallbackPayload
+     * @param array<mixed> $expectedWorkerEventPayload
      */
     public function testSubscribesToEvent(
         Event $event,
-        string $expectedCallbackType,
-        array $expectedCallbackPayload
+        string $expectedWorkerEventType,
+        array $expectedWorkerEventPayload
     ): void {
         $this->messengerAsserter->assertQueueIsEmpty();
 
@@ -112,12 +112,12 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         self::assertInstanceOf(SendCallbackMessage::class, $message);
 
         if ($message instanceof SendCallbackMessage) {
-            $callback = $this->callbackRepository->find($message->getCallbackId());
-            self::assertInstanceOf(WorkerEvent::class, $callback);
+            $workerEvent = $this->workerEventRepository->find($message->getCallbackId());
+            self::assertInstanceOf(WorkerEvent::class, $workerEvent);
 
-            if ($callback instanceof WorkerEvent) {
-                self::assertSame($expectedCallbackType, $callback->getType());
-                self::assertSame($expectedCallbackPayload, $callback->getPayload());
+            if ($workerEvent instanceof WorkerEvent) {
+                self::assertSame($expectedWorkerEventType, $workerEvent->getType());
+                self::assertSame($expectedWorkerEventPayload, $workerEvent->getPayload());
             }
         }
     }
@@ -148,27 +148,27 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
-                'expectedCallbackType' => WorkerEvent::TYPE_JOB_STARTED,
-                'expectedCallbackPayload' => [],
+                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_STARTED,
+                'expectedWorkerEventPayload' => [],
             ],
             StartedEvent::class => [
                 'event' => new StartedEvent($testSource),
-                'expectedCallbackType' => WorkerEvent::TYPE_COMPILATION_STARTED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_STARTED,
+                'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
             PassedEvent::class => [
                 'event' => new PassedEvent($testSource, (new MockSuiteManifest())->getMock()),
-                'expectedCallbackType' => WorkerEvent::TYPE_COMPILATION_PASSED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_PASSED,
+                'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
             FailedEvent::class => [
                 'event' => new FailedEvent($testSource, $sourceCompileFailureEventOutput),
-                'expectedCallbackType' => WorkerEvent::TYPE_COMPILATION_FAILED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_FAILED,
+                'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                     'output' => [
                         'compile-failure-key' => 'value',
@@ -177,28 +177,28 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             JobCompiledEvent::class => [
                 'event' => new JobCompiledEvent(),
-                'expectedCallbackType' => WorkerEvent::TYPE_JOB_COMPILED,
-                'expectedCallbackPayload' => [],
+                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_COMPILED,
+                'expectedWorkerEventPayload' => [],
             ],
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
-                'expectedCallbackType' => WorkerEvent::TYPE_EXECUTION_STARTED,
-                'expectedCallbackPayload' => [],
+                'expectedWorkerEventType' => WorkerEvent::TYPE_EXECUTION_STARTED,
+                'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent(
                     $genericTest,
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedCallbackType' => WorkerEvent::TYPE_TEST_STARTED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_STARTED,
+                'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument), $relativeTestSource),
-                'expectedCallbackType' => WorkerEvent::TYPE_STEP_PASSED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_STEP_PASSED,
+                'expectedWorkerEventPayload' => [
                     'type' => 'step',
                     'payload' => [
                         'name' => 'passing step',
@@ -211,8 +211,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     new Step($failingStepDocument),
                     $relativeTestSource
                 ),
-                'expectedCallbackType' => WorkerEvent::TYPE_STEP_FAILED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_STEP_FAILED,
+                'expectedWorkerEventPayload' => [
                     'type' => 'step',
                     'payload' => [
                         'name' => 'failing step',
@@ -224,8 +224,8 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(TestEntity::STATE_COMPLETE),
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedCallbackType' => WorkerEvent::TYPE_TEST_PASSED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_PASSED,
+                'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
@@ -234,22 +234,22 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(TestEntity::STATE_FAILED),
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedCallbackType' => WorkerEvent::TYPE_TEST_FAILED,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_FAILED,
+                'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),
-                'expectedCallbackType' => WorkerEvent::TYPE_JOB_TIME_OUT,
-                'expectedCallbackPayload' => [
+                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_TIME_OUT,
+                'expectedWorkerEventPayload' => [
                     'maximum_duration_in_seconds' => 10,
                 ],
             ],
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
-                'expectedCallbackType' => WorkerEvent::TYPE_JOB_COMPLETED,
-                'expectedCallbackPayload' => [],
+                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_COMPLETED,
+                'expectedWorkerEventPayload' => [],
             ],
         ];
     }
