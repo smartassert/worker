@@ -7,8 +7,8 @@ namespace App\Tests\Unit\MessageHandler;
 use App\Message\SendCallbackMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\WorkerEventRepository;
-use App\Tests\Mock\Services\MockCallbackSender;
 use App\Tests\Mock\Services\MockCallbackStateMutator;
+use App\Tests\Mock\Services\MockWorkerEventSender;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +28,7 @@ class SendCallbackHandlerTest extends TestCase
             ->andReturnNull()
         ;
 
-        $sender = (new MockCallbackSender())
+        $sender = (new MockWorkerEventSender())
             ->withoutSendCall()
             ->getMock()
         ;

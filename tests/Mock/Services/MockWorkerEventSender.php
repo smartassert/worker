@@ -8,7 +8,7 @@ use App\Entity\WorkerEvent;
 use App\Services\WorkerEventSender;
 use Mockery\MockInterface;
 
-class MockCallbackSender
+class MockWorkerEventSender
 {
     private WorkerEventSender $mock;
 

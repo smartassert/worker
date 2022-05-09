@@ -12,7 +12,7 @@ use App\MessageHandler\SendCallbackHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\Services\MockCallbackSender;
+use App\Tests\Mock\Services\MockWorkerEventSender;
 use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -74,7 +74,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         $expectedSentWorkerEvent = clone $this->workerEvent;
         $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
 
-        $this->setWorkerEventSender((new MockCallbackSender())
+        $this->setWorkerEventSender((new MockWorkerEventSender())
             ->withSendCall($expectedSentWorkerEvent)
             ->getMock());
 
@@ -97,7 +97,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
         $expectedSentWorkerEvent = clone $this->workerEvent;
         $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
 
-        $this->setWorkerEventSender((new MockCallbackSender())
+        $this->setWorkerEventSender((new MockWorkerEventSender())
             ->withSendCall($expectedSentWorkerEvent, $workerEventSenderException)
             ->getMock());
 
