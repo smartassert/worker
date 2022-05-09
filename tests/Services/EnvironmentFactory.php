@@ -46,8 +46,8 @@ class EnvironmentFactory
         }
 
         $callbacks = [];
-        foreach ($setup->getCallbackSetups() as $callbackSetup) {
-            $callbacks[] = $this->testCallbackFactory->create($callbackSetup);
+        foreach ($setup->getWorkerEventSetups() as $workerEventSetup) {
+            $callbacks[] = $this->testCallbackFactory->create($workerEventSetup);
         }
 
         return $environment
