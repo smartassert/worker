@@ -19,9 +19,9 @@ class EnvironmentSetup
     private array $testSetups = [];
 
     /**
-     * @var CallbackSetup[]
+     * @var WorkerEventSetup[]
      */
-    private array $callbackSetups = [];
+    private array $workerEventSetups = [];
 
     public function getJobSetup(): ?JobSetup
     {
@@ -79,21 +79,21 @@ class EnvironmentSetup
     }
 
     /**
-     * @return CallbackSetup[]
+     * @return WorkerEventSetup[]
      */
-    public function getCallbackSetups(): array
+    public function getWorkerEventSetups(): array
     {
-        return $this->callbackSetups;
+        return $this->workerEventSetups;
     }
 
     /**
-     * @param CallbackSetup[] $callbackSetups
+     * @param WorkerEventSetup[] $workerEventSetups
      */
-    public function withCallbackSetups(array $callbackSetups): self
+    public function withWorkerEventSetups(array $workerEventSetups): self
     {
         $new = clone $this;
-        $new->callbackSetups = array_filter($callbackSetups, function ($value) {
-            return $value instanceof CallbackSetup;
+        $new->workerEventSetups = array_filter($workerEventSetups, function ($value) {
+            return $value instanceof WorkerEventSetup;
         });
 
         return $new;

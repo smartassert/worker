@@ -10,11 +10,11 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Services\CompilationState;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
@@ -90,8 +90,8 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())
                             ->withPath('Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::STATE_FAILED,
@@ -188,8 +188,8 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())
                             ->withPath('Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [

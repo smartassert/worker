@@ -13,9 +13,9 @@ use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\Services\MockWorkerEventSender;
-use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use GuzzleHttp\Exception\ConnectException;
@@ -50,8 +50,8 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
 
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
-            ->withCallbackSetups([
-                (new CallbackSetup())
+            ->withWorkerEventSetups([
+                (new WorkerEventSetup())
                     ->withState(WorkerEvent::STATE_QUEUED),
             ])
         ;

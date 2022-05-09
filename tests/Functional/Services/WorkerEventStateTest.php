@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\WorkerEvent;
 use App\Services\WorkerEventState;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\CallbackSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestCallbackFactory;
 
@@ -200,7 +200,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     private function createWorkerEventEntity(string $state): void
     {
         $this->testCallbackFactory->create(
-            (new CallbackSetup())->withState($state)
+            (new WorkerEventSetup())->withState($state)
         );
     }
 }
