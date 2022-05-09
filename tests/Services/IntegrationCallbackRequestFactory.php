@@ -17,8 +17,8 @@ class IntegrationCallbackRequestFactory
 
     /**
      * @param CallbackEntity::TYPE_* $type
-     * @param non-empty-string          $reference
-     * @param array<mixed>              $payload
+     * @param non-empty-string       $reference
+     * @param array<mixed>           $payload
      */
     public function create(string $type, string $reference, array $payload): RequestInterface
     {
