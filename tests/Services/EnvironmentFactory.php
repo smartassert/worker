@@ -16,7 +16,7 @@ class EnvironmentFactory
         private JobRepository $jobRepository,
         private SourceRepository $sourceRepository,
         private TestTestFactory $testTestFactory,
-        private TestCallbackFactory $testCallbackFactory,
+        private TestWorkerEventFactory $testWorkerEventFactory,
     ) {
     }
 
@@ -45,15 +45,15 @@ class EnvironmentFactory
             $tests[] = $this->testTestFactory->create($testSetup);
         }
 
-        $callbacks = [];
+        $workerEvents = [];
         foreach ($setup->getWorkerEventSetups() as $workerEventSetup) {
-            $callbacks[] = $this->testCallbackFactory->create($workerEventSetup);
+            $workerEvents[] = $this->testWorkerEventFactory->create($workerEventSetup);
         }
 
         return $environment
             ->withSources($sources)
             ->withTests($tests)
-            ->withWorkerEvents($callbacks)
+            ->withWorkerEvents($workerEvents)
         ;
     }
 }
