@@ -27,7 +27,7 @@ use App\Event\TestStartedEvent;
 use App\Repository\CallbackRepository;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractEventCallbackFactory implements EventCallbackFactoryInterface
+abstract class AbstractEventFactory implements EventFactoryInterface
 {
     /**
      * @var array<class-string, WorkerEvent::TYPE_*>

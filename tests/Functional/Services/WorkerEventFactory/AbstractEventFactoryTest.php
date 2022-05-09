@@ -6,21 +6,21 @@ namespace App\Tests\Functional\Services\WorkerEventFactory;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\EventFactoryInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
-abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTest
+abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
 {
-    private EventCallbackFactoryInterface $callbackFactory;
+    private EventFactoryInterface $callbackFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $callbackFactory = $this->getCallbackFactory();
-        if ($callbackFactory instanceof EventCallbackFactoryInterface) {
+        if ($callbackFactory instanceof EventFactoryInterface) {
             $this->callbackFactory = $callbackFactory;
         }
     }
@@ -60,5 +60,5 @@ abstract class AbstractEventCallbackFactoryTest extends AbstractBaseFunctionalTe
         self::assertSame($expectedCallback->getPayload(), $callback->getPayload());
     }
 
-    abstract protected function getCallbackFactory(): ?EventCallbackFactoryInterface;
+    abstract protected function getCallbackFactory(): ?EventFactoryInterface;
 }

@@ -9,7 +9,7 @@ use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationFailedEventCallbackFactory extends AbstractCompilationEventCallbackFactory
+class CompilationFailedEventFactory extends AbstractCompilationEventFactory
 {
     public function handles(Event $event): bool
     {

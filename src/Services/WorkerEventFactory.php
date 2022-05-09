@@ -6,13 +6,13 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
+use App\Services\WorkerEventFactory\EventFactoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class WorkerEventFactory
 {
     /**
-     * @var EventCallbackFactoryInterface[]
+     * @var EventFactoryInterface[]
      */
     private array $eventCallbackFactories;
 
@@ -24,7 +24,7 @@ class WorkerEventFactory
         array $eventCallbackFactories
     ) {
         $this->eventCallbackFactories = array_filter($eventCallbackFactories, function ($item) {
-            return $item instanceof EventCallbackFactoryInterface;
+            return $item instanceof EventFactoryInterface;
         });
     }
 

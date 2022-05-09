@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-interface EventCallbackFactoryInterface
+interface EventFactoryInterface
 {
     public function handles(Event $event): bool;
 

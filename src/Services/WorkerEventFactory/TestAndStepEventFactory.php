@@ -10,7 +10,7 @@ use App\Event\StepEventInterface;
 use App\Event\TestEventInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TestAndStepEventCallbackFactory extends AbstractEventCallbackFactory
+class TestAndStepEventFactory extends AbstractEventFactory
 {
     public function handles(Event $event): bool
     {

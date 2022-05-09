@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\WorkerEventFactory;
 
-use App\Services\WorkerEventFactory\EventCallbackFactoryInterface;
-use App\Services\WorkerEventFactory\NoPayloadEventCallbackFactory;
+use App\Services\WorkerEventFactory\EventFactoryInterface;
+use App\Services\WorkerEventFactory\NoPayloadEventFactory;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromExecutionStartedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompiledEventDataProviderTrait;
@@ -13,7 +13,7 @@ use App\Tests\DataProvider\CallbackFactory\CreateFromJobCompletedEventDataProvid
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobFailedEventDataProviderTrait;
 use App\Tests\DataProvider\CallbackFactory\CreateFromJobReadyEventDataProviderTrait;
 
-class NoPayloadEventCallbackFactoryTest extends AbstractEventCallbackFactoryTest
+class NoPayloadEventFactoryTest extends AbstractEventFactoryTest
 {
     use CreateFromJobReadyEventDataProviderTrait;
     use CreateFromJobCompiledEventDataProviderTrait;
@@ -34,11 +34,11 @@ class NoPayloadEventCallbackFactoryTest extends AbstractEventCallbackFactoryTest
         );
     }
 
-    protected function getCallbackFactory(): ?EventCallbackFactoryInterface
+    protected function getCallbackFactory(): ?EventFactoryInterface
     {
-        $callbackFactory = self::getContainer()->get(NoPayloadEventCallbackFactory::class);
+        $callbackFactory = self::getContainer()->get(NoPayloadEventFactory::class);
 
-        return $callbackFactory instanceof NoPayloadEventCallbackFactory
+        return $callbackFactory instanceof NoPayloadEventFactory
             ? $callbackFactory
             : null;
     }
