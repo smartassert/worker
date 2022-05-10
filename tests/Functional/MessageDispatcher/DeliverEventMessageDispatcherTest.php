@@ -7,6 +7,7 @@ namespace App\Tests\Functional\MessageDispatcher;
 use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
@@ -98,7 +99,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
      */
     public function testSubscribesToEvent(
         Event $event,
-        string $expectedWorkerEventType,
+        WorkerEventType $expectedWorkerEventType,
         array $expectedWorkerEventPayload
     ): void {
         $this->messengerAsserter->assertQueueIsEmpty();
@@ -142,26 +143,26 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         return [
             JobReadyEvent::class => [
                 'event' => new JobReadyEvent(),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_STARTED,
+                'expectedWorkerEventType' => WorkerEventType::JOB_STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
             StartedEvent::class => [
                 'event' => new StartedEvent($testSource),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_STARTED,
+                'expectedWorkerEventType' => WorkerEventType::COMPILATION_STARTED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
             PassedEvent::class => [
                 'event' => new PassedEvent($testSource, (new MockSuiteManifest())->getMock()),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_PASSED,
+                'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
             FailedEvent::class => [
                 'event' => new FailedEvent($testSource, $sourceCompileFailureEventOutput),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_COMPILATION_FAILED,
+                'expectedWorkerEventType' => WorkerEventType::COMPILATION_FAILED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                     'output' => [
@@ -171,12 +172,12 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             JobCompiledEvent::class => [
                 'event' => new JobCompiledEvent(),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_COMPILED,
+                'expectedWorkerEventType' => WorkerEventType::JOB_COMPILED,
                 'expectedWorkerEventPayload' => [],
             ],
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_EXECUTION_STARTED,
+                'expectedWorkerEventType' => WorkerEventType::EXECUTION_STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
@@ -184,14 +185,14 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest,
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_STARTED,
+                'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             StepPassedEvent::class => [
                 'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument), $relativeTestSource),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_STEP_PASSED,
+                'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
                     'type' => 'step',
                     'payload' => [
@@ -205,7 +206,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     new Step($failingStepDocument),
                     $relativeTestSource
                 ),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_STEP_FAILED,
+                'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
                 'expectedWorkerEventPayload' => [
                     'type' => 'step',
                     'payload' => [
@@ -218,7 +219,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(TestEntity::STATE_COMPLETE),
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_PASSED,
+                'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
                 'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
@@ -228,21 +229,21 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $genericTest->setState(TestEntity::STATE_FAILED),
                     new TestDocument(new Document('document-key: value'))
                 ),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_TEST_FAILED,
+                'expectedWorkerEventType' => WorkerEventType::TEST_FAILED,
                 'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_TIME_OUT,
+                'expectedWorkerEventType' => WorkerEventType::JOB_TIME_OUT,
                 'expectedWorkerEventPayload' => [
                     'maximum_duration_in_seconds' => 10,
                 ],
             ],
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
-                'expectedWorkerEventType' => WorkerEvent::TYPE_JOB_COMPLETED,
+                'expectedWorkerEventType' => WorkerEventType::JOB_COMPLETED,
                 'expectedWorkerEventPayload' => [],
             ],
         ];

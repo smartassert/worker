@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 
 class CompilationState implements \Stringable
@@ -31,7 +31,7 @@ class CompilationState implements \Stringable
      */
     public function __toString(): string
     {
-        if (0 !== $this->workerEventRepository->getTypeCount(WorkerEvent::TYPE_COMPILATION_FAILED)) {
+        if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::COMPILATION_FAILED)) {
             return CompilationState::STATE_FAILED;
         }
 

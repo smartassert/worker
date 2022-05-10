@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Services\CompilationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -92,7 +93,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
+                            ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::STATE_FAILED,
             ],
@@ -190,7 +191,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEvent::TYPE_COMPILATION_FAILED),
+                            ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::STATE_FAILED,

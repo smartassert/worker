@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\SourceCompilation\FailedEvent;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
@@ -31,7 +32,7 @@ trait CreateFromCompilationFailedEventDataProviderTrait
             FailedEvent::class => [
                 'event' => new FailedEvent($source, $errorOutput),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_COMPILATION_FAILED,
+                    WorkerEventType::COMPILATION_FAILED,
                     '{{ job_label }}' . $source,
                     [
                         'source' => '/app/source/test.yml',

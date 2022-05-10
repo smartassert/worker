@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\SourceCompilation\StartedEvent;
 
 trait CreateFromCompilationStartedEventDataProviderTrait
@@ -20,7 +21,7 @@ trait CreateFromCompilationStartedEventDataProviderTrait
             StartedEvent::class => [
                 'event' => new StartedEvent($source),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_COMPILATION_STARTED,
+                    WorkerEventType::COMPILATION_STARTED,
                     '{{ job_label }}' . $source,
                     [
                         'source' => $source,

@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventSender;
@@ -46,7 +47,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
     public function testSendSuccess(): void
     {
         $workerEvent = WorkerEvent::create(
-            WorkerEvent::TYPE_JOB_STARTED,
+            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -67,7 +68,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
         $workerEvent = WorkerEvent::create(
-            WorkerEvent::TYPE_JOB_STARTED,
+            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -101,7 +102,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
     public function testSendClientException(\Exception $exception): void
     {
         $workerEvent = WorkerEvent::create(
-            WorkerEvent::TYPE_JOB_STARTED,
+            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );

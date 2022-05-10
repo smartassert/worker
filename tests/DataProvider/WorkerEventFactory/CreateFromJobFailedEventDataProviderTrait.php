@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\JobFailedEvent;
 
 trait CreateFromJobFailedEventDataProviderTrait
@@ -18,7 +19,7 @@ trait CreateFromJobFailedEventDataProviderTrait
             JobFailedEvent::class => [
                 'event' => new JobFailedEvent(),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_JOB_FAILED,
+                    WorkerEventType::JOB_FAILED,
                     '{{ job_label }}',
                     []
                 ),

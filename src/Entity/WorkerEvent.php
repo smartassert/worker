@@ -10,24 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
 {
-    public const TYPE_JOB_STARTED = 'job/started';
-    public const TYPE_JOB_TIME_OUT = 'job/timed-out';
-    public const TYPE_JOB_COMPLETED = 'job/completed';
-    public const TYPE_JOB_FAILED = 'job/failed';
-    public const TYPE_JOB_COMPILED = 'job/compiled';
-    public const TYPE_COMPILATION_STARTED = 'compilation/started';
-    public const TYPE_COMPILATION_PASSED = 'compilation/passed';
-    public const TYPE_COMPILATION_FAILED = 'compilation/failed';
-    public const TYPE_EXECUTION_STARTED = 'execution/started';
-    public const TYPE_EXECUTION_COMPLETED = 'execution/completed';
-    public const TYPE_TEST_STARTED = 'test/started';
-    public const TYPE_TEST_PASSED = 'test/passed';
-    public const TYPE_TEST_FAILED = 'test/failed';
-    public const TYPE_STEP_PASSED = 'step/passed';
-    public const TYPE_STEP_FAILED = 'step/failed';
-
-    public const TYPE_UNKNOWN = 'unknown';
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -36,11 +18,8 @@ class WorkerEvent
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
 
-    /**
-     * @var self::TYPE_*
-     */
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $type;
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
+    private WorkerEventType $type;
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
@@ -52,11 +31,10 @@ class WorkerEvent
     private array $payload;
 
     /**
-     * @param self::TYPE_*     $type
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
-    public static function create(string $type, string $reference, array $payload): self
+    public static function create(WorkerEventType $type, string $reference, array $payload): self
     {
         $entity = new WorkerEvent();
         $entity->state = WorkerEventState::AWAITING;
@@ -92,7 +70,7 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getType(): string
+    public function getType(): WorkerEventType
     {
         return $this->type;
     }

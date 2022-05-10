@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -72,7 +72,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         $executionStateComplete = $this->executionState->is(ExecutionState::STATE_COMPLETE);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
-            WorkerEvent::TYPE_EXECUTION_COMPLETED
+            WorkerEventType::EXECUTION_COMPLETED
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
