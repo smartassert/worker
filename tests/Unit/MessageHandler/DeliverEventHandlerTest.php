@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Unit\MessageHandler;
 
 use App\Message\DeliverEventMessage;
-use App\MessageHandler\SendCallbackHandler;
+use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\Mock\Services\MockWorkerEventSender;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class SendCallbackHandlerTest extends TestCase
+class DeliverEventHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,7 +37,7 @@ class SendCallbackHandlerTest extends TestCase
         $stateMutator->shouldNotReceive('setSending');
         $stateMutator->shouldNotReceive('setComplete');
 
-        $handler = new SendCallbackHandler($repository, $sender, $stateMutator);
+        $handler = new DeliverEventHandler($repository, $sender, $stateMutator);
 
         ($handler)($message);
     }
