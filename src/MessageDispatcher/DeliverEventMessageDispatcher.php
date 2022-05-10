@@ -21,7 +21,8 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
-use App\Services\WorkerEventFactory\WorkerEventFactory;
+use App\Repository\JobRepository;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -30,11 +31,25 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
+    /**
+     * @var EventHandlerInterface[]
+     */
+    private array $handlers = [];
+
+    /**
+     * @param iterable<EventHandlerInterface> $handlers
+     */
     public function __construct(
         private MessageBusInterface $messageBus,
         private WorkerEventStateMutator $workerEventStateMutator,
-        private WorkerEventFactory $workerEventFactory
+        private readonly JobRepository $jobRepository,
+        iterable $handlers
     ) {
+        foreach ($handlers as $handler) {
+            if ($handler instanceof EventHandlerInterface) {
+                $this->handlers[] = $handler;
+            }
+        }
     }
 
     /**
@@ -93,15 +108,25 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 
     public function dispatchForEvent(Event $event): ?Envelope
     {
-        $workerEvent = $this->workerEventFactory->createForEvent($event);
-        if ($workerEvent instanceof WorkerEvent) {
-            return $this->dispatch($workerEvent);
+        $job = $this->jobRepository->get();
+        if (null === $job) {
+            return null;
+        }
+
+        foreach ($this->handlers as $handler) {
+            if ($handler->handles($event)) {
+                $workerEvent = $handler->createForEvent($job, $event);
+
+                if ($workerEvent instanceof WorkerEvent) {
+                    $this->dispatch($workerEvent);
+                }
+            }
         }
 
         return null;
     }
 
-    public function dispatch(WorkerEvent $workerEvent): Envelope
+    private function dispatch(WorkerEvent $workerEvent): Envelope
     {
         $this->workerEventStateMutator->setQueued($workerEvent);
 

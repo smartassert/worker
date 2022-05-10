@@ -88,7 +88,7 @@ services:
         resource: '../src/Services/WorkerEventFactory/EventHandler/'
         tags: ['app.worker_event_factory.event_handler']
 
-    App\Services\WorkerEventFactory\WorkerEventFactory:
+    App\MessageDispatcher\DeliverEventMessageDispatcher:
         arguments:
             $handlers: !tagged_iterator app.worker_event_factory.event_handler
 

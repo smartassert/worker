@@ -12,6 +12,7 @@ use App\Services\TestFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Services\EntityRemover;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
@@ -19,6 +20,8 @@ use webignition\BasilModels\Test\Configuration;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
+    use MockeryPHPUnitIntegration;
+
     private TestFactory $factory;
     private EventDispatcherInterface $eventDispatcher;
 
