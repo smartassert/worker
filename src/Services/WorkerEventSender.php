@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
-use App\HttpMessage\CallbackRequest;
+use App\HttpMessage\EventDeliveryRequest;
 use App\Repository\JobRepository;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
@@ -30,7 +30,7 @@ class WorkerEventSender
             return;
         }
 
-        $request = new CallbackRequest($workerEvent, $job);
+        $request = new EventDeliveryRequest($workerEvent, $job);
         $response = $this->httpClient->sendRequest($request);
 
         if ($response->getStatusCode() >= 300) {
