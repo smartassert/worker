@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Services\WorkerEventFactory;
+namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationFailedEventFactory extends AbstractCompilationEventFactory
+class CompilationFailedEventHandler extends AbstractCompilationEventHandler
 {
     public function handles(Event $event): bool
     {

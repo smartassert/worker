@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\WorkerEventFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Services\WorkerEventFactory\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
-abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
+abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
 {
-    private EventFactoryInterface $factory;
+    private EventHandlerInterface $handler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $factory = $this->getFactory();
-        if ($factory instanceof EventFactoryInterface) {
-            $this->factory = $factory;
+        $factory = $this->getHandler();
+        if ($factory instanceof EventHandlerInterface) {
+            $this->handler = $factory;
         }
     }
 
@@ -32,7 +32,7 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
 
     public function testCreateForEventUnsupportedEvent(): void
     {
-        self::assertNull($this->factory->createForEvent(new Job(), new Event()));
+        self::assertNull($this->handler->createForEvent(new Job(), new Event()));
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
         $jobLabel = md5((string) rand());
         $job = Job::create($jobLabel, '', 600);
 
-        $workerEvent = $this->factory->createForEvent($job, $event);
+        $workerEvent = $this->handler->createForEvent($job, $event);
 
         $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedWorkerEvent->getReference());
         ObjectReflector::setProperty(
@@ -60,5 +60,5 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
         self::assertSame($expectedWorkerEvent->getPayload(), $workerEvent->getPayload());
     }
 
-    abstract protected function getFactory(): ?EventFactoryInterface;
+    abstract protected function getHandler(): ?EventHandlerInterface;
 }

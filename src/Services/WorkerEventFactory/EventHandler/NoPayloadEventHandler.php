@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\WorkerEventFactory;
+namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
@@ -14,7 +14,7 @@ use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class NoPayloadEventFactory extends AbstractEventFactory
+class NoPayloadEventHandler extends AbstractEventHandler
 {
     public function handles(Event $event): bool
     {
