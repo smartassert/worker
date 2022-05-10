@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Model;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 
 class WorkerEventSetup
 {
@@ -18,16 +19,13 @@ class WorkerEventSetup
      */
     private array $payload;
 
-    /**
-     * @var WorkerEvent::STATE_*
-     */
-    private string $state;
+    private WorkerEventState $state;
 
     public function __construct()
     {
         $this->type = WorkerEvent::TYPE_COMPILATION_FAILED;
         $this->payload = [];
-        $this->state = WorkerEvent::STATE_AWAITING;
+        $this->state = WorkerEventState::AWAITING;
     }
 
     /**
@@ -46,20 +44,12 @@ class WorkerEventSetup
         return $this->payload;
     }
 
-    /**
-     * @return WorkerEvent::STATE_*
-     */
-    public function getState(): string
+    public function getState(): WorkerEventState
     {
         return $this->state;
     }
 
-    /**
-     * @param WorkerEvent::STATE_* $state
-     *
-     * @return $this
-     */
-    public function withState(string $state): self
+    public function withState(WorkerEventState $state): self
     {
         $new = clone $this;
         $new->state = $state;

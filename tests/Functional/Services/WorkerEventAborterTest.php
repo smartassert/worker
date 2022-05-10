@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
 use App\Services\WorkerEventStateMutator;
@@ -49,13 +50,13 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         $id = $workerEvent->getId();
 
         self::assertIsInt($id);
-        self::assertNotSame(WorkerEvent::STATE_FAILED, $workerEvent->getState());
+        self::assertNotSame(WorkerEventState::FAILED, $workerEvent->getState());
 
         $this->aborter->abort($id);
 
         $workerEvent = $this->workerEventRepository->find($id);
         \assert($workerEvent instanceof WorkerEvent);
 
-        self::assertSame(WorkerEvent::STATE_FAILED, $workerEvent->getState());
+        self::assertSame(WorkerEventState::FAILED, $workerEvent->getState());
     }
 }

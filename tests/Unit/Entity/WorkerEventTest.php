@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use PHPUnit\Framework\TestCase;
 
 class WorkerEventTest extends TestCase
@@ -17,11 +18,11 @@ class WorkerEventTest extends TestCase
             []
         )
         ;
-        self::assertTrue($workerEvent->hasState(WorkerEvent::STATE_AWAITING));
-        self::assertFalse($workerEvent->hasState(WorkerEvent::STATE_COMPLETE));
+        self::assertTrue($workerEvent->hasState(WorkerEventState::AWAITING));
+        self::assertFalse($workerEvent->hasState(WorkerEventState::COMPLETE));
 
-        $workerEvent->setState(WorkerEvent::STATE_COMPLETE);
-        self::assertFalse($workerEvent->hasState(WorkerEvent::STATE_AWAITING));
-        self::assertTrue($workerEvent->hasState(WorkerEvent::STATE_COMPLETE));
+        $workerEvent->setState(WorkerEventState::COMPLETE);
+        self::assertFalse($workerEvent->hasState(WorkerEventState::AWAITING));
+        self::assertTrue($workerEvent->hasState(WorkerEventState::COMPLETE));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Services\EntityRemover;
 
@@ -34,7 +35,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             []
         )
         ;
-        $workerEvent0->setState(WorkerEvent::STATE_AWAITING);
+        $workerEvent0->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent0);
 
         $workerEvent1 = WorkerEvent::create(
@@ -42,7 +43,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             'non-empty reference',
             []
         );
-        $workerEvent1->setState(WorkerEvent::STATE_AWAITING);
+        $workerEvent1->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent1);
 
         $workerEvent2 = WorkerEvent::create(
@@ -50,7 +51,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             'non-empty reference',
             []
         );
-        $workerEvent2->setState(WorkerEvent::STATE_COMPLETE);
+        $workerEvent2->setState(WorkerEventState::COMPLETE);
         $this->persistEntity($workerEvent2);
 
         self::assertTrue($this->repository->hasForType(WorkerEvent::TYPE_COMPILATION_FAILED));

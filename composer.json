@@ -38,7 +38,7 @@
         "phpunit/php-timer": "^5.0",
         "phpunit/phpunit": "^9.5",
         "psr/log": "^1.1",
-        "squizlabs/php_codesniffer": "^3.5",
+        "squizlabs/php_codesniffer": "dev-master",
         "symfony/browser-kit": "6.0.*",
         "symfony/maker-bundle": "^1.40",
         "symfony/phpunit-bridge": "6.0.*",

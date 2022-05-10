@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Message\DeliverEventMessage;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -55,7 +56,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
             ->withJobSetup(new JobSetup())
             ->withWorkerEventSetups([
                 (new WorkerEventSetup())
-                    ->withState(WorkerEvent::STATE_QUEUED),
+                    ->withState(WorkerEventState::QUEUED),
             ]));
 
         $workerEvents = $environment->getWorkerEvents();
@@ -70,9 +71,9 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
      *
      * @param callable(WorkerEvent): WorkerMessageFailedEvent $eventCreator
      */
-    public function testHandleEvent(callable $eventCreator, string $expectedWorkerEventState): void
+    public function testHandleEvent(callable $eventCreator, WorkerEventState $expectedWorkerEventState): void
     {
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
+        self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
 
         $this->eventDispatcher->dispatch(
             $eventCreator($this->workerEvent)
@@ -98,7 +99,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new UnrecoverableMessageHandlingException()
                     );
                 },
-                'expectedWorkerEventState' => WorkerEvent::STATE_FAILED,
+                'expectedWorkerEventState' => WorkerEventState::FAILED,
             ],
             'non-retryable due to retry attempt exhaustion' => [
                 'eventCreator' => function (WorkerEvent $workerEvent): WorkerMessageFailedEvent {
@@ -113,7 +114,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
                         new \RuntimeException('Unfortunate event')
                     );
                 },
-                'expectedWorkerEventState' => WorkerEvent::STATE_FAILED,
+                'expectedWorkerEventState' => WorkerEventState::FAILED,
             ],
         ];
     }

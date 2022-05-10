@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,11 +30,8 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider setQueuedDataProvider
-     *
-     * @param WorkerEvent::STATE_* $initialState
-     * @param WorkerEvent::STATE_* $expectedState
      */
-    public function testSetQueued(string $initialState, string $expectedState): void
+    public function testSetQueued(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
@@ -53,36 +51,33 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     public function setQueuedDataProvider(): array
     {
         return [
-            WorkerEvent::STATE_AWAITING => [
-                'initialState' => WorkerEvent::STATE_AWAITING,
-                'expectedState' => WorkerEvent::STATE_QUEUED,
+            WorkerEventState::AWAITING->value => [
+                'initialState' => WorkerEventState::AWAITING,
+                'expectedState' => WorkerEventState::QUEUED,
             ],
-            WorkerEvent::STATE_QUEUED => [
-                'initialState' => WorkerEvent::STATE_QUEUED,
-                'expectedState' => WorkerEvent::STATE_QUEUED,
+            WorkerEventState::QUEUED->value => [
+                'initialState' => WorkerEventState::QUEUED,
+                'expectedState' => WorkerEventState::QUEUED,
             ],
-            WorkerEvent::STATE_SENDING => [
-                'initialState' => WorkerEvent::STATE_SENDING,
-                'expectedState' => WorkerEvent::STATE_QUEUED,
+            WorkerEventState::SENDING->value => [
+                'initialState' => WorkerEventState::SENDING,
+                'expectedState' => WorkerEventState::QUEUED,
             ],
-            WorkerEvent::STATE_FAILED => [
-                'initialState' => WorkerEvent::STATE_FAILED,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::FAILED->value => [
+                'initialState' => WorkerEventState::FAILED,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_COMPLETE => [
-                'initialState' => WorkerEvent::STATE_COMPLETE,
-                'expectedState' => WorkerEvent::STATE_COMPLETE,
+            WorkerEventState::COMPLETE->value => [
+                'initialState' => WorkerEventState::COMPLETE,
+                'expectedState' => WorkerEventState::COMPLETE,
             ],
         ];
     }
 
     /**
      * @dataProvider setSendingDataProvider
-     *
-     * @param WorkerEvent::STATE_* $initialState
-     * @param WorkerEvent::STATE_* $expectedState
      */
-    public function testSetSending(string $initialState, string $expectedState): void
+    public function testSetSending(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
@@ -102,36 +97,33 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     public function setSendingDataProvider(): array
     {
         return [
-            WorkerEvent::STATE_AWAITING => [
-                'initialState' => WorkerEvent::STATE_AWAITING,
-                'expectedState' => WorkerEvent::STATE_AWAITING,
+            WorkerEventState::AWAITING->value => [
+                'initialState' => WorkerEventState::AWAITING,
+                'expectedState' => WorkerEventState::AWAITING,
             ],
-            WorkerEvent::STATE_QUEUED => [
-                'initialState' => WorkerEvent::STATE_QUEUED,
-                'expectedState' => WorkerEvent::STATE_SENDING,
+            WorkerEventState::QUEUED->value => [
+                'initialState' => WorkerEventState::QUEUED,
+                'expectedState' => WorkerEventState::SENDING,
             ],
-            WorkerEvent::STATE_SENDING => [
-                'initialState' => WorkerEvent::STATE_SENDING,
-                'expectedState' => WorkerEvent::STATE_SENDING,
+            WorkerEventState::SENDING->value => [
+                'initialState' => WorkerEventState::SENDING,
+                'expectedState' => WorkerEventState::SENDING,
             ],
-            WorkerEvent::STATE_FAILED => [
-                'initialState' => WorkerEvent::STATE_FAILED,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::FAILED->value => [
+                'initialState' => WorkerEventState::FAILED,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_COMPLETE => [
-                'initialState' => WorkerEvent::STATE_COMPLETE,
-                'expectedState' => WorkerEvent::STATE_COMPLETE,
+            WorkerEventState::COMPLETE->value => [
+                'initialState' => WorkerEventState::COMPLETE,
+                'expectedState' => WorkerEventState::COMPLETE,
             ],
         ];
     }
 
     /**
      * @dataProvider setFailedDataProvider
-     *
-     * @param WorkerEvent::STATE_* $initialState
-     * @param WorkerEvent::STATE_* $expectedState
      */
-    public function testSetFailed(string $initialState, string $expectedState): void
+    public function testSetFailed(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
@@ -151,36 +143,33 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     public function setFailedDataProvider(): array
     {
         return [
-            WorkerEvent::STATE_AWAITING => [
-                'initialState' => WorkerEvent::STATE_AWAITING,
-                'expectedState' => WorkerEvent::STATE_AWAITING,
+            WorkerEventState::AWAITING->value => [
+                'initialState' => WorkerEventState::AWAITING,
+                'expectedState' => WorkerEventState::AWAITING,
             ],
-            WorkerEvent::STATE_QUEUED => [
-                'initialState' => WorkerEvent::STATE_QUEUED,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::QUEUED->value => [
+                'initialState' => WorkerEventState::QUEUED,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_SENDING => [
-                'initialState' => WorkerEvent::STATE_SENDING,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::SENDING->value => [
+                'initialState' => WorkerEventState::SENDING,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_FAILED => [
-                'initialState' => WorkerEvent::STATE_FAILED,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::FAILED->value => [
+                'initialState' => WorkerEventState::FAILED,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_COMPLETE => [
-                'initialState' => WorkerEvent::STATE_COMPLETE,
-                'expectedState' => WorkerEvent::STATE_COMPLETE,
+            WorkerEventState::COMPLETE->value => [
+                'initialState' => WorkerEventState::COMPLETE,
+                'expectedState' => WorkerEventState::COMPLETE,
             ],
         ];
     }
 
     /**
      * @dataProvider setCompleteDataProvider
-     *
-     * @param WorkerEvent::STATE_* $initialState
-     * @param WorkerEvent::STATE_* $expectedState
      */
-    public function testSetComplete(string $initialState, string $expectedState): void
+    public function testSetComplete(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
             $this->doSetAsStateTest(
@@ -200,39 +189,33 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     public function setCompleteDataProvider(): array
     {
         return [
-            WorkerEvent::STATE_AWAITING => [
-                'initialState' => WorkerEvent::STATE_AWAITING,
-                'expectedState' => WorkerEvent::STATE_AWAITING,
+            WorkerEventState::AWAITING->value => [
+                'initialState' => WorkerEventState::AWAITING,
+                'expectedState' => WorkerEventState::AWAITING,
             ],
-            WorkerEvent::STATE_QUEUED => [
-                'initialState' => WorkerEvent::STATE_QUEUED,
-                'expectedState' => WorkerEvent::STATE_QUEUED,
+            WorkerEventState::QUEUED->value => [
+                'initialState' => WorkerEventState::QUEUED,
+                'expectedState' => WorkerEventState::QUEUED,
             ],
-            WorkerEvent::STATE_SENDING => [
-                'initialState' => WorkerEvent::STATE_SENDING,
-                'expectedState' => WorkerEvent::STATE_COMPLETE,
+            WorkerEventState::SENDING->value => [
+                'initialState' => WorkerEventState::SENDING,
+                'expectedState' => WorkerEventState::COMPLETE,
             ],
-            WorkerEvent::STATE_FAILED => [
-                'initialState' => WorkerEvent::STATE_FAILED,
-                'expectedState' => WorkerEvent::STATE_FAILED,
+            WorkerEventState::FAILED->value => [
+                'initialState' => WorkerEventState::FAILED,
+                'expectedState' => WorkerEventState::FAILED,
             ],
-            WorkerEvent::STATE_COMPLETE => [
-                'initialState' => WorkerEvent::STATE_COMPLETE,
-                'expectedState' => WorkerEvent::STATE_COMPLETE,
+            WorkerEventState::COMPLETE->value => [
+                'initialState' => WorkerEventState::COMPLETE,
+                'expectedState' => WorkerEventState::COMPLETE,
             ],
         ];
     }
 
-    /**
-     * @dataProvider setSendingDataProvider
-     *
-     * @param WorkerEvent::STATE_* $initialState
-     * @param WorkerEvent::STATE_* $expectedState
-     */
     private function doSetAsStateTest(
         WorkerEvent $workerEvent,
-        string $initialState,
-        string $expectedState,
+        WorkerEventState $initialState,
+        WorkerEventState $expectedState,
         callable $setter
     ): void {
         $workerEvent->setState($initialState);

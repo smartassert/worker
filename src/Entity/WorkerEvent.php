@@ -10,12 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_QUEUED = 'queued';
-    public const STATE_SENDING = 'sending';
-    public const STATE_FAILED = 'failed';
-    public const STATE_COMPLETE = 'complete';
-
     public const TYPE_JOB_STARTED = 'job/started';
     public const TYPE_JOB_TIME_OUT = 'job/timed-out';
     public const TYPE_JOB_COMPLETED = 'job/completed';
@@ -39,11 +33,8 @@ class WorkerEvent
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /**
-     * @var self::STATE_*
-     */
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $state;
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
+    private WorkerEventState $state;
 
     /**
      * @var self::TYPE_*
@@ -68,7 +59,7 @@ class WorkerEvent
     public static function create(string $type, string $reference, array $payload): self
     {
         $entity = new WorkerEvent();
-        $entity->state = self::STATE_AWAITING;
+        $entity->state = WorkerEventState::AWAITING;
         $entity->type = $type;
         $entity->reference = $reference;
         $entity->payload = $payload;
@@ -86,26 +77,17 @@ class WorkerEvent
         return $this->id;
     }
 
-    /**
-     * @return self::STATE_*
-     */
-    public function getState(): string
+    public function getState(): WorkerEventState
     {
         return $this->state;
     }
 
-    /**
-     * @param self::STATE_* $state
-     */
-    public function hasState(string $state): bool
+    public function hasState(WorkerEventState $state): bool
     {
         return $state === $this->state;
     }
 
-    /**
-     * @param self::STATE_* $state
-     */
-    public function setState(string $state): void
+    public function setState(WorkerEventState $state): void
     {
         $this->state = $state;
     }

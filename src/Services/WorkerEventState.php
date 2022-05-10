@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState as WorkerEventStateEnum;
 use App\Repository\WorkerEventRepository;
 
 class WorkerEventState implements \Stringable
@@ -26,8 +26,8 @@ class WorkerEventState implements \Stringable
         $workerEventCount = $this->repository->count([]);
         $finishedCallbackCount = $this->repository->count([
             'state' => [
-                WorkerEvent::STATE_FAILED,
-                WorkerEvent::STATE_COMPLETE,
+                WorkerEventStateEnum::FAILED->value,
+                WorkerEventStateEnum::COMPLETE->value,
             ],
         ]);
 
