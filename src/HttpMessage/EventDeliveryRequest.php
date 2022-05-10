@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
-class CallbackRequest extends GuzzleRequest
+class EventDeliveryRequest extends GuzzleRequest
 {
     private const METHOD = 'POST';
 

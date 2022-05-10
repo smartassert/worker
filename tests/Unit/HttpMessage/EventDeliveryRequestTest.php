@@ -6,11 +6,11 @@ namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\HttpMessage\CallbackRequest;
+use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-class CallbackRequestTest extends TestCase
+class EventDeliveryRequestTest extends TestCase
 {
     public function testCreate(): void
     {
@@ -18,28 +18,28 @@ class CallbackRequestTest extends TestCase
         $jobLabel = 'label content';
         $job = Job::create($jobLabel, $jobCallbackUrl, 600);
 
-        $callbackType = 'callback type';
-        $callbackReference = 'reference value';
-        $callbackData = [
+        $workerEventType = 'worker event type';
+        $workerEventReference = 'reference value';
+        $workerEventData = [
             'key1' => 'value1',
             'key2' => 'value2',
         ];
 
-        $callback = \Mockery::mock(WorkerEvent::class);
-        $callback
+        $workerEvent = \Mockery::mock(WorkerEvent::class);
+        $workerEvent
             ->shouldReceive('getType')
-            ->andReturn($callbackType)
+            ->andReturn($workerEventType)
         ;
-        $callback
+        $workerEvent
             ->shouldReceive('getPayload')
-            ->andReturn($callbackData)
+            ->andReturn($workerEventData)
         ;
-        $callback
+        $workerEvent
             ->shouldReceive('getReference')
-            ->andReturn($callbackReference)
+            ->andReturn($workerEventReference)
         ;
 
-        $request = new CallbackRequest($callback, $job);
+        $request = new EventDeliveryRequest($workerEvent, $job);
 
         self::assertInstanceOf(RequestInterface::class, $request);
         self::assertSame('POST', $request->getMethod());
@@ -48,9 +48,9 @@ class CallbackRequestTest extends TestCase
         self::assertSame(
             [
                 'label' => $jobLabel,
-                'type' => $callbackType,
-                'reference' => $callbackReference,
-                'payload' => $callbackData,
+                'type' => $workerEventType,
+                'reference' => $workerEventReference,
+                'payload' => $workerEventData,
             ],
             json_decode((string) $request->getBody(), true)
         );
