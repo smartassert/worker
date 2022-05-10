@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Services\WorkerEventFactory;
+namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\JobTimeoutEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobTimeoutEventFactory extends AbstractEventFactory
+class JobTimeoutEventHandler extends AbstractEventHandler
 {
     public function handles(Event $event): bool
     {
