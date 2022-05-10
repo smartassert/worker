@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DeliverEventMessageTest extends TestCase
 {
-    private const CALLBACK_ID = 9;
+    private const ID = 9;
 
     private DeliverEventMessage $message;
 
@@ -17,11 +17,11 @@ class DeliverEventMessageTest extends TestCase
     {
         parent::setUp();
 
-        $this->message = new DeliverEventMessage(self::CALLBACK_ID);
+        $this->message = new DeliverEventMessage(self::ID);
     }
 
-    public function testGetWorkerEventId(): void
+    public function testWorkerEventIdProperty(): void
     {
-        self::assertSame(self::CALLBACK_ID, $this->message->getWorkerEventId());
+        self::assertSame(self::ID, $this->message->workerEventId);
     }
 }

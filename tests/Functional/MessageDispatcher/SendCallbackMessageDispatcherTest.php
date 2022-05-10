@@ -112,13 +112,10 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         self::assertInstanceOf(DeliverEventMessage::class, $message);
 
         if ($message instanceof DeliverEventMessage) {
-            $workerEvent = $this->workerEventRepository->find($message->getWorkerEventId());
+            $workerEvent = $this->workerEventRepository->find($message->workerEventId);
             self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-
-            if ($workerEvent instanceof WorkerEvent) {
-                self::assertSame($expectedWorkerEventType, $workerEvent->getType());
-                self::assertSame($expectedWorkerEventPayload, $workerEvent->getPayload());
-            }
+            self::assertSame($expectedWorkerEventType, $workerEvent->getType());
+            self::assertSame($expectedWorkerEventPayload, $workerEvent->getPayload());
         }
     }
 
