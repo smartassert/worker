@@ -5,7 +5,7 @@ framework:
             event_delivery:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
-                    service: App\Messenger\CallbackMessageRetryStrategy
+                    service: App\Messenger\DeliverEventMessageRetryStrategy
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
