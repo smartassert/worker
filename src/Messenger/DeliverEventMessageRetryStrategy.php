@@ -9,12 +9,12 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Retry\MultiplierRetryStrategy;
 use Symfony\Component\Messenger\Retry\RetryStrategyInterface;
 
-class CallbackMessageRetryStrategy implements RetryStrategyInterface
+class DeliverEventMessageRetryStrategy implements RetryStrategyInterface
 {
     private const MILLISECONDS_PER_SECOND = 1000;
 
     public function __construct(
-        private MultiplierRetryStrategy $multiplierRetryStrategy,
+        private readonly MultiplierRetryStrategy $multiplierRetryStrategy,
     ) {
     }
 
