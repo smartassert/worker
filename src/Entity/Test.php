@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\TestRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test implements \JsonSerializable, EntityInterface
 {
     public const STATE_AWAITING = 'awaiting';
@@ -28,44 +27,31 @@ class Test implements \JsonSerializable, EntityInterface
         self::STATE_CANCELLED,
     ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TestConfiguration")
-     * @ORM\JoinColumn(name="test_configuration_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: TestConfiguration::class)]
+    #[ORM\JoinColumn(name: 'test_configuration_id', referencedColumnName: 'id', nullable: false)]
     private TestConfiguration $configuration;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     *
      * @var self::STATE_*
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $state;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private string $source;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private string $target;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $stepCount = 0;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false, unique=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: false, unique: true)]
     private int $position;
 
     public static function create(
