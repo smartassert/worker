@@ -6,7 +6,7 @@ namespace App\MessageHandler;
 
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Services\WorkerEventStateMutator;
@@ -26,7 +26,7 @@ class SendCallbackHandler implements MessageHandlerInterface
      * @throws NonSuccessfulHttpResponseException
      * @throws ClientExceptionInterface
      */
-    public function __invoke(SendCallbackMessage $message): void
+    public function __invoke(DeliverEventMessage $message): void
     {
         $workerEvent = $this->repository->find($message->getCallbackId());
 

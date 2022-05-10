@@ -10,7 +10,7 @@ framework:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-            'App\Message\SendCallbackMessage': callback
+            'App\Message\DeliverEventMessage': callback
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\JobCompletedCheckMessage': async

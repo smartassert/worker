@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Messenger;
 
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\Messenger\CallbackMessageRetryStrategy;
 use App\Tests\AbstractBaseFunctionalTest;
 use GuzzleHttp\Psr7\Response;
@@ -36,7 +36,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
      */
     public function testIsRetryable(int $retryCount, bool $expected): void
     {
-        $envelope = new Envelope(new SendCallbackMessage(0), [new RedeliveryStamp($retryCount)]);
+        $envelope = new Envelope(new DeliverEventMessage(0), [new RedeliveryStamp($retryCount)]);
 
         self::assertSame($expected, $this->retryStrategy->isRetryable($envelope));
     }
@@ -70,7 +70,7 @@ class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
         ?\Throwable $throwable,
         int $expected
     ): void {
-        $envelope = new Envelope(new SendCallbackMessage(0), [new RedeliveryStamp($retryCount)]);
+        $envelope = new Envelope(new DeliverEventMessage(0), [new RedeliveryStamp($retryCount)]);
 
         self::assertSame(
             $expected,

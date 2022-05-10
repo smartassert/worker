@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -89,7 +89,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
         return [
             'non-retryable due to unrecoverable exception' => [
                 'eventCreator' => function (WorkerEvent $workerEvent): WorkerMessageFailedEvent {
-                    $message = new SendCallbackMessage((int) $workerEvent->getId());
+                    $message = new DeliverEventMessage((int) $workerEvent->getId());
                     $envelope = new Envelope($message);
 
                     return new WorkerMessageFailedEvent(
@@ -102,7 +102,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
             ],
             'non-retryable due to retry attempt exhaustion' => [
                 'eventCreator' => function (WorkerEvent $workerEvent): WorkerMessageFailedEvent {
-                    $message = new SendCallbackMessage((int) $workerEvent->getId());
+                    $message = new DeliverEventMessage((int) $workerEvent->getId());
                     $envelope = new Envelope($message, [
                         new RedeliveryStamp(3)
                     ]);
