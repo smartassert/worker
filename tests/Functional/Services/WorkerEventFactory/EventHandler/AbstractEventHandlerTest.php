@@ -11,17 +11,17 @@ use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
-abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
+abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
 {
-    private EventHandlerInterface $factory;
+    private EventHandlerInterface $handler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $factory = $this->getFactory();
+        $factory = $this->getHandler();
         if ($factory instanceof EventHandlerInterface) {
-            $this->factory = $factory;
+            $this->handler = $factory;
         }
     }
 
@@ -32,7 +32,7 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
 
     public function testCreateForEventUnsupportedEvent(): void
     {
-        self::assertNull($this->factory->createForEvent(new Job(), new Event()));
+        self::assertNull($this->handler->createForEvent(new Job(), new Event()));
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
         $jobLabel = md5((string) rand());
         $job = Job::create($jobLabel, '', 600);
 
-        $workerEvent = $this->factory->createForEvent($job, $event);
+        $workerEvent = $this->handler->createForEvent($job, $event);
 
         $expectedReferenceSource = str_replace('{{ job_label }}', $jobLabel, $expectedWorkerEvent->getReference());
         ObjectReflector::setProperty(
@@ -60,5 +60,5 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
         self::assertSame($expectedWorkerEvent->getPayload(), $workerEvent->getPayload());
     }
 
-    abstract protected function getFactory(): ?EventHandlerInterface;
+    abstract protected function getHandler(): ?EventHandlerInterface;
 }

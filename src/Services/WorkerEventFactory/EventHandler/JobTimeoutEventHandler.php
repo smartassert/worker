@@ -6,20 +6,22 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\SourceCompilation\StartedEvent;
+use App\Event\JobTimeoutEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CompilationStartedEventFactory extends AbstractCompilationEventFactory
+class JobTimeoutEventHandler extends AbstractEventHandler
 {
     public function handles(Event $event): bool
     {
-        return $event instanceof StartedEvent;
+        return $event instanceof JobTimeoutEvent;
     }
 
     public function createForEvent(Job $job, Event $event): ?WorkerEvent
     {
-        if ($event instanceof StartedEvent) {
-            return $this->create($job, $event, $this->createPayload($event));
+        if ($event instanceof JobTimeoutEvent) {
+            return $this->create($job, $event, [
+                'maximum_duration_in_seconds' => $event->getJobMaximumDuration(),
+            ]);
         }
 
         return null;

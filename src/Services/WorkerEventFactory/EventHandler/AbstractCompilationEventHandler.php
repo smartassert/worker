@@ -6,7 +6,7 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Event\SourceCompilation\EventInterface;
 
-abstract class AbstractCompilationEventFactory extends AbstractEventHandler
+abstract class AbstractCompilationEventHandler extends AbstractEventHandler
 {
     /**
      * @param array<mixed> $payload

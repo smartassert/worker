@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
-use App\Services\WorkerEventFactory\EventHandler\NoPayloadEventFactory;
+use App\Services\WorkerEventFactory\EventHandler\NoPayloadEventHandler;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionStartedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobCompiledEventDataProviderTrait;
@@ -13,7 +13,7 @@ use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobCompletedEventDataPro
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobFailedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobReadyEventDataProviderTrait;
 
-class NoPayloadEventFactoryTest extends AbstractEventFactoryTest
+class NoPayloadEventHandlerTest extends AbstractEventHandlerTest
 {
     use CreateFromJobReadyEventDataProviderTrait;
     use CreateFromJobCompiledEventDataProviderTrait;
@@ -34,10 +34,10 @@ class NoPayloadEventFactoryTest extends AbstractEventFactoryTest
         );
     }
 
-    protected function getFactory(): ?EventHandlerInterface
+    protected function getHandler(): ?EventHandlerInterface
     {
-        $factory = self::getContainer()->get(NoPayloadEventFactory::class);
+        $handler = self::getContainer()->get(NoPayloadEventHandler::class);
 
-        return $factory instanceof NoPayloadEventFactory ? $factory : null;
+        return $handler instanceof NoPayloadEventHandler ? $handler : null;
     }
 }

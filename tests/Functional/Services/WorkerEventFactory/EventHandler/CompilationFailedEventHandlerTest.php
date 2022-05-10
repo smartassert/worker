@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
-use App\Services\WorkerEventFactory\EventHandler\CompilationFailedEventFactory;
+use App\Services\WorkerEventFactory\EventHandler\CompilationFailedEventHandler;
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
 
-class CompilationFailedEventFactoryTest extends AbstractEventFactoryTest
+class CompilationFailedEventHandlerTest extends AbstractEventHandlerTest
 {
     use CreateFromCompilationFailedEventDataProviderTrait;
 
@@ -17,10 +17,10 @@ class CompilationFailedEventFactoryTest extends AbstractEventFactoryTest
         return $this->createFromCompilationFailedEventDataProvider();
     }
 
-    protected function getFactory(): ?EventHandlerInterface
+    protected function getHandler(): ?EventHandlerInterface
     {
-        $factory = self::getContainer()->get(CompilationFailedEventFactory::class);
+        $handler = self::getContainer()->get(CompilationFailedEventHandler::class);
 
-        return $factory instanceof CompilationFailedEventFactory ? $factory : null;
+        return $handler instanceof CompilationFailedEventHandler ? $handler : null;
     }
 }

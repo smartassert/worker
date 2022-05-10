@@ -14,7 +14,7 @@ use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class NoPayloadEventFactory extends AbstractEventHandler
+class NoPayloadEventHandler extends AbstractEventHandler
 {
     public function handles(Event $event): bool
     {

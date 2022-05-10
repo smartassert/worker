@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
-use App\Services\WorkerEventFactory\EventHandler\JobTimeoutEventFactory;
+use App\Services\WorkerEventFactory\EventHandler\JobTimeoutEventHandler;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobTimeoutEventDataProviderTrait;
 
-class JobTimeoutEventFactoryTest extends AbstractEventFactoryTest
+class JobTimeoutEventHandlerTest extends AbstractEventHandlerTest
 {
     use CreateFromJobTimeoutEventDataProviderTrait;
 
@@ -17,10 +17,10 @@ class JobTimeoutEventFactoryTest extends AbstractEventFactoryTest
         return $this->createFromJobTimeoutEventDataProvider();
     }
 
-    protected function getFactory(): ?EventHandlerInterface
+    protected function getHandler(): ?EventHandlerInterface
     {
-        $factory = self::getContainer()->get(JobTimeoutEventFactory::class);
+        $handler = self::getContainer()->get(JobTimeoutEventHandler::class);
 
-        return $factory instanceof JobTimeoutEventFactory ? $factory : null;
+        return $handler instanceof JobTimeoutEventHandler ? $handler : null;
     }
 }
