@@ -28,7 +28,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SendCallbackMessageDispatcher implements EventSubscriberInterface
+class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
