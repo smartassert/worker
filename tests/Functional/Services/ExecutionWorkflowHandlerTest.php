@@ -11,8 +11,8 @@ use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\TestPassedEvent;
+use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;
-use App\Message\SendCallbackMessage;
 use App\MessageDispatcher\SendCallbackMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\WorkerEventRepository;
@@ -354,7 +354,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,
-            new SendCallbackMessage((int) $expectedWorkerEvent->getId())
+            new DeliverEventMessage((int) $expectedWorkerEvent->getId())
         );
     }
 

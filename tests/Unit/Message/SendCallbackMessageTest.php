@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Message;
 
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use PHPUnit\Framework\TestCase;
 
 class SendCallbackMessageTest extends TestCase
 {
     private const CALLBACK_ID = 9;
 
-    private SendCallbackMessage $message;
+    private DeliverEventMessage $message;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->message = new SendCallbackMessage(self::CALLBACK_ID);
+        $this->message = new DeliverEventMessage(self::CALLBACK_ID);
     }
 
     public function testGetCallbackId(): void

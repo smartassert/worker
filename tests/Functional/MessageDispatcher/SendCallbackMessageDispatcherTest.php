@@ -20,7 +20,7 @@ use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
@@ -109,9 +109,9 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $envelope = $this->messengerAsserter->getEnvelopeAtPosition(0);
         $message = $envelope->getMessage();
-        self::assertInstanceOf(SendCallbackMessage::class, $message);
+        self::assertInstanceOf(DeliverEventMessage::class, $message);
 
-        if ($message instanceof SendCallbackMessage) {
+        if ($message instanceof DeliverEventMessage) {
             $workerEvent = $this->workerEventRepository->find($message->getCallbackId());
             self::assertInstanceOf(WorkerEvent::class, $workerEvent);
 

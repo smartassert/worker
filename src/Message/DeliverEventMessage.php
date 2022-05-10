@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-class SendCallbackMessage
+class DeliverEventMessage
 {
     public function __construct(
         private int $callbackId

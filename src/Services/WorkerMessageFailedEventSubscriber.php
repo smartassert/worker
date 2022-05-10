@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 
@@ -31,7 +31,7 @@ class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
     {
         $message = $event->getEnvelope()->getMessage();
 
-        if ($message instanceof SendCallbackMessage && false === $event->willRetry()) {
+        if ($message instanceof DeliverEventMessage && false === $event->willRetry()) {
             $this->workerEventAborter->abort($message->getCallbackId());
         }
     }

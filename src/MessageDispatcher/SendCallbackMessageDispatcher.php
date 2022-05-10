@@ -20,7 +20,7 @@ use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\Services\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -105,6 +105,6 @@ class SendCallbackMessageDispatcher implements EventSubscriberInterface
     {
         $this->workerEventStateMutator->setQueued($workerEvent);
 
-        return $this->messageBus->dispatch(new SendCallbackMessage((int) $workerEvent->getId()));
+        return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
     }
 }
