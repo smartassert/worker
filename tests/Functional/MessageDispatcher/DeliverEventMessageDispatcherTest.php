@@ -40,7 +40,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\YamlDocument\Document;
 
-class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
+class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
 
@@ -110,13 +110,10 @@ class SendCallbackMessageDispatcherTest extends AbstractBaseFunctionalTest
         $envelope = $this->messengerAsserter->getEnvelopeAtPosition(0);
         $message = $envelope->getMessage();
         self::assertInstanceOf(DeliverEventMessage::class, $message);
-
-        if ($message instanceof DeliverEventMessage) {
-            $workerEvent = $this->workerEventRepository->find($message->workerEventId);
-            self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-            self::assertSame($expectedWorkerEventType, $workerEvent->getType());
-            self::assertSame($expectedWorkerEventPayload, $workerEvent->getPayload());
-        }
+        $workerEvent = $this->workerEventRepository->find($message->workerEventId);
+        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
+        self::assertSame($expectedWorkerEventType, $workerEvent->getType());
+        self::assertSame($expectedWorkerEventPayload, $workerEvent->getPayload());
     }
 
     /**

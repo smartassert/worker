@@ -10,7 +10,7 @@ use App\Event\JobFailedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationState;
 use App\Services\ApplicationWorkflowHandler;
@@ -55,7 +55,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
-            SendCallbackMessageDispatcher::class => [
+            DeliverEventMessageDispatcher::class => [
                 TestPassedEvent::class => ['dispatchForEvent'],
                 TestFailedEvent::class => ['dispatchForEvent'],
             ],
