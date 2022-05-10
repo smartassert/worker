@@ -7,27 +7,27 @@ namespace App\Tests\Functional\Messenger;
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
-use App\Messenger\CallbackMessageRetryStrategy;
+use App\Messenger\DeliverEventMessageRetryStrategy;
 use App\Tests\AbstractBaseFunctionalTest;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 
-class CallbackMessageRetryStrategyTest extends AbstractBaseFunctionalTest
+class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
 
     private const MAX_RETRIES = 3;
 
-    private CallbackMessageRetryStrategy $retryStrategy;
+    private DeliverEventMessageRetryStrategy $retryStrategy;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $retryStrategy = self::getContainer()->get(CallbackMessageRetryStrategy::class);
-        \assert($retryStrategy instanceof CallbackMessageRetryStrategy);
+        $retryStrategy = self::getContainer()->get(DeliverEventMessageRetryStrategy::class);
+        \assert($retryStrategy instanceof DeliverEventMessageRetryStrategy);
         $this->retryStrategy = $retryStrategy;
     }
 
