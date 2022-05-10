@@ -13,7 +13,7 @@ use App\Services\WorkerEventStateMutator;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class SendCallbackHandler implements MessageHandlerInterface
+class DeliverEventHandler implements MessageHandlerInterface
 {
     public function __construct(
         private WorkerEventRepository $repository,

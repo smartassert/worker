@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
-use App\MessageHandler\SendCallbackHandler;
+use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -23,11 +23,11 @@ use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use webignition\ObjectReflector\ObjectReflector;
 
-class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
+class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
 
-    private SendCallbackHandler $handler;
+    private DeliverEventHandler $handler;
     private WorkerEventRepository $workerEventRepository;
     private WorkerEvent $workerEvent;
 
@@ -35,9 +35,9 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
     {
         parent::setUp();
 
-        $sendCallbackHandler = self::getContainer()->get(SendCallbackHandler::class);
-        \assert($sendCallbackHandler instanceof SendCallbackHandler);
-        $this->handler = $sendCallbackHandler;
+        $handler = self::getContainer()->get(DeliverEventHandler::class);
+        \assert($handler instanceof DeliverEventHandler);
+        $this->handler = $handler;
 
         $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($workerEventRepository instanceof WorkerEventRepository);
