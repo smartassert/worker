@@ -7,7 +7,7 @@ namespace App\Tests\Functional\MessageHandler;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Exception\NonSuccessfulHttpResponseException;
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
@@ -78,7 +78,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
             ->withSendCall($expectedSentWorkerEvent)
             ->getMock());
 
-        $message = new SendCallbackMessage((int) $this->workerEvent->getId());
+        $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
         self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
 
@@ -101,7 +101,7 @@ class SendCallbackHandlerTest extends AbstractBaseFunctionalTest
             ->withSendCall($expectedSentWorkerEvent, $workerEventSenderException)
             ->getMock());
 
-        $message = new SendCallbackMessage((int) $this->workerEvent->getId());
+        $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
         self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
 

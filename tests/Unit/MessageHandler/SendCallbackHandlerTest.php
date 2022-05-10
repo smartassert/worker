@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\MessageHandler;
 
-use App\Message\SendCallbackMessage;
+use App\Message\DeliverEventMessage;
 use App\MessageHandler\SendCallbackHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
@@ -19,7 +19,7 @@ class SendCallbackHandlerTest extends TestCase
     public function testInvokeCallbackNotExists(): void
     {
         $workerEventId = 0;
-        $message = new SendCallbackMessage($workerEventId);
+        $message = new DeliverEventMessage($workerEventId);
 
         $repository = \Mockery::mock(WorkerEventRepository::class);
         $repository

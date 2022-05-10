@@ -1,7 +1,7 @@
 framework:
     messenger:
         transports:
-            callback:
+            event_delivery:
                 dsn: 'sync://'
                 retry_strategy:
                     service: App\Messenger\CallbackMessageRetryStrategy
