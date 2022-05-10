@@ -18,6 +18,30 @@ return (new PhpCsFixer\Config())
         'types_spaces' => [
             'space' => 'single',
         ],
+        'blank_line_before_statement' => [
+            'statements' => [
+                'break',
+                'continue',
+                'declare',
+                'default',
+                'phpdoc',
+                'do',
+                'exit',
+                'for',
+                'goto',
+                'include',
+                'include_once',
+                'require',
+                'require_once',
+                'return',
+                'switch',
+                'throw',
+                'try',
+                'while',
+                'yield',
+                'yield_from',
+            ],
+        ],
     ])
     ->setFinder($finder)
 ;
