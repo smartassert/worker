@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState as WorkerEventStateEnum;
 use Doctrine\ORM\EntityManagerInterface;
 
 class WorkerEventStateMutator
@@ -15,36 +16,33 @@ class WorkerEventStateMutator
 
     public function setQueued(WorkerEvent $workerEvent): void
     {
-        if (in_array($workerEvent->getState(), [WorkerEvent::STATE_AWAITING, WorkerEvent::STATE_SENDING])) {
-            $this->set($workerEvent, WorkerEvent::STATE_QUEUED);
+        if (in_array($workerEvent->getState(), [WorkerEventStateEnum::AWAITING, WorkerEventStateEnum::SENDING])) {
+            $this->set($workerEvent, WorkerEventStateEnum::QUEUED);
         }
     }
 
     public function setSending(WorkerEvent $workerEvent): void
     {
-        if (WorkerEvent::STATE_QUEUED === $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEvent::STATE_SENDING);
+        if (WorkerEventStateEnum::QUEUED === $workerEvent->getState()) {
+            $this->set($workerEvent, WorkerEventStateEnum::SENDING);
         }
     }
 
     public function setFailed(WorkerEvent $workerEvent): void
     {
-        if (in_array($workerEvent->getState(), [WorkerEvent::STATE_QUEUED, WorkerEvent::STATE_SENDING])) {
-            $this->set($workerEvent, WorkerEvent::STATE_FAILED);
+        if (in_array($workerEvent->getState(), [WorkerEventStateEnum::QUEUED, WorkerEventStateEnum::SENDING])) {
+            $this->set($workerEvent, WorkerEventStateEnum::FAILED);
         }
     }
 
     public function setComplete(WorkerEvent $workerEvent): void
     {
-        if (WorkerEvent::STATE_SENDING === $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEvent::STATE_COMPLETE);
+        if (WorkerEventStateEnum::SENDING === $workerEvent->getState()) {
+            $this->set($workerEvent, WorkerEventStateEnum::COMPLETE);
         }
     }
 
-    /**
-     * @param WorkerEvent::STATE_* $state
-     */
-    private function set(WorkerEvent $workerEvent, string $state): void
+    private function set(WorkerEvent $workerEvent, WorkerEventStateEnum $state): void
     {
         $workerEvent->setState($state);
 

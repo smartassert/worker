@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState as EntityState;
 use App\Services\WorkerEventState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\WorkerEventSetup;
@@ -38,7 +39,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      *
-     * @param array<WorkerEvent::STATE_*> $states
+     * @param EntityState[] $states
      */
     public function testGet(array $states, string $expectedState): void
     {
@@ -61,37 +62,37 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
                 ],
                 'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
-                    WorkerEvent::STATE_COMPLETE,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
+                    EntityState::COMPLETE,
                 ],
                 'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
-                    WorkerEvent::STATE_FAILED,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
+                    EntityState::FAILED,
                 ],
                 'expectedState' => WorkerEventState::STATE_RUNNING,
             ],
             'two complete, three failed' => [
                 'states' => [
-                    WorkerEvent::STATE_COMPLETE,
-                    WorkerEvent::STATE_COMPLETE,
-                    WorkerEvent::STATE_FAILED,
-                    WorkerEvent::STATE_FAILED,
-                    WorkerEvent::STATE_FAILED,
+                    EntityState::COMPLETE,
+                    EntityState::COMPLETE,
+                    EntityState::FAILED,
+                    EntityState::FAILED,
+                    EntityState::FAILED,
                 ],
                 'expectedState' => WorkerEventState::STATE_COMPLETE,
             ],
@@ -101,7 +102,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<WorkerEvent::STATE_*>      $states
+     * @param EntityState[]                    $states
      * @param array<WorkerEventState::STATE_*> $expectedIsStates
      * @param array<WorkerEventState::STATE_*> $expectedIsNotStates
      */
@@ -133,9 +134,9 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
                 ],
                 'expectedIsStates' => [
                     WorkerEventState::STATE_RUNNING,
@@ -147,10 +148,10 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
-                    WorkerEvent::STATE_COMPLETE,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
+                    EntityState::COMPLETE,
                 ],
                 'expectedIsStates' => [
                     WorkerEventState::STATE_RUNNING,
@@ -162,10 +163,10 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
-                    WorkerEvent::STATE_AWAITING,
-                    WorkerEvent::STATE_QUEUED,
-                    WorkerEvent::STATE_SENDING,
-                    WorkerEvent::STATE_FAILED,
+                    EntityState::AWAITING,
+                    EntityState::QUEUED,
+                    EntityState::SENDING,
+                    EntityState::FAILED,
                 ],
                 'expectedIsStates' => [
                     WorkerEventState::STATE_RUNNING,
@@ -177,11 +178,11 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             ],
             'two complete, three failed' => [
                 'states' => [
-                    WorkerEvent::STATE_COMPLETE,
-                    WorkerEvent::STATE_COMPLETE,
-                    WorkerEvent::STATE_FAILED,
-                    WorkerEvent::STATE_FAILED,
-                    WorkerEvent::STATE_FAILED,
+                    EntityState::COMPLETE,
+                    EntityState::COMPLETE,
+                    EntityState::FAILED,
+                    EntityState::FAILED,
+                    EntityState::FAILED,
                 ],
                 'expectedIsStates' => [
                     WorkerEventState::STATE_COMPLETE,
@@ -194,10 +195,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
         ];
     }
 
-    /**
-     * @param WorkerEvent::STATE_* $state
-     */
-    private function createWorkerEventEntity(string $state): void
+    private function createWorkerEventEntity(EntityState $state): void
     {
         $this->testWorkerEventFactory->create(
             (new WorkerEventSetup())->withState($state)

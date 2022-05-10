@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
@@ -52,7 +53,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
             ->withJobSetup(new JobSetup())
             ->withWorkerEventSetups([
                 (new WorkerEventSetup())
-                    ->withState(WorkerEvent::STATE_QUEUED),
+                    ->withState(WorkerEventState::QUEUED),
             ])
         ;
 
@@ -72,7 +73,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeSuccess(): void
     {
         $expectedSentWorkerEvent = clone $this->workerEvent;
-        $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
+        $expectedSentWorkerEvent->setState(WorkerEventState::SENDING);
 
         $this->setWorkerEventSender((new MockWorkerEventSender())
             ->withSendCall($expectedSentWorkerEvent)
@@ -80,22 +81,24 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
+        self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
 
         ($this->handler)($message);
 
         $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
         self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-        self::assertSame(WorkerEvent::STATE_COMPLETE, $this->workerEvent->getState());
+        self::assertSame(WorkerEventState::COMPLETE, $this->workerEvent->getState());
     }
 
     /**
      * @dataProvider invokeFailureDataProvider
      */
-    public function testInvokeFailure(\Exception $workerEventSenderException, string $expectedWorkerEventState): void
-    {
+    public function testInvokeFailure(
+        \Exception $workerEventSenderException,
+        WorkerEventState $expectedWorkerEventState
+    ): void {
         $expectedSentWorkerEvent = clone $this->workerEvent;
-        $expectedSentWorkerEvent->setState(WorkerEvent::STATE_SENDING);
+        $expectedSentWorkerEvent->setState(WorkerEventState::SENDING);
 
         $this->setWorkerEventSender((new MockWorkerEventSender())
             ->withSendCall($expectedSentWorkerEvent, $workerEventSenderException)
@@ -103,7 +106,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
-        self::assertSame(WorkerEvent::STATE_QUEUED, $this->workerEvent->getState());
+        self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
 
         try {
             ($this->handler)($message);
@@ -128,11 +131,11 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
                     new WorkerEvent(),
                     new Response(400)
                 ),
-                'expectedWorkerEventState' => WorkerEvent::STATE_SENDING,
+                'expectedWorkerEventState' => WorkerEventState::SENDING,
             ],
             'Guzzle ConnectException' => [
                 'workerEventSenderException' => \Mockery::mock(ConnectException::class),
-                'expectedWorkerEventState' => WorkerEvent::STATE_SENDING,
+                'expectedWorkerEventState' => WorkerEventState::SENDING,
             ],
         ];
     }

@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventState;
 use App\Services\ApplicationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -132,7 +133,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
@@ -151,8 +152,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_SENDING)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETING_EVENT_DELIVERY,
             ],
@@ -171,8 +172,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETE,
             ],
@@ -182,7 +183,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
-                            ->withState(WorkerEvent::STATE_COMPLETE),
+                            ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_TIMED_OUT,
             ],
@@ -344,7 +345,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_EXECUTING,
@@ -373,8 +374,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_SENDING)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETING_EVENT_DELIVERY,
@@ -403,8 +404,8 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                             ->withState(Test::STATE_COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEvent::STATE_COMPLETE)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_COMPLETE,
@@ -424,7 +425,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
                             ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
-                            ->withState(WorkerEvent::STATE_COMPLETE),
+                            ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::STATE_TIMED_OUT,
