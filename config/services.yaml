@@ -84,15 +84,13 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
+    App\Services\WorkerEventFactory\:
+        resource: '../src/Services/WorkerEventFactory/'
+        tags: ['foo.factory']
+
     App\Services\WorkerEventFactory:
         arguments:
-            $eventCallbackFactories:
-                - '@App\Services\WorkerEventFactory\CompilationStartedEventFactory'
-                - '@App\Services\WorkerEventFactory\CompilationPassedEventFactory'
-                - '@App\Services\WorkerEventFactory\CompilationFailedEventFactory'
-                - '@App\Services\WorkerEventFactory\TestAndStepEventFactory'
-                - '@App\Services\WorkerEventFactory\JobTimeoutEventFactory'
-                - '@App\Services\WorkerEventFactory\NoPayloadEventFactory'
+            $handlers: !tagged_iterator foo.factory
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator

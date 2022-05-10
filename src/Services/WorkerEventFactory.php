@@ -17,15 +17,21 @@ class WorkerEventFactory
     private array $eventCallbackFactories;
 
     /**
-     * @param array<mixed> $eventCallbackFactories
+     * @param array<mixed> $handlers
      */
     public function __construct(
         private readonly JobRepository $jobRepository,
-        array $eventCallbackFactories
+        iterable $handlers
     ) {
-        $this->eventCallbackFactories = array_filter($eventCallbackFactories, function ($item) {
-            return $item instanceof EventFactoryInterface;
-        });
+        $filteredHandlers = [];
+
+        foreach ($handlers as $handler) {
+            if ($handler instanceof EventFactoryInterface) {
+                $filteredHandlers[] = $handler;
+            }
+        }
+
+        $this->eventCallbackFactories = $filteredHandlers;
     }
 
     public function createForEvent(Event $event): ?WorkerEvent
