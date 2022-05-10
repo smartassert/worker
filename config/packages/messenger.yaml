@@ -2,7 +2,7 @@ framework:
     messenger:
         reset_on_message: true
         transports:
-            callback:
+            event_delivery:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
                     service: App\Messenger\CallbackMessageRetryStrategy
@@ -10,7 +10,7 @@ framework:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-            'App\Message\DeliverEventMessage': callback
+            'App\Message\DeliverEventMessage': event_delivery
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\JobCompletedCheckMessage': async
