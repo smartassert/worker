@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
-use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Services\WorkerEventFactory\EventHandler\NoPayloadEventFactory;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionStartedEventDataProviderTrait;
@@ -34,7 +34,7 @@ class NoPayloadEventFactoryTest extends AbstractEventFactoryTest
         );
     }
 
-    protected function getFactory(): ?EventFactoryInterface
+    protected function getFactory(): ?EventHandlerInterface
     {
         $factory = self::getContainer()->get(NoPayloadEventFactory::class);
 

@@ -9,7 +9,7 @@ use App\Entity\WorkerEvent;
 use App\Event\JobTimeoutEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobTimeoutEventFactory extends AbstractEventFactory
+class JobTimeoutEventFactory extends AbstractEventHandler
 {
     public function handles(Event $event): bool
     {

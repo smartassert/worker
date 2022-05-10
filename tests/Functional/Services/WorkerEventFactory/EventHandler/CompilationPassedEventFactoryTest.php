@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Services\WorkerEventFactory\EventHandler\CompilationPassedEventFactory;
-use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
 
 class CompilationPassedEventFactoryTest extends AbstractEventFactoryTest
@@ -17,7 +17,7 @@ class CompilationPassedEventFactoryTest extends AbstractEventFactoryTest
         return $this->createFromCompilationPassedEventDataProvider();
     }
 
-    protected function getFactory(): ?EventFactoryInterface
+    protected function getFactory(): ?EventHandlerInterface
     {
         $factory = self::getContainer()->get(CompilationPassedEventFactory::class);
 

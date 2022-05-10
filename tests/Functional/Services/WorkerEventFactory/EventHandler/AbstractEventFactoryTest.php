@@ -6,21 +6,21 @@ namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Tests\AbstractBaseFunctionalTest;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
 abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
 {
-    private EventFactoryInterface $factory;
+    private EventHandlerInterface $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $factory = $this->getFactory();
-        if ($factory instanceof EventFactoryInterface) {
+        if ($factory instanceof EventHandlerInterface) {
             $this->factory = $factory;
         }
     }
@@ -60,5 +60,5 @@ abstract class AbstractEventFactoryTest extends AbstractBaseFunctionalTest
         self::assertSame($expectedWorkerEvent->getPayload(), $workerEvent->getPayload());
     }
 
-    abstract protected function getFactory(): ?EventFactoryInterface;
+    abstract protected function getFactory(): ?EventHandlerInterface;
 }

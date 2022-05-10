@@ -6,15 +6,15 @@ namespace App\Services\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class WorkerEventFactory
 {
     /**
-     * @var EventFactoryInterface[]
+     * @var EventHandlerInterface[]
      */
-    private array $eventCallbackFactories;
+    private array $handlers = [];
 
     /**
      * @param array<mixed> $handlers
@@ -23,15 +23,11 @@ class WorkerEventFactory
         private readonly JobRepository $jobRepository,
         iterable $handlers
     ) {
-        $filteredHandlers = [];
-
         foreach ($handlers as $handler) {
-            if ($handler instanceof EventFactoryInterface) {
-                $filteredHandlers[] = $handler;
+            if ($handler instanceof EventHandlerInterface) {
+                $this->handlers[] = $handler;
             }
         }
-
-        $this->eventCallbackFactories = $filteredHandlers;
     }
 
     public function createForEvent(Event $event): ?WorkerEvent
@@ -41,7 +37,7 @@ class WorkerEventFactory
             return null;
         }
 
-        foreach ($this->eventCallbackFactories as $eventCallbackFactory) {
+        foreach ($this->handlers as $eventCallbackFactory) {
             if ($eventCallbackFactory->handles($event)) {
                 return $eventCallbackFactory->createForEvent($job, $event);
             }
