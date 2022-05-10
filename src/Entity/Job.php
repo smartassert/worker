@@ -4,39 +4,28 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job implements \JsonSerializable, EntityInterface
 {
     public const ID = 1;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
     private int $id = self::ID;
 
-    /**
-     * @ORM\Column(type="string", length=32, nullable=false, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 32, nullable: false, unique: true)]
     private ?string $label = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private ?string $callbackUrl;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $startDateTime = null;
 
     public static function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): self

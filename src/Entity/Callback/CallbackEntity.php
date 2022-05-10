@@ -4,44 +4,36 @@ declare(strict_types=1);
 
 namespace App\Entity\Callback;
 
+use App\Repository\CallbackRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: CallbackRepository::class)]
 class CallbackEntity implements CallbackInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     *
      * @var self::STATE_*
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $state;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     *
      * @var self::TYPE_*
      */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $type;
 
-    /**
-     * @ORM\Column(type="string", length=32)
-     */
+    #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
 
     /**
-     * @ORM\Column(type="json")
-     *
      * @var array<mixed>
      */
+    #[ORM\Column(type: 'json')]
     private array $payload;
 
     /**
