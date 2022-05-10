@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services;
+namespace App\Tests\Functional\Services\WorkerEventFactory;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory;
+use App\Services\WorkerEventFactory\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;

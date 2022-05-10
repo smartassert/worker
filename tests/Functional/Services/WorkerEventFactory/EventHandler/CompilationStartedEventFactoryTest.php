@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\WorkerEventFactory;
+namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
-use App\Services\WorkerEventFactory\CompilationStartedEventFactory;
-use App\Services\WorkerEventFactory\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\CompilationStartedEventFactory;
+use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationStartedEventDataProviderTrait;
 
 class CompilationStartedEventFactoryTest extends AbstractEventFactoryTest

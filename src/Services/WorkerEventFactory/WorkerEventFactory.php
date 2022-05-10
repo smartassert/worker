@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventFactoryInterface;
+use App\Services\WorkerEventFactory\EventHandler\EventFactoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class WorkerEventFactory
