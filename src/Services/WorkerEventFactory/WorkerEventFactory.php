@@ -37,9 +37,9 @@ class WorkerEventFactory
             return null;
         }
 
-        foreach ($this->handlers as $eventCallbackFactory) {
-            if ($eventCallbackFactory->handles($event)) {
-                return $eventCallbackFactory->createForEvent($job, $event);
+        foreach ($this->handlers as $handler) {
+            if ($handler->handles($event)) {
+                return $handler->createForEvent($job, $event);
             }
         }
 
