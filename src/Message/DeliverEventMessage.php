@@ -7,12 +7,12 @@ namespace App\Message;
 class DeliverEventMessage
 {
     public function __construct(
-        private int $callbackId
+        private int $workerEventId
     ) {
     }
 
-    public function getCallbackId(): int
+    public function getWorkerEventId(): int
     {
-        return $this->callbackId;
+        return $this->workerEventId;
     }
 }

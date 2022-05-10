@@ -32,7 +32,7 @@ class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
         $message = $event->getEnvelope()->getMessage();
 
         if ($message instanceof DeliverEventMessage && false === $event->willRetry()) {
-            $this->workerEventAborter->abort($message->getCallbackId());
+            $this->workerEventAborter->abort($message->getWorkerEventId());
         }
     }
 }

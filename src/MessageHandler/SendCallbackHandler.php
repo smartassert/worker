@@ -28,7 +28,7 @@ class SendCallbackHandler implements MessageHandlerInterface
      */
     public function __invoke(DeliverEventMessage $message): void
     {
-        $workerEvent = $this->repository->find($message->getCallbackId());
+        $workerEvent = $this->repository->find($message->getWorkerEventId());
 
         if ($workerEvent instanceof WorkerEvent) {
             $this->workerEventStateMutator->setSending($workerEvent);

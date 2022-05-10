@@ -7,7 +7,7 @@ namespace App\Tests\Unit\Message;
 use App\Message\DeliverEventMessage;
 use PHPUnit\Framework\TestCase;
 
-class SendCallbackMessageTest extends TestCase
+class DeliverEventMessageTest extends TestCase
 {
     private const CALLBACK_ID = 9;
 
@@ -20,8 +20,8 @@ class SendCallbackMessageTest extends TestCase
         $this->message = new DeliverEventMessage(self::CALLBACK_ID);
     }
 
-    public function testGetCallbackId(): void
+    public function testGetWorkerEventId(): void
     {
-        self::assertSame(self::CALLBACK_ID, $this->message->getCallbackId());
+        self::assertSame(self::CALLBACK_ID, $this->message->getWorkerEventId());
     }
 }
