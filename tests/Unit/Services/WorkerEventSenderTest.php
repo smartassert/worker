@@ -12,7 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 
-class CallbackSenderTest extends TestCase
+class WorkerEventSenderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
