@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Test as TestEntity;
-use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
 use App\Event\ExecutionStartedEvent;
@@ -17,16 +16,13 @@ use App\Event\SourceCompilation\FailedEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\SourceCompilation\StartedEvent;
 use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
-use App\Model\Document\Step;
-use App\Model\Document\Test as TestDocument;
 use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
+use App\Services\CompilationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Services\TestFactory;
 use App\Services\TestStateMutator;
@@ -39,7 +35,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\YamlDocument\Document;
 
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 {
@@ -76,6 +71,10 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             ExecutionWorkflowHandler::class => [
                 JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
+                TestPassedEvent::class => [
+                    'dispatchNextExecuteTestMessageFromTestPassedEvent',
+                    'dispatchExecutionCompletedEvent',
+                ],
             ],
             TimeoutCheckMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatch'],
@@ -84,11 +83,19 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 TestFailedEvent::class => ['dispatchJobFailedEvent'],
                 TestPassedEvent::class => ['dispatchJobCompletedEvent'],
             ],
+            CompilationWorkflowHandler::class => [
+                JobReadyEvent::class => ['dispatchNextCompileSourceMessage'],
+                PassedEvent::class => [
+                    'dispatchNextCompileSourceMessage',
+                    'dispatchCompilationCompletedEvent',
+                ],
+            ],
         ]);
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(TestEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
         }
     }
 
@@ -130,15 +137,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
-        $testConfiguration = \Mockery::mock(TestConfiguration::class);
-
-        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
-        $failingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "failing step" }');
-
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
-
-        $genericTest = TestEntity::create($testConfiguration, $testSource, '', 1, 1);
 
         return [
             JobReadyEvent::class => [
@@ -179,60 +179,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new ExecutionStartedEvent(),
                 'expectedWorkerEventType' => WorkerEventType::EXECUTION_STARTED,
                 'expectedWorkerEventPayload' => [],
-            ],
-            TestStartedEvent::class => [
-                'event' => new TestStartedEvent(
-                    $genericTest,
-                    new TestDocument(new Document('document-key: value'))
-                ),
-                'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
-                'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
-                ],
-            ],
-            StepPassedEvent::class => [
-                'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument), $relativeTestSource),
-                'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
-                'expectedWorkerEventPayload' => [
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => 'passing step',
-                    ],
-                ],
-            ],
-            StepFailedEvent::class => [
-                'event' => new StepFailedEvent(
-                    $genericTest->setState(TestEntity::STATE_FAILED),
-                    new Step($failingStepDocument),
-                    $relativeTestSource
-                ),
-                'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
-                'expectedWorkerEventPayload' => [
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => 'failing step',
-                    ],
-                ],
-            ],
-            TestPassedEvent::class => [
-                'event' => new TestPassedEvent(
-                    $genericTest->setState(TestEntity::STATE_COMPLETE),
-                    new TestDocument(new Document('document-key: value'))
-                ),
-                'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
-                'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
-                ],
-            ],
-            TestFailedEvent::class => [
-                'event' => new TestFailedEvent(
-                    $genericTest->setState(TestEntity::STATE_FAILED),
-                    new TestDocument(new Document('document-key: value'))
-                ),
-                'expectedWorkerEventType' => WorkerEventType::TEST_FAILED,
-                'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
-                ],
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),

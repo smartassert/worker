@@ -10,6 +10,7 @@ use App\Event\JobFailedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
+use App\MessageDispatcher\DeliverEventDispatcher\TestAndStepEventDeliverEventDispatcher;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationState;
@@ -64,6 +65,9 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     'dispatchExecutionCompletedEvent',
                     'dispatchNextExecuteTestMessageFromTestPassedEvent',
                 ],
+            ],
+            TestAndStepEventDeliverEventDispatcher::class => [
+                TestPassedEvent::class => ['dispatchForEvent'],
             ],
         ]);
     }
