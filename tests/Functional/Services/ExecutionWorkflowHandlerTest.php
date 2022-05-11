@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Entity\Test as TestEntity;
+use App\Entity\WorkerEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\TestPassedEvent;
+use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;
-use App\Message\SendCallbackMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
-use App\Repository\CallbackRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -61,7 +60,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
 
         $eventListenerRemover->remove([
-            SendCallbackMessageDispatcher::class => [
+            DeliverEventMessageDispatcher::class => [
                 PassedEvent::class => ['dispatchForEvent'],
                 JobCompiledEvent::class => ['dispatchForEvent'],
                 TestPassedEvent::class => ['dispatchForEvent'],
@@ -74,7 +73,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(TestEntity::class);
         }
@@ -346,16 +345,16 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueCount(1);
 
-        $callbackRepository = self::getContainer()->get(CallbackRepository::class);
-        \assert($callbackRepository instanceof CallbackRepository);
-        $callbacks = $callbackRepository->findAll();
-        $expectedCallback = array_pop($callbacks);
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $workerEvents = $workerEventRepository->findAll();
+        $expectedWorkerEvent = array_pop($workerEvents);
 
-        self::assertInstanceOf(CallbackInterface::class, $expectedCallback);
+        self::assertInstanceOf(WorkerEvent::class, $expectedWorkerEvent);
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,
-            new SendCallbackMessage((int) $expectedCallback->getId())
+            new DeliverEventMessage((int) $expectedWorkerEvent->getId())
         );
     }
 

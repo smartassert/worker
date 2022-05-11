@@ -14,9 +14,9 @@ use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
-use App\Services\CallbackState;
 use App\Services\CompilationState;
 use App\Services\ErrorResponseFactory;
+use App\Services\EventDeliveryState;
 use App\Services\ExecutionState;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
@@ -56,8 +56,8 @@ class JobController
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->callbackUrl) {
-            return new ErrorResponse('callback_url/missing');
+        if ('' === $request->eventDeliveryUrl) {
+            return new ErrorResponse('event_delivery_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
@@ -89,7 +89,7 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $this->jobRepository->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
+        $this->jobRepository->create($request->label, $request->eventDeliveryUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
 
@@ -103,7 +103,7 @@ class JobController
         TestSerializer $testSerializer,
         CompilationState $compilationState,
         ExecutionState $executionState,
-        CallbackState $callbackState,
+        EventDeliveryState $workerEventState,
     ): JsonResponse {
         $job = $this->jobRepository->get();
         if (null === $job) {
@@ -118,7 +118,7 @@ class JobController
                 'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => (string) $compilationState,
                 'execution_state' => (string) $executionState,
-                'callback_state' => (string) $callbackState,
+                'event_delivery_state' => (string) $workerEventState,
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );

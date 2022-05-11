@@ -15,14 +15,14 @@ class JobTest extends TestCase
     public function testCreate(): void
     {
         $label = md5('label source');
-        $callbackUrl = 'http://example.com/callback';
+        $eventDeliveryUrl = 'http://example.com/events';
         $maximumDurationInSeconds = 10 * self::SECONDS_PER_MINUTE;
 
-        $job = Job::create($label, $callbackUrl, $maximumDurationInSeconds);
+        $job = Job::create($label, $eventDeliveryUrl, $maximumDurationInSeconds);
 
         self::assertSame(1, $job->getId());
         self::assertSame($label, $job->getLabel());
-        self::assertSame($callbackUrl, $job->getCallbackUrl());
+        self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
     }
 
     /**
@@ -42,10 +42,10 @@ class JobTest extends TestCase
     {
         return [
             'state compilation-awaiting' => [
-                'job' => Job::create('label content', 'http://example.com/callback', 1),
+                'job' => Job::create('label content', 'http://example.com/events', 1),
                 'expectedSerializedJob' => [
                     'label' => 'label content',
-                    'callback_url' => 'http://example.com/callback',
+                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 1,
                 ],
             ],

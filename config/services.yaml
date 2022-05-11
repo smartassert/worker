@@ -6,7 +6,7 @@
 parameters:
     compiler_source_directory: '%env(COMPILER_SOURCE_DIRECTORY)%'
     compiler_target_directory: '%env(COMPILER_TARGET_DIRECTORY)%'
-    callback_retry_limit: '%env(int:CALLBACK_RETRY_LIMIT)%'
+    event_delivery_retry_limit: '%env(int:EVENT_DELIVERY_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(JOB_TIMEOUT_CHECK_PERIOD_MS)%'
 
 services:
@@ -84,15 +84,13 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
-    App\Services\CallbackFactory:
+    App\Services\WorkerEventFactory\EventHandler\:
+        resource: '../src/Services/WorkerEventFactory/EventHandler/'
+        tags: ['app.worker_event_factory.event_handler']
+
+    App\MessageDispatcher\DeliverEventMessageDispatcher:
         arguments:
-            $eventCallbackFactories:
-                - '@App\Services\EventCallbackFactory\CompilationStartedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationPassedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\CompilationFailedEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\TestAndStepEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\JobTimeoutEventCallbackFactory'
-                - '@App\Services\EventCallbackFactory\NoPayloadEventCallbackFactory'
+            $handlers: !tagged_iterator app.worker_event_factory.event_handler
 
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
@@ -106,17 +104,17 @@ services:
         arguments:
             $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
 
-    app.messenger.retry_strategy.callback.multiplier:
+    app.messenger.retry_strategy.deliver_event.multiplier:
         class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
         arguments:
-            $maxRetries: '%callback_retry_limit%'
+            $maxRetries: '%event_delivery_retry_limit%'
             $delayMilliseconds: 1000
             $multiplier: 2
             $maxDelayMilliseconds: 0
 
-    App\Messenger\CallbackMessageRetryStrategy:
+    App\Messenger\DeliverEventMessageRetryStrategy:
         arguments:
-            $multiplierRetryStrategy: '@app.messenger.retry_strategy.callback.multiplier'
+            $multiplierRetryStrategy: '@app.messenger.retry_strategy.deliver_event.multiplier'
 
     webignition\YamlDocumentSetParser\Parser: ~
 

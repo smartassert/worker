@@ -11,7 +11,7 @@ use App\Event\JobReadyEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Services\CompilationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -57,7 +57,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
-            SendCallbackMessageDispatcher::class => [
+            DeliverEventMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatchForEvent'],
                 PassedEvent::class => ['dispatchForEvent'],
             ],

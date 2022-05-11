@@ -16,7 +16,7 @@ class EnvironmentFactory
         private JobRepository $jobRepository,
         private SourceRepository $sourceRepository,
         private TestTestFactory $testTestFactory,
-        private TestCallbackFactory $testCallbackFactory,
+        private TestWorkerEventFactory $testWorkerEventFactory,
     ) {
     }
 
@@ -28,7 +28,7 @@ class EnvironmentFactory
         if ($jobSetup instanceof JobSetup) {
             $job = $this->jobRepository->create(
                 $jobSetup->getLabel(),
-                $jobSetup->getCallbackUrl(),
+                $jobSetup->getEventDeliveryUrl(),
                 $jobSetup->getMaximumDurationInSeconds()
             );
 
@@ -45,15 +45,15 @@ class EnvironmentFactory
             $tests[] = $this->testTestFactory->create($testSetup);
         }
 
-        $callbacks = [];
-        foreach ($setup->getCallbackSetups() as $callbackSetup) {
-            $callbacks[] = $this->testCallbackFactory->create($callbackSetup);
+        $workerEvents = [];
+        foreach ($setup->getWorkerEventSetups() as $workerEventSetup) {
+            $workerEvents[] = $this->testWorkerEventFactory->create($workerEventSetup);
         }
 
         return $environment
             ->withSources($sources)
             ->withTests($tests)
-            ->withCallbacks($callbacks)
+            ->withWorkerEvents($workerEvents)
         ;
     }
 }

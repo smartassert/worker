@@ -8,7 +8,7 @@ use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
-class Job implements \JsonSerializable, EntityInterface
+class Job implements \JsonSerializable
 {
     public const ID = 1;
 
@@ -20,7 +20,7 @@ class Job implements \JsonSerializable, EntityInterface
     private ?string $label = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private ?string $callbackUrl;
+    private ?string $eventDeliveryUrl;
 
     #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
@@ -28,12 +28,12 @@ class Job implements \JsonSerializable, EntityInterface
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $startDateTime = null;
 
-    public static function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): self
+    public static function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): self
     {
         $job = new Job();
 
         $job->label = $label;
-        $job->callbackUrl = $callbackUrl;
+        $job->eventDeliveryUrl = $eventDeliveryUrl;
         $job->maximumDurationInSeconds = $maximumDurationInSeconds;
 
         return $job;
@@ -49,9 +49,9 @@ class Job implements \JsonSerializable, EntityInterface
         return $this->label;
     }
 
-    public function getCallbackUrl(): ?string
+    public function getEventDeliveryUrl(): ?string
     {
-        return $this->callbackUrl;
+        return $this->eventDeliveryUrl;
     }
 
     public function getMaximumDurationInSeconds(): int
@@ -87,7 +87,7 @@ class Job implements \JsonSerializable, EntityInterface
     {
         return [
             'label' => $this->label,
-            'callback_url' => $this->callbackUrl,
+            'event_delivery_url' => $this->eventDeliveryUrl,
             'maximum_duration_in_seconds' => $this->maximumDurationInSeconds,
         ];
     }

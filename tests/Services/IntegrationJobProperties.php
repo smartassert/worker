@@ -18,12 +18,12 @@ class IntegrationJobProperties
         return $this->label;
     }
 
-    public function getCallbackUrl(): string
+    public function getEventDeliveryUrl(): string
     {
-        return $this->createCallbackUrlForStatusCode(200);
+        return $this->createEventDeliveryUrlForStatusCode(200);
     }
 
-    public function createCallbackUrlForStatusCode(int $statusCode): string
+    public function createEventDeliveryUrlForStatusCode(int $statusCode): string
     {
         return $this->baseUrl . '/status/' . (string) $statusCode;
     }

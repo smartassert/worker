@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\Callback\CallbackEntity;
-use App\Entity\Callback\CallbackInterface;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Services\CompilationState;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Model\CallbackSetup;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
@@ -39,7 +39,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(CallbackEntity::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Source::class);
             $entityRemover->removeForEntity(Test::class);
@@ -82,7 +82,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => CompilationState::STATE_RUNNING,
             ],
-            'failed: has job, has sources, has more than zero compile-failure callbacks' => [
+            'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -91,9 +91,9 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())
                             ->withPath('Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
-                            ->withType(CallbackInterface::TYPE_COMPILATION_FAILED),
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
+                            ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::STATE_FAILED,
             ],
@@ -180,7 +180,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     CompilationState::STATE_UNKNOWN,
                 ],
             ],
-            'failed: has job, has sources, has more than zero compile-failure callbacks' => [
+            'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -189,9 +189,9 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())
                             ->withPath('Test/test2.yml'),
                     ])
-                    ->withCallbackSetups([
-                        (new CallbackSetup())
-                            ->withType(CallbackInterface::TYPE_COMPILATION_FAILED),
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
+                            ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::STATE_FAILED,

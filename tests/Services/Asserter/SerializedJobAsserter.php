@@ -26,12 +26,12 @@ class SerializedJobAsserter
         TestCase::assertIsArray($job);
 
         TestCase::assertSame($expectedJob['label'], $job['label']);
-        TestCase::assertSame($expectedJob['callback_url'], $job['callback_url']);
+        TestCase::assertSame($expectedJob['event_delivery_url'], $job['event_delivery_url']);
         TestCase::assertSame($expectedJob['maximum_duration_in_seconds'], $job['maximum_duration_in_seconds']);
         TestCase::assertSame($expectedJob['sources'], $job['sources']);
         TestCase::assertSame($expectedJob['compilation_state'], $job['compilation_state']);
         TestCase::assertSame($expectedJob['execution_state'], $job['execution_state']);
-        TestCase::assertSame($expectedJob['callback_state'], $job['callback_state']);
+        TestCase::assertSame($expectedJob['event_delivery_state'], $job['event_delivery_state']);
 
         TestCase::assertIsArray($job['tests']);
         TestCase::assertIsArray($expectedJob['tests']);

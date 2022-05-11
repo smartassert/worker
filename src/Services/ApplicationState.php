@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Callback\CallbackInterface;
-use App\Repository\CallbackRepository;
+use App\Entity\WorkerEventType;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
+use App\Repository\WorkerEventRepository;
 
 class ApplicationState implements \Stringable
 {
@@ -15,7 +15,7 @@ class ApplicationState implements \Stringable
     public const STATE_AWAITING_SOURCES = 'awaiting-sources';
     public const STATE_COMPILING = 'compiling';
     public const STATE_EXECUTING = 'executing';
-    public const STATE_COMPLETING_CALLBACKS = 'completing-callbacks';
+    public const STATE_COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
     public const STATE_COMPLETE = 'complete';
     public const STATE_TIMED_OUT = 'timed-out';
 
@@ -23,8 +23,8 @@ class ApplicationState implements \Stringable
         private readonly JobRepository $jobRepository,
         private CompilationState $compilationState,
         private ExecutionState $executionState,
-        private CallbackState $callbackState,
-        private CallbackRepository $callbackRepository,
+        private EventDeliveryState $eventDeliveryState,
+        private WorkerEventRepository $workerEventRepository,
         private SourceRepository $sourceRepository,
     ) {
     }
@@ -38,7 +38,7 @@ class ApplicationState implements \Stringable
             return self::STATE_AWAITING_JOB;
         }
 
-        if (0 !== $this->callbackRepository->getTypeCount(CallbackInterface::TYPE_JOB_TIME_OUT)) {
+        if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::JOB_TIME_OUT)) {
             return self::STATE_TIMED_OUT;
         }
 
@@ -54,8 +54,8 @@ class ApplicationState implements \Stringable
             return self::STATE_EXECUTING;
         }
 
-        if ($this->callbackState->is(CallbackState::STATE_AWAITING, CallbackState::STATE_RUNNING)) {
-            return self::STATE_COMPLETING_CALLBACKS;
+        if ($this->eventDeliveryState->is(EventDeliveryState::STATE_AWAITING, EventDeliveryState::STATE_RUNNING)) {
+            return self::STATE_COMPLETING_EVENT_DELIVERY;
         }
 
         return self::STATE_COMPLETE;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
-use App\Services\CallbackState;
 use App\Services\CompilationState;
+use App\Services\EventDeliveryState;
 use App\Services\ExecutionState;
 use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Client;
@@ -90,7 +90,7 @@ class AppTest extends TestCase
         $response = $this->httpClient->post('https://localhost/job', [
             'form_params' => [
                 'label' => md5('label content'),
-                'callback_url' => 'http://callback-receiver/callback',
+                'event_delivery_url' => 'http://event-receiver/events',
                 'maximum_duration_in_seconds' => 600,
                 'source' => $serializedSource,
             ],
@@ -117,7 +117,7 @@ class AppTest extends TestCase
 
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
-            'callback_url' => 'http://callback-receiver/callback',
+            'event_delivery_url' => 'http://event-receiver/events',
             'maximum_duration_in_seconds' => 600,
             'sources' => [
                 'Test/chrome-open-index.yml',
@@ -127,7 +127,7 @@ class AppTest extends TestCase
             ],
             'compilation_state' => 'complete',
             'execution_state' => 'complete',
-            'callback_state' => 'complete',
+            'event_delivery_state' => 'complete',
             'tests' => [
                 [
                     'configuration' => [
@@ -196,6 +196,6 @@ class AppTest extends TestCase
 
         return CompilationState::STATE_COMPLETE === $jobStatus['compilation_state']
             && ExecutionState::STATE_COMPLETE === $jobStatus['execution_state']
-            && CallbackState::STATE_COMPLETE === $jobStatus['callback_state'];
+            && EventDeliveryState::STATE_COMPLETE === $jobStatus['event_delivery_state'];
     }
 }

@@ -1,14 +1,14 @@
 version: "3"
 
 services:
-  callback-receiver:
+  event-receiver:
     image: caddy:2.4.5-alpine
-    container_name: callback-receiver
+    container_name: caddy-event-receiver
     restart: unless-stopped
     ports:
       - "8080:80"
     volumes:
-      - ./caddy-callback/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy-event-receiver/Caddyfile:/etc/caddy/Caddyfile
 
   html-fixtures:
     image: caddy:2.4.5

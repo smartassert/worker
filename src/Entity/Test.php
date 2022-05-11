@@ -8,7 +8,7 @@ use App\Repository\TestRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
-class Test implements \JsonSerializable, EntityInterface
+class Test implements \JsonSerializable
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';

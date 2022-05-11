@@ -86,7 +86,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => '',
-                        CreateJobRequest::KEY_CALLBACK_URL => '',
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
@@ -98,18 +98,18 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                     ''
                 ),
             ],
-            'label, callback_url, maximum_duration_in_seconds populated' => [
+            'label, event_delivery_url, maximum_duration_in_seconds populated' => [
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_CALLBACK_URL => 'https://example.com/callback',
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
-                    'https://example.com/callback',
+                    'https://example.com/events',
                     300,
                     ''
                 ),
@@ -118,7 +118,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_CALLBACK_URL => 'https://example.com/callback',
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
@@ -129,7 +129,7 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
-                    'https://example.com/callback',
+                    'https://example.com/events',
                     300,
                     <<< 'EOT'
                         ---

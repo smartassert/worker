@@ -6,7 +6,7 @@ namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Event\JobReadyEvent;
 use App\Message\TimeoutCheckMessage;
-use App\MessageDispatcher\SendCallbackMessageDispatcher;
+use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\Asserter\MessengerAsserter;
@@ -43,7 +43,7 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
-            SendCallbackMessageDispatcher::class => [
+            DeliverEventMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatchForEvent'],
             ],
         ]);
