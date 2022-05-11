@@ -11,7 +11,7 @@ use App\Event\JobTimeoutEvent;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 
-class JobTimeoutEventDeliverEventDispatcherTest extends AbstractDeliverEventDispatcherTest
+class JobTimeoutDispatcherTest extends AbstractDeliverEventDispatcherTest
 {
     /**
      * @return array<mixed>
