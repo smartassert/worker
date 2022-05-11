@@ -22,7 +22,7 @@ class MockWorkerEventSender
         return $this->mock;
     }
 
-    public function withSendCall(WorkerEvent $callback, ?\Exception $exception = null): self
+    public function withSendCall(WorkerEvent $workerEvent, ?\Exception $exception = null): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
@@ -31,16 +31,16 @@ class MockWorkerEventSender
         if ($exception instanceof \Throwable) {
             $this->mock
                 ->shouldReceive('send')
-                ->withArgs(function (WorkerEvent $callbackArg) use ($callback) {
-                    return $callbackArg->getId() === $callback->getId();
+                ->withArgs(function (WorkerEvent $workerEventArg) use ($workerEvent) {
+                    return $workerEventArg->getId() === $workerEvent->getId();
                 })
                 ->andThrow($exception)
             ;
         } else {
             $this->mock
                 ->shouldReceive('send')
-                ->withArgs(function (WorkerEvent $callbackArg) use ($callback) {
-                    return $callbackArg->getId() === $callback->getId();
+                ->withArgs(function (WorkerEvent $workerEventArg) use ($workerEvent) {
+                    return $workerEventArg->getId() === $workerEvent->getId();
                 })
             ;
         }
