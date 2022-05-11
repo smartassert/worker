@@ -11,7 +11,6 @@ use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
-use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilation\FailedEvent as SourceCompilationFailedEvent;
 use App\Event\SourceCompilation\PassedEvent as SourceCompilationPassedEvent;
 use App\Event\SourceCompilation\StartedEvent as SourceCompilationStartedEvent;
@@ -78,9 +77,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             ],
             ExecutionCompletedEvent::class => [
                 ['dispatchForEvent', 50],
-            ],
-            JobTimeoutEvent::class => [
-                ['dispatchForEvent', 0],
             ],
             JobCompletedEvent::class => [
                 ['dispatchForEvent', 0],
