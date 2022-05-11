@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState as EntityState;
-use App\Services\WorkerEventState;
+use App\Entity\WorkerEventState;
+use App\Services\EventDeliveryState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestWorkerEventFactory;
 
-class WorkerEventStateTest extends AbstractBaseFunctionalTest
+class EventDeliveryStateTest extends AbstractBaseFunctionalTest
 {
-    private WorkerEventState $workerEventState;
+    private EventDeliveryState $workerEventState;
     private TestWorkerEventFactory $testWorkerEventFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $workerEventState = self::getContainer()->get(WorkerEventState::class);
-        if ($workerEventState instanceof WorkerEventState) {
+        $workerEventState = self::getContainer()->get(EventDeliveryState::class);
+        if ($workerEventState instanceof EventDeliveryState) {
             $this->workerEventState = $workerEventState;
         }
 
@@ -39,7 +39,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      *
-     * @param EntityState[] $states
+     * @param WorkerEventState[] $states
      */
     public function testGet(array $states, string $expectedState): void
     {
@@ -58,43 +58,43 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
         return [
             'no events' => [
                 'states' => [],
-                'expectedState' => WorkerEventState::STATE_AWAITING,
+                'expectedState' => EventDeliveryState::STATE_AWAITING,
             ],
             'awaiting, sending, queued' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
                 ],
-                'expectedState' => WorkerEventState::STATE_RUNNING,
+                'expectedState' => EventDeliveryState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
-                    EntityState::COMPLETE,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
+                    WorkerEventState::COMPLETE,
                 ],
-                'expectedState' => WorkerEventState::STATE_RUNNING,
+                'expectedState' => EventDeliveryState::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
-                    EntityState::FAILED,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
+                    WorkerEventState::FAILED,
                 ],
-                'expectedState' => WorkerEventState::STATE_RUNNING,
+                'expectedState' => EventDeliveryState::STATE_RUNNING,
             ],
             'two complete, three failed' => [
                 'states' => [
-                    EntityState::COMPLETE,
-                    EntityState::COMPLETE,
-                    EntityState::FAILED,
-                    EntityState::FAILED,
-                    EntityState::FAILED,
+                    WorkerEventState::COMPLETE,
+                    WorkerEventState::COMPLETE,
+                    WorkerEventState::FAILED,
+                    WorkerEventState::FAILED,
+                    WorkerEventState::FAILED,
                 ],
-                'expectedState' => WorkerEventState::STATE_COMPLETE,
+                'expectedState' => EventDeliveryState::STATE_COMPLETE,
             ],
         ];
     }
@@ -102,9 +102,9 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param EntityState[]                    $states
-     * @param array<WorkerEventState::STATE_*> $expectedIsStates
-     * @param array<WorkerEventState::STATE_*> $expectedIsNotStates
+     * @param WorkerEventState[]                 $states
+     * @param array<EventDeliveryState::STATE_*> $expectedIsStates
+     * @param array<EventDeliveryState::STATE_*> $expectedIsNotStates
      */
     public function testIs(array $states, array $expectedIsStates, array $expectedIsNotStates): void
     {
@@ -125,77 +125,77 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
             'no event deliveries' => [
                 'states' => [],
                 'expectedIsStates' => [
-                    WorkerEventState::STATE_AWAITING,
+                    EventDeliveryState::STATE_AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    WorkerEventState::STATE_RUNNING,
-                    WorkerEventState::STATE_COMPLETE,
+                    EventDeliveryState::STATE_RUNNING,
+                    EventDeliveryState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
                 ],
                 'expectedIsStates' => [
-                    WorkerEventState::STATE_RUNNING,
+                    EventDeliveryState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    WorkerEventState::STATE_AWAITING,
-                    WorkerEventState::STATE_COMPLETE,
+                    EventDeliveryState::STATE_AWAITING,
+                    EventDeliveryState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
-                    EntityState::COMPLETE,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
+                    WorkerEventState::COMPLETE,
                 ],
                 'expectedIsStates' => [
-                    WorkerEventState::STATE_RUNNING,
+                    EventDeliveryState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    WorkerEventState::STATE_AWAITING,
-                    WorkerEventState::STATE_COMPLETE,
+                    EventDeliveryState::STATE_AWAITING,
+                    EventDeliveryState::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
-                    EntityState::AWAITING,
-                    EntityState::QUEUED,
-                    EntityState::SENDING,
-                    EntityState::FAILED,
+                    WorkerEventState::AWAITING,
+                    WorkerEventState::QUEUED,
+                    WorkerEventState::SENDING,
+                    WorkerEventState::FAILED,
                 ],
                 'expectedIsStates' => [
-                    WorkerEventState::STATE_RUNNING,
+                    EventDeliveryState::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    WorkerEventState::STATE_AWAITING,
-                    WorkerEventState::STATE_COMPLETE,
+                    EventDeliveryState::STATE_AWAITING,
+                    EventDeliveryState::STATE_COMPLETE,
                 ],
             ],
             'two complete, three failed' => [
                 'states' => [
-                    EntityState::COMPLETE,
-                    EntityState::COMPLETE,
-                    EntityState::FAILED,
-                    EntityState::FAILED,
-                    EntityState::FAILED,
+                    WorkerEventState::COMPLETE,
+                    WorkerEventState::COMPLETE,
+                    WorkerEventState::FAILED,
+                    WorkerEventState::FAILED,
+                    WorkerEventState::FAILED,
                 ],
                 'expectedIsStates' => [
-                    WorkerEventState::STATE_COMPLETE,
+                    EventDeliveryState::STATE_COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    WorkerEventState::STATE_AWAITING,
-                    WorkerEventState::STATE_RUNNING,
+                    EventDeliveryState::STATE_AWAITING,
+                    EventDeliveryState::STATE_RUNNING,
                 ],
             ],
         ];
     }
 
-    private function createWorkerEventEntity(EntityState $state): void
+    private function createWorkerEventEntity(WorkerEventState $state): void
     {
         $this->testWorkerEventFactory->create(
             (new WorkerEventSetup())->withState($state)
