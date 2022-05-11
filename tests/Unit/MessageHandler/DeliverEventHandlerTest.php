@@ -16,7 +16,7 @@ class DeliverEventHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testInvokeCallbackNotExists(): void
+    public function testInvokeWorkerEventDoesNotExist(): void
     {
         $workerEventId = 0;
         $message = new DeliverEventMessage($workerEventId);
