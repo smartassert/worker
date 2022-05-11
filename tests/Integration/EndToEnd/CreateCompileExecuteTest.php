@@ -118,7 +118,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
-        self::assertSame(WorkerEventState::STATE_COMPLETE, $statusData['callback_state']);
+        self::assertSame(WorkerEventState::STATE_COMPLETE, $statusData['event_delivery_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
 
         $testDataCollection = $statusData['tests'];

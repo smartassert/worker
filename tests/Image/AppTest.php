@@ -127,7 +127,7 @@ class AppTest extends TestCase
             ],
             'compilation_state' => 'complete',
             'execution_state' => 'complete',
-            'callback_state' => 'complete',
+            'event_delivery_state' => 'complete',
             'tests' => [
                 [
                     'configuration' => [
@@ -196,6 +196,6 @@ class AppTest extends TestCase
 
         return CompilationState::STATE_COMPLETE === $jobStatus['compilation_state']
             && ExecutionState::STATE_COMPLETE === $jobStatus['execution_state']
-            && WorkerEventState::STATE_COMPLETE === $jobStatus['callback_state'];
+            && WorkerEventState::STATE_COMPLETE === $jobStatus['event_delivery_state'];
     }
 }
