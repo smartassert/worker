@@ -95,7 +95,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
 
                     return new WorkerMessageFailedEvent(
                         $envelope,
-                        'callback',
+                        'event_delivery',
                         new UnrecoverableMessageHandlingException()
                     );
                 },
@@ -110,7 +110,7 @@ class WorkerMessageFailedEventSubscriberTest extends AbstractBaseFunctionalTest
 
                     return new WorkerMessageFailedEvent(
                         $envelope,
-                        'callback',
+                        'callevent_deliveryback',
                         new \RuntimeException('Unfortunate event')
                     );
                 },
