@@ -14,7 +14,7 @@ class WorkerEventState implements \Stringable
     public const STATE_COMPLETE = 'complete';
 
     public function __construct(
-        private WorkerEventRepository $repository
+        private readonly WorkerEventRepository $repository
     ) {
     }
 
@@ -23,19 +23,19 @@ class WorkerEventState implements \Stringable
      */
     public function __toString(): string
     {
-        $workerEventCount = $this->repository->count([]);
-        $finishedCallbackCount = $this->repository->count([
+        $eventCount = $this->repository->count([]);
+        $finishedEventCount = $this->repository->count([
             'state' => [
                 WorkerEventStateEnum::FAILED->value,
                 WorkerEventStateEnum::COMPLETE->value,
             ],
         ]);
 
-        if (0 === $workerEventCount) {
+        if (0 === $eventCount) {
             return self::STATE_AWAITING;
         }
 
-        return $finishedCallbackCount === $workerEventCount
+        return $finishedEventCount === $eventCount
             ? self::STATE_COMPLETE
             : self::STATE_RUNNING;
     }
