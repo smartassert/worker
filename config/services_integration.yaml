@@ -60,7 +60,7 @@ services:
         arguments:
             $baseUrl: '%env(CALLBACK_BASE_URL)%'
 
-    App\Tests\Services\IntegrationCallbackRequestFactory:
+    App\Tests\Services\IntegrationDeliverEventRequestFactory:
         public: true
 
     App\MessageHandler\TimeoutCheckHandler:
