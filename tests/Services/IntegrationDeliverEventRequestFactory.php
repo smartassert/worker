@@ -8,7 +8,7 @@ use App\Entity\WorkerEventType;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
-class IntegrationCallbackRequestFactory
+class IntegrationDeliverEventRequestFactory
 {
     public function __construct(
         private readonly IntegrationJobProperties $jobProperties,

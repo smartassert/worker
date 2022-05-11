@@ -17,7 +17,7 @@ use App\Tests\Services\CallableInvoker;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
-use App\Tests\Services\IntegrationCallbackRequestFactory;
+use App\Tests\Services\IntegrationDeliverEventRequestFactory;
 use App\Tests\Services\IntegrationJobProperties;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
@@ -211,7 +211,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
                     IntegrationJobProperties $jobProperties,
-                    IntegrationCallbackRequestFactory $requestFactory,
+                    IntegrationDeliverEventRequestFactory $requestFactory,
                 ) {
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
@@ -512,7 +512,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
                     IntegrationJobProperties $jobProperties,
-                    IntegrationCallbackRequestFactory $requestFactory,
+                    IntegrationDeliverEventRequestFactory $requestFactory,
                 ) {
                     $transactions = $httpLogReader->getTransactions();
                     $httpLogReader->reset();
