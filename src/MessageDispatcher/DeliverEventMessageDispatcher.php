@@ -14,11 +14,6 @@ use App\Event\JobReadyEvent;
 use App\Event\SourceCompilation\FailedEvent as SourceCompilationFailedEvent;
 use App\Event\SourceCompilation\PassedEvent as SourceCompilationPassedEvent;
 use App\Event\SourceCompilation\StartedEvent as SourceCompilationStartedEvent;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
@@ -79,21 +74,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 50],
             ],
             JobCompletedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            TestStartedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            StepPassedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            StepFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            TestPassedEvent::class => [
-                ['dispatchForEvent', 100],
-            ],
-            TestFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             JobFailedEvent::class => [
