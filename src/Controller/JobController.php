@@ -118,7 +118,7 @@ class JobController
                 'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => (string) $compilationState,
                 'execution_state' => (string) $executionState,
-                'callback_state' => (string) $workerEventState,
+                'event_delivery_state' => (string) $workerEventState,
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );
