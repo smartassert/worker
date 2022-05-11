@@ -16,7 +16,7 @@ class EventDeliveryRequest extends GuzzleRequest
     {
         parent::__construct(
             self::METHOD,
-            (string) $job->getCallbackUrl(),
+            (string) $job->getEventDeliveryUrl(),
             [
                 'content-type' => 'application/json',
             ],

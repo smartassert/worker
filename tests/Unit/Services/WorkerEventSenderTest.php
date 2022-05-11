@@ -25,8 +25,8 @@ class WorkerEventSenderTest extends TestCase
             ->getMock()
         ;
 
-        $callbackSender = new WorkerEventSender($httpClient, $jobRepository);
-        $callbackSender->send(WorkerEvent::create(
+        $sender = new WorkerEventSender($httpClient, $jobRepository);
+        $sender->send(WorkerEvent::create(
             WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []

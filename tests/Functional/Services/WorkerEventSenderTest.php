@@ -130,6 +130,6 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
     {
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
-        $jobRepository->create('label content', 'http://example.com/callback', 10);
+        $jobRepository->create('label content', 'http://example.com/events', 10);
     }
 }

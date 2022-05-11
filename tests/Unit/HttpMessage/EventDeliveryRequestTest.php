@@ -15,9 +15,9 @@ class EventDeliveryRequestTest extends TestCase
 {
     public function testCreate(): void
     {
-        $jobCallbackUrl = 'http://example.com/callback';
+        $jobEventDeliveryUrl = 'http://example.com/events';
         $jobLabel = 'label content';
-        $job = Job::create($jobLabel, $jobCallbackUrl, 600);
+        $job = Job::create($jobLabel, $jobEventDeliveryUrl, 600);
 
         $workerEventType = WorkerEventType::JOB_COMPLETED;
         $workerEventReference = 'reference value';
@@ -44,7 +44,7 @@ class EventDeliveryRequestTest extends TestCase
 
         self::assertInstanceOf(RequestInterface::class, $request);
         self::assertSame('POST', $request->getMethod());
-        self::assertSame($jobCallbackUrl, (string) $request->getUri());
+        self::assertSame($jobEventDeliveryUrl, (string) $request->getUri());
         self::assertSame('application/json', $request->getHeaderLine('content-type'));
         self::assertSame(
             [

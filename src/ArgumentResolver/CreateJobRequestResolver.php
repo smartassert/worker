@@ -25,8 +25,8 @@ class CreateJobRequestResolver implements ArgumentValueResolverInterface
             $label = $request->request->get(CreateJobRequest::KEY_LABEL);
             $label = is_string($label) ? trim($label) : '';
 
-            $callbackUrl = $request->request->get(CreateJobRequest::KEY_CALLBACK_URL);
-            $callbackUrl = is_string($callbackUrl) ? trim($callbackUrl) : '';
+            $eventDeliveryUrl = $request->request->get(CreateJobRequest::KEY_EVENT_DELIVERY_URL);
+            $eventDeliveryUrl = is_string($eventDeliveryUrl) ? trim($eventDeliveryUrl) : '';
 
             $maximumDurationInSeconds = null;
             if ($request->request->has(CreateJobRequest::KEY_MAXIMUM_DURATION)) {
@@ -39,7 +39,7 @@ class CreateJobRequestResolver implements ArgumentValueResolverInterface
             $sourceContent = $request->request->get(CreateJobRequest::KEY_SOURCE);
             $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-            yield new CreateJobRequest($label, $callbackUrl, $maximumDurationInSeconds, $sourceContent);
+            yield new CreateJobRequest($label, $eventDeliveryUrl, $maximumDurationInSeconds, $sourceContent);
         }
     }
 }
