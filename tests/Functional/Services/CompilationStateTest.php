@@ -82,7 +82,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => CompilationState::STATE_RUNNING,
             ],
-            'failed: has job, has sources, has more than zero compile-failure callbacks' => [
+            'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -180,7 +180,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
                     CompilationState::STATE_UNKNOWN,
                 ],
             ],
-            'failed: has job, has sources, has more than zero compile-failure callbacks' => [
+            'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([

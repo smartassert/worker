@@ -122,7 +122,7 @@ class WorkerEventStateTest extends AbstractBaseFunctionalTest
     public function isDataProvider(): array
     {
         return [
-            'no callbacks' => [
+            'no event deliveries' => [
                 'states' => [],
                 'expectedIsStates' => [
                     WorkerEventState::STATE_AWAITING,

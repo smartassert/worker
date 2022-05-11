@@ -105,7 +105,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
-            'first test complete, no callbacks' => [
+            'first test complete, no event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -120,7 +120,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
-            'first test complete, callback for first test complete' => [
+            'first test complete, event delivery for first test complete' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -138,7 +138,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
             ],
-            'all tests complete, first callback complete, second callback running' => [
+            'all tests complete, first event delivery complete, second event delivery running' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -158,7 +158,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETING_EVENT_DELIVERY,
             ],
-            'all tests complete, all callbacks complete' => [
+            'all tests complete, all event deliveries complete' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -178,7 +178,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::STATE_COMPLETE,
             ],
-            'has a job-timeout callback' => [
+            'has a job-timeout event delivery' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
@@ -307,7 +307,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ApplicationState::STATE_TIMED_OUT,
                 ],
             ],
-            'first test complete, no callbacks' => [
+            'first test complete, no event deliveries' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -332,7 +332,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ApplicationState::STATE_TIMED_OUT,
                 ],
             ],
-            'first test complete, callback for first test complete' => [
+            'first test complete, event delivery for first test complete' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -360,7 +360,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ApplicationState::STATE_TIMED_OUT,
                 ],
             ],
-            'all tests complete, first callback complete, second callback running' => [
+            'all tests complete, first event delivery complete, second event delivery running' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -390,7 +390,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ApplicationState::STATE_TIMED_OUT,
                 ],
             ],
-            'all tests complete, all callbacks complete' => [
+            'all tests complete, all event deliveries complete' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
@@ -420,7 +420,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ApplicationState::STATE_TIMED_OUT,
                 ],
             ],
-            'has a job-timeout callback' => [
+            'has a job-timeout event delivery' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
