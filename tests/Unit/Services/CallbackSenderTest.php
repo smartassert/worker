@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Services\WorkerEventSender;
 use App\Tests\Mock\Repository\MockJobRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -26,7 +27,7 @@ class CallbackSenderTest extends TestCase
 
         $callbackSender = new WorkerEventSender($httpClient, $jobRepository);
         $callbackSender->send(WorkerEvent::create(
-            WorkerEvent::TYPE_JOB_STARTED,
+            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         ));

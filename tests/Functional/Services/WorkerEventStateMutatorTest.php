@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventState;
+use App\Entity\WorkerEventType;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -243,7 +244,7 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     private function createEntity(): WorkerEvent
     {
         return WorkerEvent::create(
-            WorkerEvent::TYPE_COMPILATION_FAILED,
+            WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []
         );

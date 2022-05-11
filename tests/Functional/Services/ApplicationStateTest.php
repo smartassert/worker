@@ -9,6 +9,7 @@ use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventState;
+use App\Entity\WorkerEventType;
 use App\Services\ApplicationState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -182,7 +183,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
+                            ->withType(WorkerEventType::JOB_TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::STATE_TIMED_OUT,
@@ -424,7 +425,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEvent::TYPE_JOB_TIME_OUT)
+                            ->withType(WorkerEventType::JOB_TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [

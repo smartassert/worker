@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,11 +23,10 @@ class WorkerEventRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param WorkerEvent::TYPE_* $type
-     * @param non-empty-string    $reference
-     * @param array<mixed>        $payload
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
      */
-    public function create(string $type, string $reference, array $payload): WorkerEvent
+    public function create(WorkerEventType $type, string $reference, array $payload): WorkerEvent
     {
         $entity = WorkerEvent::create($type, $reference, $payload);
 
@@ -36,18 +36,15 @@ class WorkerEventRepository extends ServiceEntityRepository
         return $entity;
     }
 
-    public function hasForType(string $type): bool
+    public function hasForType(WorkerEventType $type): bool
     {
-        return $this->count(['type' => $type]) > 0;
+        return $this->count(['type' => $type->value]) > 0;
     }
 
-    /**
-     * @param WorkerEvent::TYPE_* $type
-     */
-    public function getTypeCount(string $type): int
+    public function getTypeCount(WorkerEventType $type): int
     {
         return $this->count([
-            'type' => $type,
+            'type' => $type->value,
         ]);
     }
 }

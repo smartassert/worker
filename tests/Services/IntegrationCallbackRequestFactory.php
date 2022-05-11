@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
@@ -16,11 +16,10 @@ class IntegrationCallbackRequestFactory
     }
 
     /**
-     * @param WorkerEvent::TYPE_* $type
-     * @param non-empty-string    $reference
-     * @param array<mixed>        $payload
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
      */
-    public function create(string $type, string $reference, array $payload): RequestInterface
+    public function create(WorkerEventType $type, string $reference, array $payload): RequestInterface
     {
         return new Request(
             'POST',
@@ -30,7 +29,7 @@ class IntegrationCallbackRequestFactory
             ],
             (string) json_encode([
                 'label' => $this->jobProperties->getLabel(),
-                'type' => $type,
+                'type' => $type->value,
                 'reference' => $reference,
                 'payload' => $payload,
             ])

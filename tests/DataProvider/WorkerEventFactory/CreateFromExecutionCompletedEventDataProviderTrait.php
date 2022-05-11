@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 
 trait CreateFromExecutionCompletedEventDataProviderTrait
@@ -18,7 +19,7 @@ trait CreateFromExecutionCompletedEventDataProviderTrait
             ExecutionCompletedEvent::class => [
                 'event' => new ExecutionCompletedEvent(),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_EXECUTION_COMPLETED,
+                    WorkerEventType::EXECUTION_COMPLETED,
                     '{{ job_label }}',
                     []
                 ),

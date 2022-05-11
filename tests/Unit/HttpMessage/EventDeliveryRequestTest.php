@@ -6,6 +6,7 @@ namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -18,7 +19,7 @@ class EventDeliveryRequestTest extends TestCase
         $jobLabel = 'label content';
         $job = Job::create($jobLabel, $jobCallbackUrl, 600);
 
-        $workerEventType = 'worker event type';
+        $workerEventType = WorkerEventType::JOB_COMPLETED;
         $workerEventReference = 'reference value';
         $workerEventData = [
             'key1' => 'value1',
@@ -48,7 +49,7 @@ class EventDeliveryRequestTest extends TestCase
         self::assertSame(
             [
                 'label' => $jobLabel,
-                'type' => $workerEventType,
+                'type' => $workerEventType->value,
                 'reference' => $workerEventReference,
                 'payload' => $workerEventData,
             ],

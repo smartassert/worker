@@ -7,6 +7,7 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
@@ -43,7 +44,7 @@ trait CreateFromStepEventDataProviderTrait
                     $passingStepPath
                 ),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_STEP_PASSED,
+                    WorkerEventType::STEP_PASSED,
                     '{{ job_label }}' . $passingStepPath . $passingStepName,
                     $passingStepData
                 ),
@@ -55,7 +56,7 @@ trait CreateFromStepEventDataProviderTrait
                     $failingStepPath
                 ),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_STEP_FAILED,
+                    WorkerEventType::STEP_FAILED,
                     '{{ job_label }}' . $failingStepPath . $failingStepName,
                     $failingStepData
                 ),

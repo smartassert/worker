@@ -7,6 +7,7 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventType;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
@@ -40,7 +41,7 @@ trait CreateFromTestEventDataProviderTrait
             TestStartedEvent::class => [
                 'event' => new TestStartedEvent($test, $testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_TEST_STARTED,
+                    WorkerEventType::TEST_STARTED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData
                 ),
@@ -48,7 +49,7 @@ trait CreateFromTestEventDataProviderTrait
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent($test, $testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_TEST_PASSED,
+                    WorkerEventType::TEST_PASSED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData
                 ),
@@ -56,7 +57,7 @@ trait CreateFromTestEventDataProviderTrait
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent($test, $testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
-                    WorkerEvent::TYPE_TEST_FAILED,
+                    WorkerEventType::TEST_FAILED,
                     '{{ job_label }}' . $testRelativeSource,
                     $documentData
                 ),
