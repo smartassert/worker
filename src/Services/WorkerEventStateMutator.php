@@ -46,7 +46,7 @@ class WorkerEventStateMutator
     {
         $workerEvent->setState($state);
 
-        $this->entityManager->persist($workerEvent->getEntity());
+        $this->entityManager->persist($workerEvent);
         $this->entityManager->flush();
     }
 }
