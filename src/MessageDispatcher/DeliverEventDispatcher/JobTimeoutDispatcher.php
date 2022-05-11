@@ -12,7 +12,7 @@ use App\Services\WorkerEventFactory\EventHandler\JobTimeoutEventHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobTimeoutEventDeliverEventDispatcher extends AbstractDeliverEventDispatcher implements EventSubscriberInterface
+class JobTimeoutDispatcher extends AbstractDeliverEventDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         DeliverEventMessageDispatcher $messageDispatcher,

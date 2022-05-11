@@ -24,7 +24,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\EventListenerRemover;
 use webignition\YamlDocument\Document;
 
-class TestAndStepEventDeliverEventDispatcherTest extends AbstractDeliverEventDispatcherTest
+class TestAndStepDispatcherTest extends AbstractDeliverEventDispatcherTest
 {
     private const RELATIVE_SOURCE = 'Test/test.yml';
     private const ABSOLUTE_SOURCE = '/app/source/' . self::RELATIVE_SOURCE;

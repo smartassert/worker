@@ -18,7 +18,7 @@ use App\Services\WorkerEventFactory\EventHandler\TestAndStepEventHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TestAndStepEventDeliverEventDispatcher extends AbstractDeliverEventDispatcher implements EventSubscriberInterface
+class TestAndStepDispatcher extends AbstractDeliverEventDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         DeliverEventMessageDispatcher $messageDispatcher,

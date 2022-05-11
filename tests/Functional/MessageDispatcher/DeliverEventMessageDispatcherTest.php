@@ -12,7 +12,6 @@ use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilation\FailedEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\SourceCompilation\StartedEvent;
 use App\Event\StepFailedEvent;
@@ -34,7 +33,6 @@ use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
-use webignition\BasilCompilerModels\ErrorOutputInterface;
 
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 {
@@ -129,14 +127,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
      */
     public function subscribesToEventDataProvider(): array
     {
-        $sourceCompileFailureEventOutput = \Mockery::mock(ErrorOutputInterface::class);
-        $sourceCompileFailureEventOutput
-            ->shouldReceive('getData')
-            ->andReturn([
-                'compile-failure-key' => 'value',
-            ])
-        ;
-
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
 
@@ -158,16 +148,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
-                ],
-            ],
-            FailedEvent::class => [
-                'event' => new FailedEvent($testSource, $sourceCompileFailureEventOutput),
-                'expectedWorkerEventType' => WorkerEventType::COMPILATION_FAILED,
-                'expectedWorkerEventPayload' => [
-                    'source' => $testSource,
-                    'output' => [
-                        'compile-failure-key' => 'value',
-                    ],
                 ],
             ],
             JobCompiledEvent::class => [
