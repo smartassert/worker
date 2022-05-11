@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Image;
 
 use App\Services\CompilationState;
+use App\Services\EventDeliveryState;
 use App\Services\ExecutionState;
-use App\Services\WorkerEventState;
 use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -196,6 +196,6 @@ class AppTest extends TestCase
 
         return CompilationState::STATE_COMPLETE === $jobStatus['compilation_state']
             && ExecutionState::STATE_COMPLETE === $jobStatus['execution_state']
-            && WorkerEventState::STATE_COMPLETE === $jobStatus['event_delivery_state'];
+            && EventDeliveryState::STATE_COMPLETE === $jobStatus['event_delivery_state'];
     }
 }

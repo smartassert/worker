@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState as WorkerEventStateEnum;
+use App\Entity\WorkerEventState;
 use Doctrine\ORM\EntityManagerInterface;
 
 class WorkerEventStateMutator
@@ -16,33 +16,33 @@ class WorkerEventStateMutator
 
     public function setQueued(WorkerEvent $workerEvent): void
     {
-        if (in_array($workerEvent->getState(), [WorkerEventStateEnum::AWAITING, WorkerEventStateEnum::SENDING])) {
-            $this->set($workerEvent, WorkerEventStateEnum::QUEUED);
+        if (in_array($workerEvent->getState(), [WorkerEventState::AWAITING, WorkerEventState::SENDING])) {
+            $this->set($workerEvent, WorkerEventState::QUEUED);
         }
     }
 
     public function setSending(WorkerEvent $workerEvent): void
     {
-        if (WorkerEventStateEnum::QUEUED === $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEventStateEnum::SENDING);
+        if (WorkerEventState::QUEUED === $workerEvent->getState()) {
+            $this->set($workerEvent, WorkerEventState::SENDING);
         }
     }
 
     public function setFailed(WorkerEvent $workerEvent): void
     {
-        if (in_array($workerEvent->getState(), [WorkerEventStateEnum::QUEUED, WorkerEventStateEnum::SENDING])) {
-            $this->set($workerEvent, WorkerEventStateEnum::FAILED);
+        if (in_array($workerEvent->getState(), [WorkerEventState::QUEUED, WorkerEventState::SENDING])) {
+            $this->set($workerEvent, WorkerEventState::FAILED);
         }
     }
 
     public function setComplete(WorkerEvent $workerEvent): void
     {
-        if (WorkerEventStateEnum::SENDING === $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEventStateEnum::COMPLETE);
+        if (WorkerEventState::SENDING === $workerEvent->getState()) {
+            $this->set($workerEvent, WorkerEventState::COMPLETE);
         }
     }
 
-    private function set(WorkerEvent $workerEvent, WorkerEventStateEnum $state): void
+    private function set(WorkerEvent $workerEvent, WorkerEventState $state): void
     {
         $workerEvent->setState($state);
 

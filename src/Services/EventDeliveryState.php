@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEventState as WorkerEventStateEnum;
+use App\Entity\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
-class WorkerEventState implements \Stringable
+class EventDeliveryState implements \Stringable
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -26,8 +26,8 @@ class WorkerEventState implements \Stringable
         $eventCount = $this->repository->count([]);
         $finishedEventCount = $this->repository->count([
             'state' => [
-                WorkerEventStateEnum::FAILED->value,
-                WorkerEventStateEnum::COMPLETE->value,
+                WorkerEventState::FAILED->value,
+                WorkerEventState::COMPLETE->value,
             ],
         ]);
 
@@ -41,7 +41,7 @@ class WorkerEventState implements \Stringable
     }
 
     /**
-     * @param WorkerEventState::STATE_* ...$states
+     * @param EventDeliveryState::STATE_* ...$states
      */
     public function is(...$states): bool
     {
