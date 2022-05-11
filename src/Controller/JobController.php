@@ -56,8 +56,8 @@ class JobController
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->callbackUrl) {
-            return new ErrorResponse('callback_url/missing');
+        if ('' === $request->eventDeliveryUrl) {
+            return new ErrorResponse('event_delivery_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
@@ -89,7 +89,7 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $this->jobRepository->create($request->label, $request->callbackUrl, $request->maximumDurationInSeconds);
+        $this->jobRepository->create($request->label, $request->eventDeliveryUrl, $request->maximumDurationInSeconds);
 
         $messageBus->dispatch(new JobReadyMessage());
 

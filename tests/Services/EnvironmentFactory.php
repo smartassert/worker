@@ -28,7 +28,7 @@ class EnvironmentFactory
         if ($jobSetup instanceof JobSetup) {
             $job = $this->jobRepository->create(
                 $jobSetup->getLabel(),
-                $jobSetup->getCallbackUrl(),
+                $jobSetup->getEventDeliveryUrl(),
                 $jobSetup->getMaximumDurationInSeconds()
             );
 

@@ -90,7 +90,7 @@ class AppTest extends TestCase
         $response = $this->httpClient->post('https://localhost/job', [
             'form_params' => [
                 'label' => md5('label content'),
-                'callback_url' => 'http://callback-receiver/callback',
+                'event_delivery_url' => 'http://event-receiver/events',
                 'maximum_duration_in_seconds' => 600,
                 'source' => $serializedSource,
             ],
@@ -117,7 +117,7 @@ class AppTest extends TestCase
 
         $this->jobAsserter->assertJob([
             'label' => md5('label content'),
-            'callback_url' => 'http://callback-receiver/callback',
+            'event_delivery_url' => 'http://event-receiver/events',
             'maximum_duration_in_seconds' => 600,
             'sources' => [
                 'Test/chrome-open-index.yml',

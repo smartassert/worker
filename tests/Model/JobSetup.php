@@ -7,7 +7,7 @@ namespace App\Tests\Model;
 class JobSetup
 {
     private string $label;
-    private string $callbackUrl;
+    private string $eventDeliveryUrl;
     private int $maximumDurationInSeconds;
 
     /**
@@ -18,7 +18,7 @@ class JobSetup
     public function __construct()
     {
         $this->label = md5('label content');
-        $this->callbackUrl = 'http://example.com/callback';
+        $this->eventDeliveryUrl = 'http://example.com/events';
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
     }
@@ -28,9 +28,9 @@ class JobSetup
         return $this->label;
     }
 
-    public function getCallbackUrl(): string
+    public function getEventDeliveryUrl(): string
     {
-        return $this->callbackUrl;
+        return $this->eventDeliveryUrl;
     }
 
     public function getMaximumDurationInSeconds(): int
@@ -54,10 +54,10 @@ class JobSetup
         return $new;
     }
 
-    public function withCallbackUrl(string $callbackUrl): self
+    public function withEventDeliveryUrl(string $url): self
     {
         $new = clone $this;
-        $new->callbackUrl = $callbackUrl;
+        $new->eventDeliveryUrl = $url;
 
         return $new;
     }

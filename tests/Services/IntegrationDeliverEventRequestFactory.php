@@ -23,7 +23,7 @@ class IntegrationDeliverEventRequestFactory
     {
         return new Request(
             'POST',
-            $this->jobProperties->getCallbackUrl(),
+            $this->jobProperties->getEventDeliveryUrl(),
             [
                 'content-type' => 'application/json',
             ],

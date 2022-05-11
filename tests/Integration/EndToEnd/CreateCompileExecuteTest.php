@@ -86,11 +86,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $statusResponse);
 
         $label = $this->jobProperties->getLabel();
-        $callbackUrl = $this->jobProperties->getCallbackUrl();
+        $eventDeliveryUrl = $this->jobProperties->getEventDeliveryUrl();
 
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
@@ -114,7 +114,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertIsArray($statusData);
 
         self::assertSame($label, $statusData['label']);
-        self::assertSame($callbackUrl, $statusData['callback_url']);
+        self::assertSame($eventDeliveryUrl, $statusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);

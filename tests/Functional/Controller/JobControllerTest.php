@@ -103,13 +103,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     public function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
-        $callbackUrl = 'https://example.com/callback';
+        $eventDeliveryUrl = 'https://example.com/events';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
         $nonEmptyPayload = [
             CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
         ];
@@ -131,20 +131,20 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'error_state' => 'label/missing',
                 ],
             ],
-            'missing values: callback_url missing' => [
+            'missing values: event_delivery_url missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_CALLBACK_URL => null,
+                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => null,
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'callback_url/missing',
+                    'error_state' => 'event_delivery_url/missing',
                 ],
             ],
-            'missing values: callback_url empty' => [
+            'missing values: event_delivery_url empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_CALLBACK_URL => '',
+                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => '',
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'callback_url/missing',
+                    'error_state' => 'event_delivery_url/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [
@@ -197,7 +197,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
-            CreateJobRequest::KEY_CALLBACK_URL => 'https://example.com/callback',
+            CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
 
@@ -350,12 +350,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         self::assertNull($this->jobRepository->get());
 
         $label = md5((string) rand());
-        $callbackUrl = md5((string) rand());
+        $eventDeliveryUrl = md5((string) rand());
         $maximumDuration = rand(1, 1000);
 
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_CALLBACK_URL => $callbackUrl,
+            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
@@ -367,7 +367,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
         $job = $this->jobRepository->get();
         self::assertSame($label, $job->getLabel());
-        self::assertSame($callbackUrl, $job->getCallbackUrl());
+        self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
         self::assertSame($maximumDuration, $job->getMaximumDurationInSeconds());
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
@@ -489,12 +489,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withCallbackUrl('http://example.com/callback')
+                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(10)
                     ),
                 'expectedResponseData' => [
                     'label' => 'label content',
-                    'callback_url' => 'http://example.com/callback',
+                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 10,
                     'sources' => [],
                     'compilation_state' => 'awaiting',
@@ -508,7 +508,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withCallbackUrl('http://example.com/callback')
+                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(11)
                     )->withSourceSetups([
                         (new SourceSetup())->withPath('Test/test1.yml'),
@@ -517,7 +517,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
-                    'callback_url' => 'http://example.com/callback',
+                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 11,
                     'sources' => [
                         'Test/test1.yml',
@@ -535,7 +535,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withCallbackUrl('http://example.com/callback')
+                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(12)
                     )->withSourceSetups([
                         (new SourceSetup())->withPath('Test/test1.yml'),
@@ -553,7 +553,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
-                    'callback_url' => 'http://example.com/callback',
+                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 12,
                     'sources' => [
                         'Test/test1.yml',

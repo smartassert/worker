@@ -31,9 +31,9 @@ class JobRepository extends ServiceEntityRepository
         return $job;
     }
 
-    public function create(string $label, string $callbackUrl, int $maximumDurationInSeconds): Job
+    public function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): Job
     {
-        return $this->add(Job::create($label, $callbackUrl, $maximumDurationInSeconds));
+        return $this->add(Job::create($label, $eventDeliveryUrl, $maximumDurationInSeconds));
     }
 
     public function get(): ?Job
