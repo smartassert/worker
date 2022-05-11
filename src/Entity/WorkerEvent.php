@@ -45,11 +45,6 @@ class WorkerEvent
         return $entity;
     }
 
-    public function getEntity(): WorkerEvent
-    {
-        return $this;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
