@@ -23,7 +23,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
+use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -31,25 +31,12 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
-    /**
-     * @var EventHandlerInterface[]
-     */
-    private array $handlers = [];
-
-    /**
-     * @param iterable<EventHandlerInterface> $handlers
-     */
     public function __construct(
         private MessageBusInterface $messageBus,
         private WorkerEventStateMutator $workerEventStateMutator,
         private readonly JobRepository $jobRepository,
-        iterable $handlers
+        private readonly GenericEventHandler $handler,
     ) {
-        foreach ($handlers as $handler) {
-            if ($handler instanceof EventHandlerInterface) {
-                $this->handlers[] = $handler;
-            }
-        }
     }
 
     /**
@@ -113,12 +100,9 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             return null;
         }
 
-        foreach ($this->handlers as $handler) {
-            $workerEvent = $handler->createForEvent($job, $event);
-
-            if ($workerEvent instanceof WorkerEvent) {
-                return $this->dispatch($workerEvent);
-            }
+        $workerEvent = $this->handler->createForEvent($job, $event);
+        if ($workerEvent instanceof WorkerEvent) {
+            return $this->dispatch($workerEvent);
         }
 
         return null;
