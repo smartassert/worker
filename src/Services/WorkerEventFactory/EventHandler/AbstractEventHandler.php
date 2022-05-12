@@ -18,11 +18,8 @@ use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
-use App\Event\SourceEventInterface;
-use App\Event\StepEventInterface;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
-use App\Event\TestEventInterface;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
@@ -61,33 +58,13 @@ abstract class AbstractEventHandler
      */
     protected function create(Job $job, EventInterface $event, array $data): WorkerEvent
     {
+        $referenceComponents = $event->getReferenceComponents();
+        array_unshift($referenceComponents, $job->getLabel());
+
         return $this->workerEventRepository->create(
             self::EVENT_TO_TYPE_MAP[$event::class] ?? WorkerEventType::UNKNOWN,
-            $this->createReference($job, $event),
+            md5(implode('', $referenceComponents)),
             $data
         );
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    private function createReference(Job $job, EventInterface $event): string
-    {
-        $referenceComponents = [$job->getLabel()];
-
-        if ($event instanceof SourceEventInterface) {
-            $referenceComponents[] = $event->getSource();
-        }
-
-        if ($event instanceof TestEventInterface) {
-            $referenceComponents[] = $event->getDocument()->getPath();
-        }
-
-        if ($event instanceof StepEventInterface) {
-            $referenceComponents[] = $event->getPath();
-            $referenceComponents[] = $event->getDocument()->getName();
-        }
-
-        return md5(implode('', $referenceComponents));
     }
 }
