@@ -14,10 +14,10 @@ use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilation\EventInterface;
-use App\Event\SourceCompilation\FailedEvent as CompilationFailedEvent;
-use App\Event\SourceCompilation\PassedEvent as CompilationPassedEvent;
-use App\Event\SourceCompilation\StartedEvent as CompilationStartedEvent;
+use App\Event\SourceCompilation\SourceCompilationFailedEvent as CompilationFailedEvent;
+use App\Event\SourceCompilation\SourceCompilationPassedEvent as CompilationPassedEvent;
+use App\Event\SourceCompilation\SourceCompilationStartedEvent as CompilationStartedEvent;
+use App\Event\SourceCompilation\SourceEventInterface;
 use App\Event\StepEventInterface;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
@@ -75,7 +75,7 @@ abstract class AbstractEventHandler implements EventHandlerInterface
     {
         $referenceComponents = [$job->getLabel()];
 
-        if ($event instanceof EventInterface) {
+        if ($event instanceof SourceEventInterface) {
             $referenceComponents[] = $event->getSource();
         }
 

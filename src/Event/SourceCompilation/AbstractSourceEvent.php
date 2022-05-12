@@ -6,7 +6,7 @@ namespace App\Event\SourceCompilation;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractEvent extends Event implements EventInterface
+abstract class AbstractSourceEvent extends Event implements SourceEventInterface
 {
     public function __construct(private string $source)
     {

@@ -9,7 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Entity\WorkerEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\SourceCompilation\PassedEvent;
+use App\Event\SourceCompilation\SourceCompilationPassedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;
@@ -61,7 +61,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                PassedEvent::class => ['dispatchForEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
                 JobCompiledEvent::class => ['dispatchForEvent'],
                 TestPassedEvent::class => ['dispatchForEvent'],
                 ExecutionStartedEvent::class => ['dispatchForEvent'],

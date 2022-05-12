@@ -6,7 +6,7 @@ namespace App\Event\SourceCompilation;
 
 use Psr\EventDispatcher\StoppableEventInterface;
 
-interface EventInterface extends StoppableEventInterface
+interface SourceEventInterface extends StoppableEventInterface
 {
     public function getSource(): string;
 }

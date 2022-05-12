@@ -6,7 +6,7 @@ namespace App\Event\SourceCompilation;
 
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
-class FailedEvent extends AbstractEvent implements OutcomeEventInterface
+class SourceCompilationFailedEvent extends AbstractSourceEvent implements OutcomeSourceEventInterface
 {
     public function __construct(string $source, private ErrorOutputInterface $errorOutput)
     {

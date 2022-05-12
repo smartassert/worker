@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Event\JobReadyEvent;
-use App\Event\SourceCompilation\PassedEvent;
+use App\Event\SourceCompilation\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
@@ -59,10 +59,10 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatchForEvent'],
-                PassedEvent::class => ['dispatchForEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                PassedEvent::class => ['dispatchExecutionStartedEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchExecutionStartedEvent'],
             ],
         ]);
 
@@ -184,8 +184,8 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     public function subscribesToEventsDataProvider(): array
     {
         return [
-            PassedEvent::class => [
-                'event' => new PassedEvent(
+            SourceCompilationPassedEvent::class => [
+                'event' => new SourceCompilationPassedEvent(
                     '/app/source/Test/test1.yml',
                     (new MockSuiteManifest())
                         ->withGetTestManifestsCall([])
