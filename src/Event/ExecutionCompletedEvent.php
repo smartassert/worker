@@ -6,6 +6,6 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ExecutionCompletedEvent extends Event
+class ExecutionCompletedEvent extends Event implements EventInterface
 {
 }

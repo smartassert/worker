@@ -6,6 +6,6 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobFailedEvent extends Event
+class JobFailedEvent extends Event implements EventInterface
 {
 }

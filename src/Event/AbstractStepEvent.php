@@ -8,7 +8,7 @@ use App\Entity\Test;
 use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractStepEvent extends Event implements StepEventInterface
+abstract class AbstractStepEvent extends Event implements StepEventInterface, EventInterface
 {
     public function __construct(
         private readonly Test $test,
