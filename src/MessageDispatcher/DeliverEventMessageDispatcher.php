@@ -118,7 +118,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 $workerEvent = $handler->createForEvent($job, $event);
 
                 if ($workerEvent instanceof WorkerEvent) {
-                    $this->dispatch($workerEvent);
+                    return $this->dispatch($workerEvent);
                 }
             }
         }
