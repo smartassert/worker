@@ -9,7 +9,7 @@ use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
 use App\Event\SourceCompilationStartedEvent;
 
-class CompilationStartedEventHandler extends AbstractCompilationEventHandler
+class CompilationStartedEventHandler extends AbstractEventHandler
 {
     public function handles(EventInterface $event): bool
     {
@@ -19,7 +19,7 @@ class CompilationStartedEventHandler extends AbstractCompilationEventHandler
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         if ($event instanceof SourceCompilationStartedEvent) {
-            return $this->create($job, $event, $this->createPayload($event));
+            return $this->create($job, $event, $event->getPayload());
         }
 
         return null;

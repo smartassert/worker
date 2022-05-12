@@ -19,9 +19,7 @@ class JobTimeoutEventHandler extends AbstractEventHandler
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         if ($event instanceof JobTimeoutEvent) {
-            return $this->create($job, $event, [
-                'maximum_duration_in_seconds' => $event->getJobMaximumDuration(),
-            ]);
+            return $this->create($job, $event, $event->getPayload());
         }
 
         return null;
