@@ -6,4 +6,8 @@ namespace App\Event;
 
 interface EventInterface
 {
+    /**
+     * @return array<mixed>
+     */
+    public function getPayload(): array;
 }

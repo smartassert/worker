@@ -16,4 +16,11 @@ class JobTimeoutEvent extends Event implements EventInterface
     {
         return $this->jobMaximumDuration;
     }
+
+    public function getPayload(): array
+    {
+        return [
+            'maximum_duration_in_seconds' => $this->getJobMaximumDuration(),
+        ];
+    }
 }
