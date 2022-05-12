@@ -6,17 +6,17 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Event\EventInterface;
 use App\Event\JobTimeoutEvent;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class JobTimeoutEventHandler extends AbstractEventHandler
 {
-    public function handles(Event $event): bool
+    public function handles(EventInterface $event): bool
     {
         return $event instanceof JobTimeoutEvent;
     }
 
-    public function createForEvent(Job $job, Event $event): ?WorkerEvent
+    public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         if ($event instanceof JobTimeoutEvent) {
             return $this->create($job, $event, [

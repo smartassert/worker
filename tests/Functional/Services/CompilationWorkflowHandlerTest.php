@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Event\EventInterface;
 use App\Event\JobReadyEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
@@ -25,7 +26,6 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -156,7 +156,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
      *
      * @param object[] $expectedQueuedMessages
      */
-    public function testSubscribesToEvents(Event $event, array $expectedQueuedMessages): void
+    public function testSubscribesToEvents(EventInterface $event, array $expectedQueuedMessages): void
     {
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())

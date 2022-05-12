@@ -6,9 +6,9 @@ namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Event\EventInterface;
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Tests\AbstractBaseFunctionalTest;
-use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
 abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
@@ -32,13 +32,13 @@ abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
 
     public function testCreateForEventUnsupportedEvent(): void
     {
-        self::assertNull($this->handler->createForEvent(new Job(), new Event()));
+        self::assertNull($this->handler->createForEvent(new Job(), \Mockery::mock(EventInterface::class)));
     }
 
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreateForEvent(Event $event, WorkerEvent $expectedWorkerEvent): void
+    public function testCreateForEvent(EventInterface $event, WorkerEvent $expectedWorkerEvent): void
     {
         $jobLabel = md5((string) rand());
         $job = Job::create($jobLabel, '', 600);

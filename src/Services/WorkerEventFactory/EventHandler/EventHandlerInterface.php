@@ -6,11 +6,11 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use Symfony\Contracts\EventDispatcher\Event;
+use App\Event\EventInterface;
 
 interface EventHandlerInterface
 {
-    public function handles(Event $event): bool;
+    public function handles(EventInterface $event): bool;
 
-    public function createForEvent(Job $job, Event $event): ?WorkerEvent;
+    public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent;
 }

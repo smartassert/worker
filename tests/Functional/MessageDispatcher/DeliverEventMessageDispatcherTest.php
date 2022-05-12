@@ -8,6 +8,7 @@ use App\Entity\Test as TestEntity;
 use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
+use App\Event\EventInterface;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
@@ -37,7 +38,6 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\YamlDocument\Document;
 
@@ -98,7 +98,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
      * @param array<mixed> $expectedWorkerEventPayload
      */
     public function testSubscribesToEvent(
-        Event $event,
+        EventInterface $event,
         WorkerEventType $expectedWorkerEventType,
         array $expectedWorkerEventPayload
     ): void {
