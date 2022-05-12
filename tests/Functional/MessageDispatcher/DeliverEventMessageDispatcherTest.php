@@ -181,17 +181,14 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent(
-                    $genericTest,
-                    new TestDocument(new Document('document-key: value'))
-                ),
+                'event' => new TestStartedEvent(new TestDocument(new Document('document-key: value'))),
                 'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
                     'document-key' => 'value',
                 ],
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument), $relativeTestSource),
+                'event' => new StepPassedEvent(new Step($passingStepDocument), $relativeTestSource),
                 'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
                     'type' => 'step',
@@ -202,9 +199,9 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    $genericTest->setState(TestEntity::STATE_FAILED),
                     new Step($failingStepDocument),
-                    $relativeTestSource
+                    $relativeTestSource,
+                    $genericTest->setState(TestEntity::STATE_FAILED)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
                 'expectedWorkerEventPayload' => [
@@ -216,8 +213,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    $genericTest->setState(TestEntity::STATE_COMPLETE),
-                    new TestDocument(new Document('document-key: value'))
+                    new TestDocument(new Document('document-key: value')),
+                    $genericTest->setState(TestEntity::STATE_COMPLETE)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
                 'expectedWorkerEventPayload' => [
@@ -225,10 +222,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent(
-                    $genericTest->setState(TestEntity::STATE_FAILED),
-                    new TestDocument(new Document('document-key: value'))
-                ),
+                'event' => new TestFailedEvent(new TestDocument(new Document('document-key: value'))),
                 'expectedWorkerEventType' => WorkerEventType::TEST_FAILED,
                 'expectedWorkerEventPayload' => [
                     'document-key' => 'value',

@@ -7,6 +7,7 @@ namespace App\Tests\Functional\MessageHandler;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\WorkerEvent;
+use App\Event\AbstractSourceEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
@@ -132,7 +133,10 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
-                        self::assertSame($sourcePath, $actualEvent->getSource());
+                        self::assertSame(
+                            $sourcePath,
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                        );
                         ++$eventExpectationCount;
 
                         return true;
@@ -146,8 +150,11 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                         $suiteManifest,
                         &$eventExpectationCount
                     ) {
-                        self::assertSame($sourcePath, $actualEvent->getSource());
-                        self::assertSame($suiteManifest, $actualEvent->getOutput());
+                        self::assertSame(
+                            $sourcePath,
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                        );
+                        self::assertSame($suiteManifest, $actualEvent->getSuiteManifest());
                         ++$eventExpectationCount;
 
                         return true;
@@ -200,7 +207,10 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
-                        self::assertSame($sourcePath, $actualEvent->getSource());
+                        self::assertSame(
+                            $sourcePath,
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                        );
                         ++$eventExpectationCount;
 
                         return true;
@@ -214,8 +224,14 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                         $errorOutput,
                         &$eventExpectationCount
                     ) {
-                        self::assertSame($sourcePath, $actualEvent->getSource());
-                        self::assertSame($errorOutput, $actualEvent->getOutput());
+                        self::assertSame(
+                            $sourcePath,
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                        );
+                        self::assertSame(
+                            $errorOutput,
+                            ObjectReflector::getProperty($actualEvent, 'errorOutput')
+                        );
                         ++$eventExpectationCount;
 
                         return true;

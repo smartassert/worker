@@ -83,7 +83,6 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
         $failingStepPath = 'Test/failing.yml';
 
         $source = $sourceDirectory . '/' . $sourcePath;
-        $passingStepSource = $sourceDirectory . '/' . $passingStepPath;
         $failingStepSource = $sourceDirectory . '/' . $failingStepPath;
 
         $errorOutputData = [
@@ -211,7 +210,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent($test, $testDocument),
+                'event' => new TestStartedEvent($testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_STARTED,
                     '{{ job_label }}' . $sourcePath,
@@ -219,7 +218,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestPassedEvent::class => [
-                'event' => new TestPassedEvent($test, $testDocument),
+                'event' => new TestPassedEvent($testDocument, $test),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_PASSED,
                     '{{ job_label }}' . $sourcePath,
@@ -227,7 +226,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent($test, $testDocument),
+                'event' => new TestFailedEvent($testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_FAILED,
                     '{{ job_label }}' . $sourcePath,
@@ -235,11 +234,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent(
-                    Test::create($testConfiguration, $passingStepSource, '', 1, 1),
-                    new Step($passingStepDocument),
-                    $passingStepPath
-                ),
+                'event' => new StepPassedEvent(new Step($passingStepDocument), $passingStepPath),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::STEP_PASSED,
                     '{{ job_label }}' . $passingStepPath . $passingStepName,
@@ -248,9 +243,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    Test::create($testConfiguration, $failingStepSource, '', 1, 1),
                     new Step($failingStepDocument),
-                    $failingStepPath
+                    $failingStepPath,
+                    Test::create($testConfiguration, $failingStepSource, '', 1, 1),
                 ),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::STEP_FAILED,

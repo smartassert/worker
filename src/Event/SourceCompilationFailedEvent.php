@@ -6,16 +6,11 @@ namespace App\Event;
 
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
-class SourceCompilationFailedEvent extends AbstractSourceEvent implements OutcomeSourceEventInterface
+class SourceCompilationFailedEvent extends AbstractSourceEvent
 {
     public function __construct(string $source, private ErrorOutputInterface $errorOutput)
     {
         parent::__construct($source);
-    }
-
-    public function getOutput(): ErrorOutputInterface
-    {
-        return $this->errorOutput;
     }
 
     public function getPayload(): array
@@ -23,7 +18,7 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent implements Outcom
         return array_merge(
             parent::getPayload(),
             [
-                'output' => $this->getOutput()->getData(),
+                'output' => $this->errorOutput->getData(),
             ]
         );
     }

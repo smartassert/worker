@@ -6,21 +6,16 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractSourceEvent extends Event implements SourceEventInterface, EventInterface
+abstract class AbstractSourceEvent extends Event implements EventInterface
 {
     public function __construct(private string $source)
     {
     }
 
-    public function getSource(): string
-    {
-        return $this->source;
-    }
-
     public function getPayload(): array
     {
         return [
-            'source' => $this->getSource(),
+            'source' => $this->source,
         ];
     }
 
