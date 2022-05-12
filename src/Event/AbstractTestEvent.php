@@ -25,4 +25,9 @@ abstract class AbstractTestEvent extends Event implements TestEventInterface, Ev
     {
         return $this->document;
     }
+
+    public function getPayload(): array
+    {
+        return $this->getDocument()->getData();
+    }
 }
