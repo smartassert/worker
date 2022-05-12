@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
-use App\Services\WorkerEventFactory\EventHandler\TestAndStepEventHandler;
+use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromStepEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromTestEventDataProviderTrait;
 
-class TestAndStepEventHandlerTest extends AbstractEventHandlerTest
+class GenericEventHandlerTest extends AbstractEventHandlerTest
 {
     use CreateFromStepEventDataProviderTrait;
     use CreateFromTestEventDataProviderTrait;
@@ -24,8 +24,8 @@ class TestAndStepEventHandlerTest extends AbstractEventHandlerTest
 
     protected function getHandler(): ?EventHandlerInterface
     {
-        $handler = self::getContainer()->get(TestAndStepEventHandler::class);
+        $handler = self::getContainer()->get(GenericEventHandler::class);
 
-        return $handler instanceof TestAndStepEventHandler ? $handler : null;
+        return $handler instanceof GenericEventHandler ? $handler : null;
     }
 }
