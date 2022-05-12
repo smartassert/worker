@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Event\SourceCompilation;
+namespace App\Event;
 
 use webignition\BasilCompilerModels\SuiteManifest;
 
-class PassedEvent extends AbstractEvent implements OutcomeEventInterface
+class SourceCompilationPassedEvent extends AbstractSourceEvent implements OutcomeSourceEventInterface
 {
     public function __construct(string $source, private SuiteManifest $suiteManifest)
     {
