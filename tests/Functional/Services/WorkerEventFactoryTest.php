@@ -210,7 +210,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent($test, $testDocument),
+                'event' => new TestStartedEvent($testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_STARTED,
                     '{{ job_label }}' . $sourcePath,
@@ -218,7 +218,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestPassedEvent::class => [
-                'event' => new TestPassedEvent($test, $testDocument),
+                'event' => new TestPassedEvent($testDocument, $test),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_PASSED,
                     '{{ job_label }}' . $sourcePath,
@@ -226,7 +226,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent($test, $testDocument),
+                'event' => new TestFailedEvent($testDocument),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::TEST_FAILED,
                     '{{ job_label }}' . $sourcePath,
