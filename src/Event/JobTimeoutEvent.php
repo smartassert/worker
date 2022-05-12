@@ -23,4 +23,9 @@ class JobTimeoutEvent extends Event implements EventInterface
             'maximum_duration_in_seconds' => $this->getJobMaximumDuration(),
         ];
     }
+
+    public function getReferenceComponents(): array
+    {
+        return [];
+    }
 }

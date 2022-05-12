@@ -23,4 +23,11 @@ abstract class AbstractSourceEvent extends Event implements SourceEventInterface
             'source' => $this->getSource(),
         ];
     }
+
+    public function getReferenceComponents(): array
+    {
+        return [
+            $this->source,
+        ];
+    }
 }

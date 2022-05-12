@@ -30,4 +30,11 @@ abstract class AbstractTestEvent extends Event implements TestEventInterface, Ev
     {
         return $this->getDocument()->getData();
     }
+
+    public function getReferenceComponents(): array
+    {
+        return [
+            $this->document->getPath(),
+        ];
+    }
 }
