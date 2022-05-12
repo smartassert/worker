@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\WorkerEventFactory\EventHandler;
+namespace App\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;

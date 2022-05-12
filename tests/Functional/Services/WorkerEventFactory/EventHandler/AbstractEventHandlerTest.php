@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
-use App\Services\WorkerEventFactory\EventHandler\WorkerEventFactory;
+use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use webignition\ObjectReflector\ObjectReflector;
 
