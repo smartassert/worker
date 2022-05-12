@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Test as TestEntity;
 use App\Model\Document\Test as TestDocument;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractTestEvent extends Event implements TestEventInterface
+abstract class AbstractTestEvent extends Event implements EventInterface
 {
     public function __construct(
-        private readonly TestEntity $test,
         private readonly TestDocument $document
     ) {
     }
 
-    public function getTest(): TestEntity
+    public function getPayload(): array
     {
-        return $this->test;
+        return $this->document->getData();
     }
 
-    public function getDocument(): TestDocument
+    public function getReferenceComponents(): array
     {
-        return $this->document;
+        return [
+            $this->document->getPath(),
+        ];
     }
 }

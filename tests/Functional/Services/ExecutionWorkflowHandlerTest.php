@@ -9,7 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Entity\WorkerEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\SourceCompilation\PassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;
@@ -61,7 +61,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                PassedEvent::class => ['dispatchForEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
                 JobCompiledEvent::class => ['dispatchForEvent'],
                 TestPassedEvent::class => ['dispatchForEvent'],
                 ExecutionStartedEvent::class => ['dispatchForEvent'],
@@ -181,10 +181,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent(
-            $test,
-            new TestDocument(new Document())
-        );
+        $event = new TestPassedEvent(new TestDocument(new Document()), $test);
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -286,7 +283,6 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
-                $tests[0],
                 new TestDocument(
                     new Document((string) json_encode([
                         'type' => 'test',
@@ -294,7 +290,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                             'path' => $test0RelativeSource,
                         ],
                     ]))
-                )
+                ),
+                $tests[0]
             )
         );
 
@@ -331,7 +328,6 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
-                $tests[0],
                 new TestDocument(
                     new Document((string) json_encode([
                         'type' => 'test',
@@ -339,7 +335,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                             'path' => $test0RelativeSource,
                         ],
                     ]))
-                )
+                ),
+                $tests[0],
             )
         );
 

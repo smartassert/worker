@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\Test;
 use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractStepEvent extends Event implements StepEventInterface
+abstract class AbstractStepEvent extends Event implements EventInterface
 {
     public function __construct(
-        private readonly Test $test,
         private readonly Step $step,
         private readonly string $path,
     ) {
     }
 
-    public function getTest(): Test
+    public function getPayload(): array
     {
-        return $this->test;
+        return $this->step->getData();
     }
 
-    public function getDocument(): Step
+    public function getReferenceComponents(): array
     {
-        return $this->step;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
+        return [
+            $this->path,
+            (string) $this->step->getName(),
+        ];
     }
 }

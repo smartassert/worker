@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Services;
 
+use App\Event\AbstractStepEvent;
+use App\Event\EventInterface;
 use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
 use App\Services\Compiler;
@@ -12,7 +14,6 @@ use App\Services\TestFactory;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
-use Symfony\Contracts\EventDispatcher\Event;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\ObjectReflector\ObjectReflector;
 use webignition\YamlDocument\Document;
@@ -92,7 +93,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'testSource' => 'Test/chrome-open-index.yml',
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
-                        function (Event $event): bool {
+                        function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
@@ -116,9 +117,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($expectedDocument, $event->getDocument());
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
@@ -132,7 +134,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'testSource' => 'Test/firefox-open-index.yml',
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
-                        function (Event $event): bool {
+                        function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
@@ -150,9 +152,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
@@ -166,7 +169,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'testSource' => 'Test/chrome-firefox-open-index.yml',
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
-                        function (Event $event): bool {
+                        function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
@@ -184,15 +187,16 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
                     ),
                     new ExpectedDispatchedEvent(
-                        function (Event $event): bool {
+                        function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
@@ -210,9 +214,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageHandler;
 
+use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageHandler\JobCompletedCheckHandler;
@@ -14,7 +15,6 @@ use App\Tests\Mock\Services\MockApplicationState;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
@@ -79,7 +79,7 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
 
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(function (Event $event) use (&$eventExpectationCount) {
+                new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
                     self::assertInstanceOf(JobCompletedEvent::class, $event);
                     ++$eventExpectationCount;
 

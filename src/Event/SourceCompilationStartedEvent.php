@@ -6,10 +6,10 @@ namespace App\Event;
 
 use App\Entity\WorkerEventType;
 
-class StepPassedEvent extends AbstractStepEvent
+class SourceCompilationStartedEvent extends AbstractSourceEvent
 {
     public function getType(): WorkerEventType
     {
-        return WorkerEventType::STEP_PASSED;
+        return WorkerEventType::COMPILATION_STARTED;
     }
 }

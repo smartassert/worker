@@ -7,8 +7,9 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Event\EventInterface;
 use App\Event\JobReadyEvent;
-use App\Event\SourceCompilation\PassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
@@ -25,7 +26,6 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -59,10 +59,10 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
                 JobReadyEvent::class => ['dispatchForEvent'],
-                PassedEvent::class => ['dispatchForEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                PassedEvent::class => ['dispatchExecutionStartedEvent'],
+                SourceCompilationPassedEvent::class => ['dispatchExecutionStartedEvent'],
             ],
         ]);
 
@@ -156,7 +156,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
      *
      * @param object[] $expectedQueuedMessages
      */
-    public function testSubscribesToEvents(Event $event, array $expectedQueuedMessages): void
+    public function testSubscribesToEvents(EventInterface $event, array $expectedQueuedMessages): void
     {
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
@@ -184,8 +184,8 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     public function subscribesToEventsDataProvider(): array
     {
         return [
-            PassedEvent::class => [
-                'event' => new PassedEvent(
+            SourceCompilationPassedEvent::class => [
+                'event' => new SourceCompilationPassedEvent(
                     '/app/source/Test/test1.yml',
                     (new MockSuiteManifest())
                         ->withGetTestManifestsCall([])

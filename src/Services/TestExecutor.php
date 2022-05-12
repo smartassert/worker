@@ -60,11 +60,11 @@ class TestExecutor
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new StepPassedEvent($test, $step, $path));
+                $this->eventDispatcher->dispatch(new StepPassedEvent($step, $path));
             }
 
             if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new StepFailedEvent($test, $step, $path));
+                $this->eventDispatcher->dispatch(new StepFailedEvent($step, $path, $test));
             }
         }
     }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
+use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -12,9 +14,9 @@ use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilation\FailedEvent as SourceCompilationFailedEvent;
-use App\Event\SourceCompilation\PassedEvent as SourceCompilationPassedEvent;
-use App\Event\SourceCompilation\StartedEvent as SourceCompilationStartedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
@@ -22,34 +24,20 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
+use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
-    /**
-     * @var EventHandlerInterface[]
-     */
-    private array $handlers = [];
-
-    /**
-     * @param iterable<EventHandlerInterface> $handlers
-     */
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private WorkerEventStateMutator $workerEventStateMutator,
+        private readonly MessageBusInterface $messageBus,
+        private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly JobRepository $jobRepository,
-        iterable $handlers
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
-        foreach ($handlers as $handler) {
-            if ($handler instanceof EventHandlerInterface) {
-                $this->handlers[] = $handler;
-            }
-        }
     }
 
     /**
@@ -106,30 +94,28 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchForEvent(Event $event): ?Envelope
+    public function dispatchForEvent(EventInterface $event): ?Envelope
     {
         $job = $this->jobRepository->get();
         if (null === $job) {
             return null;
         }
 
-        foreach ($this->handlers as $handler) {
-            if ($handler->handles($event)) {
-                $workerEvent = $handler->createForEvent($job, $event);
-
-                if ($workerEvent instanceof WorkerEvent) {
-                    $this->dispatch($workerEvent);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private function dispatch(WorkerEvent $workerEvent): Envelope
-    {
+        $workerEvent = $this->createWorkerEvent($job, $event);
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
+    }
+
+    private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
+    {
+        $referenceComponents = $event->getReferenceComponents();
+        array_unshift($referenceComponents, $job->getLabel());
+
+        return $this->workerEventRepository->create(
+            $event->getType(),
+            md5(implode('', $referenceComponents)),
+            $event->getPayload()
+        );
     }
 }

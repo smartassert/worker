@@ -90,8 +90,8 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (TestStartedEvent $actualEvent) use ($test, &$eventExpectationCount) {
-                        self::assertSame($test, $actualEvent->getTest());
+                    function (TestStartedEvent $actualEvent) use (&$eventExpectationCount) {
+                        self::assertInstanceOf(TestStartedEvent::class, $actualEvent);
                         ++$eventExpectationCount;
 
                         return true;
@@ -99,7 +99,10 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
                 ),
                 new ExpectedDispatchedEvent(
                     function (TestPassedEvent $actualEvent) use ($test, &$eventExpectationCount) {
-                        self::assertSame($test, $actualEvent->getTest());
+                        self::assertSame(
+                            $test,
+                            ObjectReflector::getProperty($actualEvent, 'test')
+                        );
                         ++$eventExpectationCount;
 
                         return true;
