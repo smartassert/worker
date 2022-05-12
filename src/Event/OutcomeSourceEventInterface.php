@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event\SourceCompilation;
+namespace App\Event;
 
 use webignition\BasilCompilerModels\OutputInterface;
 

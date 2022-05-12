@@ -6,7 +6,7 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
-use App\Event\SourceCompilation\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationFailedEvent;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
 trait CreateFromCompilationFailedEventDataProviderTrait

@@ -9,7 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Entity\WorkerEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;

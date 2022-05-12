@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Event\SourceCompilation\SourceCompilationFailedEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
-use App\Event\SourceCompilation\SourceCompilationStartedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\Repository\JobRepository;
 use App\Services\CompilationState;

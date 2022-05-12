@@ -6,9 +6,9 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Source;
-use App\Event\SourceCompilation\SourceCompilationFailedEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
-use App\Event\SourceCompilation\SourceCompilationStartedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;

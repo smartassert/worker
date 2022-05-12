@@ -6,7 +6,7 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class CompilationPassedEventHandler extends AbstractCompilationEventHandler

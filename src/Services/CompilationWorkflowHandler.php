@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Event\JobCompiledEvent;
 use App\Event\JobReadyEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\WorkerEventFactory\EventHandler;
 
-use App\Event\SourceCompilation\SourceEventInterface;
+use App\Event\SourceEventInterface;
 
 abstract class AbstractCompilationEventHandler extends AbstractEventHandler
 {

@@ -6,7 +6,7 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
-use App\Event\SourceCompilation\SourceCompilationStartedEvent;
+use App\Event\SourceCompilationStartedEvent;
 
 trait CreateFromCompilationStartedEventDataProviderTrait
 {

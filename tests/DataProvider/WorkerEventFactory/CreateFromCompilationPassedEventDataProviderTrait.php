@@ -6,8 +6,8 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
-use App\Event\SourceCompilation\SourceCompilationFailedEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Tests\Mock\MockSuiteManifest;
 
 trait CreateFromCompilationPassedEventDataProviderTrait

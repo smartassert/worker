@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Event\JobReadyEvent;
-use App\Event\SourceCompilation\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
