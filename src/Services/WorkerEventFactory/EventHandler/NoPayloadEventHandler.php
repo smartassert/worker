@@ -30,10 +30,6 @@ class NoPayloadEventHandler extends AbstractEventHandler
 
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
-        if ($this->handles($event)) {
-            return $this->create($job, $event, $event->getPayload());
-        }
-
-        return null;
+        return $this->create($job, $event, $event->getPayload());
     }
 }

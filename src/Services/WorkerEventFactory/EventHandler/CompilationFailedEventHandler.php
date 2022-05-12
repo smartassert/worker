@@ -18,10 +18,6 @@ class CompilationFailedEventHandler extends AbstractEventHandler
 
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
-        if ($event instanceof SourceCompilationFailedEvent) {
-            return $this->create($job, $event, $event->getPayload());
-        }
-
-        return null;
+        return $this->create($job, $event, $event->getPayload());
     }
 }
