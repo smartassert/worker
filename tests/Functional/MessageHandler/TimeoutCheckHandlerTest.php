@@ -95,15 +95,19 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
     {
         $jobMaximumDuration = 123;
 
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (Event $actualEvent) use ($jobMaximumDuration) {
+                    function (Event $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
                         self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
 
                         if ($actualEvent instanceof JobTimeoutEvent) {
                             self::assertSame($jobMaximumDuration, $actualEvent->getJobMaximumDuration());
                         }
+
+                        ++$eventExpectationCount;
 
                         return true;
                     },
@@ -132,6 +136,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         ($this->handler)($message);
 
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
         $this->messengerAsserter->assertQueueCount(0);
     }
 }
