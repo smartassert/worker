@@ -20,7 +20,7 @@ class TestAndStepEventHandler extends AbstractEventHandler
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         if ($event instanceof TestEventInterface || $event instanceof StepEventInterface) {
-            return $this->create($job, $event, $event->getDocument()->getData());
+            return $this->create($job, $event, $event->getPayload());
         }
 
         return null;
