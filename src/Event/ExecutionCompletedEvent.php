@@ -12,4 +12,9 @@ class ExecutionCompletedEvent extends Event implements EventInterface
     {
         return [];
     }
+
+    public function getReferenceComponents(): array
+    {
+        return [];
+    }
 }

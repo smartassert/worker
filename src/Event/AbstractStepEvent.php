@@ -36,4 +36,12 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface, Ev
     {
         return $this->getDocument()->getData();
     }
+
+    public function getReferenceComponents(): array
+    {
+        return [
+            $this->path,
+            (string) $this->step->getName(),
+        ];
+    }
 }

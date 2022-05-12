@@ -10,4 +10,9 @@ interface EventInterface
      * @return array<mixed>
      */
     public function getPayload(): array;
+
+    /**
+     * @return string[]
+     */
+    public function getReferenceComponents(): array;
 }
