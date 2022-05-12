@@ -75,10 +75,13 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
             $applicationState
         );
 
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(function (Event $event) {
+                new ExpectedDispatchedEvent(function (Event $event) use (&$eventExpectationCount) {
                     self::assertInstanceOf(JobCompletedEvent::class, $event);
+                    ++$eventExpectationCount;
 
                     return true;
                 })
@@ -94,5 +97,7 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
         );
 
         ($this->handler)(new JobCompletedCheckMessage());
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 }

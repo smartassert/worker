@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Source;
+use App\Entity\WorkerEvent;
 use App\Event\SourceCompilation\FailedEvent;
 use App\Event\SourceCompilation\PassedEvent;
 use App\Event\SourceCompilation\StartedEvent;
@@ -51,6 +52,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Source::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
         }
     }
 
@@ -124,19 +126,23 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             $compiler
         );
 
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (StartedEvent $actualEvent) use ($sourcePath) {
+                    function (StartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (PassedEvent $actualEvent) use ($sourcePath, $suiteManifest) {
+                    function (PassedEvent $actualEvent) use ($sourcePath, $suiteManifest, &$eventExpectationCount) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
                         self::assertSame($suiteManifest, $actualEvent->getOutput());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
@@ -147,8 +153,9 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $this->setCompileSourceHandlerEventDispatcher($eventDispatcher);
 
-        $handler = $this->handler;
-        $handler($compileSourceMessage);
+        ($this->handler)($compileSourceMessage);
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 
     public function testInvokeCompileFailure(): void
@@ -181,19 +188,23 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             $compiler
         );
 
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (StartedEvent $actualEvent) use ($sourcePath) {
+                    function (StartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (FailedEvent $actualEvent) use ($sourcePath, $errorOutput) {
+                    function (FailedEvent $actualEvent) use ($sourcePath, $errorOutput, &$eventExpectationCount) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
                         self::assertSame($errorOutput, $actualEvent->getOutput());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
@@ -206,6 +217,8 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $handler = $this->handler;
         $handler($compileSourceMessage);
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 
     private function setCompileSourceHandlerEventDispatcher(EventDispatcherInterface $eventDispatcher): void

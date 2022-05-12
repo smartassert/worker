@@ -31,11 +31,14 @@ class JobReadyHandlerTest extends AbstractBaseFunctionalTest
 
     public function testInvoke(): void
     {
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (JobReadyEvent $actualEvent) {
+                    function (JobReadyEvent $actualEvent) use (&$eventExpectationCount) {
                         self::assertInstanceOf(JobReadyEvent::class, $actualEvent);
+                        ++$eventExpectationCount;
 
                         return true;
                     },
@@ -49,5 +52,7 @@ class JobReadyHandlerTest extends AbstractBaseFunctionalTest
         $message = new JobReadyMessage();
 
         ($this->handler)($message);
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 }
