@@ -9,9 +9,11 @@ use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
 use App\Event\EventInterface;
+use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
+use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -238,6 +240,16 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             JobCompletedEvent::class => [
                 'event' => new JobCompletedEvent(),
                 'expectedWorkerEventType' => WorkerEventType::JOB_COMPLETED,
+                'expectedWorkerEventPayload' => [],
+            ],
+            JobFailedEvent::class => [
+                'event' => new JobFailedEvent(),
+                'expectedWorkerEventType' => WorkerEventType::JOB_FAILED,
+                'expectedWorkerEventPayload' => [],
+            ],
+            ExecutionCompletedEvent::class => [
+                'event' => new ExecutionCompletedEvent(),
+                'expectedWorkerEventType' => WorkerEventType::EXECUTION_COMPLETED,
                 'expectedWorkerEventPayload' => [],
             ],
         ];
