@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractStepEvent extends Event implements StepEventInterface, EventInterface
+abstract class AbstractStepEvent extends Event implements EventInterface
 {
     public function __construct(
         private readonly Step $step,
