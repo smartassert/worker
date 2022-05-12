@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
+use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -22,7 +24,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory;
+use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -31,10 +33,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private WorkerEventStateMutator $workerEventStateMutator,
+        private readonly MessageBusInterface $messageBus,
+        private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly JobRepository $jobRepository,
-        private readonly WorkerEventFactory $workerEventFactory,
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
 
@@ -99,9 +101,21 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             return null;
         }
 
-        $workerEvent = $this->workerEventFactory->createForEvent($job, $event);
+        $workerEvent = $this->createWorkerEvent($job, $event);
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
+    }
+
+    private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
+    {
+        $referenceComponents = $event->getReferenceComponents();
+        array_unshift($referenceComponents, $job->getLabel());
+
+        return $this->workerEventRepository->create(
+            $event->getType(),
+            md5(implode('', $referenceComponents)),
+            $event->getPayload()
+        );
     }
 }
