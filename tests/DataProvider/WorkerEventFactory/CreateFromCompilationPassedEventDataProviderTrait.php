@@ -20,7 +20,7 @@ trait CreateFromCompilationPassedEventDataProviderTrait
         $source = '/app/source/test.yml';
 
         return [
-            SourceCompilationFailedEvent::class => [
+            SourceCompilationPassedEvent::class => [
                 'event' => new SourceCompilationPassedEvent($source, (new MockSuiteManifest())->getMock()),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::COMPILATION_PASSED,

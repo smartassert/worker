@@ -6,6 +6,9 @@ namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
 use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
+use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationStartedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionCompletedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromExecutionStartedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobCompiledEventDataProviderTrait;
@@ -27,6 +30,9 @@ class GenericEventHandlerTest extends AbstractEventHandlerTest
     use CreateFromExecutionCompletedEventDataProviderTrait;
     use CreateFromJobCompletedEventDataProviderTrait;
     use CreateFromJobFailedEventDataProviderTrait;
+    use CreateFromCompilationFailedEventDataProviderTrait;
+    use CreateFromCompilationPassedEventDataProviderTrait;
+    use CreateFromCompilationStartedEventDataProviderTrait;
 
     public function createDataProvider(): array
     {
@@ -40,6 +46,9 @@ class GenericEventHandlerTest extends AbstractEventHandlerTest
             $this->createFromJobCompletedEventDataProvider(),
             $this->createFromExecutionCompletedEventDataProvider(),
             $this->createFromJobFailedEventDataProvider(),
+            $this->createFromCompilationFailedEventDataProvider(),
+            $this->createFromCompilationPassedEventDataProvider(),
+            $this->createFromCompilationStartedEventDataProvider(),
         );
     }
 
