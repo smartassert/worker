@@ -10,11 +10,6 @@ use App\Event\EventInterface;
 
 class JobTimeoutEventHandler extends AbstractEventHandler
 {
-    public function handles(EventInterface $event): bool
-    {
-        return true;
-    }
-
     public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         return $this->create($job, $event, $event->getPayload());
