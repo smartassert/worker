@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
+namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
