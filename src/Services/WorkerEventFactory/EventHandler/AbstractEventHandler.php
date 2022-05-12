@@ -58,14 +58,12 @@ abstract class AbstractEventHandler
      */
     protected function create(Job $job, EventInterface $event, array $data): WorkerEvent
     {
-        $reference = md5(implode('', array_merge(
-            [$job->getLabel()],
-            $event->getReferenceComponents(),
-        )));
+        $referenceComponents = $event->getReferenceComponents();
+        array_unshift($referenceComponents, $job->getLabel());
 
         return $this->workerEventRepository->create(
             self::EVENT_TO_TYPE_MAP[$event::class] ?? WorkerEventType::UNKNOWN,
-            $reference,
+            md5(implode('', $referenceComponents)),
             $data
         );
     }
