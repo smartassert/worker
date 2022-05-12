@@ -114,12 +114,10 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         }
 
         foreach ($this->handlers as $handler) {
-            if ($handler->handles($event)) {
-                $workerEvent = $handler->createForEvent($job, $event);
+            $workerEvent = $handler->createForEvent($job, $event);
 
-                if ($workerEvent instanceof WorkerEvent) {
-                    $this->dispatch($workerEvent);
-                }
+            if ($workerEvent instanceof WorkerEvent) {
+                return $this->dispatch($workerEvent);
             }
         }
 

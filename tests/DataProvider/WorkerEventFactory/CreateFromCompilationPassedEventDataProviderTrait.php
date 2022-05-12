@@ -6,7 +6,6 @@ namespace App\Tests\DataProvider\WorkerEventFactory;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
-use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Tests\Mock\MockSuiteManifest;
 
@@ -20,7 +19,7 @@ trait CreateFromCompilationPassedEventDataProviderTrait
         $source = '/app/source/test.yml';
 
         return [
-            SourceCompilationFailedEvent::class => [
+            SourceCompilationPassedEvent::class => [
                 'event' => new SourceCompilationPassedEvent($source, (new MockSuiteManifest())->getMock()),
                 'expectedWorkerEvent' => WorkerEvent::create(
                     WorkerEventType::COMPILATION_PASSED,
