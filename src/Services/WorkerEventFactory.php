@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\WorkerEventFactory\EventHandler;
+namespace App\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
@@ -25,7 +25,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Repository\WorkerEventRepository;
 
-abstract class AbstractEventHandler
+class WorkerEventFactory
 {
     /**
      * @var array<class-string, WorkerEventType>
@@ -53,10 +53,7 @@ abstract class AbstractEventHandler
     ) {
     }
 
-    /**
-     * @param array<mixed> $data
-     */
-    protected function create(Job $job, EventInterface $event, array $data): WorkerEvent
+    public function createForEvent(Job $job, EventInterface $event): WorkerEvent
     {
         $referenceComponents = $event->getReferenceComponents();
         array_unshift($referenceComponents, $job->getLabel());
@@ -64,7 +61,7 @@ abstract class AbstractEventHandler
         return $this->workerEventRepository->create(
             self::EVENT_TO_TYPE_MAP[$event::class] ?? WorkerEventType::UNKNOWN,
             md5(implode('', $referenceComponents)),
-            $data
+            $event->getPayload()
         );
     }
 }
