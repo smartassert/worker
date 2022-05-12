@@ -13,17 +13,12 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent implements Outcom
         parent::__construct($source);
     }
 
-    public function getOutput(): ErrorOutputInterface
-    {
-        return $this->errorOutput;
-    }
-
     public function getPayload(): array
     {
         return array_merge(
             parent::getPayload(),
             [
-                'output' => $this->getOutput()->getData(),
+                'output' => $this->errorOutput->getData(),
             ]
         );
     }

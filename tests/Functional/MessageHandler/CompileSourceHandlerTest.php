@@ -154,7 +154,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                             $sourcePath,
                             ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
-                        self::assertSame($suiteManifest, $actualEvent->getOutput());
+                        self::assertSame($suiteManifest, $actualEvent->getSuiteManifest());
                         ++$eventExpectationCount;
 
                         return true;
@@ -228,7 +228,10 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                             $sourcePath,
                             ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
-                        self::assertSame($errorOutput, $actualEvent->getOutput());
+                        self::assertSame(
+                            $errorOutput,
+                            ObjectReflector::getProperty($actualEvent, 'errorOutput')
+                        );
                         ++$eventExpectationCount;
 
                         return true;

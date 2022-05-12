@@ -13,7 +13,7 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent implements Outcom
         parent::__construct($source);
     }
 
-    public function getOutput(): SuiteManifest
+    public function getSuiteManifest(): SuiteManifest
     {
         return $this->suiteManifest;
     }
