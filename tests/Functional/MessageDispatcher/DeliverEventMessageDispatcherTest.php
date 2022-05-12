@@ -191,7 +191,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent($genericTest, new Step($passingStepDocument), $relativeTestSource),
+                'event' => new StepPassedEvent(new Step($passingStepDocument), $relativeTestSource),
                 'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
                     'type' => 'step',
@@ -202,9 +202,9 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    $genericTest->setState(TestEntity::STATE_FAILED),
                     new Step($failingStepDocument),
-                    $relativeTestSource
+                    $relativeTestSource,
+                    $genericTest->setState(TestEntity::STATE_FAILED)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
                 'expectedWorkerEventPayload' => [
