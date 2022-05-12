@@ -8,7 +8,7 @@ use App\Entity\Test as TestEntity;
 use App\Model\Document\Test as TestDocument;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractTestEvent extends Event implements TestEventInterface
+abstract class AbstractTestEvent extends Event implements TestEventInterface, EventInterface
 {
     public function __construct(
         private readonly TestEntity $test,
