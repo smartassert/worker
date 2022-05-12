@@ -98,10 +98,13 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventApplicationComplete(): void
     {
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(function (Event $event) {
+                new ExpectedDispatchedEvent(function (Event $event) use (&$eventExpectationCount) {
                     self::assertInstanceOf(JobCompletedEvent::class, $event);
+                    ++$eventExpectationCount;
 
                     return true;
                 }),
@@ -132,14 +135,19 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             new TestEntity(),
             new TestDocument(new Document())
         ));
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 
     public function testSubscribesToTestFailedEvent(): void
     {
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(function (Event $event) {
+                new ExpectedDispatchedEvent(function (Event $event) use (&$eventExpectationCount) {
                     self::assertInstanceOf(JobFailedEvent::class, $event);
+                    ++$eventExpectationCount;
 
                     return true;
                 }),
@@ -155,5 +163,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestFailedEvent(new TestEntity(), new TestDocument(new Document())));
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 }
