@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MessageDispatcher;
 
 use App\Entity\WorkerEvent;
+use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -27,7 +28,6 @@ use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
@@ -106,7 +106,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchForEvent(Event $event): ?Envelope
+    public function dispatchForEvent(EventInterface $event): ?Envelope
     {
         $job = $this->jobRepository->get();
         if (null === $job) {

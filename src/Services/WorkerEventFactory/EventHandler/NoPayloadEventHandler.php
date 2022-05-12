@@ -6,17 +6,17 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class NoPayloadEventHandler extends AbstractEventHandler
 {
-    public function handles(Event $event): bool
+    public function handles(EventInterface $event): bool
     {
         return
             $event instanceof JobReadyEvent
@@ -28,7 +28,7 @@ class NoPayloadEventHandler extends AbstractEventHandler
             ;
     }
 
-    public function createForEvent(Job $job, Event $event): ?WorkerEvent
+    public function createForEvent(Job $job, EventInterface $event): ?WorkerEvent
     {
         if ($this->handles($event)) {
             return $this->create($job, $event, []);

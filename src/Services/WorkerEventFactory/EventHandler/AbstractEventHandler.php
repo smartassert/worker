@@ -7,6 +7,7 @@ namespace App\Services\WorkerEventFactory\EventHandler;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
+use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -26,7 +27,6 @@ use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Repository\WorkerEventRepository;
-use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEventHandler implements EventHandlerInterface
 {
@@ -59,7 +59,7 @@ abstract class AbstractEventHandler implements EventHandlerInterface
     /**
      * @param array<mixed> $data
      */
-    protected function create(Job $job, Event $event, array $data): WorkerEvent
+    protected function create(Job $job, EventInterface $event, array $data): WorkerEvent
     {
         return $this->workerEventRepository->create(
             self::EVENT_TO_TYPE_MAP[$event::class] ?? WorkerEventType::UNKNOWN,
@@ -71,7 +71,7 @@ abstract class AbstractEventHandler implements EventHandlerInterface
     /**
      * @return non-empty-string
      */
-    private function createReference(Job $job, Event $event): string
+    private function createReference(Job $job, EventInterface $event): string
     {
         $referenceComponents = [$job->getLabel()];
 
