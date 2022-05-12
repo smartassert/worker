@@ -12,11 +12,6 @@ abstract class AbstractSourceEvent extends Event implements SourceEventInterface
     {
     }
 
-    public function getSource(): string
-    {
-        return $this->source;
-    }
-
     public function getPayload(): array
     {
         return [

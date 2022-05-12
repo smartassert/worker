@@ -8,5 +8,4 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 interface SourceEventInterface extends StoppableEventInterface
 {
-    public function getSource(): string;
 }
