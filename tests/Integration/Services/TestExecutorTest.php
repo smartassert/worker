@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Services;
 
+use App\Event\AbstractStepEvent;
 use App\Event\EventInterface;
 use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
@@ -116,9 +117,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($expectedDocument, $event->getDocument());
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
@@ -150,9 +152,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
@@ -184,9 +187,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }
@@ -210,9 +214,10 @@ class TestExecutorTest extends AbstractTestCreationTest
                                 ],
                             ])));
 
-                            if ($event instanceof StepPassedEvent) {
-                                self::assertEquals($event->getDocument(), $expectedDocument);
-                            }
+                            self::assertEquals(
+                                $expectedDocument,
+                                ObjectReflector::getProperty($event, 'step', AbstractStepEvent::class)
+                            );
 
                             return true;
                         }

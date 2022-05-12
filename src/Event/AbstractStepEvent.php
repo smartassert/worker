@@ -22,14 +22,9 @@ abstract class AbstractStepEvent extends Event implements StepEventInterface, Ev
         return $this->test;
     }
 
-    public function getDocument(): Step
-    {
-        return $this->step;
-    }
-
     public function getPayload(): array
     {
-        return $this->getDocument()->getData();
+        return $this->step->getData();
     }
 
     public function getReferenceComponents(): array
