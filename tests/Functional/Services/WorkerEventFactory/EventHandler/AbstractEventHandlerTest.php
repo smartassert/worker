@@ -30,16 +30,6 @@ abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
      */
     abstract public function createDataProvider(): array;
 
-//    public function testCreateForEventUnsupportedEvent(): void
-//    {
-//        $event = \Mockery::mock(EventInterface::class);
-//        $event
-//            ->shouldReceive('getPayload')
-//            ->andReturn([]);
-//
-//        self::assertNull($this->handler->createForEvent(new Job(), $event));
-//    }
-
     /**
      * @dataProvider createDataProvider
      */
