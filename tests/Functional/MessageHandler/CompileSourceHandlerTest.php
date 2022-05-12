@@ -6,10 +6,10 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Source;
+use App\Entity\WorkerEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
-use App\Entity\WorkerEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -139,7 +139,13 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (SourceCompilationPassedEvent $actualEvent) use ($sourcePath, $suiteManifest, &$eventExpectationCount) {
+                    function (
+                        SourceCompilationPassedEvent $actualEvent
+                    ) use (
+                        $sourcePath,
+                        $suiteManifest,
+                        &$eventExpectationCount
+                    ) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
                         self::assertSame($suiteManifest, $actualEvent->getOutput());
                         ++$eventExpectationCount;
@@ -201,7 +207,13 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (SourceCompilationFailedEvent $actualEvent) use ($sourcePath, $errorOutput, &$eventExpectationCount) {
+                    function (
+                        SourceCompilationFailedEvent $actualEvent
+                    ) use (
+                        $sourcePath,
+                        $errorOutput,
+                        &$eventExpectationCount
+                    ) {
                         self::assertSame($sourcePath, $actualEvent->getSource());
                         self::assertSame($errorOutput, $actualEvent->getOutput());
                         ++$eventExpectationCount;
