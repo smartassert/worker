@@ -14,9 +14,9 @@ use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent as CompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent as CompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent as CompilationStartedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationStartedEvent;
 use App\Event\SourceEventInterface;
 use App\Event\StepEventInterface;
 use App\Event\StepFailedEvent;
@@ -34,9 +34,9 @@ abstract class AbstractEventHandler implements EventHandlerInterface
      * @var array<class-string, WorkerEventType>
      */
     private const EVENT_TO_TYPE_MAP = [
-        CompilationStartedEvent::class => WorkerEventType::COMPILATION_STARTED,
-        CompilationFailedEvent::class => WorkerEventType::COMPILATION_FAILED,
-        CompilationPassedEvent::class => WorkerEventType::COMPILATION_PASSED,
+        SourceCompilationStartedEvent::class => WorkerEventType::COMPILATION_STARTED,
+        SourceCompilationFailedEvent::class => WorkerEventType::COMPILATION_FAILED,
+        SourceCompilationPassedEvent::class => WorkerEventType::COMPILATION_PASSED,
         JobTimeoutEvent::class => WorkerEventType::JOB_TIME_OUT,
         JobReadyEvent::class => WorkerEventType::JOB_STARTED,
         JobCompiledEvent::class => WorkerEventType::JOB_COMPILED,
