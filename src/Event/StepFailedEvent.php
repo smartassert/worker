@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test;
+use App\Entity\WorkerEventType;
 use App\Model\Document\Step;
 
 class StepFailedEvent extends AbstractStepEvent
@@ -20,5 +21,10 @@ class StepFailedEvent extends AbstractStepEvent
     public function getTest(): Test
     {
         return $this->test;
+    }
+
+    public function getType(): WorkerEventType
+    {
+        return WorkerEventType::STEP_FAILED;
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\WorkerEventType;
+
 interface EventInterface
 {
     /**
@@ -15,4 +17,6 @@ interface EventInterface
      * @return string[]
      */
     public function getReferenceComponents(): array;
+
+    public function getType(): WorkerEventType;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\WorkerEventType;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
@@ -21,5 +22,10 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent
                 'output' => $this->errorOutput->getData(),
             ]
         );
+    }
+
+    public function getType(): WorkerEventType
+    {
+        return WorkerEventType::COMPILATION_FAILED;
     }
 }
