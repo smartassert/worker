@@ -8,4 +8,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ExecutionCompletedEvent extends Event implements EventInterface
 {
+    public function getPayload(): array
+    {
+        return [];
+    }
 }
