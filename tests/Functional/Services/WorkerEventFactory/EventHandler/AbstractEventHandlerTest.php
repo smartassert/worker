@@ -7,20 +7,20 @@ namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
-use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
+use App\Services\WorkerEventFactory\EventHandler\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use webignition\ObjectReflector\ObjectReflector;
 
 abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
 {
-    private GenericEventHandler $handler;
+    private WorkerEventFactory $handler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $factory = $this->getHandler();
-        if ($factory instanceof GenericEventHandler) {
+        if ($factory instanceof WorkerEventFactory) {
             $this->handler = $factory;
         }
     }
@@ -55,5 +55,5 @@ abstract class AbstractEventHandlerTest extends AbstractBaseFunctionalTest
         self::assertSame($expectedWorkerEvent->getPayload(), $workerEvent->getPayload());
     }
 
-    abstract protected function getHandler(): ?GenericEventHandler;
+    abstract protected function getHandler(): ?WorkerEventFactory;
 }

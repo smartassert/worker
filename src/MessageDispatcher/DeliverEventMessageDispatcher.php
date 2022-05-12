@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -23,7 +22,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
-use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
+use App\Services\WorkerEventFactory\EventHandler\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -35,7 +34,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private MessageBusInterface $messageBus,
         private WorkerEventStateMutator $workerEventStateMutator,
         private readonly JobRepository $jobRepository,
-        private readonly GenericEventHandler $handler,
+        private readonly WorkerEventFactory $workerEventFactory,
     ) {
     }
 
@@ -100,16 +99,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             return null;
         }
 
-        $workerEvent = $this->handler->createForEvent($job, $event);
-        if ($workerEvent instanceof WorkerEvent) {
-            return $this->dispatch($workerEvent);
-        }
-
-        return null;
-    }
-
-    private function dispatch(WorkerEvent $workerEvent): Envelope
-    {
+        $workerEvent = $this->workerEventFactory->createForEvent($job, $event);
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));

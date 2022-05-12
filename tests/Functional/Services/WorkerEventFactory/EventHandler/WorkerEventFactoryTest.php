@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
-use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
+use App\Services\WorkerEventFactory\EventHandler\WorkerEventFactory;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationStartedEventDataProviderTrait;
@@ -18,7 +18,7 @@ use App\Tests\DataProvider\WorkerEventFactory\CreateFromJobTimeoutEventDataProvi
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromStepEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromTestEventDataProviderTrait;
 
-class GenericEventHandlerTest extends AbstractEventHandlerTest
+class WorkerEventFactoryTest extends AbstractEventHandlerTest
 {
     use CreateFromStepEventDataProviderTrait;
     use CreateFromTestEventDataProviderTrait;
@@ -51,10 +51,10 @@ class GenericEventHandlerTest extends AbstractEventHandlerTest
         );
     }
 
-    protected function getHandler(): ?GenericEventHandler
+    protected function getHandler(): ?WorkerEventFactory
     {
-        $handler = self::getContainer()->get(GenericEventHandler::class);
+        $handler = self::getContainer()->get(WorkerEventFactory::class);
 
-        return $handler instanceof GenericEventHandler ? $handler : null;
+        return $handler instanceof WorkerEventFactory ? $handler : null;
     }
 }
