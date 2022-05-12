@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
+use App\Event\EventInterface;
 use App\Event\JobTimeoutEvent;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
@@ -17,7 +18,6 @@ use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Contracts\EventDispatcher\Event;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
@@ -100,7 +100,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (Event $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
+                    function (EventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
                         self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
 
                         if ($actualEvent instanceof JobTimeoutEvent) {
