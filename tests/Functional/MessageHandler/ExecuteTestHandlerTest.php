@@ -47,6 +47,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(Test::class);
         }
     }
 
@@ -84,18 +85,22 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         ObjectReflector::setProperty($this->handler, ExecuteTestHandler::class, 'testExecutor', $testExecutor);
 
+        $eventExpectationCount = 0;
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (TestStartedEvent $actualEvent) use ($test) {
+                    function (TestStartedEvent $actualEvent) use ($test, &$eventExpectationCount) {
                         self::assertSame($test, $actualEvent->getTest());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (TestPassedEvent $actualEvent) use ($test) {
+                    function (TestPassedEvent $actualEvent) use ($test, &$eventExpectationCount) {
                         self::assertSame($test, $actualEvent->getTest());
+                        ++$eventExpectationCount;
 
                         return true;
                     },
@@ -110,6 +115,8 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         $executeTestMessage = new ExecuteTestMessage((int) $test->getId());
         $handler($executeTestMessage);
+
+        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
 
         self::assertTrue($job->hasStarted());
 
