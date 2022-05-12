@@ -28,7 +28,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Repository\WorkerEventRepository;
 
-abstract class AbstractEventHandler implements EventHandlerInterface
+abstract class AbstractEventHandler
 {
     /**
      * @var array<class-string, WorkerEventType>
