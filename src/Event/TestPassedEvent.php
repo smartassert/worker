@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test as TestEntity;
+use App\Entity\WorkerEventType;
 use App\Model\Document\Test as TestDocument;
 
 class TestPassedEvent extends AbstractTestEvent
@@ -19,5 +20,10 @@ class TestPassedEvent extends AbstractTestEvent
     public function getTest(): TestEntity
     {
         return $this->test;
+    }
+
+    public function getType(): WorkerEventType
+    {
+        return WorkerEventType::TEST_PASSED;
     }
 }

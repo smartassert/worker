@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\WorkerEventType;
 use webignition\BasilCompilerModels\SuiteManifest;
 
 class SourceCompilationPassedEvent extends AbstractSourceEvent
@@ -16,5 +17,10 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
     public function getSuiteManifest(): SuiteManifest
     {
         return $this->suiteManifest;
+    }
+
+    public function getType(): WorkerEventType
+    {
+        return WorkerEventType::COMPILATION_PASSED;
     }
 }
