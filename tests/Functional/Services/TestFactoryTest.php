@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Event\SourceCompilation\PassedEvent;
+use App\Event\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -138,7 +138,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     public function testCreateFromSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (SuiteManifest $suiteManifest) {
-            $event = new PassedEvent('/app/source/Test/test.yml', $suiteManifest);
+            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $suiteManifest);
 
             return $this->factory->createFromSourceCompileSuccessEvent($event);
         });
@@ -147,7 +147,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     public function testSubscribesToSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (SuiteManifest $suiteManifest) {
-            $event = new PassedEvent('/app/source/Test/test.yml', $suiteManifest);
+            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $suiteManifest);
             $this->eventDispatcher->dispatch($event);
 
             $testRepository = self::getContainer()->get(TestRepository::class);

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Event\SourceCompilation;
+namespace App\Event;
 
 use webignition\BasilCompilerModels\OutputInterface;
 
-interface OutcomeEventInterface extends EventInterface
+interface OutcomeSourceEventInterface extends SourceEventInterface
 {
     public function getOutput(): OutputInterface;
 }

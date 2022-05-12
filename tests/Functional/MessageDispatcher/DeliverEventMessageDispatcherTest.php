@@ -13,9 +13,9 @@ use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobReadyEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilation\FailedEvent;
-use App\Event\SourceCompilation\PassedEvent;
-use App\Event\SourceCompilation\StartedEvent;
+use App\Event\SourceCompilationFailedEvent;
+use App\Event\SourceCompilationPassedEvent;
+use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
@@ -72,7 +72,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 StepFailedEvent::class => ['setFailedFromStepFailedEvent'],
             ],
             TestFactory::class => [
-                PassedEvent::class => ['createFromSourceCompileSuccessEvent'],
+                SourceCompilationPassedEvent::class => ['createFromSourceCompileSuccessEvent'],
             ],
             ExecutionWorkflowHandler::class => [
                 JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
@@ -146,22 +146,22 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventType' => WorkerEventType::JOB_STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
-            StartedEvent::class => [
-                'event' => new StartedEvent($testSource),
+            SourceCompilationStartedEvent::class => [
+                'event' => new SourceCompilationStartedEvent($testSource),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_STARTED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
-            PassedEvent::class => [
-                'event' => new PassedEvent($testSource, (new MockSuiteManifest())->getMock()),
+            SourceCompilationPassedEvent::class => [
+                'event' => new SourceCompilationPassedEvent($testSource, (new MockSuiteManifest())->getMock()),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
                 ],
             ],
-            FailedEvent::class => [
-                'event' => new FailedEvent($testSource, $sourceCompileFailureEventOutput),
+            SourceCompilationFailedEvent::class => [
+                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_FAILED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
