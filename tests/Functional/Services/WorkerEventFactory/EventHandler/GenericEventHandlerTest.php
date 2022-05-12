@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services\WorkerEventFactory\EventHandler;
 
-use App\Services\WorkerEventFactory\EventHandler\EventHandlerInterface;
 use App\Services\WorkerEventFactory\EventHandler\GenericEventHandler;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationFailedEventDataProviderTrait;
 use App\Tests\DataProvider\WorkerEventFactory\CreateFromCompilationPassedEventDataProviderTrait;
@@ -52,7 +51,7 @@ class GenericEventHandlerTest extends AbstractEventHandlerTest
         );
     }
 
-    protected function getHandler(): ?EventHandlerInterface
+    protected function getHandler(): ?GenericEventHandler
     {
         $handler = self::getContainer()->get(GenericEventHandler::class);
 
