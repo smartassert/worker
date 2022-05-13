@@ -99,7 +99,7 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
     {
         return [
             JobReadyEvent::class => [
-                'event' => new JobReadyEvent(),
+                'event' => new JobReadyEvent([]),
                 'expectedQueuedMessage' => new TimeoutCheckMessage(),
             ],
         ];

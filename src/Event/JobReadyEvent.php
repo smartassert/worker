@@ -9,9 +9,19 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class JobReadyEvent extends Event implements EventInterface
 {
+    /**
+     * @param string[] $testPaths
+     */
+    public function __construct(
+        private readonly array $testPaths,
+    ) {
+    }
+
     public function getPayload(): array
     {
-        return [];
+        return [
+            'tests' => $this->testPaths,
+        ];
     }
 
     public function getReferenceComponents(): array

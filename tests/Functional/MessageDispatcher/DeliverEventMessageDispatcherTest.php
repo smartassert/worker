@@ -144,9 +144,17 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         return [
             JobReadyEvent::class => [
-                'event' => new JobReadyEvent(),
+                'event' => new JobReadyEvent([
+                    'Test/test1.yaml',
+                    'Test/test2.yaml',
+                ]),
                 'expectedWorkerEventType' => WorkerEventType::JOB_STARTED,
-                'expectedWorkerEventPayload' => [],
+                'expectedWorkerEventPayload' => [
+                    'tests' => [
+                        'Test/test1.yaml',
+                        'Test/test2.yaml',
+                    ]
+                ],
             ],
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),

@@ -196,7 +196,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 ],
             ],
             JobReadyEvent::class => [
-                'event' => new JobReadyEvent(),
+                'event' => new JobReadyEvent([]),
                 'expectedQueuedMessages' => [
                     new CompileSourceMessage('Test/test1.yml'),
                     new TimeoutCheckMessage(),
