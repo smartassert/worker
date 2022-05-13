@@ -218,9 +218,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::JOB_STARTED,
                             md5($jobProperties->getLabel()),
                             [
-                                'Test/chrome-open-index.yml',
-                                'Test/chrome-firefox-open-index.yml',
-                                'Test/chrome-open-form.yml',
+                                'tests' => [
+                                    'Test/chrome-open-index.yml',
+                                    'Test/chrome-firefox-open-index.yml',
+                                    'Test/chrome-open-form.yml',
+                                ],
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
