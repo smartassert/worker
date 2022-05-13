@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Job;
+use App\Entity\Source;
 use App\Event\JobReadyEvent;
 use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
@@ -46,6 +47,7 @@ class JobController
         EventDispatcherInterface $eventDispatcher,
         ErrorResponseFactory $errorResponseFactory,
         Deserializer $yamlFileCollectionDeserializer,
+        SourceRepository $sourceRepository,
         CreateJobRequest $request,
     ): JsonResponse {
         if ($this->jobRepository->get() instanceof Job) {
@@ -91,7 +93,7 @@ class JobController
 
         $this->jobRepository->create($request->label, $request->eventDeliveryUrl, $request->maximumDurationInSeconds);
 
-        $eventDispatcher->dispatch(new JobReadyEvent());
+        $eventDispatcher->dispatch(new JobReadyEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
         return new JsonResponse([]);
     }
