@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Job;
+use App\Event\JobReadyEvent;
 use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
-use App\Message\JobReadyMessage;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
@@ -21,10 +21,10 @@ use App\Services\ExecutionState;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class JobController
@@ -43,7 +43,7 @@ class JobController
     public function create(
         YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
-        MessageBusInterface $messageBus,
+        EventDispatcherInterface $eventDispatcher,
         ErrorResponseFactory $errorResponseFactory,
         Deserializer $yamlFileCollectionDeserializer,
         CreateJobRequest $request,
@@ -91,7 +91,7 @@ class JobController
 
         $this->jobRepository->create($request->label, $request->eventDeliveryUrl, $request->maximumDurationInSeconds);
 
-        $messageBus->dispatch(new JobReadyMessage());
+        $eventDispatcher->dispatch(new JobReadyEvent());
 
         return new JsonResponse([]);
     }
