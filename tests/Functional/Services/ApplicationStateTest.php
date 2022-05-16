@@ -54,7 +54,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        self::assertSame($expectedState, (string) $this->applicationState);
+        self::assertSame($expectedState, $this->applicationState->get());
     }
 
     /**

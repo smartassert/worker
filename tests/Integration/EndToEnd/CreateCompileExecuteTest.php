@@ -138,7 +138,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
         }
 
-        self::assertSame(ApplicationState::STATE_COMPLETE, (string) $this->applicationState);
+        self::assertSame(ApplicationState::STATE_COMPLETE, $this->applicationState->get());
 
         if (is_callable($assertions)) {
             $this->callableInvoker->invoke($assertions);

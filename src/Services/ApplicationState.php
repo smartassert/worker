@@ -9,7 +9,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 
-class ApplicationState implements \Stringable
+class ApplicationState
 {
     public const STATE_AWAITING_JOB = 'awaiting-job';
     public const STATE_AWAITING_SOURCES = 'awaiting-sources';
@@ -32,7 +32,7 @@ class ApplicationState implements \Stringable
     /**
      * @return ApplicationState::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         if (null === $this->jobRepository->get()) {
             return self::STATE_AWAITING_JOB;
@@ -70,6 +70,6 @@ class ApplicationState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }
