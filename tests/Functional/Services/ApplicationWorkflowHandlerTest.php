@@ -13,12 +13,12 @@ use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
-use App\Services\ApplicationState;
+use App\Services\ApplicationProgress;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Mock\Services\MockApplicationState;
+use App\Tests\Mock\Services\MockApplicationProgress;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Services\Asserter\MessengerAsserter;
@@ -119,16 +119,16 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $applicationState = (new MockApplicationState())
-            ->withIsCall(true, ApplicationState::STATE_COMPLETE)
+        $applicationProgress = (new MockApplicationProgress())
+            ->withIsCall(true, ApplicationProgress::STATE_COMPLETE)
             ->getMock()
         ;
 
         ObjectReflector::setProperty(
             $this->handler,
             ApplicationWorkflowHandler::class,
-            'applicationState',
-            $applicationState
+            'applicationProgress',
+            $applicationProgress
         );
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(

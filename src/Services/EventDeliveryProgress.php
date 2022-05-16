@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
-class EventDeliveryState implements \Stringable
+class EventDeliveryProgress
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -21,7 +21,7 @@ class EventDeliveryState implements \Stringable
     /**
      * @return self::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         $eventCount = $this->repository->count([]);
         $finishedEventCount = $this->repository->count([
@@ -41,7 +41,7 @@ class EventDeliveryState implements \Stringable
     }
 
     /**
-     * @param EventDeliveryState::STATE_* ...$states
+     * @param EventDeliveryProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {
@@ -49,6 +49,6 @@ class EventDeliveryState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }

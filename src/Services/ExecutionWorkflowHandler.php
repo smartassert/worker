@@ -22,7 +22,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public function __construct(
         private MessageBusInterface $messageBus,
         private TestRepository $testRepository,
-        private ExecutionState $executionState,
+        private ExecutionProgress $executionProgress,
         private WorkerEventRepository $workerEventRepository,
         private EventDispatcherInterface $eventDispatcher
     ) {
@@ -70,7 +70,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchExecutionCompletedEvent(): void
     {
-        $executionStateComplete = $this->executionState->is(ExecutionState::STATE_COMPLETE);
+        $executionStateComplete = $this->executionProgress->is(ExecutionProgress::STATE_COMPLETE);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             WorkerEventType::EXECUTION_COMPLETED
         );

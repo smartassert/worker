@@ -15,10 +15,10 @@ use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
-use App\Services\CompilationState;
+use App\Services\CompilationProgress;
 use App\Services\ErrorResponseFactory;
-use App\Services\EventDeliveryState;
-use App\Services\ExecutionState;
+use App\Services\EventDeliveryProgress;
+use App\Services\ExecutionProgress;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
@@ -103,9 +103,9 @@ class JobController
         SourceRepository $sourceRepository,
         TestRepository $testRepository,
         TestSerializer $testSerializer,
-        CompilationState $compilationState,
-        ExecutionState $executionState,
-        EventDeliveryState $workerEventState,
+        CompilationProgress $compilationProgress,
+        ExecutionProgress $executionProgress,
+        EventDeliveryProgress $eventDeliveryProgress,
     ): JsonResponse {
         $job = $this->jobRepository->get();
         if (null === $job) {
@@ -118,9 +118,9 @@ class JobController
             $job->jsonSerialize(),
             [
                 'sources' => $sourceRepository->findAllPaths(),
-                'compilation_state' => (string) $compilationState,
-                'execution_state' => (string) $executionState,
-                'event_delivery_state' => (string) $workerEventState,
+                'compilation_state' => $compilationProgress->get(),
+                'execution_state' => $executionProgress->get(),
+                'event_delivery_state' => $eventDeliveryProgress->get(),
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );

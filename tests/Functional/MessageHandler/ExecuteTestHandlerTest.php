@@ -12,7 +12,7 @@ use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockTestExecutor;
@@ -73,10 +73,10 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         self::assertInstanceOf(Job::class, $job);
         self::assertFalse($job->hasStarted());
 
-        $executionState = self::getContainer()->get(ExecutionState::class);
-        \assert($executionState instanceof ExecutionState);
+        $executionProgress = self::getContainer()->get(ExecutionProgress::class);
+        \assert($executionProgress instanceof ExecutionProgress);
 
-        self::assertSame(ExecutionState::STATE_AWAITING, (string) $executionState);
+        self::assertSame(ExecutionProgress::STATE_AWAITING, $executionProgress->get());
         self::assertSame(TestState::AWAITING, $test->getState());
 
         $testExecutor = (new MockTestExecutor())
@@ -122,7 +122,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertTrue($job->hasStarted());
 
-        self::assertSame(ExecutionState::STATE_COMPLETE, (string) $executionState);
+        self::assertSame(ExecutionProgress::STATE_COMPLETE, $executionProgress->get());
         self::assertSame(TestState::COMPLETE, $test->getState());
     }
 }

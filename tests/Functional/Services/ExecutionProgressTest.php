@@ -6,26 +6,25 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Entity\TestState;
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
-class ExecutionStateTest extends AbstractBaseFunctionalTest
+class ExecutionProgressTest extends AbstractBaseFunctionalTest
 {
-    private ExecutionState $executionState;
+    private ExecutionProgress $executionProgress;
     private EnvironmentFactory $environmentFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $executionState = self::getContainer()->get(ExecutionState::class);
-        if ($executionState instanceof ExecutionState) {
-            $this->executionState = $executionState;
-        }
+        $executionProgress = self::getContainer()->get(ExecutionProgress::class);
+        \assert($executionProgress instanceof ExecutionProgress);
+        $this->executionProgress = $executionProgress;
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
@@ -44,7 +43,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        self::assertSame($expectedState, (string) $this->executionState);
+        self::assertSame($expectedState, $this->executionProgress->get());
     }
 
     /**
@@ -55,7 +54,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
         return [
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [
                 'setup' => new EnvironmentSetup(),
-                'expectedState' => ExecutionState::STATE_AWAITING,
+                'expectedState' => ExecutionProgress::STATE_AWAITING,
             ],
             'running: not has finished tests and has running tests and not has awaiting tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -63,7 +62,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())
                             ->withState(TestState::RUNNING),
                     ]),
-                'expectedState' => ExecutionState::STATE_RUNNING,
+                'expectedState' => ExecutionProgress::STATE_RUNNING,
             ],
             'awaiting: not has finished tests and not has running tests and has awaiting tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -71,7 +70,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())
                             ->withState(TestState::AWAITING),
                     ]),
-                'expectedState' => ExecutionState::STATE_AWAITING,
+                'expectedState' => ExecutionProgress::STATE_AWAITING,
             ],
             'running: has complete tests and has running tests and not has awaiting tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -79,7 +78,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::COMPLETE),
                         (new TestSetup())->withState(TestState::RUNNING),
                     ]),
-                'expectedState' => ExecutionState::STATE_RUNNING,
+                'expectedState' => ExecutionProgress::STATE_RUNNING,
             ],
             'running: has complete tests and not has running tests and has awaiting tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -87,25 +86,25 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::COMPLETE),
                         (new TestSetup())->withState(TestState::AWAITING),
                     ]),
-                'expectedState' => ExecutionState::STATE_RUNNING,
+                'expectedState' => ExecutionProgress::STATE_RUNNING,
             ],
             'complete: has finished tests and not has running tests and not has awaiting tests' => [
                 'setup' => (new EnvironmentSetup())
                     ->withTestSetups([
                         (new TestSetup())->withState(TestState::COMPLETE),
                     ]),
-                'expectedState' => ExecutionState::STATE_COMPLETE,
+                'expectedState' => ExecutionProgress::STATE_COMPLETE,
             ],
             'cancelled: has failed tests' => [
                 'setup' => (new EnvironmentSetup())
                     ->withTestSetups([
                         (new TestSetup())->withState(TestState::FAILED),
                     ]),
-                'expectedState' => ExecutionState::STATE_CANCELLED,
+                'expectedState' => ExecutionProgress::STATE_CANCELLED,
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_COMPLETE,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_COMPLETE,
                 ],
             ],
             'cancelled: has cancelled tests' => [
@@ -113,7 +112,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())->withState(TestState::CANCELLED),
                     ]),
-                'expectedState' => ExecutionState::STATE_CANCELLED,
+                'expectedState' => ExecutionProgress::STATE_CANCELLED,
             ],
         ];
     }
@@ -121,8 +120,8 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<ExecutionState::STATE_*> $expectedIsStates
-     * @param array<ExecutionState::STATE_*> $expectedIsNotStates
+     * @param array<ExecutionProgress::STATE_*> $expectedIsStates
+     * @param array<ExecutionProgress::STATE_*> $expectedIsNotStates
      */
     public function testIs(
         EnvironmentSetup $setup,
@@ -131,8 +130,8 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
     ): void {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->executionState->is(...$expectedIsStates));
-        self::assertFalse($this->executionState->is(...$expectedIsNotStates));
+        self::assertTrue($this->executionProgress->is(...$expectedIsStates));
+        self::assertFalse($this->executionProgress->is(...$expectedIsNotStates));
     }
 
     /**
@@ -144,12 +143,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [
                 'setup' => new EnvironmentSetup(),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_AWAITING,
+                    ExecutionProgress::STATE_AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_COMPLETE,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_COMPLETE,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'running: not has finished tests and has running tests and not has awaiting tests' => [
@@ -159,12 +158,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                             ->withState(TestState::RUNNING),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_RUNNING,
+                    ExecutionProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_COMPLETE,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_COMPLETE,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'awaiting: not has finished tests and not has running tests and has awaiting tests' => [
@@ -174,12 +173,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                             ->withState(TestState::AWAITING),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_AWAITING,
+                    ExecutionProgress::STATE_AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_COMPLETE,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_COMPLETE,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'running: has complete tests and has running tests and not has awaiting tests' => [
@@ -189,12 +188,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::RUNNING),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_RUNNING,
+                    ExecutionProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_COMPLETE,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_COMPLETE,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'running: has complete tests and not has running tests and has awaiting tests' => [
@@ -204,12 +203,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::AWAITING),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_RUNNING,
+                    ExecutionProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_COMPLETE,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_COMPLETE,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'complete: has finished tests and not has running tests and not has awaiting tests' => [
@@ -218,12 +217,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_COMPLETE,
+                    ExecutionProgress::STATE_COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
             ],
             'cancelled: has failed tests' => [
@@ -232,12 +231,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::FAILED),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_COMPLETE,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_COMPLETE,
                 ],
             ],
             'cancelled: has cancelled tests' => [
@@ -246,12 +245,12 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withState(TestState::CANCELLED),
                     ]),
                 'expectedIsStates' => [
-                    ExecutionState::STATE_CANCELLED,
+                    ExecutionProgress::STATE_CANCELLED,
                 ],
                 'expectedIsNotStates' => [
-                    ExecutionState::STATE_AWAITING,
-                    ExecutionState::STATE_RUNNING,
-                    ExecutionState::STATE_COMPLETE,
+                    ExecutionProgress::STATE_AWAITING,
+                    ExecutionProgress::STATE_RUNNING,
+                    ExecutionProgress::STATE_COMPLETE,
                 ],
             ],
         ];

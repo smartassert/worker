@@ -9,7 +9,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 
-class ApplicationState implements \Stringable
+class ApplicationProgress
 {
     public const STATE_AWAITING_JOB = 'awaiting-job';
     public const STATE_AWAITING_SOURCES = 'awaiting-sources';
@@ -21,18 +21,18 @@ class ApplicationState implements \Stringable
 
     public function __construct(
         private readonly JobRepository $jobRepository,
-        private CompilationState $compilationState,
-        private ExecutionState $executionState,
-        private EventDeliveryState $eventDeliveryState,
+        private CompilationProgress $compilationProgress,
+        private ExecutionProgress $executionProgress,
+        private EventDeliveryProgress $eventDeliveryProgress,
         private WorkerEventRepository $workerEventRepository,
         private SourceRepository $sourceRepository,
     ) {
     }
 
     /**
-     * @return ApplicationState::STATE_*
+     * @return ApplicationProgress::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         if (null === $this->jobRepository->get()) {
             return self::STATE_AWAITING_JOB;
@@ -46,15 +46,20 @@ class ApplicationState implements \Stringable
             return self::STATE_AWAITING_SOURCES;
         }
 
-        if (false === $this->compilationState->is(...CompilationState::FINISHED_STATES)) {
+        if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
             return self::STATE_COMPILING;
         }
 
-        if (false === $this->executionState->is(...ExecutionState::FINISHED_STATES)) {
+        if (false === $this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
             return self::STATE_EXECUTING;
         }
 
-        if ($this->eventDeliveryState->is(EventDeliveryState::STATE_AWAITING, EventDeliveryState::STATE_RUNNING)) {
+        if (
+            $this->eventDeliveryProgress->is(
+                EventDeliveryProgress::STATE_AWAITING,
+                EventDeliveryProgress::STATE_RUNNING
+            )
+        ) {
             return self::STATE_COMPLETING_EVENT_DELIVERY;
         }
 
@@ -62,7 +67,7 @@ class ApplicationState implements \Stringable
     }
 
     /**
-     * @param ApplicationState::STATE_* ...$states
+     * @param ApplicationProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {
@@ -70,6 +75,6 @@ class ApplicationState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }

@@ -6,25 +6,24 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventState;
-use App\Services\EventDeliveryState;
+use App\Services\EventDeliveryProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestWorkerEventFactory;
 
-class EventDeliveryStateTest extends AbstractBaseFunctionalTest
+class EventDeliveryProgressTest extends AbstractBaseFunctionalTest
 {
-    private EventDeliveryState $workerEventState;
+    private EventDeliveryProgress $eventDeliveryProgress;
     private TestWorkerEventFactory $testWorkerEventFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $workerEventState = self::getContainer()->get(EventDeliveryState::class);
-        if ($workerEventState instanceof EventDeliveryState) {
-            $this->workerEventState = $workerEventState;
-        }
+        $eventDeliveryProgress = self::getContainer()->get(EventDeliveryProgress::class);
+        \assert($eventDeliveryProgress instanceof EventDeliveryProgress);
+        $this->eventDeliveryProgress = $eventDeliveryProgress;
 
         $testWorkerEventFactory = self::getContainer()->get(TestWorkerEventFactory::class);
         \assert($testWorkerEventFactory instanceof TestWorkerEventFactory);
@@ -47,7 +46,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
             $this->createWorkerEventEntity($workerEventState);
         }
 
-        self::assertSame($expectedState, (string) $this->workerEventState);
+        self::assertSame($expectedState, $this->eventDeliveryProgress->get());
     }
 
     /**
@@ -58,7 +57,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
         return [
             'no events' => [
                 'states' => [],
-                'expectedState' => EventDeliveryState::STATE_AWAITING,
+                'expectedState' => EventDeliveryProgress::STATE_AWAITING,
             ],
             'awaiting, sending, queued' => [
                 'states' => [
@@ -66,7 +65,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::QUEUED,
                     WorkerEventState::SENDING,
                 ],
-                'expectedState' => EventDeliveryState::STATE_RUNNING,
+                'expectedState' => EventDeliveryProgress::STATE_RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
@@ -75,7 +74,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::SENDING,
                     WorkerEventState::COMPLETE,
                 ],
-                'expectedState' => EventDeliveryState::STATE_RUNNING,
+                'expectedState' => EventDeliveryProgress::STATE_RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
@@ -84,7 +83,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::SENDING,
                     WorkerEventState::FAILED,
                 ],
-                'expectedState' => EventDeliveryState::STATE_RUNNING,
+                'expectedState' => EventDeliveryProgress::STATE_RUNNING,
             ],
             'two complete, three failed' => [
                 'states' => [
@@ -94,7 +93,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::FAILED,
                     WorkerEventState::FAILED,
                 ],
-                'expectedState' => EventDeliveryState::STATE_COMPLETE,
+                'expectedState' => EventDeliveryProgress::STATE_COMPLETE,
             ],
         ];
     }
@@ -102,9 +101,9 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param WorkerEventState[]                 $states
-     * @param array<EventDeliveryState::STATE_*> $expectedIsStates
-     * @param array<EventDeliveryState::STATE_*> $expectedIsNotStates
+     * @param WorkerEventState[]                    $states
+     * @param array<EventDeliveryProgress::STATE_*> $expectedIsStates
+     * @param array<EventDeliveryProgress::STATE_*> $expectedIsNotStates
      */
     public function testIs(array $states, array $expectedIsStates, array $expectedIsNotStates): void
     {
@@ -112,8 +111,8 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
             $this->createWorkerEventEntity($state);
         }
 
-        self::assertTrue($this->workerEventState->is(...$expectedIsStates));
-        self::assertFalse($this->workerEventState->is(...$expectedIsNotStates));
+        self::assertTrue($this->eventDeliveryProgress->is(...$expectedIsStates));
+        self::assertFalse($this->eventDeliveryProgress->is(...$expectedIsNotStates));
     }
 
     /**
@@ -125,11 +124,11 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
             'no event deliveries' => [
                 'states' => [],
                 'expectedIsStates' => [
-                    EventDeliveryState::STATE_AWAITING,
+                    EventDeliveryProgress::STATE_AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    EventDeliveryState::STATE_RUNNING,
-                    EventDeliveryState::STATE_COMPLETE,
+                    EventDeliveryProgress::STATE_RUNNING,
+                    EventDeliveryProgress::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued' => [
@@ -139,11 +138,11 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::SENDING,
                 ],
                 'expectedIsStates' => [
-                    EventDeliveryState::STATE_RUNNING,
+                    EventDeliveryProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    EventDeliveryState::STATE_AWAITING,
-                    EventDeliveryState::STATE_COMPLETE,
+                    EventDeliveryProgress::STATE_AWAITING,
+                    EventDeliveryProgress::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, complete' => [
@@ -154,11 +153,11 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::COMPLETE,
                 ],
                 'expectedIsStates' => [
-                    EventDeliveryState::STATE_RUNNING,
+                    EventDeliveryProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    EventDeliveryState::STATE_AWAITING,
-                    EventDeliveryState::STATE_COMPLETE,
+                    EventDeliveryProgress::STATE_AWAITING,
+                    EventDeliveryProgress::STATE_COMPLETE,
                 ],
             ],
             'awaiting, sending, queued, failed' => [
@@ -169,11 +168,11 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::FAILED,
                 ],
                 'expectedIsStates' => [
-                    EventDeliveryState::STATE_RUNNING,
+                    EventDeliveryProgress::STATE_RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    EventDeliveryState::STATE_AWAITING,
-                    EventDeliveryState::STATE_COMPLETE,
+                    EventDeliveryProgress::STATE_AWAITING,
+                    EventDeliveryProgress::STATE_COMPLETE,
                 ],
             ],
             'two complete, three failed' => [
@@ -185,11 +184,11 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
                     WorkerEventState::FAILED,
                 ],
                 'expectedIsStates' => [
-                    EventDeliveryState::STATE_COMPLETE,
+                    EventDeliveryProgress::STATE_COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    EventDeliveryState::STATE_AWAITING,
-                    EventDeliveryState::STATE_RUNNING,
+                    EventDeliveryProgress::STATE_AWAITING,
+                    EventDeliveryProgress::STATE_RUNNING,
                 ],
             ],
         ];

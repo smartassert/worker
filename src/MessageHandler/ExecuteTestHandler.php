@@ -11,7 +11,7 @@ use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use App\Services\TestDocumentFactory;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
@@ -26,7 +26,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         private EventDispatcherInterface $eventDispatcher,
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
-        private ExecutionState $executionState,
+        private ExecutionProgress $executionProgress,
         private TestDocumentFactory $testDocumentFactory
     ) {
     }
@@ -38,7 +38,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
             return;
         }
 
-        if ($this->executionState->is(...ExecutionState::FINISHED_STATES)) {
+        if ($this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
             return;
         }
 

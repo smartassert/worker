@@ -11,12 +11,12 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use App\Services\TestDocumentFactory;
 use App\Services\TestStateMutator;
 use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Mock\Repository\MockTestRepository;
-use App\Tests\Mock\Services\MockExecutionState;
+use App\Tests\Mock\Services\MockExecutionProgress;
 use App\Tests\Mock\Services\MockTestExecutor;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class ExecuteTestHandlerTest extends TestCase
      */
     public function testInvokeNoExecution(
         JobRepository $jobRepository,
-        ExecutionState $executionState,
+        ExecutionProgress $executionProgress,
         ExecuteTestMessage $message,
         TestRepository $testRepository
     ): void {
@@ -46,7 +46,7 @@ class ExecuteTestHandlerTest extends TestCase
             \Mockery::mock(EventDispatcherInterface::class),
             \Mockery::mock(TestStateMutator::class),
             $testRepository,
-            $executionState,
+            $executionProgress,
             \Mockery::mock(TestDocumentFactory::class)
         );
 
@@ -65,7 +65,7 @@ class ExecuteTestHandlerTest extends TestCase
                 'jobRepository' => (new MockJobRepository())
                     ->withGetCall(null)
                     ->getMock(),
-                'executionState' => (new MockExecutionState())
+                'executionProgress' => (new MockExecutionProgress())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -76,8 +76,8 @@ class ExecuteTestHandlerTest extends TestCase
                 'jobRepository' => (new MockJobRepository())
                     ->withGetCall(new Job())
                     ->getMock(),
-                'executionState' => (new MockExecutionState())
-                    ->withIsCall(true, ...ExecutionState::FINISHED_STATES)
+                'executionProgress' => (new MockExecutionProgress())
+                    ->withIsCall(true, ...ExecutionProgress::FINISHED_STATES)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -88,8 +88,8 @@ class ExecuteTestHandlerTest extends TestCase
                 'jobRepository' => (new MockJobRepository())
                     ->withGetCall(new Job())
                     ->getMock(),
-                'executionState' => (new MockExecutionState())
-                    ->withIsCall(false, ...ExecutionState::FINISHED_STATES)
+                'executionProgress' => (new MockExecutionProgress())
+                    ->withIsCall(false, ...ExecutionProgress::FINISHED_STATES)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -100,8 +100,8 @@ class ExecuteTestHandlerTest extends TestCase
                 'jobRepository' => (new MockJobRepository())
                     ->withGetCall(new Job())
                     ->getMock(),
-                'executionState' => (new MockExecutionState())
-                    ->withIsCall(false, ...ExecutionState::FINISHED_STATES)
+                'executionProgress' => (new MockExecutionProgress())
+                    ->withIsCall(false, ...ExecutionProgress::FINISHED_STATES)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())

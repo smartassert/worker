@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class CompilationWorkflowHandler implements EventSubscriberInterface
 {
     public function __construct(
-        private CompilationState $compilationState,
+        private CompilationProgress $compilationProgress,
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
         private SourcePathFinder $sourcePathFinder
@@ -40,7 +40,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchNextCompileSourceMessage(): void
     {
-        if (false === $this->compilationState->is(...CompilationState::FINISHED_STATES)) {
+        if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();
 
             if (is_string($sourcePath)) {
@@ -51,7 +51,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchCompilationCompletedEvent(): void
     {
-        if (CompilationState::STATE_COMPLETE === (string) $this->compilationState) {
+        if ($this->compilationProgress->is(CompilationProgress::STATE_COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompiledEvent());
         }
     }

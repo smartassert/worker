@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 
-class CompilationState implements \Stringable
+class CompilationProgress
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -27,12 +27,12 @@ class CompilationState implements \Stringable
     }
 
     /**
-     * @return CompilationState::STATE_*
+     * @return CompilationProgress::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::COMPILATION_FAILED)) {
-            return CompilationState::STATE_FAILED;
+            return CompilationProgress::STATE_FAILED;
         }
 
         $compiledSources = $this->sourcePathFinder->findCompiledPaths();
@@ -40,17 +40,17 @@ class CompilationState implements \Stringable
 
         if ([] === $compiledSources) {
             return is_string($nextSource)
-                ? CompilationState::STATE_RUNNING
-                : CompilationState::STATE_AWAITING;
+                ? CompilationProgress::STATE_RUNNING
+                : CompilationProgress::STATE_AWAITING;
         }
 
         return is_string($nextSource)
-            ? CompilationState::STATE_RUNNING
-            : CompilationState::STATE_COMPLETE;
+            ? CompilationProgress::STATE_RUNNING
+            : CompilationProgress::STATE_COMPLETE;
     }
 
     /**
-     * @param CompilationState::STATE_* ...$states
+     * @param CompilationProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {
@@ -58,6 +58,6 @@ class CompilationState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }

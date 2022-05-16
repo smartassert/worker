@@ -7,10 +7,10 @@ namespace App\Tests\Integration\EndToEnd;
 use App\Entity\TestState;
 use App\Entity\WorkerEventType;
 use App\Request\CreateJobRequest;
-use App\Services\ApplicationState;
-use App\Services\CompilationState;
-use App\Services\EventDeliveryState;
-use App\Services\ExecutionState;
+use App\Services\ApplicationProgress;
+use App\Services\CompilationProgress;
+use App\Services\EventDeliveryProgress;
+use App\Services\ExecutionProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\CallableInvoker;
@@ -33,7 +33,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     private JsonResponseAsserter $jsonResponseAsserter;
     private IntegrationJobProperties $jobProperties;
     private CreateJobSourceFactory $createJobSourceFactory;
-    private ApplicationState $applicationState;
+    private ApplicationProgress $applicationProgress;
 
     protected function setUp(): void
     {
@@ -59,19 +59,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
         $this->createJobSourceFactory = $createJobSourceFactory;
 
-        $applicationState = self::getContainer()->get(ApplicationState::class);
-        \assert($applicationState instanceof ApplicationState);
-        $this->applicationState = $applicationState;
+        $applicationProgress = self::getContainer()->get(ApplicationProgress::class);
+        \assert($applicationProgress instanceof ApplicationProgress);
+        $this->applicationProgress = $applicationProgress;
     }
 
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param string[]                  $manifestPaths
-     * @param string[]                  $sourcePaths
-     * @param CompilationState::STATE_* $expectedCompilationEndState
-     * @param ExecutionState::STATE_*   $expectedExecutionEndState
-     * @param array<int, array<mixed>>  $expectedTestDataCollection
+     * @param string[]                     $manifestPaths
+     * @param string[]                     $sourcePaths
+     * @param CompilationProgress::STATE_* $expectedCompilationEndState
+     * @param ExecutionProgress::STATE_*   $expectedExecutionEndState
+     * @param array<int, array<mixed>>     $expectedTestDataCollection
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
@@ -118,7 +118,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
-        self::assertSame(EventDeliveryState::STATE_COMPLETE, $statusData['event_delivery_state']);
+        self::assertSame(EventDeliveryProgress::STATE_COMPLETE, $statusData['event_delivery_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
 
         $testDataCollection = $statusData['tests'];
@@ -138,7 +138,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
         }
 
-        self::assertSame(ApplicationState::STATE_COMPLETE, (string) $this->applicationState);
+        self::assertSame(ApplicationProgress::STATE_COMPLETE, $this->applicationProgress->get());
 
         if (is_callable($assertions)) {
             $this->callableInvoker->invoke($assertions);
@@ -164,8 +164,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-form.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::STATE_COMPLETE,
+                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
+                'expectedExecutionEndState' => ExecutionProgress::STATE_COMPLETE,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [
@@ -501,8 +501,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::STATE_CANCELLED,
+                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
+                'expectedExecutionEndState' => ExecutionProgress::STATE_CANCELLED,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [

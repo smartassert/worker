@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Services;
 
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use Mockery\MockInterface;
 
-class MockExecutionState
+class MockExecutionProgress
 {
-    private ExecutionState $mock;
+    private ExecutionProgress $mock;
 
     public function __construct()
     {
-        $this->mock = \Mockery::mock(ExecutionState::class);
+        $this->mock = \Mockery::mock(ExecutionProgress::class);
     }
 
-    public function getMock(): ExecutionState
+    public function getMock(): ExecutionProgress
     {
         return $this->mock;
     }
 
     /**
-     * @param ExecutionState::STATE_* $state
+     * @param ExecutionProgress::STATE_* $state
      */
     public function withGetCall(string $state): self
     {
@@ -39,7 +39,7 @@ class MockExecutionState
     }
 
     /**
-     * @param array<ExecutionState::STATE_*> $states
+     * @param array<ExecutionProgress::STATE_*> $states
      */
     public function withIsCall(bool $is, ...$states): self
     {
