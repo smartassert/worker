@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Enum\ApplicationState;
 use App\Event\JobCompletedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Services\ApplicationProgress;
@@ -20,7 +21,7 @@ class JobCompletedCheckHandler implements MessageHandlerInterface
 
     public function __invoke(JobCompletedCheckMessage $jobCompleteCheckMessage): void
     {
-        if ($this->applicationProgress->is(ApplicationProgress::STATE_COMPLETE)) {
+        if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
         }
     }

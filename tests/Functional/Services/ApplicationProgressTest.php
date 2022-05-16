@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Enum\ApplicationState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
@@ -50,7 +51,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      */
-    public function testGet(EnvironmentSetup $setup, string $expectedState): void
+    public function testGet(EnvironmentSetup $setup, ApplicationState $expectedState): void
     {
         $this->environmentFactory->create($setup);
 
@@ -65,12 +66,12 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
         return [
             'no job, is awaiting' => [
                 'setup' => new EnvironmentSetup(),
-                'expectedState' => ApplicationProgress::STATE_AWAITING_JOB,
+                'expectedState' => ApplicationState::AWAITING_JOB,
             ],
             'has job, no sources' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup()),
-                'expectedState' => ApplicationProgress::STATE_AWAITING_SOURCES,
+                'expectedState' => ApplicationState::AWAITING_SOURCES,
             ],
             'no sources compiled' => [
                 'setup' => (new EnvironmentSetup())
@@ -79,7 +80,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test1.yml'),
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_COMPILING,
+                'expectedState' => ApplicationState::COMPILING,
             ],
             'first source compiled' => [
                 'setup' => (new EnvironmentSetup())
@@ -91,7 +92,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_COMPILING,
+                'expectedState' => ApplicationState::COMPILING,
             ],
             'all sources compiled, no tests running' => [
                 'setup' => (new EnvironmentSetup())
@@ -104,7 +105,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_EXECUTING,
+                'expectedState' => ApplicationState::EXECUTING,
             ],
             'first test complete, no event deliveries' => [
                 'setup' => (new EnvironmentSetup())
@@ -119,7 +120,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                             ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_EXECUTING,
+                'expectedState' => ApplicationState::EXECUTING,
             ],
             'first test complete, event delivery for first test complete' => [
                 'setup' => (new EnvironmentSetup())
@@ -137,7 +138,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_EXECUTING,
+                'expectedState' => ApplicationState::EXECUTING,
             ],
             'all tests complete, first event delivery complete, second event delivery running' => [
                 'setup' => (new EnvironmentSetup())
@@ -157,7 +158,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                         (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
                     ]),
-                'expectedState' => ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
+                'expectedState' => ApplicationState::COMPLETING_EVENT_DELIVERY,
             ],
             'all tests complete, all event deliveries complete' => [
                 'setup' => (new EnvironmentSetup())
@@ -177,7 +178,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
                     ]),
-                'expectedState' => ApplicationProgress::STATE_COMPLETE,
+                'expectedState' => ApplicationState::COMPLETE,
             ],
             'has a job-timeout event delivery' => [
                 'setup' => (new EnvironmentSetup())
@@ -187,7 +188,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                             ->withType(WorkerEventType::JOB_TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
-                'expectedState' => ApplicationProgress::STATE_TIMED_OUT,
+                'expectedState' => ApplicationState::TIMED_OUT,
             ],
         ];
     }
@@ -195,8 +196,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<ApplicationProgress::STATE_*> $expectedIsStates
-     * @param array<ApplicationProgress::STATE_*> $expectedIsNotStates
+     * @param array<ApplicationState::*> $expectedIsStates
+     * @param array<ApplicationState::*> $expectedIsNotStates
      */
     public function testIs(
         EnvironmentSetup $setup,
@@ -218,30 +219,30 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
             'no job, is awaiting' => [
                 'setup' => new EnvironmentSetup(),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
+                    ApplicationState::AWAITING_JOB,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'has job, no sources' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup()),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
+                    ApplicationState::AWAITING_SOURCES,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::COMPILING,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'no sources compiled' => [
@@ -252,15 +253,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_COMPILING,
+                    ApplicationState::COMPILING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'first source compiled' => [
@@ -274,15 +275,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_COMPILING,
+                    ApplicationState::COMPILING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'all sources compiled, no tests running' => [
@@ -297,15 +298,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_EXECUTING,
+                    ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'first test complete, no event deliveries' => [
@@ -322,15 +323,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_EXECUTING,
+                    ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'first test complete, event delivery for first test complete' => [
@@ -350,15 +351,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_EXECUTING,
+                    ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'all tests complete, first event delivery complete, second event delivery running' => [
@@ -380,15 +381,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETE,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETE,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'all tests complete, all event deliveries complete' => [
@@ -410,15 +411,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_COMPLETE,
+                    ApplicationState::COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::TIMED_OUT,
                 ],
             ],
             'has a job-timeout event delivery' => [
@@ -430,15 +431,15 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
-                    ApplicationProgress::STATE_TIMED_OUT,
+                    ApplicationState::TIMED_OUT,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationProgress::STATE_AWAITING_JOB,
-                    ApplicationProgress::STATE_AWAITING_SOURCES,
-                    ApplicationProgress::STATE_COMPILING,
-                    ApplicationProgress::STATE_EXECUTING,
-                    ApplicationProgress::STATE_COMPLETING_EVENT_DELIVERY,
-                    ApplicationProgress::STATE_COMPLETE,
+                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING_SOURCES,
+                    ApplicationState::COMPILING,
+                    ApplicationState::EXECUTING,
+                    ApplicationState::COMPLETING_EVENT_DELIVERY,
+                    ApplicationState::COMPLETE,
                 ],
             ],
         ];
