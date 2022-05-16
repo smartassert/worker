@@ -53,7 +53,7 @@ class CompilationStateTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        self::assertSame($expectedState, (string) $this->compilationState);
+        self::assertSame($expectedState, $this->compilationState->get());
     }
 
     /**

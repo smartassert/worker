@@ -118,7 +118,7 @@ class JobController
             $job->jsonSerialize(),
             [
                 'sources' => $sourceRepository->findAllPaths(),
-                'compilation_state' => (string) $compilationState,
+                'compilation_state' => $compilationState->get(),
                 'execution_state' => (string) $executionState,
                 'event_delivery_state' => (string) $workerEventState,
                 'tests' => $testSerializer->serializeCollection($tests),

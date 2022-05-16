@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 
-class CompilationState implements \Stringable
+class CompilationState
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -29,7 +29,7 @@ class CompilationState implements \Stringable
     /**
      * @return CompilationState::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::COMPILATION_FAILED)) {
             return CompilationState::STATE_FAILED;
@@ -58,6 +58,6 @@ class CompilationState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }

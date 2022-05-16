@@ -51,7 +51,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchCompilationCompletedEvent(): void
     {
-        if (CompilationState::STATE_COMPLETE === (string) $this->compilationState) {
+        if ($this->compilationState->is(CompilationState::STATE_COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompiledEvent());
         }
     }
