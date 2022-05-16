@@ -22,7 +22,7 @@ class ApplicationProgress
     public function __construct(
         private readonly JobRepository $jobRepository,
         private CompilationProgress $compilationProgress,
-        private ExecutionState $executionState,
+        private ExecutionProgress $executionProgress,
         private EventDeliveryProgress $eventDeliveryProgress,
         private WorkerEventRepository $workerEventRepository,
         private SourceRepository $sourceRepository,
@@ -50,7 +50,7 @@ class ApplicationProgress
             return self::STATE_COMPILING;
         }
 
-        if (false === $this->executionState->is(...ExecutionState::FINISHED_STATES)) {
+        if (false === $this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
             return self::STATE_EXECUTING;
         }
 

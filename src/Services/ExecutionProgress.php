@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\TestState;
 use App\Repository\TestRepository;
 
-class ExecutionState
+class ExecutionProgress
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -25,7 +25,7 @@ class ExecutionState
     }
 
     /**
-     * @return ExecutionState::STATE_*
+     * @return ExecutionProgress::STATE_*
      */
     public function get(): string
     {
@@ -50,7 +50,7 @@ class ExecutionState
     }
 
     /**
-     * @param ExecutionState::STATE_* ...$states
+     * @param ExecutionProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {

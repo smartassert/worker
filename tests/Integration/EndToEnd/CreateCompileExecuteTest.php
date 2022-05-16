@@ -10,7 +10,7 @@ use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Services\CompilationProgress;
 use App\Services\EventDeliveryProgress;
-use App\Services\ExecutionState;
+use App\Services\ExecutionProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\CallableInvoker;
@@ -70,7 +70,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
      * @param string[]                     $manifestPaths
      * @param string[]                     $sourcePaths
      * @param CompilationProgress::STATE_* $expectedCompilationEndState
-     * @param ExecutionState::STATE_*      $expectedExecutionEndState
+     * @param ExecutionProgress::STATE_*   $expectedExecutionEndState
      * @param array<int, array<mixed>>     $expectedTestDataCollection
      */
     public function testCreateCompileExecute(
@@ -165,7 +165,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::STATE_COMPLETE,
+                'expectedExecutionEndState' => ExecutionProgress::STATE_COMPLETE,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [
@@ -502,7 +502,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::STATE_CANCELLED,
+                'expectedExecutionEndState' => ExecutionProgress::STATE_CANCELLED,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [
