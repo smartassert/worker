@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test as TestEntity;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\Model\Document\Test as TestDocument;
 
 class TestPassedEvent extends AbstractTestEvent

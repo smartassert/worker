@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEventType;
+use App\Enum\EventDeliveryState;
+use App\Enum\WorkerEventType;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
@@ -54,12 +55,7 @@ class ApplicationProgress
             return self::STATE_EXECUTING;
         }
 
-        if (
-            $this->eventDeliveryProgress->is(
-                EventDeliveryProgress::STATE_AWAITING,
-                EventDeliveryProgress::STATE_RUNNING
-            )
-        ) {
+        if ($this->eventDeliveryProgress->is(EventDeliveryState::AWAITING, EventDeliveryState::RUNNING)) {
             return self::STATE_COMPLETING_EVENT_DELIVERY;
         }
 

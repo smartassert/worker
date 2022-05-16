@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\Services\CompilationProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;

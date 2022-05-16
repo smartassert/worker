@@ -6,7 +6,7 @@ namespace App\Tests\Unit\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Test;
-use App\Entity\TestState;
+use App\Enum\TestState;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;

@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Repository;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Entity\TestState;
+use App\Enum\TestState;
 use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
 use App\Tests\Services\EntityRemover;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
 use App\Services\WorkerEventStateMutator;

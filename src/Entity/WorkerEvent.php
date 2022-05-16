@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\ORM\Mapping as ORM;
 

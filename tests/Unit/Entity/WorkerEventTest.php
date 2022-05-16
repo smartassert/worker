@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use PHPUnit\Framework\TestCase;
 
 class WorkerEventTest extends TestCase

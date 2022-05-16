@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventSender;

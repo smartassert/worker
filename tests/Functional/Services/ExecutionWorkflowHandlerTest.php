@@ -6,8 +6,8 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\Test;
-use App\Entity\TestState;
 use App\Entity\WorkerEvent;
+use App\Enum\TestState;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilationPassedEvent;

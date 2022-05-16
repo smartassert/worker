@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\Services\WorkerEventSender;
 use App\Tests\Mock\Repository\MockJobRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

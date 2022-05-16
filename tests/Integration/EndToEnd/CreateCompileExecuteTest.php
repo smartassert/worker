@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
-use App\Entity\TestState;
-use App\Entity\WorkerEventType;
+use App\Enum\EventDeliveryState;
+use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Services\CompilationProgress;
-use App\Services\EventDeliveryProgress;
 use App\Services\ExecutionProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
@@ -118,7 +118,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
-        self::assertSame(EventDeliveryProgress::STATE_COMPLETE, $statusData['event_delivery_state']);
+        self::assertSame(EventDeliveryState::COMPLETE->value, $statusData['event_delivery_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
 
         $testDataCollection = $statusData['tests'];

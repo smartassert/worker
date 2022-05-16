@@ -6,7 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState;
+use App\Enum\WorkerEventState;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
