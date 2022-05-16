@@ -8,10 +8,10 @@ use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageHandler\JobCompletedCheckHandler;
-use App\Services\ApplicationState;
+use App\Services\ApplicationProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Mock\Services\MockApplicationState;
+use App\Tests\Mock\Services\MockApplicationProgress;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -34,16 +34,16 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
 
     public function testInvokeApplicationStateNotComplete(): void
     {
-        $applicationState = (new MockApplicationState())
-            ->withIsCall(false, ApplicationState::STATE_COMPLETE)
+        $applicationProgress = (new MockApplicationProgress())
+            ->withIsCall(false, ApplicationProgress::STATE_COMPLETE)
             ->getMock()
         ;
 
         ObjectReflector::setProperty(
             $this->handler,
             JobCompletedCheckHandler::class,
-            'applicationState',
-            $applicationState
+            'applicationProgress',
+            $applicationProgress
         );
 
         $eventDispatcher = (new MockEventDispatcher())
@@ -63,16 +63,16 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
 
     public function testInvokeApplicationStateIsComplete(): void
     {
-        $applicationState = (new MockApplicationState())
-            ->withIsCall(true, ApplicationState::STATE_COMPLETE)
+        $applicationProgress = (new MockApplicationProgress())
+            ->withIsCall(true, ApplicationProgress::STATE_COMPLETE)
             ->getMock()
         ;
 
         ObjectReflector::setProperty(
             $this->handler,
             JobCompletedCheckHandler::class,
-            'applicationState',
-            $applicationState
+            'applicationProgress',
+            $applicationProgress
         );
 
         $eventExpectationCount = 0;

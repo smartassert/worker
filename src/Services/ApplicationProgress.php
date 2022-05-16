@@ -9,7 +9,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 
-class ApplicationState
+class ApplicationProgress
 {
     public const STATE_AWAITING_JOB = 'awaiting-job';
     public const STATE_AWAITING_SOURCES = 'awaiting-sources';
@@ -30,7 +30,7 @@ class ApplicationState
     }
 
     /**
-     * @return ApplicationState::STATE_*
+     * @return ApplicationProgress::STATE_*
      */
     public function get(): string
     {
@@ -62,7 +62,7 @@ class ApplicationState
     }
 
     /**
-     * @param ApplicationState::STATE_* ...$states
+     * @param ApplicationProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {

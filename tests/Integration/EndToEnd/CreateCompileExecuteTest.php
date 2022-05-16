@@ -7,7 +7,7 @@ namespace App\Tests\Integration\EndToEnd;
 use App\Entity\TestState;
 use App\Entity\WorkerEventType;
 use App\Request\CreateJobRequest;
-use App\Services\ApplicationState;
+use App\Services\ApplicationProgress;
 use App\Services\CompilationState;
 use App\Services\EventDeliveryState;
 use App\Services\ExecutionState;
@@ -33,7 +33,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     private JsonResponseAsserter $jsonResponseAsserter;
     private IntegrationJobProperties $jobProperties;
     private CreateJobSourceFactory $createJobSourceFactory;
-    private ApplicationState $applicationState;
+    private ApplicationProgress $applicationProgress;
 
     protected function setUp(): void
     {
@@ -59,9 +59,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
         $this->createJobSourceFactory = $createJobSourceFactory;
 
-        $applicationState = self::getContainer()->get(ApplicationState::class);
-        \assert($applicationState instanceof ApplicationState);
-        $this->applicationState = $applicationState;
+        $applicationProgress = self::getContainer()->get(ApplicationProgress::class);
+        \assert($applicationProgress instanceof ApplicationProgress);
+        $this->applicationProgress = $applicationProgress;
     }
 
     /**
@@ -138,7 +138,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
         }
 
-        self::assertSame(ApplicationState::STATE_COMPLETE, $this->applicationState->get());
+        self::assertSame(ApplicationProgress::STATE_COMPLETE, $this->applicationProgress->get());
 
         if (is_callable($assertions)) {
             $this->callableInvoker->invoke($assertions);

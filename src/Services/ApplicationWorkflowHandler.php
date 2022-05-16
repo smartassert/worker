@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class ApplicationWorkflowHandler implements EventSubscriberInterface
 {
     public function __construct(
-        private ApplicationState $applicationState,
+        private ApplicationProgress $applicationProgress,
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
     ) {
@@ -39,7 +39,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchJobCompletedEvent(TestPassedEvent $testEvent): void
     {
-        if ($this->applicationState->is(ApplicationState::STATE_COMPLETE)) {
+        if ($this->applicationProgress->is(ApplicationProgress::STATE_COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
         } else {
             $this->messageBus->dispatch(new JobCompletedCheckMessage());
