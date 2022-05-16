@@ -76,7 +76,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $executionState = self::getContainer()->get(ExecutionState::class);
         \assert($executionState instanceof ExecutionState);
 
-        self::assertSame(ExecutionState::STATE_AWAITING, (string) $executionState);
+        self::assertSame(ExecutionState::STATE_AWAITING, $executionState->get());
         self::assertSame(TestState::AWAITING, $test->getState());
 
         $testExecutor = (new MockTestExecutor())
@@ -122,7 +122,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertTrue($job->hasStarted());
 
-        self::assertSame(ExecutionState::STATE_COMPLETE, (string) $executionState);
+        self::assertSame(ExecutionState::STATE_COMPLETE, $executionState->get());
         self::assertSame(TestState::COMPLETE, $test->getState());
     }
 }

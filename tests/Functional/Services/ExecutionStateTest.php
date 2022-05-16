@@ -44,7 +44,7 @@ class ExecutionStateTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        self::assertSame($expectedState, (string) $this->executionState);
+        self::assertSame($expectedState, $this->executionState->get());
     }
 
     /**

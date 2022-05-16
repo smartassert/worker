@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\TestState;
 use App\Repository\TestRepository;
 
-class ExecutionState implements \Stringable
+class ExecutionState
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -27,7 +27,7 @@ class ExecutionState implements \Stringable
     /**
      * @return ExecutionState::STATE_*
      */
-    public function __toString(): string
+    public function get(): string
     {
         $hasFailedTests = 0 !== $this->testRepository->count(['state' => TestState::FAILED->value]);
         $hasCancelledTests = 0 !== $this->testRepository->count(['state' => TestState::CANCELLED->value]);
@@ -58,6 +58,6 @@ class ExecutionState implements \Stringable
             return is_string($item);
         });
 
-        return in_array((string) $this, $states);
+        return in_array($this->get(), $states);
     }
 }
