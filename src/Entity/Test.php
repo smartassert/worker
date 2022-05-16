@@ -10,12 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test implements \JsonSerializable
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_FAILED = 'failed';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_CANCELLED = 'cancelled';
-
     /**
      * @var TestState[]
      */
