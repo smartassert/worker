@@ -11,4 +11,12 @@ enum CompilationState: string
     case FAILED = 'failed';
     case COMPLETE = 'complete';
     case UNKNOWN = 'unknown';
+
+    /**
+     * @return CompilationState[]
+     */
+    public static function getFinishedStates(): array
+    {
+        return [self::COMPLETE, self::FAILED];
+    }
 }

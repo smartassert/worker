@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Enum\CompilationState;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
@@ -31,7 +32,7 @@ class CompileSourceHandler implements MessageHandlerInterface
             return;
         }
 
-        if (false === $this->compilationProgress->is(CompilationProgress::STATE_RUNNING)) {
+        if (false === $this->compilationProgress->is(CompilationState::RUNNING)) {
             return;
         }
 

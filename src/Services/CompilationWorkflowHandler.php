@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\CompilationState;
 use App\Event\JobCompiledEvent;
 use App\Event\JobReadyEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -40,7 +41,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchNextCompileSourceMessage(): void
     {
-        if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
+        if (false === $this->compilationProgress->is(...CompilationState::getFinishedStates())) {
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();
 
             if (is_string($sourcePath)) {
@@ -51,7 +52,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchCompilationCompletedEvent(): void
     {
-        if ($this->compilationProgress->is(CompilationProgress::STATE_COMPLETE)) {
+        if ($this->compilationProgress->is(CompilationState::COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompiledEvent());
         }
     }
