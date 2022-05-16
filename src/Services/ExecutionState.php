@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Test;
 use App\Entity\TestState;
 use App\Repository\TestRepository;
 
@@ -37,12 +36,7 @@ class ExecutionState implements \Stringable
             return self::STATE_CANCELLED;
         }
 
-        $finishedStateValues = [];
-        foreach (Test::FINISHED_STATES as $state) {
-            $finishedStateValues[] = $state->value;
-        }
-
-        $hasFinishedTests = 0 !== $this->testRepository->count(['state' => $finishedStateValues]);
+        $hasFinishedTests = 0 !== $this->testRepository->count(['state' => TestState::getFinishedValues()]);
         $hasRunningTests = 0 !== $this->testRepository->count(['state' => TestState::RUNNING->value]);
         $hasAwaitingTests = 0 !== $this->testRepository->count(['state' => TestState::AWAITING->value]);
 

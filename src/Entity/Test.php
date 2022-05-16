@@ -18,15 +18,6 @@ class Test implements \JsonSerializable
         TestState::RUNNING,
     ];
 
-    /**
-     * @var TestState[]
-     */
-    public const FINISHED_STATES = [
-        TestState::FAILED,
-        TestState::COMPLETE,
-        TestState::CANCELLED,
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
