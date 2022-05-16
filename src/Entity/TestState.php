@@ -13,45 +13,18 @@ enum TestState: string
     case CANCELLED = 'cancelled';
 
     /**
-     * @var array<TestState::CANCELLED|TestState::COMPLETE|TestState::FAILED>
-     */
-    public const FINISHED_STATES = [
-        TestState::FAILED,
-        TestState::COMPLETE,
-        TestState::CANCELLED,
-    ];
-
-    /**
-     * @var array<TestState::AWAITING|TestState::RUNNING>
-     */
-    public const UNFINISHED_STATES = [
-        TestState::AWAITING,
-        TestState::RUNNING,
-    ];
-
-    /**
-     * @return array<'awaiting'|'cancelled'|'complete'|'failed'|'running'>
+     * @return array{'cancelled', 'complete', 'failed'}
      */
     public static function getFinishedValues(): array
     {
-        $values = [];
-        foreach (self::FINISHED_STATES as $state) {
-            $values[] = $state->value;
-        }
-
-        return $values;
+        return [self::CANCELLED->value, self::COMPLETE->value, self::FAILED->value];
     }
 
     /**
-     * @return array<'awaiting'|'cancelled'|'complete'|'failed'|'running'>
+     * @return array{'awaiting', 'running'}
      */
     public static function getUnfinishedValues(): array
     {
-        $values = [];
-        foreach (self::UNFINISHED_STATES as $state) {
-            $values[] = $state->value;
-        }
-
-        return $values;
+        return [self::AWAITING->value, self::RUNNING->value];
     }
 }
