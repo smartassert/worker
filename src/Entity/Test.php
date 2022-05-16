@@ -10,14 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test implements \JsonSerializable
 {
-    /**
-     * @var TestState[]
-     */
-    public const UNFINISHED_STATES = [
-        TestState::AWAITING,
-        TestState::RUNNING,
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]

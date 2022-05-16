@@ -109,13 +109,8 @@ class TestRepository extends ServiceEntityRepository
      */
     public function findAllUnfinished(): array
     {
-        $unfinishedStateValues = [];
-        foreach (Test::UNFINISHED_STATES as $state) {
-            $unfinishedStateValues[] = $state->value;
-        }
-
         return $this->findBy([
-            'state' => $unfinishedStateValues,
+            'state' => TestState::getUnfinishedValues(),
         ]);
     }
 
@@ -145,16 +140,11 @@ class TestRepository extends ServiceEntityRepository
 
     public function findUnfinishedCount(): int
     {
-        $unfinishedStateValues = [];
-        foreach (Test::UNFINISHED_STATES as $state) {
-            $unfinishedStateValues[] = $state->value;
-        }
-
         $queryBuilder = $this->createQueryBuilder('Test');
         $queryBuilder
             ->select('count(Test.id)')
             ->where('Test.state IN (:States)')
-            ->setParameter('States', $unfinishedStateValues)
+            ->setParameter('States', TestState::getUnfinishedValues())
         ;
 
         $query = $queryBuilder->getQuery();
