@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
-use App\Entity\Test;
+use App\Entity\TestState;
 use App\Entity\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationState;
@@ -174,7 +174,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ],
                         'source' => 'Test/chrome-open-index.yml',
                         'step_count' => 1,
-                        'state' => Test::STATE_COMPLETE,
+                        'state' => TestState::COMPLETE->value,
                         'position' => 1,
                     ],
                     [
@@ -184,7 +184,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ],
                         'source' => 'Test/chrome-firefox-open-index.yml',
                         'step_count' => 1,
-                        'state' => Test::STATE_COMPLETE,
+                        'state' => TestState::COMPLETE->value,
                         'position' => 2,
                     ],
                     [
@@ -194,7 +194,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ],
                         'source' => 'Test/chrome-firefox-open-index.yml',
                         'step_count' => 1,
-                        'state' => Test::STATE_COMPLETE,
+                        'state' => TestState::COMPLETE->value,
                         'position' => 3,
                     ],
                     [
@@ -204,7 +204,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ],
                         'source' => 'Test/chrome-open-form.yml',
                         'step_count' => 1,
-                        'state' => Test::STATE_COMPLETE,
+                        'state' => TestState::COMPLETE->value,
                         'position' => 4,
                     ],
                 ],
@@ -511,7 +511,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ],
                         'source' => 'Test/chrome-open-index-with-step-failure.yml',
                         'step_count' => 2,
-                        'state' => Test::STATE_FAILED,
+                        'state' => TestState::FAILED->value,
                         'position' => 1,
                     ],
                 ],

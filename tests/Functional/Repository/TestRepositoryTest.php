@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Repository;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Entity\TestState;
 use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
 use App\Tests\Services\EntityRemover;
@@ -54,9 +55,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     public function findMaxPositionDataProvider(): array
     {
         $tests = $this->createTestsWithStates([
-            'position1' => Test::STATE_AWAITING,
-            'position2' => Test::STATE_AWAITING,
-            'position3' => Test::STATE_AWAITING,
+            'position1' => TestState::AWAITING,
+            'position2' => TestState::AWAITING,
+            'position3' => TestState::AWAITING,
         ]);
 
         return [
@@ -128,9 +129,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'running, failed, complete' => [
                 'tests' => $this->createTestsWithStates([
-                    Test::STATE_RUNNING,
-                    Test::STATE_FAILED,
-                    Test::STATE_COMPLETE,
+                    TestState::RUNNING,
+                    TestState::FAILED,
+                    TestState::COMPLETE,
                 ]),
             ],
         ];
@@ -161,11 +162,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     public function findNextAwaitingIdNotNullDataProvider(): array
     {
         $tests = $this->createTestsWithStates([
-            'awaiting1' => Test::STATE_AWAITING,
-            'awaiting2' => Test::STATE_AWAITING,
-            'running' => Test::STATE_RUNNING,
-            'failed' => Test::STATE_FAILED,
-            'complete' => Test::STATE_COMPLETE,
+            'awaiting1' => TestState::AWAITING,
+            'awaiting2' => TestState::AWAITING,
+            'running' => TestState::RUNNING,
+            'failed' => TestState::FAILED,
+            'complete' => TestState::COMPLETE,
         ]);
 
         return [
@@ -228,9 +229,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     public function findAllAwaitingDataProvider(): array
     {
         $tests = $this->createTestsWithStates([
-            'awaiting1' => Test::STATE_AWAITING,
-            'awaiting2' => Test::STATE_AWAITING,
-            'running' => Test::STATE_RUNNING,
+            'awaiting1' => TestState::AWAITING,
+            'awaiting2' => TestState::AWAITING,
+            'running' => TestState::RUNNING,
         ]);
 
         return [
@@ -293,11 +294,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     public function findUnfinishedCountDataProvider(): array
     {
         $tests = $this->createTestsWithStates([
-            'awaiting1' => Test::STATE_AWAITING,
-            'awaiting2' => Test::STATE_AWAITING,
-            'running' => Test::STATE_RUNNING,
-            'failed' => Test::STATE_FAILED,
-            'complete' => Test::STATE_COMPLETE,
+            'awaiting1' => TestState::AWAITING,
+            'awaiting2' => TestState::AWAITING,
+            'running' => TestState::RUNNING,
+            'failed' => TestState::FAILED,
+            'complete' => TestState::COMPLETE,
         ]);
 
         return [
@@ -353,7 +354,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     }
 
     /**
-     * @param array<Test::STATE_*> $states
+     * @param TestState[] $states
      *
      * @return Test[]
      */
@@ -370,10 +371,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         return $tests;
     }
 
-    /**
-     * @param Test::STATE_* $state
-     */
-    private function createTestWithStateAndPosition(string $state, int $position): Test
+    private function createTestWithStateAndPosition(TestState $state, int $position): Test
     {
         $test = Test::create(
             TestConfiguration::create('chrome', 'http://example.com/complete'),

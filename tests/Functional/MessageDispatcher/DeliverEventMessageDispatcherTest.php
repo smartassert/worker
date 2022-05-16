@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageDispatcher;
 
-use App\Entity\Test as TestEntity;
+use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Entity\TestState;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventType;
 use App\Event\EventInterface;
@@ -90,7 +91,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(TestEntity::class);
+            $entityRemover->removeForEntity(Test::class);
         }
     }
 
@@ -140,7 +141,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
 
-        $genericTest = TestEntity::create($testConfiguration, $testSource, '', 1, 1);
+        $genericTest = Test::create($testConfiguration, $testSource, '', 1, 1);
 
         return [
             JobReadyEvent::class => [
@@ -211,7 +212,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new StepFailedEvent(
                     new Step($failingStepDocument),
                     $relativeTestSource,
-                    $genericTest->setState(TestEntity::STATE_FAILED)
+                    $genericTest->setState(TestState::FAILED)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
                 'expectedWorkerEventPayload' => [
@@ -224,7 +225,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
                     new TestDocument(new Document('document-key: value')),
-                    $genericTest->setState(TestEntity::STATE_COMPLETE)
+                    $genericTest->setState(TestState::COMPLETE)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
                 'expectedWorkerEventPayload' => [

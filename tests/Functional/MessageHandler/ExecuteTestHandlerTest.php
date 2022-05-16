@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
@@ -76,7 +77,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         \assert($executionState instanceof ExecutionState);
 
         self::assertSame(ExecutionState::STATE_AWAITING, (string) $executionState);
-        self::assertSame(Test::STATE_AWAITING, $test->getState());
+        self::assertSame(TestState::AWAITING, $test->getState());
 
         $testExecutor = (new MockTestExecutor())
             ->withExecuteCall($test)
@@ -122,6 +123,6 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         self::assertTrue($job->hasStarted());
 
         self::assertSame(ExecutionState::STATE_COMPLETE, (string) $executionState);
-        self::assertSame(Test::STATE_COMPLETE, $test->getState());
+        self::assertSame(TestState::COMPLETE, $test->getState());
     }
 }

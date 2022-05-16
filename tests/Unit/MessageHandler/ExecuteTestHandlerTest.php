@@ -6,6 +6,7 @@ namespace App\Tests\Unit\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
@@ -57,7 +58,7 @@ class ExecuteTestHandlerTest extends TestCase
      */
     public function invokeNoExecutionDataProvider(): array
     {
-        $testInWrongState = (new Test())->setState(Test::STATE_CANCELLED);
+        $testInWrongState = (new Test())->setState(TestState::CANCELLED);
 
         return [
             'no job' => [
