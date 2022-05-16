@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
+use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\WorkerEventType;
 use App\Repository\JobRepository;
@@ -37,7 +38,7 @@ class ApplicationProgress
             return ApplicationState::AWAITING_SOURCES;
         }
 
-        if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
+        if (false === $this->compilationProgress->is(...CompilationState::getFinishedStates())) {
             return ApplicationState::COMPILING;
         }
 

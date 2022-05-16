@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Enum\CompilationState;
 use App\Enum\WorkerEventType;
 use App\Services\CompilationProgress;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -48,7 +49,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider getDataProvider
      */
-    public function testGet(EnvironmentSetup $setup, string $expectedState): void
+    public function testGet(EnvironmentSetup $setup, CompilationState $expectedState): void
     {
         $this->environmentFactory->create($setup);
 
@@ -63,12 +64,12 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
         return [
             'awaiting: no job' => [
                 'setup' => new EnvironmentSetup(),
-                'expectedState' => CompilationProgress::STATE_AWAITING,
+                'expectedState' => CompilationState::AWAITING,
             ],
             'awaiting: has job, no sources' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup()),
-                'expectedState' => CompilationProgress::STATE_AWAITING,
+                'expectedState' => CompilationState::AWAITING,
             ],
             'running: has job, has sources, no sources compiled' => [
                 'setup' => (new EnvironmentSetup())
@@ -79,7 +80,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())
                             ->withPath('Test/test2.yml'),
                     ]),
-                'expectedState' => CompilationProgress::STATE_RUNNING,
+                'expectedState' => CompilationState::RUNNING,
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => (new EnvironmentSetup())
@@ -94,7 +95,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                         (new WorkerEventSetup())
                             ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
-                'expectedState' => CompilationProgress::STATE_FAILED,
+                'expectedState' => CompilationState::FAILED,
             ],
             'complete: has job, has sources, no next source' => [
                 'setup' => (new EnvironmentSetup())
@@ -107,7 +108,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
                     ]),
-                'expectedState' => CompilationProgress::STATE_COMPLETE,
+                'expectedState' => CompilationState::COMPLETE,
             ],
         ];
     }
@@ -115,8 +116,8 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<CompilationProgress::STATE_*> $expectedIsStates
-     * @param array<CompilationProgress::STATE_*> $expectedIsNotStates
+     * @param array<CompilationState::*> $expectedIsStates
+     * @param array<CompilationState::*> $expectedIsNotStates
      */
     public function testIs(
         EnvironmentSetup $setup,
@@ -138,26 +139,26 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
             'awaiting: no job' => [
                 'setup' => new EnvironmentSetup(),
                 'expectedIsStates' => [
-                    CompilationProgress::STATE_AWAITING,
+                    CompilationState::AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    CompilationProgress::STATE_RUNNING,
-                    CompilationProgress::STATE_FAILED,
-                    CompilationProgress::STATE_COMPLETE,
-                    CompilationProgress::STATE_UNKNOWN,
+                    CompilationState::RUNNING,
+                    CompilationState::FAILED,
+                    CompilationState::COMPLETE,
+                    CompilationState::UNKNOWN,
                 ],
             ],
             'awaiting: has job, no sources' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup()),
                 'expectedIsStates' => [
-                    CompilationProgress::STATE_AWAITING,
+                    CompilationState::AWAITING,
                 ],
                 'expectedIsNotStates' => [
-                    CompilationProgress::STATE_RUNNING,
-                    CompilationProgress::STATE_FAILED,
-                    CompilationProgress::STATE_COMPLETE,
-                    CompilationProgress::STATE_UNKNOWN,
+                    CompilationState::RUNNING,
+                    CompilationState::FAILED,
+                    CompilationState::COMPLETE,
+                    CompilationState::UNKNOWN,
                 ],
             ],
             'running: has job, has sources, no sources compiled' => [
@@ -170,13 +171,13 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                             ->withPath('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
-                    CompilationProgress::STATE_RUNNING,
+                    CompilationState::RUNNING,
                 ],
                 'expectedIsNotStates' => [
-                    CompilationProgress::STATE_AWAITING,
-                    CompilationProgress::STATE_FAILED,
-                    CompilationProgress::STATE_COMPLETE,
-                    CompilationProgress::STATE_UNKNOWN,
+                    CompilationState::AWAITING,
+                    CompilationState::FAILED,
+                    CompilationState::COMPLETE,
+                    CompilationState::UNKNOWN,
                 ],
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
@@ -193,13 +194,13 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                             ->withType(WorkerEventType::COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
-                    CompilationProgress::STATE_FAILED,
+                    CompilationState::FAILED,
                 ],
                 'expectedIsNotStates' => [
-                    CompilationProgress::STATE_AWAITING,
-                    CompilationProgress::STATE_RUNNING,
-                    CompilationProgress::STATE_COMPLETE,
-                    CompilationProgress::STATE_UNKNOWN,
+                    CompilationState::AWAITING,
+                    CompilationState::RUNNING,
+                    CompilationState::COMPLETE,
+                    CompilationState::UNKNOWN,
                 ],
             ],
             'complete: has job, has sources, no next source' => [
@@ -214,13 +215,13 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [
-                    CompilationProgress::STATE_COMPLETE,
+                    CompilationState::COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    CompilationProgress::STATE_AWAITING,
-                    CompilationProgress::STATE_RUNNING,
-                    CompilationProgress::STATE_FAILED,
-                    CompilationProgress::STATE_UNKNOWN,
+                    CompilationState::AWAITING,
+                    CompilationState::RUNNING,
+                    CompilationState::FAILED,
+                    CompilationState::UNKNOWN,
                 ],
             ],
         ];

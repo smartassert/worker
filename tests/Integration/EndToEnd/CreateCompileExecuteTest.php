@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Integration\EndToEnd;
 
 use App\Enum\ApplicationState;
+use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
-use App\Services\CompilationProgress;
 use App\Services\ExecutionProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
@@ -68,17 +68,16 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param string[]                     $manifestPaths
-     * @param string[]                     $sourcePaths
-     * @param CompilationProgress::STATE_* $expectedCompilationEndState
-     * @param ExecutionProgress::STATE_*   $expectedExecutionEndState
-     * @param array<int, array<mixed>>     $expectedTestDataCollection
+     * @param string[]                   $manifestPaths
+     * @param string[]                   $sourcePaths
+     * @param ExecutionProgress::STATE_* $expectedExecutionEndState
+     * @param array<int, array<mixed>>   $expectedTestDataCollection
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
         array $sourcePaths,
         int $jobMaximumDurationInSeconds,
-        string $expectedCompilationEndState,
+        CompilationState $expectedCompilationEndState,
         string $expectedExecutionEndState,
         array $expectedTestDataCollection,
         ?callable $assertions = null
@@ -117,7 +116,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($label, $statusData['label']);
         self::assertSame($eventDeliveryUrl, $statusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
-        self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
+        self::assertSame($expectedCompilationEndState->value, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
         self::assertSame(EventDeliveryState::COMPLETE->value, $statusData['event_delivery_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
@@ -165,7 +164,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-form.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
+                'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionProgress::STATE_COMPLETE,
                 'expectedTestDataCollection' => [
                     [
@@ -502,7 +501,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
+                'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionProgress::STATE_CANCELLED,
                 'expectedTestDataCollection' => [
                     [
