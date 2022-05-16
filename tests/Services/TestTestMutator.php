@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\Test;
+use App\Entity\TestState;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TestTestMutator
@@ -14,10 +15,7 @@ class TestTestMutator
     ) {
     }
 
-    /**
-     * @param Test::STATE_* $state
-     */
-    public function setState(Test $test, string $state): Test
+    public function setState(Test $test, TestState $state): Test
     {
         $test->setState($state);
         $this->entityManager->persist($test);

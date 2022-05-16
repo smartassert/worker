@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Entity\TestState;
 
 class TestSetup
 {
@@ -13,11 +13,7 @@ class TestSetup
     private string $source;
     private string $target;
     private int $stepCount;
-
-    /**
-     * @var Test::STATE_*
-     */
-    private string $state;
+    private TestState $state;
 
     public function __construct()
     {
@@ -25,7 +21,7 @@ class TestSetup
         $this->source = '/app/source/Test/test.yml';
         $this->target = '/app/tests/GeneratedTest.php';
         $this->stepCount = 1;
-        $this->state = Test::STATE_AWAITING;
+        $this->state = TestState::AWAITING;
     }
 
     public function getConfiguration(): TestConfiguration
@@ -48,10 +44,7 @@ class TestSetup
         return $this->stepCount;
     }
 
-    /**
-     * @return Test::STATE_*
-     */
-    public function getState(): string
+    public function getState(): TestState
     {
         return $this->state;
     }
@@ -72,12 +65,7 @@ class TestSetup
         return $new;
     }
 
-    /**
-     * @param Test::STATE_* $state
-     *
-     * @return $this
-     */
-    public function withState(string $state): self
+    public function withState(TestState $state): self
     {
         $new = clone $this;
         $new->state = $state;

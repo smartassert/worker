@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Event\StepFailedEvent;
 use App\Model\Document\Step;
 use App\Services\TestStateMutator;
@@ -45,11 +46,8 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider setCompleteIfRunningDataProvider
-     *
-     * @param Test::STATE_* $initialState
-     * @param Test::STATE_* $expectedState
      */
-    public function testSetCompleteIfRunning(string $initialState, string $expectedState): void
+    public function testSetCompleteIfRunning(TestState $initialState, TestState $expectedState): void
     {
         $this->testMutator->setState($this->test, $initialState);
         self::assertSame($initialState, $this->test->getState());
@@ -65,25 +63,25 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     public function setCompleteIfRunningDataProvider(): array
     {
         return [
-            Test::STATE_AWAITING => [
-                'initialState' => Test::STATE_AWAITING,
-                'expectedState' => Test::STATE_AWAITING,
+            TestState::AWAITING->value => [
+                'initialState' => TestState::AWAITING,
+                'expectedState' => TestState::AWAITING,
             ],
-            Test::STATE_RUNNING => [
-                'initialState' => Test::STATE_RUNNING,
-                'expectedState' => Test::STATE_COMPLETE,
+            TestState::RUNNING->value => [
+                'initialState' => TestState::RUNNING,
+                'expectedState' => TestState::COMPLETE,
             ],
-            Test::STATE_COMPLETE => [
-                'initialState' => Test::STATE_COMPLETE,
-                'expectedState' => Test::STATE_COMPLETE,
+            TestState::COMPLETE->value => [
+                'initialState' => TestState::COMPLETE,
+                'expectedState' => TestState::COMPLETE,
             ],
-            Test::STATE_FAILED => [
-                'initialState' => Test::STATE_FAILED,
-                'expectedState' => Test::STATE_FAILED,
+            TestState::FAILED->value => [
+                'initialState' => TestState::FAILED,
+                'expectedState' => TestState::FAILED,
             ],
-            Test::STATE_CANCELLED => [
-                'initialState' => Test::STATE_CANCELLED,
-                'expectedState' => Test::STATE_CANCELLED,
+            TestState::CANCELLED->value => [
+                'initialState' => TestState::CANCELLED,
+                'expectedState' => TestState::CANCELLED,
             ],
         ];
     }
@@ -91,7 +89,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider handleStepFailedEventDataProvider
      */
-    public function testSetFailedFromStepFailedEventEvent(Document $document, string $expectedState): void
+    public function testSetFailedFromStepFailedEventEvent(Document $document, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $document,
@@ -105,7 +103,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider handleStepFailedEventDataProvider
      */
-    public function testSubscribesToStepFailedEvent(Document $document, string $expectedState): void
+    public function testSubscribesToStepFailedEvent(Document $document, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $document,
@@ -124,17 +122,17 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
         return [
             'step failed' => [
                 'document' => new Document('{ type: step, status: failed }'),
-                'expectedState' => Test::STATE_FAILED,
+                'expectedState' => TestState::FAILED,
             ],
         ];
     }
 
     private function doTestExecuteDocumentReceivedEventDrivenTest(
         Document $document,
-        string $expectedState,
+        TestState $expectedState,
         callable $execute
     ): void {
-        self::assertSame(Test::STATE_AWAITING, $this->test->getState());
+        self::assertSame(TestState::AWAITING, $this->test->getState());
 
         $event = new StepFailedEvent(new Step($document), '', $this->test);
         $execute($event);

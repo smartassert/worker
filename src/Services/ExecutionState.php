@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Test;
+use App\Entity\TestState;
 use App\Repository\TestRepository;
 
 class ExecutionState implements \Stringable
@@ -29,16 +29,16 @@ class ExecutionState implements \Stringable
      */
     public function __toString(): string
     {
-        $hasFailedTests = 0 !== $this->testRepository->count(['state' => Test::STATE_FAILED]);
-        $hasCancelledTests = 0 !== $this->testRepository->count(['state' => Test::STATE_CANCELLED]);
+        $hasFailedTests = 0 !== $this->testRepository->count(['state' => TestState::FAILED->value]);
+        $hasCancelledTests = 0 !== $this->testRepository->count(['state' => TestState::CANCELLED->value]);
 
         if ($hasFailedTests || $hasCancelledTests) {
             return self::STATE_CANCELLED;
         }
 
-        $hasFinishedTests = 0 !== $this->testRepository->count(['state' => Test::FINISHED_STATES]);
-        $hasRunningTests = 0 !== $this->testRepository->count(['state' => Test::STATE_RUNNING]);
-        $hasAwaitingTests = 0 !== $this->testRepository->count(['state' => Test::STATE_AWAITING]);
+        $hasFinishedTests = 0 !== $this->testRepository->count(['state' => TestState::getFinishedValues()]);
+        $hasRunningTests = 0 !== $this->testRepository->count(['state' => TestState::RUNNING->value]);
+        $hasAwaitingTests = 0 !== $this->testRepository->count(['state' => TestState::AWAITING->value]);
 
         if ($hasFinishedTests) {
             return $hasAwaitingTests || $hasRunningTests

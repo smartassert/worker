@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Entity;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Entity\TestState;
 use PHPUnit\Framework\TestCase;
 
 class TestTest extends TestCase
@@ -20,11 +21,11 @@ class TestTest extends TestCase
             0
         );
 
-        self::assertTrue($test->hasState(Test::STATE_AWAITING));
-        self::assertFalse($test->hasState(Test::STATE_COMPLETE));
+        self::assertTrue($test->hasState(TestState::AWAITING));
+        self::assertFalse($test->hasState(TestState::COMPLETE));
 
-        $test->setState(Test::STATE_COMPLETE);
-        self::assertFalse($test->hasState(Test::STATE_AWAITING));
-        self::assertTrue($test->hasState(Test::STATE_COMPLETE));
+        $test->setState(TestState::COMPLETE);
+        self::assertFalse($test->hasState(TestState::AWAITING));
+        self::assertTrue($test->hasState(TestState::COMPLETE));
     }
 }

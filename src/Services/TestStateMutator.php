@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Event\StepFailedEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -35,30 +36,27 @@ class TestStateMutator implements EventSubscriberInterface
 
     public function setRunning(Test $test): void
     {
-        $this->set($test, Test::STATE_RUNNING);
+        $this->set($test, TestState::RUNNING);
     }
 
     public function setCompleteIfRunning(Test $test): void
     {
-        if ($test->hasState(Test::STATE_RUNNING)) {
-            $this->set($test, Test::STATE_COMPLETE);
+        if ($test->hasState(TestState::RUNNING)) {
+            $this->set($test, TestState::COMPLETE);
         }
     }
 
     public function setFailed(Test $test): void
     {
-        $this->set($test, Test::STATE_FAILED);
+        $this->set($test, TestState::FAILED);
     }
 
     public function setCancelled(Test $test): void
     {
-        $this->set($test, Test::STATE_CANCELLED);
+        $this->set($test, TestState::CANCELLED);
     }
 
-    /**
-     * @param Test::STATE_* $state
-     */
-    private function set(Test $test, string $state): void
+    private function set(Test $test, TestState $state): void
     {
         $test->setState($state);
         $this->testRepository->add($test);

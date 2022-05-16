@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Entity\Test;
+use App\Entity\TestState;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
@@ -47,7 +47,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
             return;
         }
 
-        if (false === $test->hasState(Test::STATE_AWAITING)) {
+        if (false === $test->hasState(TestState::AWAITING)) {
             return;
         }
 
@@ -64,7 +64,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
-        if ($test->hasState(Test::STATE_COMPLETE)) {
+        if ($test->hasState(TestState::COMPLETE)) {
             $this->eventDispatcher->dispatch(new TestPassedEvent($testDocument, $test));
         } else {
             $this->eventDispatcher->dispatch(new TestFailedEvent($testDocument));

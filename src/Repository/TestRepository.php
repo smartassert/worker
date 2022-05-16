@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
+use App\Entity\TestState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -85,7 +86,7 @@ class TestRepository extends ServiceEntityRepository
             ->where('Test.state = :State')
             ->orderBy('Test.position', 'ASC')
             ->setMaxResults(1)
-            ->setParameter('State', Test::STATE_AWAITING)
+            ->setParameter('State', TestState::AWAITING->value)
         ;
 
         $query = $queryBuilder->getQuery();
@@ -99,7 +100,7 @@ class TestRepository extends ServiceEntityRepository
     public function findAllAwaiting(): array
     {
         return $this->findBy([
-            'state' => Test::STATE_AWAITING,
+            'state' => TestState::AWAITING->value,
         ]);
     }
 
@@ -109,7 +110,7 @@ class TestRepository extends ServiceEntityRepository
     public function findAllUnfinished(): array
     {
         return $this->findBy([
-            'state' => Test::UNFINISHED_STATES,
+            'state' => TestState::getUnfinishedValues(),
         ]);
     }
 
@@ -143,7 +144,7 @@ class TestRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('count(Test.id)')
             ->where('Test.state IN (:States)')
-            ->setParameter('States', Test::UNFINISHED_STATES)
+            ->setParameter('States', TestState::getUnfinishedValues())
         ;
 
         $query = $queryBuilder->getQuery();

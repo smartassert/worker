@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Test;
+use App\Entity\TestState;
 use App\Entity\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -49,7 +49,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         $test = $event->getTest();
 
-        if ($test->hasState(Test::STATE_COMPLETE)) {
+        if ($test->hasState(TestState::COMPLETE)) {
             $this->dispatchNextExecuteTestMessage();
         }
     }

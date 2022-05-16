@@ -10,23 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test implements \JsonSerializable
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_FAILED = 'failed';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_CANCELLED = 'cancelled';
-
-    public const UNFINISHED_STATES = [
-        self::STATE_AWAITING,
-        self::STATE_RUNNING,
-    ];
-
-    public const FINISHED_STATES = [
-        self::STATE_FAILED,
-        self::STATE_COMPLETE,
-        self::STATE_CANCELLED,
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -36,11 +19,8 @@ class Test implements \JsonSerializable
     #[ORM\JoinColumn(name: 'test_configuration_id', referencedColumnName: 'id', nullable: false)]
     private TestConfiguration $configuration;
 
-    /**
-     * @var self::STATE_*
-     */
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $state;
+    #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
+    private TestState $state;
 
     #[ORM\Column(type: 'text')]
     private string $source;
@@ -63,7 +43,7 @@ class Test implements \JsonSerializable
     ): self {
         $test = new Test();
         $test->configuration = $configuration;
-        $test->state = self::STATE_AWAITING;
+        $test->state = TestState::AWAITING;
         $test->source = $source;
         $test->target = $target;
         $test->stepCount = $stepCount;
@@ -82,26 +62,17 @@ class Test implements \JsonSerializable
         return $this->configuration;
     }
 
-    /**
-     * @return self::STATE_*
-     */
-    public function getState(): string
+    public function getState(): TestState
     {
         return $this->state;
     }
 
-    /**
-     * @param self::STATE_* $state
-     */
-    public function hasState(string $state): bool
+    public function hasState(TestState $state): bool
     {
         return $state === $this->state;
     }
 
-    /**
-     * @param self::STATE_* $state
-     */
-    public function setState(string $state): self
+    public function setState(TestState $state): self
     {
         $this->state = $state;
 
@@ -138,7 +109,7 @@ class Test implements \JsonSerializable
             'source' => $this->source,
             'target' => $this->target,
             'step_count' => $this->stepCount,
-            'state' => $this->state,
+            'state' => $this->state->value,
             'position' => $this->position,
         ];
     }

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepFailedEvent;
 use App\Model\Document\Step;
+use App\Repository\TestRepository;
 use App\Services\TestCanceller;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\TestSetup;
-use App\Tests\Services\Asserter\TestEntityAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,7 +23,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     private TestCanceller $testCanceller;
     private EventDispatcherInterface $eventDispatcher;
     private TestTestFactory $testFactory;
-    private TestEntityAsserter $testEntityAsserter;
+    private TestRepository $testRepository;
 
     protected function setUp(): void
     {
@@ -40,9 +41,9 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         \assert($testFactory instanceof TestTestFactory);
         $this->testFactory = $testFactory;
 
-        $testEntityAsserter = self::getContainer()->get(TestEntityAsserter::class);
-        \assert($testEntityAsserter instanceof TestEntityAsserter);
-        $this->testEntityAsserter = $testEntityAsserter;
+        $testRepository = self::getContainer()->get(TestRepository::class);
+        \assert($testRepository instanceof TestRepository);
+        $this->testRepository = $testRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -53,17 +54,15 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider cancelAwaitingDataProvider
      *
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
-    public function testCancelAwaiting(
-        array $states,
-        array $expectedStates
-    ): void {
+    public function testCancelAwaiting(array $states, array $expectedStates): void
+    {
         $this->createTestsWithStates($states);
 
         $this->testCanceller->cancelAwaiting();
-        $this->testEntityAsserter->assertTestStates($expectedStates);
+        $this->assertTestStates($expectedStates);
     }
 
     /**
@@ -78,44 +77,44 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
             ],
             'no awaiting tests' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_RUNNING,
-                    Test::STATE_RUNNING,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::RUNNING,
+                    TestState::RUNNING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_RUNNING,
-                    Test::STATE_RUNNING,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::RUNNING,
+                    TestState::RUNNING,
                 ],
             ],
             'all awaiting tests' => [
                 'states' => [
-                    Test::STATE_AWAITING,
-                    Test::STATE_AWAITING,
+                    TestState::AWAITING,
+                    TestState::AWAITING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
             'mixed' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_RUNNING,
-                    Test::STATE_AWAITING,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::RUNNING,
+                    TestState::AWAITING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_RUNNING,
-                    Test::STATE_CANCELLED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::RUNNING,
+                    TestState::CANCELLED,
                 ],
             ],
         ];
@@ -124,8 +123,8 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider cancelUnfinishedDataProvider
      *
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
     public function testCancelUnfinished(
         array $states,
@@ -134,7 +133,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $this->createTestsWithStates($states);
 
         $this->testCanceller->cancelUnfinished();
-        $this->testEntityAsserter->assertTestStates($expectedStates);
+        $this->assertTestStates($expectedStates);
     }
 
     /**
@@ -149,40 +148,40 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
             ],
             'no unfinished tests' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
                 ],
             ],
             'all unfinished tests' => [
                 'states' => [
-                    Test::STATE_AWAITING,
-                    Test::STATE_RUNNING,
+                    TestState::AWAITING,
+                    TestState::RUNNING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
             'mixed' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_RUNNING,
-                    Test::STATE_AWAITING,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::RUNNING,
+                    TestState::AWAITING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
         ];
@@ -191,8 +190,8 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
      *
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
     public function testCancelAwaitingFromStepFailedEvent(
         array $states,
@@ -210,8 +209,8 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
      *
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
     public function testSubscribesToStepFailedEvent(
         array $states,
@@ -234,24 +233,24 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         return [
             'no awaiting tests, test failed' => [
                 'states' => [
-                    Test::STATE_FAILED,
-                    Test::STATE_COMPLETE,
+                    TestState::FAILED,
+                    TestState::COMPLETE,
                 ],
                 'expectedStates' => [
-                    Test::STATE_FAILED,
-                    Test::STATE_COMPLETE,
+                    TestState::FAILED,
+                    TestState::COMPLETE,
                 ],
             ],
             'has awaiting tests, test failed' => [
                 'states' => [
-                    Test::STATE_FAILED,
-                    Test::STATE_AWAITING,
-                    Test::STATE_AWAITING,
+                    TestState::FAILED,
+                    TestState::AWAITING,
+                    TestState::AWAITING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_FAILED,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::FAILED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
         ];
@@ -260,8 +259,8 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider subscribesToJobTimeoutEventDataProvider
      *
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
     public function testSubscribesToJobTimeoutEvent(
         array $states,
@@ -274,7 +273,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $event = new JobTimeoutEvent(10);
         $this->eventDispatcher->dispatch($event);
 
-        $this->testEntityAsserter->assertTestStates($expectedStates);
+        $this->assertTestStates($expectedStates);
     }
 
     /**
@@ -285,48 +284,48 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         return [
             'no unfinished tests' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
                 ],
             ],
             'has unfinished tests' => [
                 'states' => [
-                    Test::STATE_AWAITING,
-                    Test::STATE_RUNNING,
+                    TestState::AWAITING,
+                    TestState::RUNNING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
             'mixed' => [
                 'states' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_AWAITING,
-                    Test::STATE_RUNNING,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::AWAITING,
+                    TestState::RUNNING,
                 ],
                 'expectedStates' => [
-                    Test::STATE_COMPLETE,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_FAILED,
-                    Test::STATE_CANCELLED,
-                    Test::STATE_CANCELLED,
+                    TestState::COMPLETE,
+                    TestState::CANCELLED,
+                    TestState::FAILED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
                 ],
             ],
         ];
     }
 
     /**
-     * @param array<Test::STATE_*> $states
-     * @param array<Test::STATE_*> $expectedStates
+     * @param TestState[] $states
+     * @param TestState[] $expectedStates
      */
     private function doTestStepFailedEventDrivenTest(
         array $states,
@@ -342,11 +341,11 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $event = new StepFailedEvent(new Step($document), '', $test);
         $execute($event);
 
-        $this->testEntityAsserter->assertTestStates($expectedStates);
+        $this->assertTestStates($expectedStates);
     }
 
     /**
-     * @param array<Test::STATE_*> $states
+     * @param TestState[] $states
      *
      * @return Test[]
      */
@@ -359,5 +358,20 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         }
 
         return $tests;
+    }
+
+    /**
+     * @param TestState[] $expectedStates
+     */
+    private function assertTestStates(array $expectedStates): void
+    {
+        $tests = $this->testRepository->findAll();
+        $states = [];
+
+        foreach ($tests as $test) {
+            $states[] = $test->getState();
+        }
+
+        self::assertSame($expectedStates, $states);
     }
 }

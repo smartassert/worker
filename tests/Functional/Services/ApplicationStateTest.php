@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Entity\TestState;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventState;
 use App\Entity\WorkerEventType;
@@ -115,7 +116,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::STATE_EXECUTING,
@@ -130,7 +131,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
@@ -148,9 +149,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
@@ -168,9 +169,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
@@ -317,7 +318,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
@@ -342,7 +343,7 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
@@ -370,9 +371,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
@@ -400,9 +401,9 @@ class ApplicationStateTest extends AbstractBaseFunctionalTest
                     ->withTestSetups([
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                         (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
-                            ->withState(Test::STATE_COMPLETE),
+                            ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
