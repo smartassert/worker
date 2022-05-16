@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
+use App\Enum\ApplicationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
@@ -138,7 +139,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
         }
 
-        self::assertSame(ApplicationProgress::STATE_COMPLETE, $this->applicationProgress->get());
+        self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
 
         if (is_callable($assertions)) {
             $this->callableInvoker->invoke($assertions);

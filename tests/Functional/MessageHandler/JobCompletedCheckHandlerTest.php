@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageHandler;
 
+use App\Enum\ApplicationState;
 use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageHandler\JobCompletedCheckHandler;
-use App\Services\ApplicationProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockApplicationProgress;
@@ -35,7 +35,7 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeApplicationStateNotComplete(): void
     {
         $applicationProgress = (new MockApplicationProgress())
-            ->withIsCall(false, ApplicationProgress::STATE_COMPLETE)
+            ->withIsCall(false, ApplicationState::COMPLETE)
             ->getMock()
         ;
 
@@ -64,7 +64,7 @@ class JobCompletedCheckHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeApplicationStateIsComplete(): void
     {
         $applicationProgress = (new MockApplicationProgress())
-            ->withIsCall(true, ApplicationProgress::STATE_COMPLETE)
+            ->withIsCall(true, ApplicationState::COMPLETE)
             ->getMock()
         ;
 

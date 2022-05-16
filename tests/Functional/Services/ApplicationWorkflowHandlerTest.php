@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test as TestEntity;
+use App\Enum\ApplicationState;
 use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
@@ -13,7 +14,6 @@ use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
-use App\Services\ApplicationProgress;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -120,7 +120,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $applicationProgress = (new MockApplicationProgress())
-            ->withIsCall(true, ApplicationProgress::STATE_COMPLETE)
+            ->withIsCall(true, ApplicationState::COMPLETE)
             ->getMock()
         ;
 

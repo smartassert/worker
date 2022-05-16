@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\ApplicationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\WorkerEventType;
 use App\Repository\JobRepository;
@@ -30,47 +31,40 @@ class ApplicationProgress
     ) {
     }
 
-    /**
-     * @return ApplicationProgress::STATE_*
-     */
-    public function get(): string
+    public function get(): ApplicationState
     {
         if (null === $this->jobRepository->get()) {
-            return self::STATE_AWAITING_JOB;
+            return ApplicationState::AWAITING_JOB;
         }
 
         if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::JOB_TIME_OUT)) {
-            return self::STATE_TIMED_OUT;
+            return ApplicationState::TIMED_OUT;
         }
 
         if (0 === $this->sourceRepository->count([])) {
-            return self::STATE_AWAITING_SOURCES;
+            return ApplicationState::AWAITING_SOURCES;
         }
 
         if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
-            return self::STATE_COMPILING;
+            return ApplicationState::COMPILING;
         }
 
         if (false === $this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
-            return self::STATE_EXECUTING;
+            return ApplicationState::EXECUTING;
         }
 
         if ($this->eventDeliveryProgress->is(EventDeliveryState::AWAITING, EventDeliveryState::RUNNING)) {
-            return self::STATE_COMPLETING_EVENT_DELIVERY;
+            return ApplicationState::COMPLETING_EVENT_DELIVERY;
         }
 
-        return self::STATE_COMPLETE;
+        return ApplicationState::COMPLETE;
     }
 
     /**
-     * @param ApplicationProgress::STATE_* ...$states
+     * @param array<ApplicationState> ...$states
      */
     public function is(...$states): bool
     {
-        $states = array_filter($states, function ($item) {
-            return is_string($item);
-        });
-
         return in_array($this->get(), $states);
     }
 }

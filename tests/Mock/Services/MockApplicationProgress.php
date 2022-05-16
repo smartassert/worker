@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Mock\Services;
 
+use App\Enum\ApplicationState;
 use App\Services\ApplicationProgress;
 use Mockery\MockInterface;
 
@@ -22,7 +23,7 @@ class MockApplicationProgress
     }
 
     /**
-     * @param array<ApplicationProgress::STATE_*> $states
+     * @param array<ApplicationState> $states
      */
     public function withIsCall(bool $is, ...$states): self
     {

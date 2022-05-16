@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\ApplicationState;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\TestFailedEvent;
@@ -39,7 +40,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchJobCompletedEvent(TestPassedEvent $testEvent): void
     {
-        if ($this->applicationProgress->is(ApplicationProgress::STATE_COMPLETE)) {
+        if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
         } else {
             $this->messageBus->dispatch(new JobCompletedCheckMessage());
