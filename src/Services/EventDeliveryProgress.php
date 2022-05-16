@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Entity\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
-class EventDeliveryState
+class EventDeliveryProgress
 {
     public const STATE_AWAITING = 'awaiting';
     public const STATE_RUNNING = 'running';
@@ -41,7 +41,7 @@ class EventDeliveryState
     }
 
     /**
-     * @param EventDeliveryState::STATE_* ...$states
+     * @param EventDeliveryProgress::STATE_* ...$states
      */
     public function is(...$states): bool
     {

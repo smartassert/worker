@@ -23,7 +23,7 @@ class ApplicationProgress
         private readonly JobRepository $jobRepository,
         private CompilationProgress $compilationProgress,
         private ExecutionState $executionState,
-        private EventDeliveryState $eventDeliveryState,
+        private EventDeliveryProgress $eventDeliveryProgress,
         private WorkerEventRepository $workerEventRepository,
         private SourceRepository $sourceRepository,
     ) {
@@ -54,7 +54,12 @@ class ApplicationProgress
             return self::STATE_EXECUTING;
         }
 
-        if ($this->eventDeliveryState->is(EventDeliveryState::STATE_AWAITING, EventDeliveryState::STATE_RUNNING)) {
+        if (
+            $this->eventDeliveryProgress->is(
+                EventDeliveryProgress::STATE_AWAITING,
+                EventDeliveryProgress::STATE_RUNNING
+            )
+        ) {
             return self::STATE_COMPLETING_EVENT_DELIVERY;
         }
 

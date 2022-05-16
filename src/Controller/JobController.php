@@ -17,7 +17,7 @@ use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
 use App\Services\CompilationProgress;
 use App\Services\ErrorResponseFactory;
-use App\Services\EventDeliveryState;
+use App\Services\EventDeliveryProgress;
 use App\Services\ExecutionState;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
@@ -105,7 +105,7 @@ class JobController
         TestSerializer $testSerializer,
         CompilationProgress $compilationProgress,
         ExecutionState $executionState,
-        EventDeliveryState $workerEventState,
+        EventDeliveryProgress $eventDeliveryProgress,
     ): JsonResponse {
         $job = $this->jobRepository->get();
         if (null === $job) {
@@ -120,7 +120,7 @@ class JobController
                 'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => $compilationProgress->get(),
                 'execution_state' => $executionState->get(),
-                'event_delivery_state' => $workerEventState->get(),
+                'event_delivery_state' => $eventDeliveryProgress->get(),
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );

@@ -9,7 +9,7 @@ use App\Entity\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Services\CompilationProgress;
-use App\Services\EventDeliveryState;
+use App\Services\EventDeliveryProgress;
 use App\Services\ExecutionState;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
@@ -118,7 +118,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
         self::assertSame($expectedCompilationEndState, $statusData['compilation_state']);
         self::assertSame($expectedExecutionEndState, $statusData['execution_state']);
-        self::assertSame(EventDeliveryState::STATE_COMPLETE, $statusData['event_delivery_state']);
+        self::assertSame(EventDeliveryProgress::STATE_COMPLETE, $statusData['event_delivery_state']);
         self::assertSame($sourcePaths, $statusData['sources']);
 
         $testDataCollection = $statusData['tests'];
