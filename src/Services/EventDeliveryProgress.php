@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEventState;
+use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
 class EventDeliveryProgress

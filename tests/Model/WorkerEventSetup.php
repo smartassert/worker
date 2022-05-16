@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\WorkerEventState;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {

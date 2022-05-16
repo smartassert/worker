@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\TestState;
-use App\Entity\WorkerEventType;
+use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;

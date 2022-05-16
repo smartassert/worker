@@ -6,9 +6,9 @@ namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Entity\TestState;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;

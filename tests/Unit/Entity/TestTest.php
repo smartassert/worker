@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Entity;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Entity\TestState;
+use App\Enum\TestState;
 use PHPUnit\Framework\TestCase;
 
 class TestTest extends TestCase

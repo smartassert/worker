@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
-use App\Entity\TestState;
-use App\Entity\WorkerEventType;
+use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Services\CompilationProgress;

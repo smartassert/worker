@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

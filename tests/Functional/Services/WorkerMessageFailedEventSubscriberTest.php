@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventState;
+use App\Enum\WorkerEventState;
 use App\Message\DeliverEventMessage;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;

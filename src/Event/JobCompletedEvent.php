@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobCompletedEvent extends Event implements EventInterface

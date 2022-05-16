@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Model;
 
 use App\Entity\TestConfiguration;
-use App\Entity\TestState;
+use App\Enum\TestState;
 
 class TestSetup
 {

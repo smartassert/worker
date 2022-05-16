@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\TestState;
 use App\Repository\TestRepository;
 use Doctrine\ORM\Mapping as ORM;
 

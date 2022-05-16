@@ -6,7 +6,7 @@ namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;

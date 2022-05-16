@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
-use App\Entity\TestState;
+use App\Enum\TestState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\WorkerEventType;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 
 class CompilationProgress

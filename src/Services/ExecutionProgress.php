@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\TestState;
+use App\Enum\TestState;
 use App\Repository\TestRepository;
 
 class ExecutionProgress

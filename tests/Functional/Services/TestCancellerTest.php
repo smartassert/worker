@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
-use App\Entity\TestState;
+use App\Enum\TestState;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepFailedEvent;
 use App\Model\Document\Step;
