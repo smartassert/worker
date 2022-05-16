@@ -7,11 +7,11 @@ namespace App\Tests\Integration\EndToEnd;
 use App\Enum\ApplicationState;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
+use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
-use App\Services\ExecutionProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\CallableInvoker;
@@ -68,17 +68,16 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param string[]                   $manifestPaths
-     * @param string[]                   $sourcePaths
-     * @param ExecutionProgress::STATE_* $expectedExecutionEndState
-     * @param array<int, array<mixed>>   $expectedTestDataCollection
+     * @param string[]                 $manifestPaths
+     * @param string[]                 $sourcePaths
+     * @param array<int, array<mixed>> $expectedTestDataCollection
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
         array $sourcePaths,
         int $jobMaximumDurationInSeconds,
         CompilationState $expectedCompilationEndState,
-        string $expectedExecutionEndState,
+        ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
         ?callable $assertions = null
     ): void {
@@ -165,7 +164,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
-                'expectedExecutionEndState' => ExecutionProgress::STATE_COMPLETE,
+                'expectedExecutionEndState' => ExecutionState::COMPLETE,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [
@@ -502,7 +501,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
-                'expectedExecutionEndState' => ExecutionProgress::STATE_CANCELLED,
+                'expectedExecutionEndState' => ExecutionState::CANCELLED,
                 'expectedTestDataCollection' => [
                     [
                         'configuration' => [

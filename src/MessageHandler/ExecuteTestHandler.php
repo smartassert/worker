@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
@@ -38,7 +39,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
             return;
         }
 
-        if ($this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
+        if ($this->executionProgress->is(...ExecutionState::getFinishedStates())) {
             return;
         }
 

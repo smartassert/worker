@@ -10,16 +10,6 @@ use App\Repository\TestRepository;
 
 class ExecutionProgress
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_CANCELLED = 'cancelled';
-
-    public const FINISHED_STATES = [
-        ExecutionState::COMPLETE,
-        ExecutionState::CANCELLED,
-    ];
-
     public function __construct(
         private TestRepository $testRepository
     ) {
