@@ -120,7 +120,7 @@ class JobController
                 'sources' => $sourceRepository->findAllPaths(),
                 'compilation_state' => $compilationState->get(),
                 'execution_state' => (string) $executionState,
-                'event_delivery_state' => (string) $workerEventState,
+                'event_delivery_state' => $workerEventState->get(),
                 'tests' => $testSerializer->serializeCollection($tests),
             ]
         );

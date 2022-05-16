@@ -47,7 +47,7 @@ class EventDeliveryStateTest extends AbstractBaseFunctionalTest
             $this->createWorkerEventEntity($workerEventState);
         }
 
-        self::assertSame($expectedState, (string) $this->workerEventState);
+        self::assertSame($expectedState, $this->workerEventState->get());
     }
 
     /**
