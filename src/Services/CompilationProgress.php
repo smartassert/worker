@@ -10,17 +10,6 @@ use App\Repository\WorkerEventRepository;
 
 class CompilationProgress
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_FAILED = 'failed';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_UNKNOWN = 'unknown';
-
-    public const FINISHED_STATES = [
-        self::STATE_COMPLETE,
-        self::STATE_FAILED,
-    ];
-
     public function __construct(
         private WorkerEventRepository $workerEventRepository,
         private SourcePathFinder $sourcePathFinder

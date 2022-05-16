@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
+use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
-use App\Services\CompilationProgress;
 use App\Services\ExecutionProgress;
 use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Client;
@@ -194,7 +194,7 @@ class AppTest extends TestCase
     {
         $jobStatus = $this->getJobStatus();
 
-        return CompilationProgress::STATE_COMPLETE === $jobStatus['compilation_state']
+        return CompilationState::COMPLETE->value === $jobStatus['compilation_state']
             && ExecutionProgress::STATE_COMPLETE === $jobStatus['execution_state']
             && EventDeliveryState::COMPLETE->value === $jobStatus['event_delivery_state'];
     }
