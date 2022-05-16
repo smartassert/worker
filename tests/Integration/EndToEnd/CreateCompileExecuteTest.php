@@ -8,7 +8,7 @@ use App\Entity\TestState;
 use App\Entity\WorkerEventType;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
-use App\Services\CompilationState;
+use App\Services\CompilationProgress;
 use App\Services\EventDeliveryState;
 use App\Services\ExecutionState;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
@@ -67,11 +67,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param string[]                  $manifestPaths
-     * @param string[]                  $sourcePaths
-     * @param CompilationState::STATE_* $expectedCompilationEndState
-     * @param ExecutionState::STATE_*   $expectedExecutionEndState
-     * @param array<int, array<mixed>>  $expectedTestDataCollection
+     * @param string[]                     $manifestPaths
+     * @param string[]                     $sourcePaths
+     * @param CompilationProgress::STATE_* $expectedCompilationEndState
+     * @param ExecutionState::STATE_*      $expectedExecutionEndState
+     * @param array<int, array<mixed>>     $expectedTestDataCollection
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
@@ -164,7 +164,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-form.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
+                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_COMPLETE,
                 'expectedTestDataCollection' => [
                     [
@@ -501,7 +501,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobMaximumDurationInSeconds' => 60,
-                'expectedCompilationEndState' => CompilationState::STATE_COMPLETE,
+                'expectedCompilationEndState' => CompilationProgress::STATE_COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::STATE_CANCELLED,
                 'expectedTestDataCollection' => [
                     [

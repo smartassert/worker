@@ -21,7 +21,7 @@ class ApplicationProgress
 
     public function __construct(
         private readonly JobRepository $jobRepository,
-        private CompilationState $compilationState,
+        private CompilationProgress $compilationProgress,
         private ExecutionState $executionState,
         private EventDeliveryState $eventDeliveryState,
         private WorkerEventRepository $workerEventRepository,
@@ -46,7 +46,7 @@ class ApplicationProgress
             return self::STATE_AWAITING_SOURCES;
         }
 
-        if (false === $this->compilationState->is(...CompilationState::FINISHED_STATES)) {
+        if (false === $this->compilationProgress->is(...CompilationProgress::FINISHED_STATES)) {
             return self::STATE_COMPILING;
         }
 
