@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\EventDeliveryState;
 use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
@@ -18,10 +19,7 @@ class EventDeliveryProgress
     ) {
     }
 
-    /**
-     * @return self::STATE_*
-     */
-    public function get(): string
+    public function get(): EventDeliveryState
     {
         $eventCount = $this->repository->count([]);
         $finishedEventCount = $this->repository->count([
@@ -32,23 +30,17 @@ class EventDeliveryProgress
         ]);
 
         if (0 === $eventCount) {
-            return self::STATE_AWAITING;
+            return EventDeliveryState::AWAITING;
         }
 
-        return $finishedEventCount === $eventCount
-            ? self::STATE_COMPLETE
-            : self::STATE_RUNNING;
+        return $finishedEventCount === $eventCount ? EventDeliveryState::COMPLETE : EventDeliveryState::RUNNING;
     }
 
     /**
-     * @param EventDeliveryProgress::STATE_* ...$states
+     * @param array<EventDeliveryState> ...$states
      */
     public function is(...$states): bool
     {
-        $states = array_filter($states, function ($item) {
-            return is_string($item);
-        });
-
         return in_array($this->get(), $states);
     }
 }
