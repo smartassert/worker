@@ -10,10 +10,6 @@ use App\Repository\WorkerEventRepository;
 
 class EventDeliveryProgress
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_COMPLETE = 'complete';
-
     public function __construct(
         private readonly WorkerEventRepository $repository
     ) {
