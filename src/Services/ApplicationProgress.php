@@ -13,14 +13,6 @@ use App\Repository\WorkerEventRepository;
 
 class ApplicationProgress
 {
-    public const STATE_AWAITING_JOB = 'awaiting-job';
-    public const STATE_AWAITING_SOURCES = 'awaiting-sources';
-    public const STATE_COMPILING = 'compiling';
-    public const STATE_EXECUTING = 'executing';
-    public const STATE_COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_TIMED_OUT = 'timed-out';
-
     public function __construct(
         private readonly JobRepository $jobRepository,
         private CompilationProgress $compilationProgress,
