@@ -133,7 +133,10 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
-        $testConfiguration = \Mockery::mock(TestConfiguration::class);
+        $testConfigurationBrowser = 'chrome';
+        $testConfigurationUrl = 'http://example.com';
+
+        $testConfiguration = TestConfiguration::create($testConfigurationBrowser, $testConfigurationUrl);
 
         $passingStepDocumentData = [
             'type' => 'step',
@@ -143,8 +146,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         ];
 
         $passingStepDocument = new Document((string) json_encode($passingStepDocumentData));
-
-//        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
 
         $failingStepDocumentData = [
             'type' => 'step',
@@ -159,6 +160,21 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testSource = '/app/source/' . $relativeTestSource;
 
         $genericTest = Test::create($testConfiguration, $testSource, '', 1, 1);
+
+        $testDocumentData = [
+            'type' => 'test',
+            'payload' => [
+                'path' => $relativeTestSource,
+                'config' => [
+                    'browser' => $testConfigurationBrowser,
+                    'url' => $testConfigurationUrl,
+                ],
+            ],
+        ];
+
+        $testDocument = new TestDocument(
+            new Document((string) json_encode($testDocumentData))
+        );
 
         return [
             JobReadyEvent::class => [
@@ -209,10 +225,11 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent(new TestDocument(new Document('document-key: value'))),
+                'event' => new TestStartedEvent($testDocument),
                 'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
+                    'source' => $relativeTestSource,
+                    'document' => $testDocumentData,
                 ],
             ],
             StepPassedEvent::class => [
@@ -237,19 +254,21 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    new TestDocument(new Document('document-key: value')),
+                    $testDocument,
                     $genericTest->setState(TestState::COMPLETE)
                 ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
                 'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
+                    'source' => $relativeTestSource,
+                    'document' => $testDocumentData,
                 ],
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent(new TestDocument(new Document('document-key: value'))),
+                'event' => new TestFailedEvent($testDocument),
                 'expectedWorkerEventType' => WorkerEventType::TEST_FAILED,
                 'expectedWorkerEventPayload' => [
-                    'document-key' => 'value',
+                    'source' => $relativeTestSource,
+                    'document' => $testDocumentData,
                 ],
             ],
             JobTimeoutEvent::class => [
