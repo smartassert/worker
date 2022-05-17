@@ -16,7 +16,10 @@ abstract class AbstractTestEvent extends Event implements EventInterface
 
     public function getPayload(): array
     {
-        return $this->document->getData();
+        return [
+            'source' => $this->document->getPath(),
+            'document' => $this->document->getData(),
+        ];
     }
 
     public function getReferenceComponents(): array

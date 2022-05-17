@@ -280,12 +280,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_STARTED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -294,20 +297,23 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::STEP_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml' . 'verify page is open'),
                             [
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
-                                            'transformations' => [
-                                                [
-                                                    'type' => 'resolution',
-                                                    'source' => '$page.url is $index.url'
-                                                ]
+                                'source' => 'Test/chrome-open-index.yml',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                                'transformations' => [
+                                                    [
+                                                        'type' => 'resolution',
+                                                        'source' => '$page.url is $index.url'
+                                                    ]
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -318,12 +324,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -332,12 +341,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_STARTED,
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-firefox-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-firefox-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -350,15 +362,18 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'verify page is open'
                             ),
                             [
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -368,12 +383,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-firefox-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-firefox-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -382,12 +400,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_STARTED,
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-firefox-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'firefox',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-firefox-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'firefox',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -400,15 +421,18 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'verify page is open'
                             ),
                             [
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -418,12 +442,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-firefox-open-index.yml',
-                                    'config' => [
-                                        'browser' => 'firefox',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-firefox-open-index.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-firefox-open-index.yml',
+                                        'config' => [
+                                            'browser' => 'firefox',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -432,12 +459,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_STARTED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-open-form.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/form.html',
+                                'source' => 'Test/chrome-open-form.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-open-form.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/form.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -446,15 +476,18 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::STEP_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml' . 'verify page is open'),
                             [
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/form.html"',
-                                            'status' => 'passed',
+                                'source' => 'Test/chrome-open-form.yml',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/form.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -464,12 +497,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_PASSED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-open-form.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/form.html',
+                                'source' => 'Test/chrome-open-form.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-open-form.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/form.html',
+                                        ],
                                     ],
                                 ],
                             ]
@@ -531,27 +567,30 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'fail on intentionally-missing element'
                             ),
                             [
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'fail on intentionally-missing element',
-                                    'status' => 'failed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$".non-existent" exists',
-                                            'status' => 'failed',
-                                            'summary' => [
-                                                'operator' => 'exists',
-                                                'source' => [
-                                                    'type' => 'node',
-                                                    'body' => [
-                                                        'type' => 'element',
-                                                        'identifier' => [
-                                                            'source' => '$".non-existent"',
-                                                            'properties' => [
-                                                                'type' => 'css',
-                                                                'locator' => '.non-existent',
-                                                                'position' => 1,
+                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'fail on intentionally-missing element',
+                                        'status' => 'failed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$".non-existent" exists',
+                                                'status' => 'failed',
+                                                'summary' => [
+                                                    'operator' => 'exists',
+                                                    'source' => [
+                                                        'type' => 'node',
+                                                        'body' => [
+                                                            'type' => 'element',
+                                                            'identifier' => [
+                                                                'source' => '$".non-existent"',
+                                                                'properties' => [
+                                                                    'type' => 'css',
+                                                                    'locator' => '.non-existent',
+                                                                    'position' => 1,
+                                                                ],
                                                             ],
                                                         ],
                                                     ],
@@ -566,12 +605,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             WorkerEventType::TEST_FAILED,
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index-with-step-failure.yml'),
                             [
-                                'type' => 'test',
-                                'payload' => [
-                                    'path' => 'Test/chrome-open-index-with-step-failure.yml',
-                                    'config' => [
-                                        'browser' => 'chrome',
-                                        'url' => 'http://html-fixtures/index.html',
+                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
                                     ],
                                 ],
                             ]
