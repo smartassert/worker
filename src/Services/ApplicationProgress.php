@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Enum\ApplicationState;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
+use App\Enum\ExecutionState;
 use App\Enum\WorkerEventType;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
@@ -42,7 +43,7 @@ class ApplicationProgress
             return ApplicationState::COMPILING;
         }
 
-        if (false === $this->executionProgress->is(...ExecutionProgress::FINISHED_STATES)) {
+        if (false === $this->executionProgress->is(...ExecutionState::getFinishedStates())) {
             return ApplicationState::EXECUTING;
         }
 

@@ -4,36 +4,24 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Repository\TestRepository;
 
 class ExecutionProgress
 {
-    public const STATE_AWAITING = 'awaiting';
-    public const STATE_RUNNING = 'running';
-    public const STATE_COMPLETE = 'complete';
-    public const STATE_CANCELLED = 'cancelled';
-
-    public const FINISHED_STATES = [
-        self::STATE_COMPLETE,
-        self::STATE_CANCELLED,
-    ];
-
     public function __construct(
         private TestRepository $testRepository
     ) {
     }
 
-    /**
-     * @return ExecutionProgress::STATE_*
-     */
-    public function get(): string
+    public function get(): ExecutionState
     {
         $hasFailedTests = 0 !== $this->testRepository->count(['state' => TestState::FAILED->value]);
         $hasCancelledTests = 0 !== $this->testRepository->count(['state' => TestState::CANCELLED->value]);
 
         if ($hasFailedTests || $hasCancelledTests) {
-            return self::STATE_CANCELLED;
+            return ExecutionState::CANCELLED;
         }
 
         $hasFinishedTests = 0 !== $this->testRepository->count(['state' => TestState::getFinishedValues()]);
@@ -42,22 +30,18 @@ class ExecutionProgress
 
         if ($hasFinishedTests) {
             return $hasAwaitingTests || $hasRunningTests
-                ? self::STATE_RUNNING
-                : self::STATE_COMPLETE;
+                ? ExecutionState::RUNNING
+                : ExecutionState::COMPLETE;
         }
 
-        return $hasRunningTests ? self::STATE_RUNNING : self::STATE_AWAITING;
+        return $hasRunningTests ? ExecutionState::RUNNING : ExecutionState::AWAITING;
     }
 
     /**
-     * @param ExecutionProgress::STATE_* ...$states
+     * @param array<ExecutionState> ...$states
      */
     public function is(...$states): bool
     {
-        $states = array_filter($states, function ($item) {
-            return is_string($item);
-        });
-
         return in_array($this->get(), $states);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Tests\Unit\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Test;
+use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
@@ -77,7 +78,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->withGetCall(new Job())
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(true, ...ExecutionProgress::FINISHED_STATES)
+                    ->withIsCall(true, ...ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -89,7 +90,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->withGetCall(new Job())
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(false, ...ExecutionProgress::FINISHED_STATES)
+                    ->withIsCall(false, ...ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -101,7 +102,7 @@ class ExecuteTestHandlerTest extends TestCase
                     ->withGetCall(new Job())
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(false, ...ExecutionProgress::FINISHED_STATES)
+                    ->withIsCall(false, ...ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
