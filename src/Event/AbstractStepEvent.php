@@ -17,7 +17,10 @@ abstract class AbstractStepEvent extends Event implements EventInterface
 
     public function getPayload(): array
     {
-        return $this->step->getData();
+        return [
+            'source' => $this->path,
+            'document' => $this->step->getData(),
+        ];
     }
 
     public function getReferenceComponents(): array

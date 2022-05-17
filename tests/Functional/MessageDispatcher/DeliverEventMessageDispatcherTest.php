@@ -135,8 +135,25 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $testConfiguration = \Mockery::mock(TestConfiguration::class);
 
-        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
-        $failingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "failing step" }');
+        $passingStepDocumentData = [
+            'type' => 'step',
+            'payload' => [
+                'name' => 'passing step',
+            ],
+        ];
+
+        $passingStepDocument = new Document((string) json_encode($passingStepDocumentData));
+
+//        $passingStepDocument = new Document('type: step' . "\n" . 'payload: { name: "passing step" }');
+
+        $failingStepDocumentData = [
+            'type' => 'step',
+            'payload' => [
+                'name' => 'failing step',
+            ],
+        ];
+
+        $failingStepDocument = new Document((string) json_encode($failingStepDocumentData));
 
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
@@ -202,10 +219,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new StepPassedEvent(new Step($passingStepDocument), $relativeTestSource),
                 'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => 'passing step',
-                    ],
+                    'source' => $relativeTestSource,
+                    'document' => $passingStepDocumentData,
                 ],
             ],
             StepFailedEvent::class => [
@@ -216,10 +231,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ),
                 'expectedWorkerEventType' => WorkerEventType::STEP_FAILED,
                 'expectedWorkerEventPayload' => [
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => 'failing step',
-                    ],
+                    'source' => $relativeTestSource,
+                    'document' => $failingStepDocumentData,
                 ],
             ],
             TestPassedEvent::class => [
