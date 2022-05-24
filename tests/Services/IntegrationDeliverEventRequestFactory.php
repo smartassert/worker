@@ -19,7 +19,7 @@ class IntegrationDeliverEventRequestFactory
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
-    public function create(WorkerEventType $type, string $reference, array $payload): RequestInterface
+    public function create(int $identifier, WorkerEventType $type, string $reference, array $payload): RequestInterface
     {
         return new Request(
             'POST',
@@ -29,6 +29,7 @@ class IntegrationDeliverEventRequestFactory
             ],
             (string) json_encode([
                 'label' => $this->jobProperties->getLabel(),
+                'identifier' => $identifier,
                 'type' => $type->value,
                 'reference' => $reference,
                 'payload' => $payload,
