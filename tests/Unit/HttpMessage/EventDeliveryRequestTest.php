@@ -10,6 +10,7 @@ use App\Enum\WorkerEventType;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use webignition\ObjectReflector\ObjectReflector;
 
 class EventDeliveryRequestTest extends TestCase
 {
@@ -26,19 +27,8 @@ class EventDeliveryRequestTest extends TestCase
             'key2' => 'value2',
         ];
 
-        $workerEvent = \Mockery::mock(WorkerEvent::class);
-        $workerEvent
-            ->shouldReceive('getType')
-            ->andReturn($workerEventType)
-        ;
-        $workerEvent
-            ->shouldReceive('getPayload')
-            ->andReturn($workerEventData)
-        ;
-        $workerEvent
-            ->shouldReceive('getReference')
-            ->andReturn($workerEventReference)
-        ;
+        $workerEvent = WorkerEvent::create($workerEventType, $workerEventReference, $workerEventData);
+        ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);
 
@@ -49,6 +39,7 @@ class EventDeliveryRequestTest extends TestCase
         self::assertSame(
             [
                 'label' => $jobLabel,
+                'identifier' => 123,
                 'type' => $workerEventType->value,
                 'reference' => $workerEventReference,
                 'payload' => $workerEventData,

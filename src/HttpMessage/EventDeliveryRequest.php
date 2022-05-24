@@ -22,6 +22,7 @@ class EventDeliveryRequest extends GuzzleRequest
             ],
             (string) json_encode([
                 'label' => $job->getLabel(),
+                'identifier' => $workerEvent->getId(),
                 'type' => $workerEvent->getType(),
                 'reference' => $workerEvent->getReference(),
                 'payload' => $workerEvent->getPayload(),
