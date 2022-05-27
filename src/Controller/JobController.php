@@ -20,6 +20,7 @@ use App\Services\CompilationProgress;
 use App\Services\ErrorResponseFactory;
 use App\Services\EventDeliveryProgress;
 use App\Services\ExecutionProgress;
+use App\Services\ReferenceFactory;
 use App\Services\SourceFactory;
 use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
@@ -49,6 +50,7 @@ class JobController
         ErrorResponseFactory $errorResponseFactory,
         Deserializer $yamlFileCollectionDeserializer,
         SourceRepository $sourceRepository,
+        ReferenceFactory $referenceFactory,
         CreateJobRequest $request,
     ): JsonResponse {
         if ($this->jobRepository->has()) {
@@ -105,7 +107,9 @@ class JobController
 
         $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
-        return new JsonResponse([]);
+        return new JsonResponse([
+            'reference' => $referenceFactory->create($job->getLabel()),
+        ]);
     }
 
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]
