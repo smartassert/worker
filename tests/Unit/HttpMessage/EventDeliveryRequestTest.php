@@ -18,7 +18,7 @@ class EventDeliveryRequestTest extends TestCase
     {
         $jobEventDeliveryUrl = 'http://example.com/events';
         $jobLabel = 'label content';
-        $job = new Job($jobLabel, $jobEventDeliveryUrl, 600);
+        $job = new Job($jobLabel, $jobEventDeliveryUrl, 600, ['test.yml']);
 
         $workerEventType = WorkerEventType::JOB_COMPLETED;
         $workerEventReference = 'reference value';

@@ -82,16 +82,25 @@ class JobController
         }
 
         try {
-            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollectionFactory->create($provider));
+            $yamlSourceCollection = $yamlSourceCollectionFactory->create($provider);
         } catch (InvalidManifestException $exception) {
             return $errorResponseFactory->createFromInvalidManifestException($exception);
         } catch (MissingManifestException $exception) {
             return new ErrorResponse('source/manifest/missing');
+        }
+
+        try {
+            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollection);
         } catch (MissingTestSourceException $exception) {
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $this->jobRepository->create($request->label, $request->eventDeliveryUrl, $request->maximumDurationInSeconds);
+        $this->jobRepository->create(
+            $request->label,
+            $request->eventDeliveryUrl,
+            $request->maximumDurationInSeconds,
+            $yamlSourceCollection->getManifest()->getTestPaths()
+        );
 
         $eventDispatcher->dispatch(new JobReadyEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 

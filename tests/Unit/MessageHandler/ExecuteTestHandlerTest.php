@@ -60,7 +60,7 @@ class ExecuteTestHandlerTest extends TestCase
     public function invokeNoExecutionDataProvider(): array
     {
         $testInWrongState = (new Test())->setState(TestState::CANCELLED);
-        $job = new Job(md5((string) rand()), 'https://example.com/events', 600);
+        $job = new Job(md5((string) rand()), 'https://example.com/events', 600, []);
 
         return [
             'no job' => [

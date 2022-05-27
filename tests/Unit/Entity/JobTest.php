@@ -18,7 +18,7 @@ class JobTest extends TestCase
         $eventDeliveryUrl = 'http://example.com/events';
         $maximumDurationInSeconds = 10 * self::SECONDS_PER_MINUTE;
 
-        $job = new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds);
+        $job = new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds, ['test.yml']);
 
         self::assertSame($label, $job->getLabel());
         self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
@@ -41,11 +41,25 @@ class JobTest extends TestCase
     {
         return [
             'state compilation-awaiting' => [
-                'job' => new Job('label content', 'http://example.com/events', 1),
+                'job' => new Job(
+                    'label content',
+                    'http://example.com/events',
+                    1,
+                    [
+                        'test1.yml',
+                        'test2.yml',
+                        'test3.yml',
+                    ]
+                ),
                 'expectedSerializedJob' => [
                     'label' => 'label content',
                     'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 1,
+                    'test_paths' => [
+                        'test1.yml',
+                        'test2.yml',
+                        'test3.yml',
+                    ]
                 ],
             ],
         ];
@@ -68,12 +82,12 @@ class JobTest extends TestCase
 
         return [
             'start date time not set' => [
-                'job' => new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration),
+                'job' => new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration, []),
                 'expectedHasReachedMaximumDuration' => false,
             ],
             'not exceeded: start date time is now' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration);
+                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration, []);
                     $job->setStartDateTime();
 
                     return $job;
@@ -82,7 +96,7 @@ class JobTest extends TestCase
             ],
             'not exceeded: start date time is less than max duration seconds ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration);
+                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration, []);
                     $startDateTime = new \DateTimeImmutable('-9 minute -50 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -93,7 +107,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration);
+                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration, []);
                     $startDateTime = new \DateTimeImmutable('-10 minute');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -104,7 +118,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is greater than max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration);
+                    $job = new Job(md5((string) rand()), 'https://example.com/events', $maximumDuration, []);
                     $startDateTime = new \DateTimeImmutable('-10 minute -1 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
