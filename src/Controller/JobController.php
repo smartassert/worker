@@ -95,12 +95,12 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $this->jobRepository->create(
+        $this->jobRepository->add(new Job(
             $request->label,
             $request->eventDeliveryUrl,
             $request->maximumDurationInSeconds,
             $yamlSourceCollection->getManifest()->getTestPaths()
-        );
+        ));
 
         $eventDispatcher->dispatch(new JobReadyEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
