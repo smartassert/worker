@@ -14,6 +14,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
+use App\Services\ReferenceFactory;
 use App\Services\SourceFactory;
 use App\Services\YamlSourceCollectionFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -368,7 +369,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         ];
 
         $response = $this->clientRequestSender->create($requestPayload);
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
+        $this->jsonResponseAsserter->assertJsonResponse(
+            200,
+            [
+                'reference' => md5($label),
+            ],
+            $response
+        );
 
         self::assertNotNull($this->jobRepository->get());
 
@@ -501,6 +508,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
 
+        $referenceFactory = self::getContainer()->get(ReferenceFactory::class);
+        \assert($referenceFactory instanceof ReferenceFactory);
+
         $request = new CreateJobRequest(
             md5((string) rand()),
             md5((string) rand()),
@@ -515,6 +525,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             \Mockery::mock(ErrorResponseFactory::class),
             $yamlFileCollectionDeserializer,
             $sourceRepository,
+            $referenceFactory,
             $request
         );
     }
