@@ -60,6 +60,7 @@ class ExecuteTestHandlerTest extends TestCase
     public function invokeNoExecutionDataProvider(): array
     {
         $testInWrongState = (new Test())->setState(TestState::CANCELLED);
+        $job = new Job(md5((string) rand()), 'https://example.com/events', 600);
 
         return [
             'no job' => [
@@ -75,7 +76,7 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'execution state not awaiting, not running' => [
                 'jobRepository' => (new MockJobRepository())
-                    ->withGetCall(new Job(md5((string) rand()), '', 600))
+                    ->withGetCall($job)
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
                     ->withIsCall(true, ...ExecutionState::getFinishedStates())
@@ -87,7 +88,7 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'no test' => [
                 'jobRepository' => (new MockJobRepository())
-                    ->withGetCall(new Job(md5((string) rand()), '', 600))
+                    ->withGetCall($job)
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
                     ->withIsCall(false, ...ExecutionState::getFinishedStates())
@@ -99,7 +100,7 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'test in wrong state' => [
                 'jobRepository' => (new MockJobRepository())
-                    ->withGetCall(new Job(md5((string) rand()), '', 600))
+                    ->withGetCall($job)
                     ->getMock(),
                 'executionProgress' => (new MockExecutionProgress())
                     ->withIsCall(false, ...ExecutionState::getFinishedStates())

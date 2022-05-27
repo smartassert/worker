@@ -17,8 +17,11 @@ class Job implements \JsonSerializable
     #[ORM\Column(type: 'string', length: 32)]
     private string $label;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private ?string $eventDeliveryUrl;
+    private string $eventDeliveryUrl;
 
     #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
@@ -28,6 +31,7 @@ class Job implements \JsonSerializable
 
     /**
      * @param non-empty-string $label
+     * @param non-empty-string $eventDeliveryUrl
      */
     public function __construct(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds)
     {
@@ -44,7 +48,10 @@ class Job implements \JsonSerializable
         return $this->label;
     }
 
-    public function getEventDeliveryUrl(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getEventDeliveryUrl(): string
     {
         return $this->eventDeliveryUrl;
     }
