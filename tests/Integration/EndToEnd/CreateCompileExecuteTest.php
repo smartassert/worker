@@ -104,7 +104,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $duration = $timer->stop();
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());
 
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $createResponse);
+        $this->jsonResponseAsserter->assertJsonResponse(
+            200,
+            [
+                'reference' => md5($label),
+            ],
+            $createResponse
+        );
 
         $statusResponse = $this->clientRequestSender->getStatus();
 
