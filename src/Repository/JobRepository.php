@@ -33,6 +33,7 @@ class JobRepository extends ServiceEntityRepository
 
     /**
      * @param non-empty-string $label
+     * @param non-empty-string $eventDeliveryUrl
      */
     public function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): Job
     {

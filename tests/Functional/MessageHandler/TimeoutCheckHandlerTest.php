@@ -68,7 +68,11 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $job = new Job(md5((string) rand()), '', 600);
+        $job = new Job(
+            md5((string) rand()),
+            'https://example.com/events',
+            600
+        );
 
         $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
@@ -116,7 +120,12 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $job = new Job(md5((string) rand()), '', $jobMaximumDuration);
+        $job = new Job(
+            md5((string) rand()),
+            'https://example.com/events',
+            $jobMaximumDuration
+        );
+
         ObjectReflector::setProperty(
             $job,
             Job::class,
