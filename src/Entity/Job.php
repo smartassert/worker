@@ -30,14 +30,26 @@ class Job implements \JsonSerializable
     private ?\DateTimeImmutable $startDateTime = null;
 
     /**
+     * @var array<int, string>
+     */
+    #[ORM\Column(type: 'simple_array')]
+    private array $testPaths;
+
+    /**
      * @param non-empty-string $label
      * @param non-empty-string $eventDeliveryUrl
+     * @param array<int, string> $testPaths
      */
-    public function __construct(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds)
-    {
+    public function __construct(
+        string $label,
+        string $eventDeliveryUrl,
+        int $maximumDurationInSeconds,
+        array $testPaths
+    ) {
         $this->label = $label;
         $this->eventDeliveryUrl = $eventDeliveryUrl;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
+        $this->testPaths = $testPaths;
     }
 
     /**
@@ -91,6 +103,7 @@ class Job implements \JsonSerializable
             'label' => $this->label,
             'event_delivery_url' => $this->eventDeliveryUrl,
             'maximum_duration_in_seconds' => $this->maximumDurationInSeconds,
+            'test_paths' => $this->testPaths,
         ];
     }
 }

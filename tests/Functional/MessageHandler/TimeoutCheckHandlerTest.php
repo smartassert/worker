@@ -71,7 +71,8 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $job = new Job(
             md5((string) rand()),
             'https://example.com/events',
-            600
+            600,
+            ['test.yml']
         );
 
         $jobRepository = (new MockJobRepository())
@@ -123,7 +124,8 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $job = new Job(
             md5((string) rand()),
             'https://example.com/events',
-            $jobMaximumDuration
+            $jobMaximumDuration,
+            ['test.yml']
         );
 
         ObjectReflector::setProperty(

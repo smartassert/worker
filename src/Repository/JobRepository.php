@@ -34,10 +34,15 @@ class JobRepository extends ServiceEntityRepository
     /**
      * @param non-empty-string $label
      * @param non-empty-string $eventDeliveryUrl
+     * @param array<int, string> $testPaths
      */
-    public function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): Job
-    {
-        return $this->add(new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds));
+    public function create(
+        string $label,
+        string $eventDeliveryUrl,
+        int $maximumDurationInSeconds,
+        array $testPaths,
+    ): Job {
+        return $this->add(new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds, $testPaths));
     }
 
     public function get(): ?Job

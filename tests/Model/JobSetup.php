@@ -22,12 +22,18 @@ class JobSetup
      */
     private array $localSourcePaths;
 
+    /**
+     * @var string[]
+     */
+    private array $testPaths;
+
     public function __construct()
     {
         $this->label = md5('label content');
         $this->eventDeliveryUrl = 'http://example.com/events';
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
+        $this->testPaths = [];
     }
 
     /**
@@ -57,6 +63,14 @@ class JobSetup
     public function getLocalSourcePaths(): array
     {
         return $this->localSourcePaths;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTestPaths(): array
+    {
+        return $this->testPaths;
     }
 
     /**
@@ -96,6 +110,17 @@ class JobSetup
     {
         $new = clone $this;
         $new->maximumDurationInSeconds = $maximumDurationInSeconds;
+
+        return $new;
+    }
+
+    /**
+     * @param string[] $testPaths
+     */
+    public function withTestPaths(array $testPaths): self
+    {
+        $new = clone $this;
+        $new->testPaths = $testPaths;
 
         return $new;
     }
