@@ -11,7 +11,7 @@ class ReferenceFactory
      *
      * @return non-empty-string
      */
-    public function create(string $jobLabel, array $components): string
+    public function create(string $jobLabel, array $components = []): string
     {
         array_unshift($components, $jobLabel);
 
