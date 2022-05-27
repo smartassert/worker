@@ -6,7 +6,14 @@ namespace App\Tests\Model;
 
 class JobSetup
 {
+    /**
+     * @var non-empty-string
+     */
     private string $label;
+
+    /**
+     * @var non-empty-string
+     */
     private string $eventDeliveryUrl;
     private int $maximumDurationInSeconds;
 
@@ -23,11 +30,17 @@ class JobSetup
         $this->localSourcePaths = [];
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getLabel(): string
     {
         return $this->label;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getEventDeliveryUrl(): string
     {
         return $this->eventDeliveryUrl;
@@ -46,6 +59,9 @@ class JobSetup
         return $this->localSourcePaths;
     }
 
+    /**
+     * @param non-empty-string $label
+     */
     public function withLabel(string $label): self
     {
         $new = clone $this;
@@ -54,6 +70,9 @@ class JobSetup
         return $new;
     }
 
+    /**
+     * @param non-empty-string $url
+     */
     public function withEventDeliveryUrl(string $url): self
     {
         $new = clone $this;
