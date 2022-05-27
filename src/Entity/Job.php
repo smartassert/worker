@@ -23,15 +23,11 @@ class Job implements \JsonSerializable
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $startDateTime = null;
 
-    public static function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): self
+    public function __construct(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds)
     {
-        $job = new Job();
-
-        $job->label = $label;
-        $job->eventDeliveryUrl = $eventDeliveryUrl;
-        $job->maximumDurationInSeconds = $maximumDurationInSeconds;
-
-        return $job;
+        $this->label = $label;
+        $this->eventDeliveryUrl = $eventDeliveryUrl;
+        $this->maximumDurationInSeconds = $maximumDurationInSeconds;
     }
 
     public function getLabel(): ?string

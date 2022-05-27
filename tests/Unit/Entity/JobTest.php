@@ -18,7 +18,7 @@ class JobTest extends TestCase
         $eventDeliveryUrl = 'http://example.com/events';
         $maximumDurationInSeconds = 10 * self::SECONDS_PER_MINUTE;
 
-        $job = Job::create($label, $eventDeliveryUrl, $maximumDurationInSeconds);
+        $job = new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds);
 
         self::assertSame($label, $job->getLabel());
         self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
@@ -41,7 +41,7 @@ class JobTest extends TestCase
     {
         return [
             'state compilation-awaiting' => [
-                'job' => Job::create('label content', 'http://example.com/events', 1),
+                'job' => new Job('label content', 'http://example.com/events', 1),
                 'expectedSerializedJob' => [
                     'label' => 'label content',
                     'event_delivery_url' => 'http://example.com/events',
@@ -68,12 +68,12 @@ class JobTest extends TestCase
 
         return [
             'start date time not set' => [
-                'job' => Job::create('', '', $maximumDuration),
+                'job' => new Job('', '', $maximumDuration),
                 'expectedHasReachedMaximumDuration' => false,
             ],
             'not exceeded: start date time is now' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = Job::create('', '', $maximumDuration);
+                    $job = new Job('', '', $maximumDuration);
                     $job->setStartDateTime();
 
                     return $job;
@@ -82,7 +82,7 @@ class JobTest extends TestCase
             ],
             'not exceeded: start date time is less than max duration seconds ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = Job::create('', '', $maximumDuration);
+                    $job = new Job('', '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-9 minute -50 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -93,7 +93,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = Job::create('', '', $maximumDuration);
+                    $job = new Job('', '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-10 minute');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -104,7 +104,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is greater than max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = Job::create('', '', $maximumDuration);
+                    $job = new Job('', '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-10 minute -1 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);

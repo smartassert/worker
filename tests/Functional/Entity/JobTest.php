@@ -24,7 +24,7 @@ class JobTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(Job::class);
         self::assertCount(0, $repository->findAll());
 
-        $job = Job::create('label content', 'http://example.com/events', 600);
+        $job = new Job('label content', 'http://example.com/events', 600);
 
         $this->entityManager->persist($job);
         $this->entityManager->flush();
