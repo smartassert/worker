@@ -92,7 +92,9 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
     {
         $sourcePath = 'Test/test1.yml';
         $environmentSetup = (new EnvironmentSetup())
-            ->withJobSetup(new JobSetup())
+            ->withJobSetup(
+                (new JobSetup())->withTestPaths([$sourcePath])
+            )
             ->withSourceSetups([
                 (new SourceSetup())->withPath($sourcePath),
             ])
@@ -175,7 +177,9 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
     {
         $sourcePath = 'Test/test1.yml';
         $environmentSetup = (new EnvironmentSetup())
-            ->withJobSetup(new JobSetup())
+            ->withJobSetup(
+                (new JobSetup())->withTestPaths([$sourcePath])
+            )
             ->withSourceSetups([
                 (new SourceSetup())->withPath($sourcePath),
             ])

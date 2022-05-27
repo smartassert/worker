@@ -33,7 +33,7 @@ class JobSetup
         $this->eventDeliveryUrl = 'http://example.com/events';
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
-        $this->testPaths = [];
+        $this->testPaths = ['test.yml'];
     }
 
     /**

@@ -584,25 +584,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     public function statusDataProvider(): array
     {
         return [
-            'new job, no sources, no tests' => [
-                'setup' => (new EnvironmentSetup())
-                    ->withJobSetup(
-                        (new JobSetup())
-                            ->withLabel('label content')
-                            ->withEventDeliveryUrl('http://example.com/events')
-                            ->withMaximumDurationInSeconds(10)
-                    ),
-                'expectedResponseData' => [
-                    'label' => 'label content',
-                    'event_delivery_url' => 'http://example.com/events',
-                    'maximum_duration_in_seconds' => 10,
-                    'sources' => [],
-                    'compilation_state' => 'awaiting',
-                    'execution_state' => 'awaiting',
-                    'event_delivery_state' => 'awaiting',
-                    'tests' => [],
-                ],
-            ],
             'new job, has sources, no tests' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(
@@ -610,6 +591,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                             ->withLabel('label content')
                             ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(11)
+                            ->withTestPaths([
+                                'Test/test1.yml',
+                                'Test/test2.yml',
+                                'Test/test3.yml',
+                            ])
                     )->withSourceSetups([
                         (new SourceSetup())->withPath('Test/test1.yml'),
                         (new SourceSetup())->withPath('Test/test2.yml'),
@@ -619,6 +605,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'label' => 'label content',
                     'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 11,
+
                     'sources' => [
                         'Test/test1.yml',
                         'Test/test2.yml',
@@ -627,6 +614,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'compilation_state' => 'running',
                     'execution_state' => 'awaiting',
                     'event_delivery_state' => 'awaiting',
+                    'test_paths' => [
+                        'Test/test1.yml',
+                        'Test/test2.yml',
+                        'Test/test3.yml',
+                    ],
                     'tests' => [],
                 ],
             ],
@@ -637,6 +629,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                             ->withLabel('label content')
                             ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(12)
+                            ->withTestPaths([
+                                'Test/test1.yml',
+                                'Test/test2.yml',
+                                'Test/test3.yml',
+                            ])
                     )->withSourceSetups([
                         (new SourceSetup())->withPath('Test/test1.yml'),
                         (new SourceSetup())->withPath('Test/test2.yml'),
@@ -663,6 +660,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'compilation_state' => 'running',
                     'execution_state' => 'awaiting',
                     'event_delivery_state' => 'awaiting',
+                    'test_paths' => [
+                        'Test/test1.yml',
+                        'Test/test2.yml',
+                        'Test/test3.yml',
+                    ],
                     'tests' => [
                         [
                             'configuration' => [

@@ -55,7 +55,7 @@ class JobTest extends TestCase
                     'label' => 'label content',
                     'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 1,
-                    [
+                    'test_paths' => [
                         'test1.yml',
                         'test2.yml',
                         'test3.yml',

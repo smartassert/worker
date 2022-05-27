@@ -32,8 +32,8 @@ class JobRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param non-empty-string $label
-     * @param non-empty-string $eventDeliveryUrl
+     * @param non-empty-string   $label
+     * @param non-empty-string   $eventDeliveryUrl
      * @param array<int, string> $testPaths
      */
     public function create(
