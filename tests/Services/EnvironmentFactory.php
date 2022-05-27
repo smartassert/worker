@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use App\Entity\Job;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Tests\Model\Environment;
@@ -26,12 +27,12 @@ class EnvironmentFactory
 
         $jobSetup = $setup->getJobSetup();
         if ($jobSetup instanceof JobSetup) {
-            $job = $this->jobRepository->create(
+            $job = $this->jobRepository->add(new Job(
                 $jobSetup->getLabel(),
                 $jobSetup->getEventDeliveryUrl(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
-            );
+            ));
 
             $environment = $environment->withJob($job);
         }
