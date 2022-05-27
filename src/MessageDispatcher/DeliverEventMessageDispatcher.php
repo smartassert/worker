@@ -25,6 +25,7 @@ use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
+use App\Services\ReferenceFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -37,6 +38,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventRepository $workerEventRepository,
+        private readonly ReferenceFactory $referenceFactory,
     ) {
     }
 
@@ -109,12 +111,9 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 
     private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
     {
-        $referenceComponents = $event->getReferenceComponents();
-        array_unshift($referenceComponents, $job->getLabel());
-
         return $this->workerEventRepository->create(
             $event->getType(),
-            md5(implode('', $referenceComponents)),
+            $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
             $event->getPayload()
         );
     }
