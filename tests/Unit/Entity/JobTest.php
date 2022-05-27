@@ -68,12 +68,12 @@ class JobTest extends TestCase
 
         return [
             'start date time not set' => [
-                'job' => new Job('', '', $maximumDuration),
+                'job' => new Job(md5((string) rand()), '', $maximumDuration),
                 'expectedHasReachedMaximumDuration' => false,
             ],
             'not exceeded: start date time is now' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job('', '', $maximumDuration);
+                    $job = new Job(md5((string) rand()), '', $maximumDuration);
                     $job->setStartDateTime();
 
                     return $job;
@@ -82,7 +82,7 @@ class JobTest extends TestCase
             ],
             'not exceeded: start date time is less than max duration seconds ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job('', '', $maximumDuration);
+                    $job = new Job(md5((string) rand()), '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-9 minute -50 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -93,7 +93,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job('', '', $maximumDuration);
+                    $job = new Job(md5((string) rand()), '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-10 minute');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
@@ -104,7 +104,7 @@ class JobTest extends TestCase
             ],
             'exceeded: start date time is greater than max duration minutes ago' => [
                 'job' => (function () use ($maximumDuration) {
-                    $job = new Job('', '', $maximumDuration);
+                    $job = new Job(md5((string) rand()), '', $maximumDuration);
                     $startDateTime = new \DateTimeImmutable('-10 minute -1 second');
 
                     ObjectReflector::setProperty($job, Job::class, 'startDateTime', $startDateTime);
