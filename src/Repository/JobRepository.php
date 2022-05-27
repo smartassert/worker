@@ -31,6 +31,9 @@ class JobRepository extends ServiceEntityRepository
         return $job;
     }
 
+    /**
+     * @param non-empty-string $label
+     */
     public function create(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds): Job
     {
         return $this->add(new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds));

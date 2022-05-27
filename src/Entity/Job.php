@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job implements \JsonSerializable
 {
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 32)]
     private string $label;
@@ -23,6 +26,9 @@ class Job implements \JsonSerializable
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeImmutable $startDateTime = null;
 
+    /**
+     * @param non-empty-string $label
+     */
     public function __construct(string $label, string $eventDeliveryUrl, int $maximumDurationInSeconds)
     {
         $this->label = $label;
@@ -30,7 +36,10 @@ class Job implements \JsonSerializable
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
     }
 
-    public function getLabel(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
     {
         return $this->label;
     }
