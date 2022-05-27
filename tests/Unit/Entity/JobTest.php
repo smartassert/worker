@@ -20,7 +20,6 @@ class JobTest extends TestCase
 
         $job = Job::create($label, $eventDeliveryUrl, $maximumDurationInSeconds);
 
-        self::assertSame(1, $job->getId());
         self::assertSame($label, $job->getLabel());
         self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
     }

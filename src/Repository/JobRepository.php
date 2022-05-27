@@ -38,7 +38,7 @@ class JobRepository extends ServiceEntityRepository
 
     public function get(): ?Job
     {
-        return parent::find(Job::ID);
+        return parent::findOneBy([]);
     }
 
     /**

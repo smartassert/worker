@@ -10,14 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job implements \JsonSerializable
 {
-    public const ID = 1;
-
     #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    private int $id = self::ID;
-
-    #[ORM\Column(type: 'string', length: 32, nullable: false, unique: true)]
-    private ?string $label = null;
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $label;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private ?string $eventDeliveryUrl;
@@ -37,11 +32,6 @@ class Job implements \JsonSerializable
         $job->maximumDurationInSeconds = $maximumDurationInSeconds;
 
         return $job;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getLabel(): ?string
