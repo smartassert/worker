@@ -19,7 +19,6 @@ class JobStatusFactory
         private readonly ExecutionProgress $executionProgress,
         private readonly EventDeliveryProgress $eventDeliveryProgress,
         private readonly ReferenceFactory $referenceFactory,
-        private readonly JobSerializer $jobSerializer,
     ) {
     }
 
@@ -28,13 +27,31 @@ class JobStatusFactory
         $tests = $this->testRepository->findAll();
 
         return new JobStatus(
-            $this->jobSerializer->serialize($job),
+            $job,
             $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
             $this->compilationProgress->get(),
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
             $this->testSerializer->serializeCollection($tests),
+            $this->createTestReferences($job)
         );
+    }
+
+    /**
+     * @return array<int, array{label: string, reference: string}>
+     */
+    private function createTestReferences(Job $job): array
+    {
+        $data = [];
+
+        foreach ($job->getTestPaths() as $testPath) {
+            $data[] = [
+                'label' => $testPath,
+                'reference' => $this->referenceFactory->create($job->getLabel(), [$testPath]),
+            ];
+        }
+
+        return $data;
     }
 }
