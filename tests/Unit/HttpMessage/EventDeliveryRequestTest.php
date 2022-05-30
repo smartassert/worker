@@ -27,7 +27,7 @@ class EventDeliveryRequestTest extends TestCase
             'key2' => 'value2',
         ];
 
-        $workerEvent = WorkerEvent::create($workerEventType, $workerEventReference, $workerEventData);
+        $workerEvent = new WorkerEvent($workerEventType, $workerEventReference, $workerEventData);
         ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);

@@ -44,15 +44,6 @@ class WorkerEvent
         $this->payload = $payload;
     }
 
-    /**
-     * @param non-empty-string $reference
-     * @param array<mixed>     $payload
-     */
-    public static function create(WorkerEventType $type, string $reference, array $payload): self
-    {
-        return new WorkerEvent($type, $reference, $payload);
-    }
-
     public function getId(): ?int
     {
         return $this->id;

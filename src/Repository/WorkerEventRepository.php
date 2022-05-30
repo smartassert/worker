@@ -28,7 +28,7 @@ class WorkerEventRepository extends ServiceEntityRepository
      */
     public function create(WorkerEventType $type, string $reference, array $payload): WorkerEvent
     {
-        $entity = WorkerEvent::create($type, $reference, $payload);
+        $entity = new WorkerEvent($type, $reference, $payload);
 
         $this->_em->persist($entity);
         $this->_em->flush();

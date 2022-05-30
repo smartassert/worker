@@ -243,10 +243,6 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
 
     private function createEntity(): WorkerEvent
     {
-        return WorkerEvent::create(
-            WorkerEventType::COMPILATION_FAILED,
-            'non-empty reference',
-            []
-        );
+        return new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
     }
 }

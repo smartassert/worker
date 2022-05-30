@@ -25,7 +25,7 @@ class WorkerEventTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(WorkerEvent::class);
         self::assertCount(0, $repository->findAll());
 
-        $workerEvent = WorkerEvent::create(
+        $workerEvent = new WorkerEvent(
             WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []

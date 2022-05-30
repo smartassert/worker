@@ -30,28 +30,15 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testHasForType(): void
     {
-        $workerEvent0 = WorkerEvent::create(
-            WorkerEventType::COMPILATION_FAILED,
-            'non-empty reference',
-            []
-        )
-        ;
+        $workerEvent0 = new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
         $workerEvent0->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent0);
 
-        $workerEvent1 = WorkerEvent::create(
-            WorkerEventType::TEST_STARTED,
-            'non-empty reference',
-            []
-        );
+        $workerEvent1 = new WorkerEvent(WorkerEventType::TEST_STARTED, 'non-empty reference', []);
         $workerEvent1->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent1);
 
-        $workerEvent2 = WorkerEvent::create(
-            WorkerEventType::JOB_TIME_OUT,
-            'non-empty reference',
-            []
-        );
+        $workerEvent2 = new WorkerEvent(WorkerEventType::JOB_TIME_OUT, 'non-empty reference', []);
         $workerEvent2->setState(WorkerEventState::COMPLETE);
         $this->persistEntity($workerEvent2);
 
