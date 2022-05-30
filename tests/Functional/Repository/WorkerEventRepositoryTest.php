@@ -69,7 +69,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
     private function createWorkerEventsWithTypes(array $types): void
     {
         foreach ($types as $type) {
-            $this->repository->create($type, 'non-empty reference', []);
+            $this->repository->add(new WorkerEvent($type, 'non-empty reference', []));
         }
     }
 }

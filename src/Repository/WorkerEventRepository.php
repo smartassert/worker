@@ -22,6 +22,14 @@ class WorkerEventRepository extends ServiceEntityRepository
         parent::__construct($registry, WorkerEvent::class);
     }
 
+    public function add(WorkerEvent $workerEvent): WorkerEvent
+    {
+        $this->_em->persist($workerEvent);
+        $this->_em->flush();
+
+        return $workerEvent;
+    }
+
     /**
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
