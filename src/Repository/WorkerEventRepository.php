@@ -30,20 +30,6 @@ class WorkerEventRepository extends ServiceEntityRepository
         return $workerEvent;
     }
 
-    /**
-     * @param non-empty-string $reference
-     * @param array<mixed>     $payload
-     */
-    public function create(WorkerEventType $type, string $reference, array $payload): WorkerEvent
-    {
-        $entity = new WorkerEvent($type, $reference, $payload);
-
-        $this->_em->persist($entity);
-        $this->_em->flush();
-
-        return $entity;
-    }
-
     public function hasForType(WorkerEventType $type): bool
     {
         return $this->count(['type' => $type->value]) > 0;
