@@ -439,6 +439,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'test_paths' => [
                         'Test/chrome-open-index.yml',
                     ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                    ],
                     'tests' => [],
                 ],
                 'expectedStoredSources' => [
@@ -487,6 +493,16 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'test_paths' => [
                         'Test/chrome-open-index.yml',
                         'InvalidTest/invalid-yaml.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                        [
+                            'label' => 'InvalidTest/invalid-yaml.yml',
+                            'reference' => md5($label . 'InvalidTest/invalid-yaml.yml')
+                        ],
                     ],
                     'tests' => [],
                 ],
@@ -542,6 +558,16 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'test_paths' => [
                         'Test/chrome-open-index.yml',
                         'Test/firefox-open-index.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                        [
+                            'label' => 'Test/firefox-open-index.yml',
+                            'reference' => md5($label . 'Test/firefox-open-index.yml')
+                        ],
                     ],
                     'tests' => [],
                 ],
@@ -723,6 +749,20 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test2.yml',
                         'Test/test3.yml',
                     ],
+                    'references' => [
+                        [
+                            'label' => 'Test/test1.yml',
+                            'reference' => md5('label content' . 'Test/test1.yml')
+                        ],
+                        [
+                            'label' => 'Test/test2.yml',
+                            'reference' => md5('label content' . 'Test/test2.yml')
+                        ],
+                        [
+                            'label' => 'Test/test3.yml',
+                            'reference' => md5('label content' . 'Test/test3.yml')
+                        ],
+                    ],
                     'tests' => [],
                 ],
             ],
@@ -769,6 +809,20 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test1.yml',
                         'Test/test2.yml',
                         'Test/test3.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/test1.yml',
+                            'reference' => md5('label content' . 'Test/test1.yml')
+                        ],
+                        [
+                            'label' => 'Test/test2.yml',
+                            'reference' => md5('label content' . 'Test/test2.yml')
+                        ],
+                        [
+                            'label' => 'Test/test3.yml',
+                            'reference' => md5('label content' . 'Test/test3.yml')
+                        ],
                     ],
                     'tests' => [
                         [
