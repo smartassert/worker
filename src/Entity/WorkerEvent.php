@@ -36,15 +36,21 @@ class WorkerEvent
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
+    public function __construct(WorkerEventType $type, string $reference, array $payload)
+    {
+        $this->state = WorkerEventState::AWAITING;
+        $this->type = $type;
+        $this->reference = $reference;
+        $this->payload = $payload;
+    }
+
+    /**
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
+     */
     public static function create(WorkerEventType $type, string $reference, array $payload): self
     {
-        $entity = new WorkerEvent();
-        $entity->state = WorkerEventState::AWAITING;
-        $entity->type = $type;
-        $entity->reference = $reference;
-        $entity->payload = $payload;
-
-        return $entity;
+        return new WorkerEvent($type, $reference, $payload);
     }
 
     public function getId(): ?int
