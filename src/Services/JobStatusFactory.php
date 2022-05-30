@@ -19,6 +19,7 @@ class JobStatusFactory
         private readonly ExecutionProgress $executionProgress,
         private readonly EventDeliveryProgress $eventDeliveryProgress,
         private readonly ReferenceFactory $referenceFactory,
+        private readonly JobSerializer $jobSerializer,
     ) {
     }
 
@@ -27,7 +28,7 @@ class JobStatusFactory
         $tests = $this->testRepository->findAll();
 
         return new JobStatus(
-            $job,
+            $this->jobSerializer->serialize($job),
             $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
             $this->compilationProgress->get(),

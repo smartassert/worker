@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Entity\Job;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
@@ -12,11 +11,12 @@ use App\Enum\ExecutionState;
 class JobStatus implements \JsonSerializable
 {
     /**
+     * @param array<mixed> $serializedJob
      * @param string[]     $sourcePaths
      * @param array<mixed> $serializedTests
      */
     public function __construct(
-        private readonly Job $job,
+        private readonly array $serializedJob,
         private readonly string $reference,
         private readonly array $sourcePaths,
         private readonly CompilationState $compilationState,
@@ -32,7 +32,7 @@ class JobStatus implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return array_merge(
-            $this->job->jsonSerialize(),
+            $this->serializedJob,
             [
                 'reference' => $this->reference,
                 'sources' => $this->sourcePaths,
