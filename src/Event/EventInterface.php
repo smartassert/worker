@@ -19,4 +19,9 @@ interface EventInterface
     public function getReferenceComponents(): array;
 
     public function getType(): WorkerEventType;
+
+    /**
+     * @return string[]
+     */
+    public function getRelatedReferenceValues(): array;
 }
