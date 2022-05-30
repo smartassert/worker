@@ -41,11 +41,11 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 
     public function testAbort(): void
     {
-        $workerEvent = $this->workerEventRepository->create(
+        $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
             WorkerEventType::JOB_COMPLETED,
             'non-empty reference',
             []
-        );
+        ));
         $this->stateMutator->setQueued($workerEvent);
 
         $id = $workerEvent->getId();

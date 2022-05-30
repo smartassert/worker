@@ -13,7 +13,7 @@ class WorkerEventTest extends TestCase
 {
     public function testHasState(): void
     {
-        $workerEvent = WorkerEvent::create(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
+        $workerEvent = new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
         self::assertTrue($workerEvent->hasState(WorkerEventState::AWAITING));
         self::assertFalse($workerEvent->hasState(WorkerEventState::COMPLETE));
 

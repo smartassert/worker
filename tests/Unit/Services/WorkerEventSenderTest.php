@@ -26,10 +26,6 @@ class WorkerEventSenderTest extends TestCase
         ;
 
         $sender = new WorkerEventSender($httpClient, $jobRepository);
-        $sender->send(WorkerEvent::create(
-            WorkerEventType::JOB_STARTED,
-            'non-empty reference',
-            []
-        ));
+        $sender->send(new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Messenger;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventType;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\Messenger\DeliverEventMessageRetryStrategy;
@@ -83,6 +84,8 @@ class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
      */
     public function getWaitingTimeDataProvider(): array
     {
+        $workerEvent = new WorkerEvent(WorkerEventType::JOB_STARTED, md5('reference source'), []);
+
         return [
             'throwable is null, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
@@ -106,40 +109,28 @@ class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
             ],
             'throwable has response with no retry-after header, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
-                'throwable' => new NonSuccessfulHttpResponseException(
-                    new WorkerEvent(),
-                    new Response()
-                ),
+                'throwable' => new NonSuccessfulHttpResponseException($workerEvent, new Response()),
                 'expected' => 4000,
             ],
             'throwable has response with date-based retry-after header, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
-                'throwable' => new NonSuccessfulHttpResponseException(
-                    new WorkerEvent(),
-                    new Response(200, [
-                        'retry-after' => (new \DateTime())->format('Y-m-d H:i:s'),
-                    ])
-                ),
+                'throwable' => new NonSuccessfulHttpResponseException($workerEvent, new Response(200, [
+                    'retry-after' => (new \DateTime())->format('Y-m-d H:i:s'),
+                ])),
                 'expected' => 4000,
             ],
             'throwable has response with int-based retry-after header 10' => [
                 'retryCount' => self::MAX_RETRIES - 1,
-                'throwable' => new NonSuccessfulHttpResponseException(
-                    new WorkerEvent(),
-                    new Response(200, [
-                        'retry-after' => '10',
-                    ])
-                ),
+                'throwable' => new NonSuccessfulHttpResponseException($workerEvent, new Response(200, [
+                    'retry-after' => '10',
+                ])),
                 'expected' => 10000,
             ],
             'throwable has response with int-based retry-after header 20' => [
                 'retryCount' => self::MAX_RETRIES - 1,
-                'throwable' => new NonSuccessfulHttpResponseException(
-                    new WorkerEvent(),
-                    new Response(200, [
-                        'retry-after' => '20',
-                    ])
-                ),
+                'throwable' => new NonSuccessfulHttpResponseException($workerEvent, new Response(200, [
+                    'retry-after' => '20',
+                ])),
                 'expected' => 20000,
             ],
         ];

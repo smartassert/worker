@@ -13,17 +13,17 @@ class TestWorkerEventFactory
 {
     public function __construct(
         private readonly WorkerEventRepository $workerEventRepository,
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
     public function create(WorkerEventSetup $workerEventSetup): WorkerEvent
     {
-        $workerEvent = $this->workerEventRepository->create(
+        $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
             $workerEventSetup->getType(),
             'non-empty reference',
             $workerEventSetup->getPayload()
-        );
+        ));
 
         $workerEvent->setState($workerEventSetup->getState());
         $this->entityManager->flush();

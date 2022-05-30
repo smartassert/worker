@@ -46,11 +46,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
 
     public function testSendSuccess(): void
     {
-        $workerEvent = WorkerEvent::create(
-            WorkerEventType::JOB_STARTED,
-            'non-empty reference',
-            []
-        );
+        $workerEvent = new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []);
         $this->mockHandler->append(new Response(200));
         $this->createJob();
 
@@ -67,11 +63,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
-        $workerEvent = WorkerEvent::create(
-            WorkerEventType::JOB_STARTED,
-            'non-empty reference',
-            []
-        );
+        $workerEvent = new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []);
         $this->mockHandler->append($response);
         $this->createJob();
 
@@ -101,11 +93,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
      */
     public function testSendClientException(\Exception $exception): void
     {
-        $workerEvent = WorkerEvent::create(
-            WorkerEventType::JOB_STARTED,
-            'non-empty reference',
-            []
-        );
+        $workerEvent = new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []);
         $this->mockHandler->append($exception);
         $this->createJob();
 
