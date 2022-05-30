@@ -27,6 +27,7 @@ use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\ReferenceFactory;
+use App\Services\ResourceReferenceFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -40,6 +41,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly ReferenceFactory $referenceFactory,
+        private readonly ResourceReferenceFactory $resourceReferenceFactory,
     ) {
     }
 
@@ -110,10 +112,22 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 
     private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
     {
+        $payload = $event->getPayload();
+        $relatedReferenceValues = $event->getRelatedReferenceValues();
+
+        if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceValues) {
+            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
+                $job,
+                $relatedReferenceValues
+            );
+
+            $payload['related_references'] = $resourceReferenceCollection->toArray();
+        }
+
         $workerEvent = new WorkerEvent(
             $event->getType(),
             $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
-            $event->getPayload()
+            $payload
         );
 
         return $this->workerEventRepository->add($workerEvent);

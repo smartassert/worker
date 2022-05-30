@@ -28,4 +28,9 @@ abstract class AbstractTestEvent extends Event implements EventInterface
             $this->document->getPath(),
         ];
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return [];
+    }
 }

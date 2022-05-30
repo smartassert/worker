@@ -33,4 +33,9 @@ class JobStartedEvent extends Event implements EventInterface
     {
         return WorkerEventType::JOB_STARTED;
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return $this->testPaths;
+    }
 }

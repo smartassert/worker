@@ -23,4 +23,9 @@ class ExecutionStartedEvent extends Event implements EventInterface
     {
         return WorkerEventType::EXECUTION_STARTED;
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return [];
+    }
 }
