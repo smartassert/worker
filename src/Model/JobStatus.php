@@ -43,7 +43,7 @@ class JobStatus implements \JsonSerializable
             'execution_state' => $this->executionState->value,
             'event_delivery_state' => $this->eventDeliveryState->value,
             'tests' => $this->serializedTests,
-            'references' => $this->testReferences,
+            'references' => $this->testReferences->toArray(),
         ];
     }
 }

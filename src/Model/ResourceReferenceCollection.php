@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class ResourceReferenceCollection implements \JsonSerializable
+class ResourceReferenceCollection
 {
     /**
      * @var ResourceReference[]
      */
-    private array $testPathReferences = [];
+    private array $resourceReferences = [];
 
     /**
      * @param ResourceReference[] $testReferences
@@ -18,16 +18,21 @@ class ResourceReferenceCollection implements \JsonSerializable
     {
         foreach ($testReferences as $testReference) {
             if ($testReference instanceof ResourceReference) {
-                $this->testPathReferences[] = $testReference;
+                $this->resourceReferences[] = $testReference;
             }
         }
     }
 
     /**
-     * @return ResourceReference[]
+     * @return array<int, array{label: string, reference: string}>
      */
-    public function jsonSerialize(): array
+    public function toArray(): array
     {
-        return $this->testPathReferences;
+        $data = [];
+        foreach ($this->resourceReferences as $testPathReference) {
+            $data[] = $testPathReference->toArray();
+        }
+
+        return $data;
     }
 }

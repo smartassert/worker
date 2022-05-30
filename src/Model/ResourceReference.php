@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class ResourceReference implements \JsonSerializable
+class ResourceReference
 {
     public function __construct(
         public readonly string $label,
@@ -15,7 +15,7 @@ class ResourceReference implements \JsonSerializable
     /**
      * @return array{label: string, reference: string}
      */
-    public function jsonSerialize(): array
+    public function toArray(): array
     {
         return [
             'label' => $this->label,
