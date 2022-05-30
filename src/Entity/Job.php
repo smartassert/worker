@@ -8,7 +8,7 @@ use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
-class Job implements \JsonSerializable
+class Job
 {
     /**
      * @var non-empty-string
@@ -100,18 +100,5 @@ class Job implements \JsonSerializable
     public function setStartDateTime(): void
     {
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerialize(): array
-    {
-        return [
-            'label' => $this->label,
-            'event_delivery_url' => $this->eventDeliveryUrl,
-            'maximum_duration_in_seconds' => $this->maximumDurationInSeconds,
-            'test_paths' => $this->testPaths,
-        ];
     }
 }
