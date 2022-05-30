@@ -12,7 +12,7 @@ use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -46,7 +46,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            JobReadyEvent::class => [
+            JobStartedEvent::class => [
                 ['dispatchForEvent', 500],
             ],
             SourceCompilationStartedEvent::class => [

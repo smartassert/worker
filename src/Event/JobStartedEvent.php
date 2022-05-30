@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Enum\WorkerEventType;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobReadyEvent extends Event implements EventInterface
+class JobStartedEvent extends Event implements EventInterface
 {
     /**
      * @param string[] $testPaths

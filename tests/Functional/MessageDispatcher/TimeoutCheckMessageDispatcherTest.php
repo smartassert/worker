@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageDispatcher;
 
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
@@ -44,7 +44,7 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                JobReadyEvent::class => ['dispatchForEvent'],
+                JobStartedEvent::class => ['dispatchForEvent'],
             ],
         ]);
     }
@@ -98,8 +98,8 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
     public function subscribesToEventDataProvider(): array
     {
         return [
-            JobReadyEvent::class => [
-                'event' => new JobReadyEvent([]),
+            JobStartedEvent::class => [
+                'event' => new JobStartedEvent([]),
                 'expectedQueuedMessage' => new TimeoutCheckMessage(),
             ],
         ];

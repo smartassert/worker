@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Enum\CompilationState;
 use App\Event\JobCompiledEvent;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -33,7 +33,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchNextCompileSourceMessage', 50],
                 ['dispatchCompilationCompletedEvent', 60],
             ],
-            JobReadyEvent::class => [
+            JobStartedEvent::class => [
                 ['dispatchNextCompileSourceMessage', 50],
             ],
         ];

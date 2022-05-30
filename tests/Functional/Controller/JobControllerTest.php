@@ -9,7 +9,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
@@ -486,7 +486,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);
         $eventDispatcher
             ->shouldReceive('dispatch')
-            ->withArgs(function (JobReadyEvent $event) use ($manifestPaths) {
+            ->withArgs(function (JobStartedEvent $event) use ($manifestPaths) {
                 $eventPayload = $event->getPayload();
                 self::assertArrayHasKey('tests', $eventPayload);
                 self::assertSame($manifestPaths, $eventPayload['tests']);

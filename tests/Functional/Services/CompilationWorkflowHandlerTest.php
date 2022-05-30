@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Event\EventInterface;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
@@ -58,7 +58,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                JobReadyEvent::class => ['dispatchForEvent'],
+                JobStartedEvent::class => ['dispatchForEvent'],
                 SourceCompilationPassedEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
@@ -195,8 +195,8 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     new CompileSourceMessage('Test/test1.yml'),
                 ],
             ],
-            JobReadyEvent::class => [
-                'event' => new JobReadyEvent([]),
+            JobStartedEvent::class => [
+                'event' => new JobStartedEvent([]),
                 'expectedQueuedMessages' => [
                     new CompileSourceMessage('Test/test1.yml'),
                     new TimeoutCheckMessage(),
