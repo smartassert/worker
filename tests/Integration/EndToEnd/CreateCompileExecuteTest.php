@@ -231,6 +231,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     'Test/chrome-firefox-open-index.yml',
                                     'Test/chrome-open-form.yml',
                                 ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'Test/chrome-open-index.yml',
+                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                                    ],
+                                    [
+                                        'label' => 'Test/chrome-firefox-open-index.yml',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'Test/chrome-open-form.yml',
+                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                                    ],
+                                ],
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
