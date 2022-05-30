@@ -12,9 +12,8 @@ use App\Enum\ExecutionState;
 class JobStatus implements \JsonSerializable
 {
     /**
-     * @param string[]                                            $sourcePaths
-     * @param array<mixed>                                        $serializedTests
-     * @param array<int, array{label: string, reference: string}> $testReferences
+     * @param string[]     $sourcePaths
+     * @param array<mixed> $serializedTests
      */
     public function __construct(
         private readonly Job $job,
@@ -24,7 +23,7 @@ class JobStatus implements \JsonSerializable
         private readonly ExecutionState $executionState,
         private readonly EventDeliveryState $eventDeliveryState,
         private readonly array $serializedTests,
-        private readonly array $testReferences,
+        private readonly ResourceReferenceCollection $testReferences,
     ) {
     }
 
