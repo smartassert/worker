@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Job;
 use App\Entity\Source;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Exception\InvalidManifestException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
@@ -102,7 +102,7 @@ class JobController
             $yamlSourceCollection->getManifest()->getTestPaths()
         ));
 
-        $eventDispatcher->dispatch(new JobReadyEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
+        $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
         return new JsonResponse([]);
     }

@@ -15,7 +15,7 @@ use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
-use App\Event\JobReadyEvent;
+use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -81,7 +81,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
             ],
             TimeoutCheckMessageDispatcher::class => [
-                JobReadyEvent::class => ['dispatch'],
+                JobStartedEvent::class => ['dispatch'],
             ],
             ApplicationWorkflowHandler::class => [
                 TestFailedEvent::class => ['dispatchJobFailedEvent'],
@@ -177,8 +177,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         );
 
         return [
-            JobReadyEvent::class => [
-                'event' => new JobReadyEvent([
+            JobStartedEvent::class => [
+                'event' => new JobStartedEvent([
                     'Test/test1.yaml',
                     'Test/test2.yaml',
                 ]),
