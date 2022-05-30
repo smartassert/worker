@@ -13,16 +13,11 @@ use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
-use App\Repository\TestRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
-use App\Services\CompilationProgress;
 use App\Services\ErrorResponseFactory;
-use App\Services\EventDeliveryProgress;
-use App\Services\ExecutionProgress;
-use App\Services\ReferenceFactory;
+use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
-use App\Services\TestSerializer;
 use App\Services\YamlSourceCollectionFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SmartAssert\YamlFile\Collection\Deserializer;
@@ -50,7 +45,7 @@ class JobController
         ErrorResponseFactory $errorResponseFactory,
         Deserializer $yamlFileCollectionDeserializer,
         SourceRepository $sourceRepository,
-        ReferenceFactory $referenceFactory,
+        JobStatusFactory $jobStatusFactory,
         CreateJobRequest $request,
     ): JsonResponse {
         if ($this->jobRepository->has()) {
@@ -88,7 +83,7 @@ class JobController
             $yamlSourceCollection = $yamlSourceCollectionFactory->create($provider);
         } catch (InvalidManifestException $exception) {
             return $errorResponseFactory->createFromInvalidManifestException($exception);
-        } catch (MissingManifestException $exception) {
+        } catch (MissingManifestException) {
             return new ErrorResponse('source/manifest/missing');
         }
 
@@ -107,39 +102,18 @@ class JobController
 
         $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
-        return new JsonResponse([
-            'reference' => $referenceFactory->create($job->getLabel()),
-        ]);
+        return new JsonResponse($jobStatusFactory->create($job));
     }
 
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]
-    public function status(
-        SourceRepository $sourceRepository,
-        TestRepository $testRepository,
-        TestSerializer $testSerializer,
-        CompilationProgress $compilationProgress,
-        ExecutionProgress $executionProgress,
-        EventDeliveryProgress $eventDeliveryProgress,
-    ): JsonResponse {
+    public function status(JobStatusFactory $jobStatusFactory): JsonResponse
+    {
         try {
             $job = $this->jobRepository->get();
         } catch (JobNotFoundException) {
             return new JsonResponse([], 400);
         }
 
-        $tests = $testRepository->findAll();
-
-        $data = array_merge(
-            $job->jsonSerialize(),
-            [
-                'sources' => $sourceRepository->findAllPaths(),
-                'compilation_state' => $compilationProgress->get(),
-                'execution_state' => $executionProgress->get(),
-                'event_delivery_state' => $eventDeliveryProgress->get(),
-                'tests' => $testSerializer->serializeCollection($tests),
-            ]
-        );
-
-        return new JsonResponse($data);
+        return new JsonResponse($jobStatusFactory->create($job));
     }
 }
