@@ -25,4 +25,9 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
             $this->source,
         ];
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return [];
+    }
 }

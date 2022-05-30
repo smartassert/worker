@@ -23,4 +23,9 @@ class JobFailedEvent extends Event implements EventInterface
     {
         return WorkerEventType::JOB_FAILED;
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return [];
+    }
 }

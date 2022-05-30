@@ -34,4 +34,9 @@ class JobTimeoutEvent extends Event implements EventInterface
     {
         return WorkerEventType::JOB_TIME_OUT;
     }
+
+    public function getRelatedReferenceValues(): array
+    {
+        return [];
+    }
 }
