@@ -73,6 +73,14 @@ class Job implements \JsonSerializable
         return $this->maximumDurationInSeconds;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getTestPaths(): array
+    {
+        return $this->testPaths;
+    }
+
     public function hasStarted(): bool
     {
         return $this->startDateTime instanceof \DateTimeInterface;
