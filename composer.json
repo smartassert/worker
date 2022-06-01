@@ -20,7 +20,7 @@
         "symfony/messenger": "6.0.*",
         "symfony/string": "6.0.*",
         "symfony/yaml": "6.0.*",
-        "webignition/basil-compiler-models": "^0.16.0",
+        "webignition/basil-compiler-models": "^3.0",
         "webignition/basil-runner-documents": "^1.0",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
         "webignition/yaml-document": "^0.3",

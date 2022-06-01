@@ -29,17 +29,23 @@ class Test implements \JsonSerializable
     #[ORM\Column(type: 'text')]
     private string $target;
 
-    #[ORM\Column(type: 'integer')]
-    private int $stepCount = 0;
+    /**
+     * @var non-empty-string[]
+     */
+    #[ORM\Column(type: 'simple_array')]
+    private array $stepNames = [];
 
     #[ORM\Column(type: 'integer', nullable: false, unique: true)]
     private int $position;
 
+    /**
+     * @param non-empty-string[] $stepNames
+     */
     public static function create(
         TestConfiguration $configuration,
         string $source,
         string $target,
-        int $stepCount,
+        array $stepNames,
         int $position
     ): self {
         $test = new Test();
@@ -47,7 +53,7 @@ class Test implements \JsonSerializable
         $test->state = TestState::AWAITING;
         $test->source = $source;
         $test->target = $target;
-        $test->stepCount = $stepCount;
+        $test->stepNames = $stepNames;
         $test->position = $position;
 
         return $test;
@@ -90,9 +96,12 @@ class Test implements \JsonSerializable
         return $this->target;
     }
 
-    public function getStepCount(): int
+    /**
+     * @return non-empty-string[]
+     */
+    public function getStepNames(): array
     {
-        return $this->stepCount;
+        return $this->stepNames;
     }
 
     public function getPosition(): int
@@ -109,7 +118,7 @@ class Test implements \JsonSerializable
             'configuration' => $this->configuration->jsonSerialize(),
             'source' => $this->source,
             'target' => $this->target,
-            'step_count' => $this->stepCount,
+            'step_names' => $this->stepNames,
             'state' => $this->state->value,
             'position' => $this->position,
         ];

@@ -67,7 +67,7 @@ class TestDocumentFactoryTest extends TestCase
             TestConfiguration::create('chrome', 'http://example.com'),
             $path,
             '/app/target/GeneratedTest.php',
-            2,
+            ['step 1', 'step 2'],
             1
         );
     }

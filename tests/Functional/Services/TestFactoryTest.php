@@ -16,7 +16,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
-use webignition\BasilModels\Test\Configuration;
+use webignition\BasilModels\Model\Test\Configuration;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -52,13 +52,13 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 new Configuration('chrome', 'http://example.com'),
                 'Tests/chrome_test.yml',
                 '/app/tests/GeneratedChromeTest.php',
-                2
+                ['step 1', 'step 2']
             ),
             'firefox' => new TestManifest(
                 new Configuration('firefox', 'http://example.com'),
                 'Tests/firefox_test.yml',
                 '/app/tests/GeneratedFirefoxTest.php',
-                3
+                ['step 1', 'step 2', 'step 3']
             )
         ];
 
@@ -67,14 +67,14 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 TestConfiguration::create('chrome', 'http://example.com'),
                 'Tests/chrome_test.yml',
                 '/app/tests/GeneratedChromeTest.php',
-                2,
+                ['step 1', 'step 2'],
                 1
             ),
             'firefox' => Test::create(
                 TestConfiguration::create('firefox', 'http://example.com'),
                 'Tests/firefox_test.yml',
                 '/app/tests/GeneratedFirefoxTest.php',
-                3,
+                ['step 1', 'step 2', 'step 3'],
                 2
             ),
         ];
@@ -182,7 +182,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
         self::assertSame($expected->getSource(), $actual->getSource());
         self::assertSame($expected->getTarget(), $actual->getTarget());
         self::assertSame($expected->getState(), $actual->getState());
-        self::assertSame($expected->getStepCount(), $actual->getStepCount());
+        self::assertSame($expected->getStepNames(), $actual->getStepNames());
         self::assertSame($expected->getPosition(), $actual->getPosition());
     }
 

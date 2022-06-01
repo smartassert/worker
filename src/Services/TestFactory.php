@@ -66,7 +66,7 @@ class TestFactory implements EventSubscriberInterface
             ),
             $manifest->getSource(),
             $manifest->getTarget(),
-            $manifest->getStepCount()
+            $manifest->getStepNames()
         );
     }
 }

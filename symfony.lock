@@ -1,7 +1,4 @@
 {
-    "composer/package-versions-deprecated": {
-        "version": "1.11.99.1"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -331,9 +328,6 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client-contracts": {
-        "version": "v2.4.0"
-    },
     "symfony/http-foundation": {
         "version": "v5.2.4"
     },
@@ -440,6 +434,9 @@
     },
     "webignition/object-reflector": {
         "version": "1.0"
+    },
+    "webignition/php-basil-context-aware-exception": {
+        "version": "0.5"
     },
     "webignition/tcp-cli-proxy-client": {
         "version": "0.12"
