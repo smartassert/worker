@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Job;
+use App\Exception\JobNotFoundException;
 use App\Model\JobStatus;
+use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 
 class JobStatusFactory
 {
     public function __construct(
+        private readonly JobRepository $jobRepository,
         private readonly SourceRepository $sourceRepository,
         private readonly TestRepository $testRepository,
         private readonly TestSerializer $testSerializer,
@@ -23,8 +25,12 @@ class JobStatusFactory
     ) {
     }
 
-    public function create(Job $job): JobStatus
+    /**
+     * @throws JobNotFoundException
+     */
+    public function create(): JobStatus
     {
+        $job = $this->jobRepository->get();
         $tests = $this->testRepository->findAll();
 
         return new JobStatus(
