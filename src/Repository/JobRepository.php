@@ -50,6 +50,13 @@ class JobRepository extends ServiceEntityRepository
         throw new JobNotFoundException();
     }
 
+    public function getLabel(): ?string
+    {
+        $job = parent::findOneBy([]);
+
+        return $job instanceof Job ? $job->getLabel() : null;
+    }
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException
