@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Services;
 
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventType;
+use App\Exception\JobNotFoundException;
 use App\Services\WorkerEventSender;
 use App\Tests\Mock\Repository\MockJobRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -19,13 +20,16 @@ class WorkerEventSenderTest extends TestCase
     public function testSendNoJob(): void
     {
         $httpClient = \Mockery::mock(ClientInterface::class);
-
+        $exception = new JobNotFoundException();
         $jobRepository = (new MockJobRepository())
-            ->withGetCall(null)
+            ->withGetCall($exception)
             ->getMock()
         ;
 
         $sender = new WorkerEventSender($httpClient, $jobRepository);
+
+        self::expectExceptionObject($exception);
+
         $sender->send(new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []));
     }
 }

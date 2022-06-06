@@ -9,7 +9,6 @@ use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
-use App\Repository\JobRepository;
 use App\Services\CompilationProgress;
 use App\Services\Compiler;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -20,7 +19,6 @@ class CompileSourceHandler implements MessageHandlerInterface
 {
     public function __construct(
         private Compiler $compiler,
-        private readonly JobRepository $jobRepository,
         private CompilationProgress $compilationProgress,
         private EventDispatcherInterface $eventDispatcher
     ) {
@@ -28,10 +26,6 @@ class CompileSourceHandler implements MessageHandlerInterface
 
     public function __invoke(CompileSourceMessage $message): void
     {
-        if (null === $this->jobRepository->get()) {
-            return;
-        }
-
         if (false === $this->compilationProgress->is(CompilationState::RUNNING)) {
             return;
         }

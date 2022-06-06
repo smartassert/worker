@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Mock\Repository;
 
 use App\Entity\Job;
+use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Mockery\MockInterface;
 
@@ -25,12 +26,15 @@ class MockJobRepository
         return $this->jobStore;
     }
 
-    public function withGetCall(?Job $job): self
+    public function withGetCall(Job|JobNotFoundException $outcome): self
     {
-        $this->jobStore
-            ->shouldReceive('get')
-            ->andReturn($job)
-        ;
+        $expectation = $this->jobStore->shouldReceive('get');
+
+        if ($outcome instanceof Job) {
+            $expectation->andReturn($outcome);
+        } else {
+            $expectation->andThrow($outcome);
+        }
 
         return $this;
     }

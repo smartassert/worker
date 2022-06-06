@@ -7,6 +7,7 @@ namespace App\Tests\Functional\MessageHandler;
 use App\Entity\Job;
 use App\Event\EventInterface;
 use App\Event\JobTimeoutEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -47,6 +48,8 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
     public function testInvokeNoJob(): void
     {
+        $this->messengerAsserter->assertQueueCount(0);
+
         $eventDispatcher = (new MockEventDispatcher())
             ->withoutDispatchCall()
             ->getMock()
@@ -56,9 +59,12 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         $message = new TimeoutCheckMessage();
 
-        ($this->handler)($message);
-
-        $this->messengerAsserter->assertQueueCount(0);
+        try {
+            ($this->handler)($message);
+            self::fail(JobNotFoundException::class . ' not thrown');
+        } catch (JobNotFoundException $exception) {
+            $this->messengerAsserter->assertQueueCount(0);
+        }
     }
 
     public function testInvokeJobMaximumDurationNotReached(): void

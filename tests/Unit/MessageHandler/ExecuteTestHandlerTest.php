@@ -8,12 +8,14 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
+use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Services\ExecutionProgress;
 use App\Services\TestDocumentFactory;
+use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Mock\Repository\MockTestRepository;
@@ -26,6 +28,25 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ExecuteTestHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    public function testInvokeNoJob(): void
+    {
+        $exception = new JobNotFoundException();
+
+        $handler = new ExecuteTestHandler(
+            (new MockJobRepository())->withGetCall($exception)->getMock(),
+            \Mockery::mock(TestExecutor::class),
+            \Mockery::mock(EventDispatcherInterface::class),
+            \Mockery::mock(TestStateMutator::class),
+            \Mockery::mock(TestRepository::class),
+            \Mockery::mock(ExecutionProgress::class),
+            \Mockery::mock(TestDocumentFactory::class)
+        );
+
+        self::expectExceptionObject($exception);
+
+        $handler(new ExecuteTestMessage(1));
+    }
 
     /**
      * @dataProvider invokeNoExecutionDataProvider
@@ -63,17 +84,6 @@ class ExecuteTestHandlerTest extends TestCase
         $job = new Job(md5((string) rand()), 'https://example.com/events', 600, []);
 
         return [
-            'no job' => [
-                'jobRepository' => (new MockJobRepository())
-                    ->withGetCall(null)
-                    ->getMock(),
-                'executionProgress' => (new MockExecutionProgress())
-                    ->getMock(),
-                'message' => new ExecuteTestMessage(1),
-                'testRepository' => (new MockTestRepository())
-                    ->withoutFindCall()
-                    ->getMock(),
-            ],
             'execution state not awaiting, not running' => [
                 'jobRepository' => (new MockJobRepository())
                     ->withGetCall($job)

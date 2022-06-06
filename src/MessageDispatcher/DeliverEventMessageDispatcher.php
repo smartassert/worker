@@ -22,6 +22,7 @@ use App\Event\StepPassedEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
@@ -94,14 +95,12 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function dispatchForEvent(EventInterface $event): ?Envelope
     {
-        $job = $this->jobRepository->get();
-        if (null === $job) {
-            return null;
-        }
-
-        $workerEvent = $this->createWorkerEvent($job, $event);
+        $workerEvent = $this->createWorkerEvent($this->jobRepository->get(), $event);
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));

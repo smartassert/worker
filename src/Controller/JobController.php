@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Event\JobStartedEvent;
 use App\Exception\InvalidManifestException;
+use App\Exception\JobNotFoundException;
 use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Repository\JobRepository;
@@ -50,7 +51,7 @@ class JobController
         SourceRepository $sourceRepository,
         CreateJobRequest $request,
     ): JsonResponse {
-        if ($this->jobRepository->get() instanceof Job) {
+        if ($this->jobRepository->has()) {
             return new ErrorResponse('job/already_exists');
         }
 
@@ -116,8 +117,9 @@ class JobController
         ExecutionProgress $executionProgress,
         EventDeliveryProgress $eventDeliveryProgress,
     ): JsonResponse {
-        $job = $this->jobRepository->get();
-        if (null === $job) {
+        try {
+            $job = $this->jobRepository->get();
+        } catch (JobNotFoundException) {
             return new JsonResponse([], 400);
         }
 

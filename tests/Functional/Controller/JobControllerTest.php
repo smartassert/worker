@@ -96,12 +96,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      */
     public function testCreateBadRequest(array $requestPayload, array $expectedResponseData): void
     {
-        self::assertNull($this->jobRepository->get());
+        self::assertFalse($this->jobRepository->has());
 
         $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
-        self::assertNull($this->jobRepository->get());
+        self::assertFalse($this->jobRepository->has());
     }
 
     /**
@@ -354,7 +354,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         array $sourcePaths,
         array $expectedStoredSources,
     ): void {
-        self::assertNull($this->jobRepository->get());
+        self::assertFalse($this->jobRepository->has());
 
         $label = md5((string) rand());
         $eventDeliveryUrl = md5((string) rand());
@@ -370,7 +370,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $response = $this->clientRequestSender->create($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
 
-        self::assertNotNull($this->jobRepository->get());
+        self::assertTrue($this->jobRepository->has());
 
         $job = $this->jobRepository->get();
         self::assertSame($label, $job->getLabel());

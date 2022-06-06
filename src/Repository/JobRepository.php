@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Job;
+use App\Exception\JobNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -31,9 +32,22 @@ class JobRepository extends ServiceEntityRepository
         return $job;
     }
 
-    public function get(): ?Job
+    public function has(): bool
     {
-        return parent::findOneBy([]);
+        return parent::findOneBy([]) instanceof Job;
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function get(): Job
+    {
+        $job = parent::findOneBy([]);
+        if ($job instanceof Job) {
+            return $job;
+        }
+
+        throw new JobNotFoundException();
     }
 
     /**
