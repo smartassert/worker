@@ -16,7 +16,8 @@ return (new PhpCsFixer\Config())
         'php_unit_internal_class' => false,
         'php_unit_test_class_requires_covers' => false,
         'types_spaces' => [
-            'space' => 'single',
+            'space' => 'none',
+            'space_multiple_catch' => 'single',
         ],
         'blank_line_before_statement' => [
             'statements' => [
