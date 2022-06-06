@@ -37,17 +37,20 @@ class TestRepository extends ServiceEntityRepository
         return $test;
     }
 
+    /**
+     * @param non-empty-string[] $stepNames
+     */
     public function create(
         TestConfiguration $configuration,
         string $source,
         string $target,
-        int $stepCount
+        array $stepNames
     ): Test {
         return $this->add(Test::create(
             $this->configurationRepository->get($configuration),
             $source,
             $target,
-            $stepCount,
+            $stepNames,
             $this->findMaxPosition() + 1
         ));
     }

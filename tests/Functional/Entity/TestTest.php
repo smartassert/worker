@@ -30,7 +30,14 @@ class TestTest extends AbstractEntityTest
         $this->entityManager->persist($configuration);
         $this->entityManager->flush();
 
-        $test = Test::create($configuration, '/app/source/Test/test.yml', '/app/tests/GeneratedTest.php', 1, 1);
+        $test = Test::create(
+            $configuration,
+            '/app/source/Test/test.yml',
+            '/app/tests/GeneratedTest.php',
+            ['step 1'],
+            1
+        );
+
         $this->entityManager->persist($test);
         $this->entityManager->flush();
 

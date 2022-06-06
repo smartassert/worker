@@ -31,7 +31,7 @@ class TestTestFactory
             $testSetup->getConfiguration(),
             $source,
             $target,
-            $testSetup->getStepCount()
+            $testSetup->getStepNames()
         );
 
         $test->setState($testSetup->getState());

@@ -17,7 +17,7 @@ class TestTest extends TestCase
             \Mockery::mock(TestConfiguration::class),
             '',
             '',
-            0,
+            ['step 1'],
             0
         );
 

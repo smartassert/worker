@@ -44,7 +44,7 @@ class SerializedJobAsserter
             $this->assertTest(
                 $expectedTest['configuration'],
                 $expectedTest['source'],
-                $expectedTest['step_count'],
+                $expectedTest['step_names'],
                 $expectedTest['state'],
                 $expectedTest['position'],
                 $actualTest
@@ -55,11 +55,12 @@ class SerializedJobAsserter
     /**
      * @param array<mixed> $expectedConfiguration
      * @param array<mixed> $actual
+     * @param string[]     $expectedStepNames
      */
     private function assertTest(
         array $expectedConfiguration,
         string $expectedSource,
-        int $expectedStepCount,
+        array $expectedStepNames,
         string $expectedState,
         int $expectedPosition,
         array $actual
@@ -77,7 +78,7 @@ class SerializedJobAsserter
         TestCase::assertSame($expectedSource, $actual['source']);
         TestCase::assertArrayHasKey('target', $actual);
         TestCase::assertMatchesRegularExpression('/^Generated[0-9a-f]{32}Test\.php$/', $actual['target']);
-        TestCase::assertSame($expectedStepCount, $actual['step_count']);
+        TestCase::assertSame($expectedStepNames, $actual['step_names']);
         TestCase::assertSame($expectedState, $actual['state']);
         TestCase::assertSame($expectedPosition, $actual['position']);
     }

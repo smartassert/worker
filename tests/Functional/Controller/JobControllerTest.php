@@ -642,11 +642,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
                             ->withTarget('{{ compiler_target_directory }}/GeneratedTest1.php')
-                            ->withStepCount(3),
+                            ->withStepNames(['step 1', 'step 2', 'step 3']),
                         (new TestSetup())
                             ->withSource('{{ compiler_source_directory }}/Test/test2.yml')
                             ->withTarget('{{ compiler_target_directory }}/GeneratedTest2.php')
-                            ->withStepCount(2),
+                            ->withStepNames(['step 1', 'step 2']),
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
@@ -673,7 +673,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                             ],
                             'source' => 'Test/test1.yml',
                             'target' => 'GeneratedTest1.php',
-                            'step_count' => 3,
+                            'step_names' => ['step 1', 'step 2', 'step 3'],
                             'state' => 'awaiting',
                             'position' => 1,
                         ],
@@ -684,7 +684,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                             ],
                             'source' => 'Test/test2.yml',
                             'target' => 'GeneratedTest2.php',
-                            'step_count' => 2,
+                            'step_names' => ['step 1', 'step 2'],
                             'state' => 'awaiting',
                             'position' => 2,
                         ],

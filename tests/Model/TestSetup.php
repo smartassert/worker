@@ -12,7 +12,12 @@ class TestSetup
     private TestConfiguration $configuration;
     private string $source;
     private string $target;
-    private int $stepCount;
+
+    /**
+     * @var non-empty-string[]
+     */
+    private array $stepNames;
+
     private TestState $state;
 
     public function __construct()
@@ -20,7 +25,7 @@ class TestSetup
         $this->configuration = TestConfiguration::create('chrome', 'http://example.com');
         $this->source = '/app/source/Test/test.yml';
         $this->target = '/app/tests/GeneratedTest.php';
-        $this->stepCount = 1;
+        $this->stepNames = ['step 1'];
         $this->state = TestState::AWAITING;
     }
 
@@ -39,9 +44,12 @@ class TestSetup
         return $this->target;
     }
 
-    public function getStepCount(): int
+    /**
+     * @return non-empty-string[]
+     */
+    public function getStepNames(): array
     {
-        return $this->stepCount;
+        return $this->stepNames;
     }
 
     public function getState(): TestState
@@ -73,10 +81,13 @@ class TestSetup
         return $new;
     }
 
-    public function withStepCount(int $stepCount): self
+    /**
+     * @param non-empty-string[] $stepNames
+     */
+    public function withStepNames(array $stepNames): self
     {
         $new = clone $this;
-        $new->stepCount = $stepCount;
+        $new->stepNames = $stepNames;
 
         return $new;
     }

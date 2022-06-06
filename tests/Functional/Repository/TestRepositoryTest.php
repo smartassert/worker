@@ -377,7 +377,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             TestConfiguration::create('chrome', 'http://example.com/complete'),
             '',
             '',
-            1,
+            ['step 1'],
             $position
         );
 
