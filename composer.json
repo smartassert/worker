@@ -12,14 +12,14 @@
         "doctrine/orm": "^2.10",
         "guzzlehttp/guzzle": "^7.4",
         "smartassert/yaml-file": "^4.0",
-        "symfony/console": "6.0.*",
-        "symfony/doctrine-messenger": "6.0.*",
-        "symfony/dotenv": "6.0.*",
+        "symfony/console": "6.1.*",
+        "symfony/doctrine-messenger": "6.1.*",
+        "symfony/dotenv": "6.1.*",
         "symfony/flex": "^1.13",
-        "symfony/framework-bundle": "6.0.*",
-        "symfony/messenger": "6.0.*",
-        "symfony/string": "6.0.*",
-        "symfony/yaml": "6.0.*",
+        "symfony/framework-bundle": "6.1.*",
+        "symfony/messenger": "6.1.*",
+        "symfony/string": "6.1.*",
+        "symfony/yaml": "6.1.*",
         "webignition/basil-compiler-models": "^3.0",
         "webignition/basil-runner-documents": "^1.0",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
@@ -39,9 +39,9 @@
         "phpunit/phpunit": "^9.5",
         "psr/log": "^1.1",
         "squizlabs/php_codesniffer": "dev-master",
-        "symfony/browser-kit": "6.0.*",
+        "symfony/browser-kit": "6.1.*",
         "symfony/maker-bundle": "^1.40",
-        "symfony/phpunit-bridge": "6.0.*",
+        "symfony/phpunit-bridge": "6.1.*",
         "webignition/http-history-container": "^2.5",
         "webignition/object-reflector": "^1.0"
     },
@@ -156,7 +156,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "6.0.*"
+            "require": "6.1.*"
         }
     }
 }
