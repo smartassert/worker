@@ -135,7 +135,9 @@ class AppTest extends TestCase
                         'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-open-index.yml',
-                    'step_count' => 1,
+                    'step_names' => [
+                        'verify page is open',
+                    ],
                     'state' => 'complete',
                     'position' => 1,
                 ],
@@ -145,7 +147,9 @@ class AppTest extends TestCase
                         'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-firefox-open-index.yml',
-                    'step_count' => 1,
+                    'step_names' => [
+                        'verify page is open',
+                    ],
                     'state' => 'complete',
                     'position' => 2,
                 ],
@@ -155,7 +159,9 @@ class AppTest extends TestCase
                         'url' => 'http://html-fixtures/index.html',
                     ],
                     'source' => 'Test/chrome-firefox-open-index.yml',
-                    'step_count' => 1,
+                    'step_names' => [
+                        'verify page is open',
+                    ],
                     'state' => 'complete',
                     'position' => 3,
                 ],
@@ -165,7 +171,9 @@ class AppTest extends TestCase
                         'url' => 'http://html-fixtures/form.html',
                     ],
                     'source' => 'Test/chrome-open-form.yml',
-                    'step_count' => 1,
+                    'step_names' => [
+                        'verify page is open',
+                    ],
                     'state' => 'complete',
                     'position' => 4,
                 ],
