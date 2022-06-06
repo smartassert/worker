@@ -133,7 +133,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
             self::assertSame($expectedTestData['configuration'], $testData['configuration']);
             self::assertSame($expectedTestData['source'], $testData['source']);
-            self::assertSame($expectedTestData['step_count'], $testData['step_count']);
+            self::assertSame($expectedTestData['step_names'], $testData['step_names']);
             self::assertSame($expectedTestData['state'], $testData['state']);
             self::assertSame($expectedTestData['position'], $testData['position']);
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
@@ -174,7 +174,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => 'Test/chrome-open-index.yml',
-                        'step_count' => 1,
+                        'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 1,
                     ],
@@ -184,7 +184,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_count' => 1,
+                        'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 2,
                     ],
@@ -194,7 +194,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_count' => 1,
+                        'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 3,
                     ],
@@ -204,7 +204,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             'url' => 'http://html-fixtures/form.html',
                         ],
                         'source' => 'Test/chrome-open-form.yml',
-                        'step_count' => 1,
+                        'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 4,
                     ],
@@ -575,7 +575,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => 'Test/chrome-open-index-with-step-failure.yml',
-                        'step_count' => 2,
+                        'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
                         'state' => TestState::FAILED->value,
                         'position' => 1,
                     ],
