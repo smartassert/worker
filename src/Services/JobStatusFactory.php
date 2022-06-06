@@ -29,13 +29,13 @@ class JobStatusFactory
 
         return new JobStatus(
             $job,
-            $this->referenceFactory->create($job->getLabel()),
+            $this->referenceFactory->create(),
             $this->sourceRepository->findAllPaths(),
             $this->compilationProgress->get(),
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
             $this->testSerializer->serializeCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job, $job->getTestPaths())
+            $this->resourceReferenceFactory->createCollection($job->getTestPaths())
         );
     }
 }
