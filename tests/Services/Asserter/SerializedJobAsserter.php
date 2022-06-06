@@ -55,15 +55,15 @@ class SerializedJobAsserter
     /**
      * @param array<mixed> $expectedConfiguration
      * @param array<mixed> $actual
-     * @param string[] $expectedStepNames
+     * @param string[]     $expectedStepNames
      */
     private function assertTest(
-        array  $expectedConfiguration,
+        array $expectedConfiguration,
         string $expectedSource,
-        array    $expectedStepNames,
+        array $expectedStepNames,
         string $expectedState,
-        int    $expectedPosition,
-        array  $actual
+        int $expectedPosition,
+        array $actual
     ): void {
         TestCase::assertIsString($expectedConfiguration['browser']);
         TestCase::assertIsString($expectedConfiguration['url']);
