@@ -76,7 +76,9 @@ class CompilerTest extends AbstractTestCreationTest
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-open-index.yml',
                             'target' => '{{ target_directory }}/Generated2380721d052389cf928f39ac198a41baTest.php',
-                            'step_count' => 1,
+                            'step_names' => [
+                                'verify page is open',
+                            ],
                         ],
                     ],
                 ],
@@ -100,7 +102,9 @@ class CompilerTest extends AbstractTestCreationTest
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                             'target' => '{{ target_directory }}/Generated45ead8003cb8ba3fa966dc1ad5a91372Test.php',
-                            'step_count' => 1,
+                            'step_names' => [
+                                'verify page is open',
+                            ],
                         ],
                         [
                             'config' => [
@@ -109,7 +113,9 @@ class CompilerTest extends AbstractTestCreationTest
                             ],
                             'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                             'target' => '{{ target_directory }}/Generated88b4291e887760b0fe2eec8891356665Test.php',
-                            'step_count' => 1,
+                            'step_names' => [
+                                'verify page is open',
+                            ],
                         ],
                     ],
                 ],
