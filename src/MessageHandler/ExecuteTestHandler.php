@@ -9,6 +9,7 @@ use App\Enum\TestState;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
@@ -32,12 +33,12 @@ class ExecuteTestHandler implements MessageHandlerInterface
     ) {
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function __invoke(ExecuteTestMessage $message): void
     {
         $job = $this->jobRepository->get();
-        if (null === $job) {
-            return;
-        }
 
         if ($this->executionProgress->is(...ExecutionState::getFinishedStates())) {
             return;

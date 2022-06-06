@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Event\JobTimeoutEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
@@ -19,12 +20,12 @@ class TimeoutCheckHandler
     ) {
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function __invoke(TimeoutCheckMessage $timeoutCheck): void
     {
         $job = $this->jobRepository->get();
-        if (null === $job) {
-            return;
-        }
 
         if ($job->hasReachedMaximumDuration()) {
             $this->eventDispatcher->dispatch(new JobTimeoutEvent($job->getMaximumDurationInSeconds()));

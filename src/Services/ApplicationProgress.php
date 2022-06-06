@@ -27,7 +27,7 @@ class ApplicationProgress
 
     public function get(): ApplicationState
     {
-        if (null === $this->jobRepository->get()) {
+        if (false === $this->jobRepository->has()) {
             return ApplicationState::AWAITING_JOB;
         }
 
