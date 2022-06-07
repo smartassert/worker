@@ -6,12 +6,10 @@ namespace App\Message;
 
 class CompileSourceMessage
 {
-    public function __construct(private string $path)
+    /**
+     * @param non-empty-string $path
+     */
+    public function __construct(public readonly string $path)
     {
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
     }
 }
