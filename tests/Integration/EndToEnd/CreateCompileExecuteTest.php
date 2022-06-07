@@ -348,6 +348,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index.yml' .
+                                            'verify page is open'
+                                        ),
+                                    ],
+                                ],
                             ]
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
@@ -394,6 +407,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index.yml' .
+                                            'verify page is open'
+                                        ),
+                                    ],
+                                ],
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
@@ -410,6 +436,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             'browser' => 'chrome',
                                             'url' => 'http://html-fixtures/index.html',
                                         ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-firefox-open-index.yml' .
+                                            'verify page is open'
+                                        ),
                                     ],
                                 ],
                             ]
@@ -456,6 +495,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-firefox-open-index.yml' .
+                                            'verify page is open'
+                                        ),
+                                    ],
+                                ],
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
@@ -472,6 +524,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             'browser' => 'firefox',
                                             'url' => 'http://html-fixtures/index.html',
                                         ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-firefox-open-index.yml' .
+                                            'verify page is open'
+                                        ),
                                     ],
                                 ],
                             ]
@@ -518,6 +583,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-firefox-open-index.yml' .
+                                            'verify page is open'
+                                        ),
+                                    ],
+                                ],
                             ]
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
@@ -534,6 +612,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             'browser' => 'chrome',
                                             'url' => 'http://html-fixtures/form.html',
                                         ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-form.yml' .
+                                            'verify page is open'
+                                        ),
                                     ],
                                 ],
                             ]
@@ -574,6 +665,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             'browser' => 'chrome',
                                             'url' => 'http://html-fixtures/form.html',
                                         ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-form.yml' .
+                                            'verify page is open'
+                                        ),
                                     ],
                                 ],
                             ]
@@ -692,6 +796,28 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             'browser' => 'chrome',
                                             'url' => 'http://html-fixtures/index.html',
                                         ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                    'fail on intentionally-missing element',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index-with-step-failure.yml' .
+                                            'verify page is open'
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'fail on intentionally-missing element',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index-with-step-failure.yml' .
+                                            'fail on intentionally-missing element'
+                                        ),
                                     ],
                                 ],
                             ]
