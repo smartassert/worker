@@ -230,34 +230,34 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             SourceCompilationStartedEvent::class => [
-                'event' => new SourceCompilationStartedEvent($testSource),
+                'event' => new SourceCompilationStartedEvent($relativeTestSource),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_STARTED,
                 'expectedWorkerEventPayload' => [
-                    'source' => $testSource,
+                    'source' => $relativeTestSource,
                 ],
             ],
             SourceCompilationPassedEvent::class => [
-                'event' => new SourceCompilationPassedEvent($testSource, $sourceCompilationPassedSuiteManifest),
+                'event' => new SourceCompilationPassedEvent($relativeTestSource, $sourceCompilationPassedSuiteManifest),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
-                    'source' => $testSource,
+                    'source' => $relativeTestSource,
                     'related_references' => [
                         [
                             'label' => 'step one',
-                            'reference' => md5(self::JOB_LABEL . $testSource . 'step one'),
+                            'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step one'),
                         ],
                         [
                             'label' => 'step two',
-                            'reference' => md5(self::JOB_LABEL . $testSource . 'step two'),
+                            'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step two'),
                         ],
                     ],
                 ],
             ],
             SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
+                'event' => new SourceCompilationFailedEvent($relativeTestSource, $sourceCompileFailureEventOutput),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_FAILED,
                 'expectedWorkerEventPayload' => [
-                    'source' => $testSource,
+                    'source' => $relativeTestSource,
                     'output' => [
                         'compile-failure-key' => 'value',
                     ],
