@@ -10,7 +10,7 @@ use App\Enum\WorkerEventType;
 use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
-use App\Event\TestFailedEvent;
+use App\Event\TestEvent;
 use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
@@ -58,7 +58,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
                 TestPassedEvent::class => ['dispatchForEvent'],
-                TestFailedEvent::class => ['dispatchForEvent'],
+                TestEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
                 TestPassedEvent::class => [
@@ -167,7 +167,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $this->eventDispatcher->dispatch(new TestFailedEvent(
+        $this->eventDispatcher->dispatch(new TestEvent(
             WorkerEventType::TEST_FAILED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),

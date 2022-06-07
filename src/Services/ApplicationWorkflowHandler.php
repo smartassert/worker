@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
+use App\Enum\WorkerEventType;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
-use App\Event\TestFailedEvent;
+use App\Event\TestEvent;
 use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -32,7 +33,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             TestPassedEvent::class => [
                 ['dispatchJobCompletedEvent', 0],
             ],
-            TestFailedEvent::class => [
+            TestEvent::class => [
                 ['dispatchJobFailedEvent', 0],
             ],
         ];
@@ -47,8 +48,12 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         }
     }
 
-    public function dispatchJobFailedEvent(TestFailedEvent $testEvent): void
+    public function dispatchJobFailedEvent(TestEvent $event): void
     {
+        if (WorkerEventType::TEST_FAILED !== $event->getType()) {
+            return;
+        }
+
         $this->eventDispatcher->dispatch(new JobFailedEvent());
     }
 }

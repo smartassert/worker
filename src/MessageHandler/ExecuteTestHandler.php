@@ -8,7 +8,6 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
 use App\Event\TestEvent;
-use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
@@ -84,7 +83,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
                 $testDocument
             ));
         } else {
-            $this->eventDispatcher->dispatch(new TestFailedEvent(
+            $this->eventDispatcher->dispatch(new TestEvent(
                 WorkerEventType::TEST_FAILED,
                 $testSource,
                 $test,

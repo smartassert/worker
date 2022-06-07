@@ -24,7 +24,6 @@ use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Event\TestEvent;
-use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
@@ -91,7 +90,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 JobStartedEvent::class => ['dispatch'],
             ],
             ApplicationWorkflowHandler::class => [
-                TestFailedEvent::class => ['dispatchJobFailedEvent'],
+                TestEvent::class => ['dispatchJobFailedEvent'],
                 TestPassedEvent::class => ['dispatchJobCompletedEvent'],
             ],
         ]);
@@ -339,8 +338,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            TestFailedEvent::class => [
-                'event' => new TestFailedEvent(
+            WorkerEventType::TEST_FAILED->value => [
+                'event' => new TestEvent(
                     WorkerEventType::TEST_FAILED,
                     $relativeTestSource,
                     $genericTest->setState(TestState::FAILED),
