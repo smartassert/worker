@@ -30,7 +30,7 @@ class Job
     private ?\DateTimeImmutable $startDateTime = null;
 
     /**
-     * @var array<int, string>
+     * @var array<int, non-empty-string>
      */
     #[ORM\Column(type: 'simple_array')]
     private array $testPaths;
@@ -74,7 +74,7 @@ class Job
     }
 
     /**
-     * @return string[]
+     * @return non-empty-string[]
      */
     public function getTestPaths(): array
     {

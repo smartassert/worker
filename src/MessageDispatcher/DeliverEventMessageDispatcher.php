@@ -106,10 +106,10 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     private function createWorkerEvent(EventInterface $event): WorkerEvent
     {
         $payload = $event->getPayload();
-        $relatedReferenceValues = $event->getRelatedReferenceValues();
+        $relatedReferenceSources = $event->getRelatedReferenceSources();
 
-        if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceValues) {
-            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection($relatedReferenceValues);
+        if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
+            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection($relatedReferenceSources);
 
             $payload['related_references'] = $resourceReferenceCollection->toArray();
         }

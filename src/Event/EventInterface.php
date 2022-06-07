@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Enum\WorkerEventType;
+use App\Model\ResourceReferenceSource;
 
 interface EventInterface
 {
@@ -21,7 +22,7 @@ interface EventInterface
     public function getType(): WorkerEventType;
 
     /**
-     * @return non-empty-string[]
+     * @return ResourceReferenceSource[]
      */
-    public function getRelatedReferenceValues(): array;
+    public function getRelatedReferenceSources(): array;
 }

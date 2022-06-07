@@ -24,7 +24,7 @@ class JobCompletedEvent extends Event implements EventInterface
         return WorkerEventType::JOB_COMPLETED;
     }
 
-    public function getRelatedReferenceValues(): array
+    public function getRelatedReferenceSources(): array
     {
         return [];
     }
