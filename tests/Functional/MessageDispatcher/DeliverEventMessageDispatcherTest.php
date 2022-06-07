@@ -274,7 +274,12 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent($relativeTestSource, $genericTest, $testDocument),
+                'event' => new TestStartedEvent(
+                    WorkerEventType::TEST_STARTED,
+                    $relativeTestSource,
+                    $genericTest,
+                    $testDocument
+                ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
@@ -314,6 +319,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
+                    WorkerEventType::TEST_PASSED,
                     $relativeTestSource,
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument
@@ -335,6 +341,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestFailedEvent::class => [
                 'event' => new TestFailedEvent(
+                    WorkerEventType::TEST_FAILED,
                     $relativeTestSource,
                     $genericTest->setState(TestState::FAILED),
                     $testDocument

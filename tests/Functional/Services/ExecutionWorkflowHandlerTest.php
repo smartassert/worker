@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -182,7 +183,12 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent('Test/test1.yml', $test, new TestDocument(new Document()));
+        $event = new TestPassedEvent(
+            WorkerEventType::TEST_PASSED,
+            'Test/test1.yml',
+            $test,
+            new TestDocument(new Document())
+        );
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -284,6 +290,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
+                WorkerEventType::TEST_PASSED,
                 $test0RelativeSource,
                 $tests[0],
                 new TestDocument(
@@ -330,6 +337,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
+                WorkerEventType::TEST_PASSED,
                 $test0RelativeSource,
                 $tests[0],
                 new TestDocument(
