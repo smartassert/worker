@@ -19,7 +19,6 @@ use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Event\TestEvent;
-use App\Event\TestPassedEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\WorkerEventRepository;
 use App\Services\ReferenceFactory;
@@ -80,9 +79,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 0],
             ],
             StepFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            TestPassedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             JobFailedEvent::class => [

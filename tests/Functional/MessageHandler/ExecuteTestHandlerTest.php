@@ -10,7 +10,6 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
 use App\Event\TestEvent;
-use App\Event\TestPassedEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
@@ -101,8 +100,10 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (TestPassedEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                    function (TestEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                        self::assertSame(WorkerEventType::TEST_PASSED, $actualEvent->getType());
                         self::assertSame($test, $actualEvent->getTest());
+
                         ++$eventExpectationCount;
 
                         return true;

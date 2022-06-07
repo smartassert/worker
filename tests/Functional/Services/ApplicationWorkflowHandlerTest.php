@@ -11,7 +11,6 @@ use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\TestEvent;
-use App\Event\TestPassedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
@@ -57,13 +56,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                TestPassedEvent::class => ['dispatchForEvent'],
                 TestEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                TestPassedEvent::class => [
-                    'dispatchExecutionCompletedEvent',
-                    'dispatchNextExecuteTestMessageFromTestPassedEvent',
+                TestEvent::class => [
+                    'dispatchExecutionCompletedEventForTestPassedEvent',
+                    'dispatchNextExecuteTestMessageForTestPassedEvent',
                 ],
             ],
         ]);
@@ -85,7 +83,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueIsEmpty();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent(
+        $this->eventDispatcher->dispatch(new TestEvent(
             WorkerEventType::TEST_PASSED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),
@@ -134,7 +132,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $applicationProgress
         );
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent(
+        $this->eventDispatcher->dispatch(new TestEvent(
             WorkerEventType::TEST_PASSED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),

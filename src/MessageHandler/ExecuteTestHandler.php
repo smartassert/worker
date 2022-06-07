@@ -8,7 +8,6 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
 use App\Event\TestEvent;
-use App\Event\TestPassedEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
@@ -76,7 +75,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if ($test->hasState(TestState::COMPLETE)) {
-            $this->eventDispatcher->dispatch(new TestPassedEvent(
+            $this->eventDispatcher->dispatch(new TestEvent(
                 WorkerEventType::TEST_PASSED,
                 $testSource,
                 $test,
