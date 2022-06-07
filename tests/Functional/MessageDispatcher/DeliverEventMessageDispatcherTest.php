@@ -274,11 +274,20 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventPayload' => [],
             ],
             TestStartedEvent::class => [
-                'event' => new TestStartedEvent($testDocument),
+                'event' => new TestStartedEvent($relativeTestSource, $genericTest, $testDocument),
                 'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
                     'document' => $testDocumentData,
+                    'step_names' => [
+                        'step 1',
+                    ],
+                    'related_references' => [
+                        [
+                            'label' => 'step 1',
+                            'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                        ],
+                    ],
                 ],
             ],
             StepPassedEvent::class => [
@@ -303,21 +312,44 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             TestPassedEvent::class => [
                 'event' => new TestPassedEvent(
-                    $testDocument,
-                    $genericTest->setState(TestState::COMPLETE)
+                    $relativeTestSource,
+                    $genericTest->setState(TestState::COMPLETE),
+                    $testDocument
                 ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
                     'document' => $testDocumentData,
+                    'step_names' => [
+                        'step 1',
+                    ],
+                    'related_references' => [
+                        [
+                            'label' => 'step 1',
+                            'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                        ],
+                    ],
                 ],
             ],
             TestFailedEvent::class => [
-                'event' => new TestFailedEvent($testDocument),
+                'event' => new TestFailedEvent(
+                    $relativeTestSource,
+                    $genericTest->setState(TestState::FAILED),
+                    $testDocument
+                ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_FAILED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
                     'document' => $testDocumentData,
+                    'step_names' => [
+                        'step 1',
+                    ],
+                    'related_references' => [
+                        [
+                            'label' => 'step 1',
+                            'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                        ],
+                    ],
                 ],
             ],
             JobTimeoutEvent::class => [
