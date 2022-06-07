@@ -28,6 +28,9 @@ class SourcePathFinder
         return $this->removeCompilerSourceDirectoryPrefixFromPaths($sources);
     }
 
+    /**
+     * @return null|non-empty-string
+     */
     public function findNextNonCompiledPath(): ?string
     {
         $sourcePaths = $this->sourceRepository->findAllPaths(Source::TYPE_TEST);
