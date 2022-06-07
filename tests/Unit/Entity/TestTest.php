@@ -13,7 +13,7 @@ class TestTest extends TestCase
 {
     public function testHasState(): void
     {
-        $test = Test::create(
+        $test = new Test(
             \Mockery::mock(TestConfiguration::class),
             '',
             '',

@@ -56,19 +56,6 @@ class Test implements \JsonSerializable
         $this->state = TestState::AWAITING;
     }
 
-    /**
-     * @param non-empty-string[] $stepNames
-     */
-    public static function create(
-        TestConfiguration $configuration,
-        string $source,
-        string $target,
-        array $stepNames,
-        int $position
-    ): self {
-        return new Test($configuration, $source, $target, $stepNames, $position);
-    }
-
     public function getId(): ?int
     {
         return $this->id;

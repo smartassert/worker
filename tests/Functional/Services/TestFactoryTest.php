@@ -63,14 +63,14 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
         ];
 
         $this->tests = [
-            'chrome' => Test::create(
+            'chrome' => new Test(
                 TestConfiguration::create('chrome', 'http://example.com'),
                 'Tests/chrome_test.yml',
                 '/app/tests/GeneratedChromeTest.php',
                 ['step 1', 'step 2'],
                 1
             ),
-            'firefox' => Test::create(
+            'firefox' => new Test(
                 TestConfiguration::create('firefox', 'http://example.com'),
                 'Tests/firefox_test.yml',
                 '/app/tests/GeneratedFirefoxTest.php',

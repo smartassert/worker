@@ -46,7 +46,7 @@ class TestRepository extends ServiceEntityRepository
         string $target,
         array $stepNames
     ): Test {
-        return $this->add(Test::create(
+        return $this->add(new Test(
             $this->configurationRepository->get($configuration),
             $source,
             $target,
