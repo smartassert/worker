@@ -24,7 +24,7 @@ class SourceFactory
     public function createFromYamlSourceCollection(YamlSourceCollection $sourceCollection): void
     {
         $manifest = $sourceCollection->getManifest();
-        $manifestTestPaths = $manifest->getTestPaths();
+        $manifestTestPaths = $manifest->testPaths;
         $sourcePaths = [];
 
         $sources = $sourceCollection->getYamlFiles();

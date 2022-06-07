@@ -100,7 +100,7 @@ class JobController
             $request->label,
             $request->eventDeliveryUrl,
             $request->maximumDurationInSeconds,
-            $yamlSourceCollection->getManifest()->getTestPaths()
+            $yamlSourceCollection->getManifest()->testPaths
         ));
 
         $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));

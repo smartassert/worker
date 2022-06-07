@@ -23,7 +23,7 @@ class JobSetup
     private array $localSourcePaths;
 
     /**
-     * @var string[]
+     * @var non-empty-string[]
      */
     private array $testPaths;
 
@@ -66,7 +66,7 @@ class JobSetup
     }
 
     /**
-     * @return string[]
+     * @return non-empty-string[]
      */
     public function getTestPaths(): array
     {
@@ -115,7 +115,7 @@ class JobSetup
     }
 
     /**
-     * @param string[] $testPaths
+     * @param non-empty-string[] $testPaths
      */
     public function withTestPaths(array $testPaths): self
     {
