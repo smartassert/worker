@@ -83,7 +83,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 0],
             ],
             TestPassedEvent::class => [
-                ['dispatchForEvent', 100],
+                ['dispatchForEvent', 0],
             ],
             JobFailedEvent::class => [
                 ['dispatchForEvent', 0],
