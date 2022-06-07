@@ -37,6 +37,7 @@ use App\Services\TestFactory;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockSuiteManifest;
+use App\Tests\Mock\MockTestManifest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
@@ -192,6 +193,18 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             new Document((string) json_encode($testDocumentData))
         );
 
+        $sourceCompilationPassedSuiteManifest = (new MockSuiteManifest())
+            ->withGetTestManifestsCall([
+                (new MockTestManifest())
+                    ->withGetStepNamesCall([
+                        'step one',
+                        'step two',
+                    ])
+                    ->getMock(),
+            ])
+            ->getMock()
+        ;
+
         return [
             JobStartedEvent::class => [
                 'event' => new JobStartedEvent([
@@ -224,10 +237,20 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             SourceCompilationPassedEvent::class => [
-                'event' => new SourceCompilationPassedEvent($testSource, (new MockSuiteManifest())->getMock()),
+                'event' => new SourceCompilationPassedEvent($testSource, $sourceCompilationPassedSuiteManifest),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
+                    'related_references' => [
+                        [
+                            'label' => 'step one',
+                            'reference' => md5(self::JOB_LABEL . $testSource . 'step one'),
+                        ],
+                        [
+                            'label' => 'step two',
+                            'reference' => md5(self::JOB_LABEL . $testSource . 'step two'),
+                        ],
+                    ],
                 ],
             ],
             SourceCompilationFailedEvent::class => [

@@ -263,6 +263,16 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index.yml' .
+                                            'verify page is open'
+                                        )
+                                    ],
+                                ],
                             ]
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
@@ -279,6 +289,16 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-firefox-open-index.yml' .
+                                            'verify page is open'
+                                        )
+                                    ],
+                                ],
                             ]
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
@@ -295,6 +315,16 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-form.yml' .
+                                            'verify page is open'
+                                        )
+                                    ],
+                                ],
                             ]
                         ),
                         'job/compiled' => $requestFactory->create(
