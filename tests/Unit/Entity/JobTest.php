@@ -25,47 +25,6 @@ class JobTest extends TestCase
     }
 
     /**
-     * @dataProvider jsonSerializeDataProvider
-     *
-     * @param array<mixed> $expectedSerializedJob
-     */
-    public function testJsonSerialize(Job $job, array $expectedSerializedJob): void
-    {
-        self::assertSame($expectedSerializedJob, $job->jsonSerialize());
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerializeDataProvider(): array
-    {
-        return [
-            'state compilation-awaiting' => [
-                'job' => new Job(
-                    'label content',
-                    'http://example.com/events',
-                    1,
-                    [
-                        'test1.yml',
-                        'test2.yml',
-                        'test3.yml',
-                    ]
-                ),
-                'expectedSerializedJob' => [
-                    'label' => 'label content',
-                    'event_delivery_url' => 'http://example.com/events',
-                    'maximum_duration_in_seconds' => 1,
-                    'test_paths' => [
-                        'test1.yml',
-                        'test2.yml',
-                        'test3.yml',
-                    ]
-                ],
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider hasReachedMaximumDurationDataProvider
      */
     public function testHasReachedMaximumDuration(Job $job, bool $hasReachedMaximumDuration): void

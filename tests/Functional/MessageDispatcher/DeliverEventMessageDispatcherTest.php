@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\MessageDispatcher;
 
+use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
@@ -36,8 +37,12 @@ use App\Services\TestFactory;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockSuiteManifest;
+use App\Tests\Mock\MockTestManifest;
+use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\JobSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -47,6 +52,8 @@ use webignition\YamlDocument\Document;
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
+
+    private const JOB_LABEL = 'label content';
 
     private EventDispatcherInterface $eventDispatcher;
     private MessengerAsserter $messengerAsserter;
@@ -91,7 +98,17 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Test::class);
+        }
+
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        if ($environmentFactory instanceof EnvironmentFactory) {
+            $environmentFactory->create(
+                (new EnvironmentSetup())->withJobSetup(
+                    (new JobSetup())->withLabel(self::JOB_LABEL)
+                )
+            );
         }
     }
 
@@ -176,6 +193,18 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             new Document((string) json_encode($testDocumentData))
         );
 
+        $sourceCompilationPassedSuiteManifest = (new MockSuiteManifest())
+            ->withGetTestManifestsCall([
+                (new MockTestManifest())
+                    ->withGetStepNamesCall([
+                        'step one',
+                        'step two',
+                    ])
+                    ->getMock(),
+            ])
+            ->getMock()
+        ;
+
         return [
             JobStartedEvent::class => [
                 'event' => new JobStartedEvent([
@@ -187,7 +216,17 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'tests' => [
                         'Test/test1.yaml',
                         'Test/test2.yaml',
-                    ]
+                    ],
+                    'related_references' => [
+                        [
+                            'label' => 'Test/test1.yaml',
+                            'reference' => md5(self::JOB_LABEL . 'Test/test1.yaml'),
+                        ],
+                        [
+                            'label' => 'Test/test2.yaml',
+                            'reference' => md5(self::JOB_LABEL . 'Test/test2.yaml'),
+                        ],
+                    ],
                 ],
             ],
             SourceCompilationStartedEvent::class => [
@@ -198,10 +237,20 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             SourceCompilationPassedEvent::class => [
-                'event' => new SourceCompilationPassedEvent($testSource, (new MockSuiteManifest())->getMock()),
+                'event' => new SourceCompilationPassedEvent($testSource, $sourceCompilationPassedSuiteManifest),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $testSource,
+                    'related_references' => [
+                        [
+                            'label' => 'step one',
+                            'reference' => md5(self::JOB_LABEL . $testSource . 'step one'),
+                        ],
+                        [
+                            'label' => 'step two',
+                            'reference' => md5(self::JOB_LABEL . $testSource . 'step two'),
+                        ],
+                    ],
                 ],
             ],
             SourceCompilationFailedEvent::class => [

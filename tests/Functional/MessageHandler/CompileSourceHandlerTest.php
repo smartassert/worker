@@ -116,7 +116,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $compiler = (new MockCompiler())
             ->withCompileCall(
-                $compileSourceMessage->getPath(),
+                $compileSourceMessage->path,
                 $suiteManifest
             )
             ->getMock()
@@ -192,7 +192,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $compiler = (new MockCompiler())
             ->withCompileCall(
-                $compileSourceMessage->getPath(),
+                $compileSourceMessage->path,
                 $errorOutput
             )
             ->getMock()

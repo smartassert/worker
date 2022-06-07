@@ -37,7 +37,7 @@ class SourceRepository extends ServiceEntityRepository
     /**
      * @param null|Source::TYPE_* $type
      *
-     * @return string[]
+     * @return non-empty-string[]
      */
     public function findAllPaths(?string $type = null): array
     {
@@ -59,7 +59,10 @@ class SourceRepository extends ServiceEntityRepository
         $paths = [];
         foreach ($result as $item) {
             if (is_array($item)) {
-                $paths[] = (string) ($item['path'] ?? null);
+                $path = $item['path'] ?? '';
+                if ('' !== $path) {
+                    $paths[] = $path;
+                }
             }
         }
 

@@ -30,4 +30,9 @@ abstract class AbstractStepEvent extends Event implements EventInterface
             (string) $this->step->getName(),
         ];
     }
+
+    public function getRelatedReferenceSources(): array
+    {
+        return [];
+    }
 }

@@ -23,4 +23,9 @@ class JobCompiledEvent extends Event implements EventInterface
     {
         return WorkerEventType::JOB_COMPILED;
     }
+
+    public function getRelatedReferenceSources(): array
+    {
+        return [];
+    }
 }

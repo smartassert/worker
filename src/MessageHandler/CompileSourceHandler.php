@@ -30,8 +30,7 @@ class CompileSourceHandler implements MessageHandlerInterface
             return;
         }
 
-        $sourcePath = $message->getPath();
-
+        $sourcePath = $message->path;
         $this->eventDispatcher->dispatch(new SourceCompilationStartedEvent($sourcePath));
 
         $output = $this->compiler->compile($sourcePath);

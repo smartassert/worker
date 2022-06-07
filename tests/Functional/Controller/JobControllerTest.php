@@ -14,6 +14,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
+use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
 use App\Services\YamlSourceCollectionFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -345,37 +346,33 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider createSuccessDataProvider
      *
-     * @param string[]                    $manifestPaths
-     * @param string[]                    $sourcePaths
+     * @param array<mixed>                $expectedResponseData
      * @param array<string, array<mixed>> $expectedStoredSources
      */
     public function testCreateSuccess(
-        array $manifestPaths,
-        array $sourcePaths,
+        callable $requestDataCreator,
+        array $expectedResponseData,
         array $expectedStoredSources,
     ): void {
         self::assertFalse($this->jobRepository->has());
 
-        $label = md5((string) rand());
-        $eventDeliveryUrl = md5((string) rand());
-        $maximumDuration = rand(1, 1000);
+        $response = $this->clientRequestSender->create($requestDataCreator($this->createJobSourceFactory));
 
-        $requestPayload = [
-            CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
-            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
-            CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
-        ];
+        $this->jsonResponseAsserter->assertJsonResponse(
+            200,
+            $expectedResponseData,
+            $response
+        );
 
-        $response = $this->clientRequestSender->create($requestPayload);
-        $this->jsonResponseAsserter->assertJsonResponse(200, [], $response);
+        $responseData = json_decode((string) $response->getContent(), true);
+        self::assertIsArray($responseData);
 
         self::assertTrue($this->jobRepository->has());
 
         $job = $this->jobRepository->get();
-        self::assertSame($label, $job->getLabel());
-        self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
-        self::assertSame($maximumDuration, $job->getMaximumDurationInSeconds());
+        self::assertSame($responseData['label'], $job->getLabel());
+        self::assertSame($responseData['event_delivery_url'], $job->getEventDeliveryUrl());
+        self::assertSame($responseData['maximum_duration_in_seconds'], $job->getMaximumDurationInSeconds());
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 
@@ -401,29 +398,113 @@ class JobControllerTest extends AbstractBaseFunctionalTest
      */
     public function createSuccessDataProvider(): array
     {
+        $label = md5((string) rand());
+        $eventDeliveryUrl = 'https://example.com/' . md5((string) rand());
+        $maximumDuration = rand(1, 1000);
+
         return [
             'single source file, test only' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml'
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml'
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventDeliveryUrl,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml'
+                            ],
+                            [
+                                'Test/chrome-open-index.yml'
+                            ]
+                        ),
+                    ];
+                },
+                'expectedResponseData' => [
+                    'label' => $label,
+                    'reference' => md5($label),
+                    'event_delivery_url' => $eventDeliveryUrl,
+                    'maximum_duration_in_seconds' => $maximumDuration,
+                    'compilation_state' => 'running',
+                    'event_delivery_state' => 'running',
+                    'execution_state' => 'awaiting',
+                    'sources' => [
+                        'Test/chrome-open-index.yml',
+                    ],
+                    'test_paths' => [
+                        'Test/chrome-open-index.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                    ],
+                    'tests' => [],
                 ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
                         'contentFixture' => 'Test/chrome-open-index.yml',
                     ],
-                ]
+                ],
             ],
             'single source file, test only with intentionally invalid yaml' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'InvalidTest/invalid-yaml.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml',
-                    'InvalidTest/invalid-yaml.yml',
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventDeliveryUrl,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                                'InvalidTest/invalid-yaml.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                                'InvalidTest/invalid-yaml.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedResponseData' => [
+                    'label' => $label,
+                    'reference' => md5($label),
+                    'event_delivery_url' => $eventDeliveryUrl,
+                    'maximum_duration_in_seconds' => $maximumDuration,
+                    'compilation_state' => 'running',
+                    'event_delivery_state' => 'running',
+                    'execution_state' => 'awaiting',
+                    'sources' => [
+                        'Test/chrome-open-index.yml',
+                        'InvalidTest/invalid-yaml.yml',
+                    ],
+                    'test_paths' => [
+                        'Test/chrome-open-index.yml',
+                        'InvalidTest/invalid-yaml.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                        [
+                            'label' => 'InvalidTest/invalid-yaml.yml',
+                            'reference' => md5($label . 'InvalidTest/invalid-yaml.yml')
+                        ],
+                    ],
+                    'tests' => [],
                 ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
@@ -434,17 +515,61 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'type' => Source::TYPE_TEST,
                         'contentFixture' => 'InvalidTest/invalid-yaml.yml',
                     ],
-                ]
+                ],
             ],
             'multiple source files' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/firefox-open-index.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/firefox-open-index.yml',
-                    'Page/index.yml',
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventDeliveryUrl,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                                'Page/index.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedResponseData' => [
+                    'label' => $label,
+                    'reference' => md5($label),
+                    'event_delivery_url' => $eventDeliveryUrl,
+                    'maximum_duration_in_seconds' => $maximumDuration,
+                    'compilation_state' => 'running',
+                    'event_delivery_state' => 'running',
+                    'execution_state' => 'awaiting',
+                    'sources' => [
+                        'Test/chrome-open-index.yml',
+                        'Test/firefox-open-index.yml',
+                        'Page/index.yml',
+                    ],
+                    'test_paths' => [
+                        'Test/chrome-open-index.yml',
+                        'Test/firefox-open-index.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                        ],
+                        [
+                            'label' => 'Test/firefox-open-index.yml',
+                            'reference' => md5($label . 'Test/firefox-open-index.yml')
+                        ],
+                    ],
+                    'tests' => [],
                 ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
@@ -459,7 +584,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'type' => Source::TYPE_RESOURCE,
                         'contentFixture' => 'Page/index.yml',
                     ],
-                ]
+                ],
             ],
         ];
     }
@@ -501,6 +626,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
 
+        $jobStatusFactory = self::getContainer()->get(JobStatusFactory::class);
+        \assert($jobStatusFactory instanceof JobStatusFactory);
+
         $request = new CreateJobRequest(
             md5((string) rand()),
             md5((string) rand()),
@@ -515,6 +643,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             \Mockery::mock(ErrorResponseFactory::class),
             $yamlFileCollectionDeserializer,
             $sourceRepository,
+            $jobStatusFactory,
             $request
         );
     }
@@ -603,6 +732,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
+                    'reference' => md5('label content'),
                     'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 11,
 
@@ -618,6 +748,20 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test1.yml',
                         'Test/test2.yml',
                         'Test/test3.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/test1.yml',
+                            'reference' => md5('label content' . 'Test/test1.yml')
+                        ],
+                        [
+                            'label' => 'Test/test2.yml',
+                            'reference' => md5('label content' . 'Test/test2.yml')
+                        ],
+                        [
+                            'label' => 'Test/test3.yml',
+                            'reference' => md5('label content' . 'Test/test3.yml')
+                        ],
                     ],
                     'tests' => [],
                 ],
@@ -650,6 +794,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
+                    'reference' => md5('label content'),
                     'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 12,
                     'sources' => [
@@ -664,6 +809,20 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test1.yml',
                         'Test/test2.yml',
                         'Test/test3.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/test1.yml',
+                            'reference' => md5('label content' . 'Test/test1.yml')
+                        ],
+                        [
+                            'label' => 'Test/test2.yml',
+                            'reference' => md5('label content' . 'Test/test2.yml')
+                        ],
+                        [
+                            'label' => 'Test/test3.yml',
+                            'reference' => md5('label content' . 'Test/test3.yml')
+                        ],
                     ],
                     'tests' => [
                         [
