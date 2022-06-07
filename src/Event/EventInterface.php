@@ -21,7 +21,7 @@ interface EventInterface
     public function getType(): WorkerEventType;
 
     /**
-     * @return string[]
+     * @return non-empty-string[]
      */
     public function getRelatedReferenceValues(): array;
 }
