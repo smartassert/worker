@@ -31,7 +31,7 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
     {
         $stepNames = [];
         foreach ($this->suiteManifest->getTestManifests() as $testManifest) {
-            $stepNames = array_merge($stepNames, $testManifest->getStepNames());
+            $stepNames = array_unique(array_merge($stepNames, $testManifest->getStepNames()));
         }
 
         $referenceSources = [];
