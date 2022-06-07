@@ -11,7 +11,7 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
     /**
      * @param non-empty-string $source
      */
-    public function __construct(private readonly string $source)
+    public function __construct(protected readonly string $source)
     {
     }
 
