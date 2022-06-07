@@ -159,7 +159,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
 
-        $genericTest = Test::create($testConfiguration, $testSource, '', ['step 1'], 1);
+        $genericTest = new Test($testConfiguration, $testSource, '', ['step 1'], 1);
 
         $testDocumentData = [
             'type' => 'test',
