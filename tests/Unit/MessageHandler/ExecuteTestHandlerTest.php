@@ -80,7 +80,13 @@ class ExecuteTestHandlerTest extends TestCase
      */
     public function invokeNoExecutionDataProvider(): array
     {
-        $testInWrongState = (new Test())->setState(TestState::CANCELLED);
+        $testInWrongState = \Mockery::mock(Test::class);
+        $testInWrongState
+            ->shouldReceive('hasState')
+            ->with(TestState::AWAITING)
+            ->andReturn(false)
+        ;
+
         $job = new Job(md5((string) rand()), 'https://example.com/events', 600, []);
 
         return [

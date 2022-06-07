@@ -41,6 +41,24 @@ class Test implements \JsonSerializable
     /**
      * @param non-empty-string[] $stepNames
      */
+    public function __construct(
+        TestConfiguration $configuration,
+        string $source,
+        string $target,
+        array $stepNames,
+        int $position
+    ) {
+        $this->configuration = $configuration;
+        $this->source = $source;
+        $this->target = $target;
+        $this->stepNames = $stepNames;
+        $this->position = $position;
+        $this->state = TestState::AWAITING;
+    }
+
+    /**
+     * @param non-empty-string[] $stepNames
+     */
     public static function create(
         TestConfiguration $configuration,
         string $source,
@@ -48,15 +66,7 @@ class Test implements \JsonSerializable
         array $stepNames,
         int $position
     ): self {
-        $test = new Test();
-        $test->configuration = $configuration;
-        $test->state = TestState::AWAITING;
-        $test->source = $source;
-        $test->target = $target;
-        $test->stepNames = $stepNames;
-        $test->position = $position;
-
-        return $test;
+        return new Test($configuration, $source, $target, $stepNames, $position);
     }
 
     public function getId(): ?int
