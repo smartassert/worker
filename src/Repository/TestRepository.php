@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Enum\TestState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -24,7 +23,6 @@ class TestRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        private readonly TestConfigurationRepository $configurationRepository,
     ) {
         parent::__construct($registry, Test::class);
     }
@@ -35,24 +33,6 @@ class TestRepository extends ServiceEntityRepository
         $this->_em->flush();
 
         return $test;
-    }
-
-    /**
-     * @param non-empty-string[] $stepNames
-     */
-    public function create(
-        TestConfiguration $configuration,
-        string $source,
-        string $target,
-        array $stepNames
-    ): Test {
-        return $this->add(new Test(
-            $this->configurationRepository->get($configuration),
-            $source,
-            $target,
-            $stepNames,
-            $this->findMaxPosition() + 1
-        ));
     }
 
     /**
