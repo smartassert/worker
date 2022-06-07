@@ -9,7 +9,7 @@ use App\Model\Document\Test as TestDocument;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractTestEvent extends Event implements EventInterface
+abstract class TestEvent extends Event implements EventInterface
 {
     /**
      * @param non-empty-string $source

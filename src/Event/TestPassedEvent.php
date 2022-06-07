@@ -6,7 +6,7 @@ namespace App\Event;
 
 use App\Enum\WorkerEventType;
 
-class TestPassedEvent extends AbstractTestEvent
+class TestPassedEvent extends TestEvent
 {
     public function getType(): WorkerEventType
     {
