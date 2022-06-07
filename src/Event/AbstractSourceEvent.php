@@ -8,10 +8,16 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractSourceEvent extends Event implements EventInterface
 {
-    public function __construct(private string $source)
+    /**
+     * @param non-empty-string $source
+     */
+    public function __construct(private readonly string $source)
     {
     }
 
+    /**
+     * @return array{source: non-empty-string}
+     */
     public function getPayload(): array
     {
         return [
@@ -19,6 +25,9 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
         ];
     }
 
+    /**
+     * @return array{0: non-empty-string}
+     */
     public function getReferenceComponents(): array
     {
         return [
