@@ -22,6 +22,6 @@ class CompileSourceMessageTest extends TestCase
 
     public function testGetPath(): void
     {
-        self::assertSame(self::PATH, $this->message->getPath());
+        self::assertSame(self::PATH, $this->message->path);
     }
 }
