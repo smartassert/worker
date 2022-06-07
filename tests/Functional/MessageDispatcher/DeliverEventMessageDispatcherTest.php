@@ -22,9 +22,7 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
+use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Step;
@@ -90,8 +88,10 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 JobStartedEvent::class => ['dispatch'],
             ],
             ApplicationWorkflowHandler::class => [
-                TestFailedEvent::class => ['dispatchJobFailedEvent'],
-                TestPassedEvent::class => ['dispatchJobCompletedEvent'],
+                TestEvent::class => [
+                    'dispatchJobFailedEventForTestFailedEvent',
+                    'dispatchJobCompletedEventForTestPassedEvent',
+                ],
             ],
         ]);
 
@@ -270,8 +270,13 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventType' => WorkerEventType::EXECUTION_STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
-            TestStartedEvent::class => [
-                'event' => new TestStartedEvent($relativeTestSource, $genericTest, $testDocument),
+            WorkerEventType::TEST_STARTED->value => [
+                'event' => new TestEvent(
+                    WorkerEventType::TEST_STARTED,
+                    $relativeTestSource,
+                    $genericTest,
+                    $testDocument
+                ),
                 'expectedWorkerEventType' => WorkerEventType::TEST_STARTED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
@@ -309,8 +314,9 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'name' => 'failing step',
                 ],
             ],
-            TestPassedEvent::class => [
-                'event' => new TestPassedEvent(
+            WorkerEventType::TEST_PASSED->value => [
+                'event' => new TestEvent(
+                    WorkerEventType::TEST_PASSED,
                     $relativeTestSource,
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument
@@ -330,8 +336,9 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            TestFailedEvent::class => [
-                'event' => new TestFailedEvent(
+            WorkerEventType::TEST_FAILED->value => [
+                'event' => new TestEvent(
+                    WorkerEventType::TEST_FAILED,
                     $relativeTestSource,
                     $genericTest->setState(TestState::FAILED),
                     $testDocument

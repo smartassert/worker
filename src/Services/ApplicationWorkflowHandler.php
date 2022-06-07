@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
+use App\Enum\WorkerEventType;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
+use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,17 +29,19 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestPassedEvent::class => [
-                ['dispatchJobCompletedEvent', 0],
-            ],
-            TestFailedEvent::class => [
-                ['dispatchJobFailedEvent', 0],
+            TestEvent::class => [
+                ['dispatchJobCompletedEventForTestPassedEvent', -100],
+                ['dispatchJobFailedEventForTestFailedEvent', -100],
             ],
         ];
     }
 
-    public function dispatchJobCompletedEvent(TestPassedEvent $testEvent): void
+    public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+            return;
+        }
+
         if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
         } else {
@@ -47,8 +49,12 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         }
     }
 
-    public function dispatchJobFailedEvent(TestFailedEvent $testEvent): void
+    public function dispatchJobFailedEventForTestFailedEvent(TestEvent $event): void
     {
+        if (WorkerEventType::TEST_FAILED !== $event->getType()) {
+            return;
+        }
+
         $this->eventDispatcher->dispatch(new JobFailedEvent());
     }
 }
