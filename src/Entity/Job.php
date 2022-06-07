@@ -36,9 +36,9 @@ class Job implements \JsonSerializable
     private array $testPaths;
 
     /**
-     * @param non-empty-string   $label
-     * @param non-empty-string   $eventDeliveryUrl
-     * @param array<int, string> $testPaths
+     * @param non-empty-string             $label
+     * @param non-empty-string             $eventDeliveryUrl
+     * @param array<int, non-empty-string> $testPaths
      */
     public function __construct(
         string $label,
