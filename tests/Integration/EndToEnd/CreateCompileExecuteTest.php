@@ -383,6 +383,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'name' => 'verify page is open',
                             ]
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
@@ -445,6 +446,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'name' => 'verify page is open',
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
@@ -507,6 +509,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'name' => 'verify page is open',
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
@@ -565,6 +568,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'name' => 'verify page is open',
                             ]
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
@@ -685,6 +689,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ],
                                     ],
                                 ],
+                                'name' => 'fail on intentionally-missing element',
                             ]
                         ),
                         'test/failed' => $requestFactory->create(
