@@ -34,7 +34,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchJobCompletedEvent', -100],
             ],
             TestEvent::class => [
-                ['dispatchJobFailedEvent', 0],
+                ['dispatchJobFailedEvent', -100],
             ],
         ];
     }
