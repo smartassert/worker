@@ -29,7 +29,7 @@ abstract class AbstractTestEvent extends Event implements EventInterface
         ];
     }
 
-    public function getRelatedReferenceValues(): array
+    public function getRelatedReferenceSources(): array
     {
         return [];
     }

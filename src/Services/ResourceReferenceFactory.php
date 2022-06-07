@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Model\ResourceReference;
 use App\Model\ResourceReferenceCollection;
+use App\Model\ResourceReferenceSource;
 
 class ResourceReferenceFactory
 {
@@ -15,15 +16,15 @@ class ResourceReferenceFactory
     }
 
     /**
-     * @param string[] $values
+     * @param ResourceReferenceSource[] $referenceSources
      */
-    public function createCollection(array $values): ResourceReferenceCollection
+    public function createCollection(array $referenceSources): ResourceReferenceCollection
     {
         $testReferences = [];
-        foreach ($values as $value) {
+        foreach ($referenceSources as $referenceSource) {
             $testReferences[] = new ResourceReference(
-                $value,
-                $this->referenceFactory->create([$value])
+                $referenceSource->label,
+                $this->referenceFactory->create($referenceSource->components)
             );
         }
 

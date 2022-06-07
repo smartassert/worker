@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Enum\WorkerEventType;
+use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobStartedEvent extends Event implements EventInterface
@@ -34,8 +35,14 @@ class JobStartedEvent extends Event implements EventInterface
         return WorkerEventType::JOB_STARTED;
     }
 
-    public function getRelatedReferenceValues(): array
+    public function getRelatedReferenceSources(): array
     {
-        return $this->testPaths;
+        $referenceSources = [];
+
+        foreach ($this->testPaths as $testPath) {
+            $referenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
+        }
+
+        return $referenceSources;
     }
 }

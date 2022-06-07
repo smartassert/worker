@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Exception\JobNotFoundException;
 use App\Model\JobStatus;
+use App\Model\ResourceReferenceSource;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
@@ -33,6 +34,11 @@ class JobStatusFactory
         $job = $this->jobRepository->get();
         $tests = $this->testRepository->findAll();
 
+        $testPathReferenceSources = [];
+        foreach ($job->getTestPaths() as $testPath) {
+            $testPathReferenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
+        }
+
         return new JobStatus(
             $job,
             $this->referenceFactory->create(),
@@ -41,7 +47,7 @@ class JobStatusFactory
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
             $this->testSerializer->serializeCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->getTestPaths())
+            $this->resourceReferenceFactory->createCollection($testPathReferenceSources)
         );
     }
 }
