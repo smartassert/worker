@@ -23,9 +23,9 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
+use App\Event\TestEvent;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Step;
@@ -273,8 +273,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventType' => WorkerEventType::EXECUTION_STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
-            TestStartedEvent::class => [
-                'event' => new TestStartedEvent(
+            WorkerEventType::TEST_STARTED->value => [
+                'event' => new TestEvent(
                     WorkerEventType::TEST_STARTED,
                     $relativeTestSource,
                     $genericTest,

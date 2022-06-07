@@ -8,8 +8,9 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
+use App\Enum\WorkerEventType;
+use App\Event\TestEvent;
 use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
@@ -92,8 +93,8 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (TestStartedEvent $actualEvent) use (&$eventExpectationCount) {
-                        self::assertInstanceOf(TestStartedEvent::class, $actualEvent);
+                    function (TestEvent $actualEvent) use (&$eventExpectationCount) {
+                        self::assertSame(WorkerEventType::TEST_STARTED, $actualEvent->getType());
                         ++$eventExpectationCount;
 
                         return true;
