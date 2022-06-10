@@ -121,3 +121,5 @@ services:
     SmartAssert\YamlFile\FileHashes\Deserializer: ~
 
     SmartAssert\YamlFile\Collection\Deserializer: ~
+
+    webignition\YamlDocument\Factory: ~
