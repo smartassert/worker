@@ -12,12 +12,13 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Handler;
 use webignition\YamlDocument\Document;
+use webignition\YamlDocument\Factory;
 
 class TestExecutor
 {
     public function __construct(
         private readonly Client $delegatorClient,
-        private readonly YamlDocumentFactory $yamlDocumentFactory,
+        private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
         private readonly TestPathMutator $testPathMutator,
     ) {
@@ -34,11 +35,9 @@ class TestExecutor
             })
         ;
 
-        $this->yamlDocumentFactory->setOnDocumentCreated(function (Document $document) use ($test) {
+        $this->yamlDocumentFactory->reset(function (Document $document) use ($test) {
             $this->dispatchStepProgressEvent($test, $document);
         });
-
-        $this->yamlDocumentFactory->start();
 
         $this->delegatorClient->request(
             sprintf(
