@@ -420,9 +420,6 @@
     "webignition/basil-compiler-models": {
         "version": "0.15"
     },
-    "webignition/basil-models": {
-        "version": "0.58"
-    },
     "webignition/basil-runner-documents": {
         "version": "1.0"
     },
@@ -434,9 +431,6 @@
     },
     "webignition/object-reflector": {
         "version": "1.0"
-    },
-    "webignition/php-basil-context-aware-exception": {
-        "version": "0.5"
     },
     "webignition/tcp-cli-proxy-client": {
         "version": "0.12"
