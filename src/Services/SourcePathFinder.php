@@ -19,16 +19,6 @@ class SourcePathFinder
     }
 
     /**
-     * @return string[]
-     */
-    public function findCompiledPaths(): array
-    {
-        $sources = $this->testRepository->findAllSources();
-
-        return $this->removeCompilerSourceDirectoryPrefixFromPaths($sources);
-    }
-
-    /**
      * @return null|non-empty-string
      */
     public function findNextNonCompiledPath(): ?string

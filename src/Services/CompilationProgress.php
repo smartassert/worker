@@ -6,13 +6,15 @@ namespace App\Services;
 
 use App\Enum\CompilationState;
 use App\Enum\WorkerEventType;
+use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
 
 class CompilationProgress
 {
     public function __construct(
         private WorkerEventRepository $workerEventRepository,
-        private SourcePathFinder $sourcePathFinder
+        private SourcePathFinder $sourcePathFinder,
+        private TestRepository $testRepository,
     ) {
     }
 
@@ -22,18 +24,14 @@ class CompilationProgress
             return CompilationState::FAILED;
         }
 
-        $compiledSources = $this->sourcePathFinder->findCompiledPaths();
+        $testCount = $this->testRepository->count([]);
         $nextSource = $this->sourcePathFinder->findNextNonCompiledPath();
 
-        if ([] === $compiledSources) {
-            return is_string($nextSource)
-                ? CompilationState::RUNNING
-                : CompilationState::AWAITING;
+        if (is_string($nextSource)) {
+            return CompilationState::RUNNING;
         }
 
-        return is_string($nextSource)
-            ? CompilationState::RUNNING
-            : CompilationState::COMPLETE;
+        return 0 === $testCount ? CompilationState::AWAITING : CompilationState::COMPLETE;
     }
 
     /**
