@@ -11,7 +11,6 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
-use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
@@ -330,20 +329,6 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                 ],
             ],
         ];
-    }
-
-    protected function persistEntity(object $entity): void
-    {
-        if ($entity instanceof Test) {
-            ObjectReflector::setProperty(
-                $entity,
-                Test::class,
-                'configuration',
-                $this->configurationRepository->get($entity->getConfiguration())
-            );
-        }
-
-        parent::persistEntity($entity);
     }
 
     /**
