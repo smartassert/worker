@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepEvent;
@@ -339,7 +340,13 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
 
         $document = new Document();
 
-        $event = new StepEvent(WorkerEventType::STEP_FAILED, new Step($document), '', $test);
+        $event = new StepEvent(
+            WorkerEventOutcome::FAILED,
+            WorkerEventType::STEP_FAILED,
+            new Step($document),
+            '',
+            $test
+        );
         $execute($event);
 
         $this->assertTestStates($expectedStates);

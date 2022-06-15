@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Event\StepEvent;
 use App\Model\Document\Step;
@@ -135,7 +136,13 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     ): void {
         self::assertSame(TestState::AWAITING, $this->test->getState());
 
-        $event = new StepEvent(WorkerEventType::STEP_FAILED, new Step($document), '', $this->test);
+        $event = new StepEvent(
+            WorkerEventOutcome::FAILED,
+            WorkerEventType::STEP_FAILED,
+            new Step($document),
+            '',
+            $this->test
+        );
         $execute($event);
 
         self::assertSame($expectedState, $this->test->getState());

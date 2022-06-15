@@ -6,6 +6,7 @@ namespace App\MessageHandler;
 
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
@@ -64,15 +65,22 @@ class ExecuteTestHandler implements MessageHandlerInterface
         }
 
         $this->eventDispatcher->dispatch(
-            new TestEvent(WorkerEventType::TEST_STARTED, $testSource, $test, $testDocument)
+            new TestEvent(
+                WorkerEventOutcome::PASSED,
+                WorkerEventType::TEST_STARTED,
+                $testSource,
+                $test,
+                $testDocument
+            )
         );
 
         $this->testStateMutator->setRunning($test);
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
+        $eventOutcome = $test->hasState(TestState::COMPLETE) ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
         $eventType = $test->hasState(TestState::COMPLETE) ? WorkerEventType::TEST_PASSED : WorkerEventType::TEST_FAILED;
 
-        $this->eventDispatcher->dispatch(new TestEvent($eventType, $testSource, $test, $testDocument));
+        $this->eventDispatcher->dispatch(new TestEvent($eventOutcome, $eventType, $testSource, $test, $testDocument));
     }
 }

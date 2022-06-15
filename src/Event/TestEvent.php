@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test as TestEntity;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Model\Document\Test as TestDocument;
 use App\Model\ResourceReferenceSource;
@@ -16,11 +18,22 @@ class TestEvent extends Event implements EventInterface
      * @param non-empty-string $source
      */
     public function __construct(
+        private readonly WorkerEventOutcome $outcome,
         private readonly WorkerEventType $type,
         private readonly string $source,
         private readonly TestEntity $testEntity,
         private readonly TestDocument $document,
     ) {
+    }
+
+    public function getScope(): WorkerEventScope
+    {
+        return WorkerEventScope::TEST;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     public function getType(): WorkerEventType
