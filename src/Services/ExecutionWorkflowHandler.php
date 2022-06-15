@@ -6,6 +6,8 @@ namespace App\Services;
 
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -81,7 +83,8 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
         $executionStateComplete = $this->executionProgress->is(ExecutionState::COMPLETE);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
-            WorkerEventType::EXECUTION_COMPLETED
+            WorkerEventScope::EXECUTION,
+            WorkerEventOutcome::COMPLETED
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {

@@ -65,37 +65,59 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent2->setState(WorkerEventState::COMPLETE);
         $this->persistEntity($workerEvent2);
 
-        self::assertTrue($this->repository->hasForType(WorkerEventType::COMPILATION_FAILED));
-        self::assertFalse($this->repository->hasForType(WorkerEventType::STEP_PASSED));
+        self::assertTrue($this->repository->hasForType(
+            WorkerEventScope::COMPILATION,
+            WorkerEventOutcome::FAILED
+        ));
+
+        self::assertFalse($this->repository->hasForType(
+            WorkerEventScope::STEP,
+            WorkerEventOutcome::PASSED
+        ));
     }
 
     public function testGetTypeCount(): void
     {
         $this->createWorkerEventsWithTypes([
-            WorkerEventType::JOB_STARTED,
-            WorkerEventType::STEP_PASSED,
-            WorkerEventType::STEP_PASSED,
-            WorkerEventType::COMPILATION_PASSED,
-            WorkerEventType::COMPILATION_PASSED,
-            WorkerEventType::COMPILATION_PASSED,
+            [WorkerEventScope::JOB, WorkerEventOutcome::STARTED],
+            [WorkerEventScope::STEP, WorkerEventOutcome::PASSED],
+            [WorkerEventScope::STEP, WorkerEventOutcome::PASSED],
+            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
+            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
+            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
         ]);
 
-        self::assertSame(0, $this->repository->getTypeCount(WorkerEventType::EXECUTION_COMPLETED));
-        self::assertSame(1, $this->repository->getTypeCount(WorkerEventType::JOB_STARTED));
-        self::assertSame(2, $this->repository->getTypeCount(WorkerEventType::STEP_PASSED));
-        self::assertSame(3, $this->repository->getTypeCount(WorkerEventType::COMPILATION_PASSED));
+        self::assertSame(
+            0,
+            $this->repository->getTypeCount(WorkerEventScope::EXECUTION, WorkerEventOutcome::COMPLETED)
+        );
+
+        self::assertSame(
+            1,
+            $this->repository->getTypeCount(WorkerEventScope::JOB, WorkerEventOutcome::STARTED)
+        );
+
+        self::assertSame(
+            2,
+            $this->repository->getTypeCount(WorkerEventScope::STEP, WorkerEventOutcome::PASSED)
+        );
+
+        self::assertSame(
+            3,
+            $this->repository->getTypeCount(WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED)
+        );
     }
 
     /**
-     * @param array<WorkerEventType::*> $types
+     * @param array<array{0: WorkerEventScope, 1: WorkerEventOutcome}> $types
      */
     private function createWorkerEventsWithTypes(array $types): void
     {
         foreach ($types as $type) {
             $this->repository->add(new WorkerEvent(
-                WorkerEventScope::UNKNOWN,
-                WorkerEventOutcome::UNKNOWN,
-                $type,
+                $type[0],
+                $type[1],
+                WorkerEventType::UNKNOWN,
                 'non-empty reference',
                 []
             ));
