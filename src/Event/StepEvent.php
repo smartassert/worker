@@ -9,7 +9,7 @@ use App\Enum\WorkerEventType;
 use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractStepEvent extends Event implements EventInterface
+class StepEvent extends Event implements EventInterface
 {
     public function __construct(
         private readonly WorkerEventType $type,
