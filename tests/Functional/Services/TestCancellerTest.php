@@ -6,8 +6,9 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Event\JobTimeoutEvent;
-use App\Event\StepFailedEvent;
+use App\Event\StepEvent;
 use App\Model\Document\Step;
 use App\Repository\TestRepository;
 use App\Services\TestCanceller;
@@ -199,7 +200,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     ): void {
         $this->doTestStepFailedEventDrivenTest(
             $states,
-            function (StepFailedEvent $event) {
+            function (StepEvent $event) {
                 $this->testCanceller->cancelAwaitingFromTestFailedEvent($event);
             },
             $expectedStates
@@ -218,7 +219,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     ): void {
         $this->doTestStepFailedEventDrivenTest(
             $states,
-            function (StepFailedEvent $event) {
+            function (StepEvent $event) {
                 $this->eventDispatcher->dispatch($event);
             },
             $expectedStates
@@ -338,7 +339,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
 
         $document = new Document();
 
-        $event = new StepFailedEvent(new Step($document), '', $test);
+        $event = new StepEvent(WorkerEventType::STEP_FAILED, new Step($document), '', $test);
         $execute($event);
 
         $this->assertTestStates($expectedStates);

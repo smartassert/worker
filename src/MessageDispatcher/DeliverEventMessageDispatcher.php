@@ -16,8 +16,7 @@ use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
+use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Repository\WorkerEventRepository;
@@ -75,10 +74,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             TestEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            StepPassedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            StepFailedEvent::class => [
+            StepEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             JobFailedEvent::class => [
