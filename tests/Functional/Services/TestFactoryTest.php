@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Event\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use App\Services\TestFactory;
@@ -64,14 +63,16 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
         $this->tests = [
             'chrome' => new Test(
-                TestConfiguration::create('chrome', 'http://example.com'),
+                'chrome',
+                'http://example.com',
                 'Tests/chrome_test.yml',
                 '/app/tests/GeneratedChromeTest.php',
                 ['step 1', 'step 2'],
                 1
             ),
             'firefox' => new Test(
-                TestConfiguration::create('firefox', 'http://example.com'),
+                'firefox',
+                'http://example.com',
                 'Tests/firefox_test.yml',
                 '/app/tests/GeneratedFirefoxTest.php',
                 ['step 1', 'step 2', 'step 3'],
@@ -178,7 +179,8 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     private function assertTestEquals(Test $expected, Test $actual): void
     {
-        $this->assertTestConfigurationEquals($expected->getConfiguration(), $actual->getConfiguration());
+        self::assertSame($expected->getBrowser(), $actual->getBrowser());
+        self::assertSame($expected->getUrl(), $actual->getUrl());
         self::assertSame($expected->getSource(), $actual->getSource());
         self::assertSame($expected->getTarget(), $actual->getTarget());
         self::assertSame($expected->getState(), $actual->getState());
@@ -192,17 +194,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
         self::assertGreaterThan(0, $test->getId());
         self::assertInstanceOf(Test::class, $expectedTest);
 
-        $configuration = $test->getConfiguration();
-        self::assertIsInt($configuration->getId());
-        self::assertGreaterThan(0, $configuration->getId());
-
         $this->assertTestEquals($expectedTest, $test);
-    }
-
-    private function assertTestConfigurationEquals(TestConfiguration $expected, TestConfiguration $actual): void
-    {
-        self::assertSame($expected->getBrowser(), $actual->getBrowser());
-        self::assertSame($expected->getUrl(), $actual->getUrl());
     }
 
     /**

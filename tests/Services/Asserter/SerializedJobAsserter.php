@@ -42,7 +42,8 @@ class SerializedJobAsserter
             TestCase::assertIsArray($actualTest);
 
             $this->assertTest(
-                $expectedTest['configuration'],
+                $expectedTest['browser'],
+                $expectedTest['url'],
                 $expectedTest['source'],
                 $expectedTest['step_names'],
                 $expectedTest['state'],
@@ -53,27 +54,20 @@ class SerializedJobAsserter
     }
 
     /**
-     * @param array<mixed> $expectedConfiguration
      * @param array<mixed> $actual
      * @param string[]     $expectedStepNames
      */
     private function assertTest(
-        array $expectedConfiguration,
+        string $expectedBrowser,
+        string $expectedUrl,
         string $expectedSource,
         array $expectedStepNames,
         string $expectedState,
         int $expectedPosition,
         array $actual
     ): void {
-        TestCase::assertIsString($expectedConfiguration['browser']);
-        TestCase::assertIsString($expectedConfiguration['url']);
-        TestCase::assertIsArray($actual['configuration']);
-
-        $this->assertTestConfiguration(
-            $expectedConfiguration['browser'],
-            $expectedConfiguration['url'],
-            $actual['configuration']
-        );
+        TestCase::assertSame($expectedBrowser, $actual['browser']);
+        TestCase::assertSame($expectedUrl, $actual['url']);
 
         TestCase::assertSame($expectedSource, $actual['source']);
         TestCase::assertArrayHasKey('target', $actual);
@@ -81,15 +75,6 @@ class SerializedJobAsserter
         TestCase::assertSame($expectedStepNames, $actual['step_names']);
         TestCase::assertSame($expectedState, $actual['state']);
         TestCase::assertSame($expectedPosition, $actual['position']);
-    }
-
-    /**
-     * @param array<mixed> $actual
-     */
-    private function assertTestConfiguration(string $expectedBrowser, string $expectedUrl, array $actual): void
-    {
-        TestCase::assertSame($expectedBrowser, $actual['browser']);
-        TestCase::assertSame($expectedUrl, $actual['url']);
     }
 
     /**

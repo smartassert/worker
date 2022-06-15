@@ -6,6 +6,7 @@ namespace App\Model\RunnerTest;
 
 use App\Entity\Test as TestEntity;
 use webignition\BasilRunnerDocuments\Test;
+use webignition\BasilRunnerDocuments\TestConfiguration;
 
 class TestProxy extends Test
 {
@@ -13,7 +14,7 @@ class TestProxy extends Test
     {
         parent::__construct(
             (string) $testEntity->getSource(),
-            new TestConfigurationProxy($testEntity->getConfiguration())
+            new TestConfiguration($testEntity->getBrowser(), $testEntity->getUrl())
         );
     }
 }

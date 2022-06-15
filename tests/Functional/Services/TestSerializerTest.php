@@ -60,10 +60,8 @@ class TestSerializerTest extends AbstractBaseFunctionalTest
                     ->withSource('{{ compiler_source_directory }}/Test/test.yml')
                     ->withTarget('{{ compiler_target_directory }}/GeneratedTest.php'),
                 'expectedSerializedTest' => [
-                    'configuration' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
+                    'browser' => 'chrome',
+                    'url' => 'http://example.com',
                     'source' => 'Test/test.yml',
                     'target' => 'GeneratedTest.php',
                     'step_names' => ['step 1'],
@@ -76,10 +74,8 @@ class TestSerializerTest extends AbstractBaseFunctionalTest
                     ->withSource('Test/test.yml')
                     ->withTarget('GeneratedTest.php'),
                 'expectedSerializedTest' => [
-                    'configuration' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
+                    'browser' => 'chrome',
+                    'url' => 'http://example.com',
                     'source' => 'Test/test.yml',
                     'target' => 'GeneratedTest.php',
                     'step_names' => ['step 1'],

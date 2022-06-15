@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Enum\TestState;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +13,8 @@ class TestTest extends TestCase
     public function testHasState(): void
     {
         $test = new Test(
-            \Mockery::mock(TestConfiguration::class),
+            '',
+            '',
             '',
             '',
             ['step 1'],

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\Test as TestEntity;
-use App\Entity\TestConfiguration;
 use App\Model\Document\Test as TestDocument;
 use App\Services\TestDocumentFactory;
 use App\Services\TestPathMutator;
@@ -64,7 +63,8 @@ class TestDocumentFactoryTest extends TestCase
     private function createTestEntity(string $path): TestEntity
     {
         return new TestEntity(
-            TestConfiguration::create('chrome', 'http://example.com'),
+            'chrome',
+            'http://example.com',
             $path,
             '/app/target/GeneratedTest.php',
             ['step 1', 'step 2'],

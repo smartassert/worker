@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Enum\TestState;
-use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
@@ -18,7 +16,6 @@ use webignition\ObjectReflector\ObjectReflector;
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
     private TestRepository $repository;
-    private TestConfigurationRepository $configurationRepository;
 
     protected function setUp(): void
     {
@@ -27,10 +24,6 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         $repository = self::getContainer()->get(TestRepository::class);
         \assert($repository instanceof TestRepository);
         $this->repository = $repository;
-
-        $configurationRepository = self::getContainer()->get(TestConfigurationRepository::class);
-        \assert($configurationRepository instanceof TestConfigurationRepository);
-        $this->configurationRepository = $configurationRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -374,7 +367,8 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     private function createTestWithStateAndPosition(TestState $state, int $position): Test
     {
         $test = new Test(
-            TestConfiguration::create('chrome', 'http://example.com/complete'),
+            'chrome',
+            'http://example.com/complete',
             '',
             '',
             ['step 1'],

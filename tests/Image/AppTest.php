@@ -130,10 +130,8 @@ class AppTest extends TestCase
             'event_delivery_state' => 'complete',
             'tests' => [
                 [
-                    'configuration' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                    ],
+                    'browser' => 'chrome',
+                    'url' => 'http://html-fixtures/index.html',
                     'source' => 'Test/chrome-open-index.yml',
                     'step_names' => [
                         'verify page is open',
@@ -142,10 +140,8 @@ class AppTest extends TestCase
                     'position' => 1,
                 ],
                 [
-                    'configuration' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                    ],
+                    'browser' => 'chrome',
+                    'url' => 'http://html-fixtures/index.html',
                     'source' => 'Test/chrome-firefox-open-index.yml',
                     'step_names' => [
                         'verify page is open',
@@ -154,10 +150,8 @@ class AppTest extends TestCase
                     'position' => 2,
                 ],
                 [
-                    'configuration' => [
-                        'browser' => 'firefox',
-                        'url' => 'http://html-fixtures/index.html',
-                    ],
+                    'browser' => 'firefox',
+                    'url' => 'http://html-fixtures/index.html',
                     'source' => 'Test/chrome-firefox-open-index.yml',
                     'step_names' => [
                         'verify page is open',
@@ -166,10 +160,8 @@ class AppTest extends TestCase
                     'position' => 3,
                 ],
                 [
-                    'configuration' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/form.html',
-                    ],
+                    'browser' => 'chrome',
+                    'url' => 'http://html-fixtures/form.html',
                     'source' => 'Test/chrome-open-form.yml',
                     'step_names' => [
                         'verify page is open',
