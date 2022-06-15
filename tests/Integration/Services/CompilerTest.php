@@ -61,22 +61,15 @@ class CompilerTest extends AbstractTestCreationTest
                 ],
                 'test' => 'Test/chrome-open-index.yml',
                 'expectedManifestCollectionData' => [
-                    'config' => [
+                    [
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/index.html',
+                        ],
                         'source' => '{{ source_directory }}/Test/chrome-open-index.yml',
-                        'target' => '{{ target_directory }}',
-                        'base-class' => 'webignition\BaseBasilTestCase\AbstractBaseTest',
-                    ],
-                    'manifests' => [
-                        [
-                            'config' => [
-                                'browser' => 'chrome',
-                                'url' => 'http://html-fixtures/index.html'
-                            ],
-                            'source' => '{{ source_directory }}/Test/chrome-open-index.yml',
-                            'target' => '{{ target_directory }}/Generated2380721d052389cf928f39ac198a41baTest.php',
-                            'step_names' => [
-                                'verify page is open',
-                            ],
+                        'target' => '{{ target_directory }}/Generated2380721d052389cf928f39ac198a41baTest.php',
+                        'step_names' => [
+                            'verify page is open',
                         ],
                     ],
                 ],
@@ -87,33 +80,26 @@ class CompilerTest extends AbstractTestCreationTest
                 ],
                 'test' => 'Test/chrome-firefox-open-index.yml',
                 'expectedManifestCollectionData' => [
-                    'config' => [
-                        'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
-                        'target' => '{{ target_directory }}',
-                        'base-class' => 'webignition\BaseBasilTestCase\AbstractBaseTest',
-                    ],
-                    'manifests' => [
-                        [
-                            'config' => [
-                                'browser' => 'chrome',
-                                'url' => 'http://html-fixtures/index.html'
-                            ],
-                            'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
-                            'target' => '{{ target_directory }}/Generated45ead8003cb8ba3fa966dc1ad5a91372Test.php',
-                            'step_names' => [
-                                'verify page is open',
-                            ],
+                    [
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://html-fixtures/index.html'
                         ],
-                        [
-                            'config' => [
-                                'browser' => 'firefox',
-                                'url' => 'http://html-fixtures/index.html'
-                            ],
-                            'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
-                            'target' => '{{ target_directory }}/Generated88b4291e887760b0fe2eec8891356665Test.php',
-                            'step_names' => [
-                                'verify page is open',
-                            ],
+                        'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
+                        'target' => '{{ target_directory }}/Generated45ead8003cb8ba3fa966dc1ad5a91372Test.php',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                    ],
+                    [
+                        'config' => [
+                            'browser' => 'firefox',
+                            'url' => 'http://html-fixtures/index.html'
+                        ],
+                        'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
+                        'target' => '{{ target_directory }}/Generated88b4291e887760b0fe2eec8891356665Test.php',
+                        'step_names' => [
+                            'verify page is open',
                         ],
                     ],
                 ],
@@ -156,22 +142,15 @@ class CompilerTest extends AbstractTestCreationTest
                 ],
                 'test' => 'InvalidTest/invalid-unparseable-assertion.yml',
                 'expectedErrorOutputData' => [
-                    'config' => [
-                        'source' => '{{ source_directory }}/InvalidTest/invalid-unparseable-assertion.yml',
-                        'target' => '{{ target_directory }}',
-                        'base-class' => 'webignition\BaseBasilTestCase\AbstractBaseTest',
-                    ],
-                    'error' => [
-                        'code' => 206,
-                        'message' => 'Unparseable test',
-                        'context' => [
-                            'type' => 'test',
-                            'test_path' => '{{ source_directory }}/InvalidTest/invalid-unparseable-assertion.yml',
-                            'step_name' => 'verify page is open',
-                            'reason' => 'empty-value',
-                            'statement_type' => 'assertion',
-                            'statement' => '$page.url is',
-                        ],
+                    'code' => 206,
+                    'message' => 'Unparseable test',
+                    'context' => [
+                        'type' => 'test',
+                        'test_path' => '{{ source_directory }}/InvalidTest/invalid-unparseable-assertion.yml',
+                        'step_name' => 'verify page is open',
+                        'reason' => 'empty-value',
+                        'statement_type' => 'assertion',
+                        'statement' => '$page.url is',
                     ],
                 ],
             ],
