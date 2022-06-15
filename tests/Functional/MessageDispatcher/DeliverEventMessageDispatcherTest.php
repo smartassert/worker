@@ -143,7 +143,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
     {
         $sourceCompileFailureEventOutput = \Mockery::mock(ErrorOutputInterface::class);
         $sourceCompileFailureEventOutput
-            ->shouldReceive('getData')
+            ->shouldReceive('toArray')
             ->andReturn([
                 'compile-failure-key' => 'value',
             ])
