@@ -9,13 +9,11 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
-use webignition\BasilModels\Model\Test\Configuration;
+use webignition\BasilCompilerModels\TestManifestCollection;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -48,13 +46,15 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
         $this->testManifests = [
             'chrome' => new TestManifest(
-                new Configuration('chrome', 'http://example.com'),
+                'chrome',
+                'http://example.com',
                 'Tests/chrome_test.yml',
                 '/app/tests/GeneratedChromeTest.php',
                 ['step 1', 'step 2']
             ),
             'firefox' => new TestManifest(
-                new Configuration('firefox', 'http://example.com'),
+                'firefox',
+                'http://example.com',
                 'Tests/firefox_test.yml',
                 '/app/tests/GeneratedFirefoxTest.php',
                 ['step 1', 'step 2', 'step 3']
@@ -138,8 +138,8 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     public function testCreateFromSourceCompileSuccessEvent(): void
     {
-        $this->doSourceCompileSuccessEventDrivenTest(function (SuiteManifest $suiteManifest) {
-            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $suiteManifest);
+        $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
+            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $collection);
 
             return $this->factory->createFromSourceCompileSuccessEvent($event);
         });
@@ -147,8 +147,8 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToSourceCompileSuccessEvent(): void
     {
-        $this->doSourceCompileSuccessEventDrivenTest(function (SuiteManifest $suiteManifest) {
-            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $suiteManifest);
+        $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
+            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $collection);
             $this->eventDispatcher->dispatch($event);
 
             $testRepository = self::getContainer()->get(TestRepository::class);
@@ -160,14 +160,11 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     private function doSourceCompileSuccessEventDrivenTest(callable $callable): void
     {
-        $suiteManifest = (new MockSuiteManifest())
-            ->withGetTestManifestsCall(
-                $this->createTestManifestCollection(['chrome', 'firefox'])
-            )
-            ->getMock()
-        ;
+        $testManifestCollection = new TestManifestCollection(
+            $this->createTestManifestCollection(['chrome', 'firefox'])
+        );
 
-        $tests = $callable($suiteManifest);
+        $tests = $callable($testManifestCollection);
 
         $expectedTests = $this->createExpectedTestCollection(['chrome', 'firefox']);
         self::assertCount(count($expectedTests), $tests);

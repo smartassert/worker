@@ -6,7 +6,7 @@ namespace App\Tests\Integration\Services;
 
 use App\Services\Compiler;
 use webignition\BasilCompilerModels\ErrorOutput;
-use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifestCollection;
 
 class CompilerTest extends AbstractTestCreationTest
 {
@@ -31,23 +31,21 @@ class CompilerTest extends AbstractTestCreationTest
      * @dataProvider compileSuccessDataProvider
      *
      * @param string[]     $sources
-     * @param array<mixed> $expectedSuiteManifestData
+     * @param array<mixed> $expectedManifestCollectionData
      */
-    public function testCompileSuccess(array $sources, string $test, array $expectedSuiteManifestData): void
+    public function testCompileSuccess(array $sources, string $test, array $expectedManifestCollectionData): void
     {
         foreach ($sources as $source) {
             $this->localSourceStoreHandler->copyFixture($source);
         }
 
-        /** @var SuiteManifest $suiteManifest */
-        $suiteManifest = $this->compiler->compile($test);
+        $manifestCollection = $this->compiler->compile($test);
+        self::assertInstanceOf(TestManifestCollection::class, $manifestCollection);
 
-        self::assertInstanceOf(SuiteManifest::class, $suiteManifest);
+        $expectedManifestCollectionData = $this->replaceCompilerDirectories($expectedManifestCollectionData);
+        $expectedManifestCollection = TestManifestCollection::fromArray($expectedManifestCollectionData);
 
-        $expectedSuiteManifestData = $this->replaceCompilerDirectories($expectedSuiteManifestData);
-        $expectedSuiteManifest = SuiteManifest::fromArray($expectedSuiteManifestData);
-
-        self::assertEquals($expectedSuiteManifest, $suiteManifest);
+        self::assertEquals($expectedManifestCollection, $manifestCollection);
     }
 
     /**
@@ -62,7 +60,7 @@ class CompilerTest extends AbstractTestCreationTest
                     'Test/chrome-open-index.yml',
                 ],
                 'test' => 'Test/chrome-open-index.yml',
-                'expectedSuiteManifestData' => [
+                'expectedManifestCollectionData' => [
                     'config' => [
                         'source' => '{{ source_directory }}/Test/chrome-open-index.yml',
                         'target' => '{{ target_directory }}',
@@ -88,7 +86,7 @@ class CompilerTest extends AbstractTestCreationTest
                     'Test/chrome-firefox-open-index.yml',
                 ],
                 'test' => 'Test/chrome-firefox-open-index.yml',
-                'expectedSuiteManifestData' => [
+                'expectedManifestCollectionData' => [
                     'config' => [
                         'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                         'target' => '{{ target_directory }}',

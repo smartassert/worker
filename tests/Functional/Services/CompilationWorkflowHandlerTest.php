@@ -16,7 +16,6 @@ use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Services\CompilationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -26,6 +25,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use webignition\BasilCompilerModels\TestManifestCollection;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -187,9 +187,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             SourceCompilationPassedEvent::class => [
                 'event' => new SourceCompilationPassedEvent(
                     '/app/source/Test/test1.yml',
-                    (new MockSuiteManifest())
-                        ->withGetTestManifestsCall([])
-                        ->getMock()
+                    new TestManifestCollection([])
                 ),
                 'expectedQueuedMessages' => [
                     new CompileSourceMessage('Test/test1.yml'),

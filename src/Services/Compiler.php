@@ -7,7 +7,7 @@ namespace App\Services;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\HandlerFactory;
 
@@ -22,7 +22,7 @@ class Compiler
     ) {
     }
 
-    public function compile(string $source): ErrorOutputInterface|SuiteManifest
+    public function compile(string $source): ErrorOutputInterface|TestManifestCollection
     {
         $output = '';
         $exitCode = null;
@@ -42,7 +42,7 @@ class Compiler
         $outputData = is_array($outputData) ? $outputData : [];
 
         return 0 === $exitCode
-            ? SuiteManifest::fromArray($outputData)
+            ? TestManifestCollection::fromArray($outputData)
             : ErrorOutput::fromArray($outputData);
     }
 }

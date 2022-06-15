@@ -14,7 +14,7 @@ use App\Services\TestFactory;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
-use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 use webignition\YamlDocument\Document;
 
@@ -55,12 +55,10 @@ class TestExecutorTest extends AbstractTestCreationTest
             $this->localSourceStoreHandler->copyFixture($source);
         }
 
-        /** @var SuiteManifest $suiteManifest */
-        $suiteManifest = $this->compiler->compile($testSource);
+        $manifestCollection = $this->compiler->compile($testSource);
+        self::assertInstanceOf(TestManifestCollection::class, $manifestCollection);
 
-        self::assertInstanceOf(SuiteManifest::class, $suiteManifest);
-
-        $tests = $this->testFactory->createFromManifestCollection($suiteManifest->getTestManifests());
+        $tests = $this->testFactory->createFromManifestCollection($manifestCollection->getManifests());
 
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls($expectedDispatchedEvents)
