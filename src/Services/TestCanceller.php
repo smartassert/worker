@@ -41,7 +41,7 @@ class TestCanceller implements EventSubscriberInterface
 
     public function cancelUnfinished(): void
     {
-        $this->cancelCollection($this->testRepository->findAllUnfinished());
+        $this->cancelCollection($this->testRepository->findBy(['state' => TestState::getUnfinishedValues()]));
     }
 
     public function cancelAwaiting(): void
