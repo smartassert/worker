@@ -28,7 +28,7 @@ class JobCompiledEvent extends Event implements EventInterface
 
     public function getOutcome(): WorkerEventOutcome
     {
-        return WorkerEventOutcome::STARTED;
+        return WorkerEventOutcome::COMPILED;
     }
 
     public function getType(): WorkerEventType

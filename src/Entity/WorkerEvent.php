@@ -89,11 +89,6 @@ class WorkerEvent
         return $this->outcome;
     }
 
-    public function getType(): WorkerEventType
-    {
-        return $this->type;
-    }
-
     public function getReference(): string
     {
         return $this->reference;
