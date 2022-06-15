@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
@@ -132,6 +133,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
                 'workerEventSenderException' => new NonSuccessfulHttpResponseException(
                     new WorkerEvent(
                         WorkerEventScope::JOB,
+                        WorkerEventOutcome::STARTED,
                         WorkerEventType::JOB_STARTED,
                         md5('reference source'),
                         []

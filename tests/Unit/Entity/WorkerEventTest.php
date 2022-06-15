@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
@@ -16,6 +17,7 @@ class WorkerEventTest extends TestCase
     {
         $workerEvent = new WorkerEvent(
             WorkerEventScope::COMPILATION,
+            WorkerEventOutcome::FAILED,
             WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []
