@@ -56,15 +56,12 @@ class TestExecutor
         $step = new Step($document);
 
         if ($step->isStep()) {
-            $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
-
-            if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new StepEvent(WorkerEventType::STEP_PASSED, $step, $path, $test));
-            }
-
-            if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new StepEvent(WorkerEventType::STEP_FAILED, $step, $path, $test));
-            }
+            $this->eventDispatcher->dispatch(new StepEvent(
+                $step->statusIsPassed() ? WorkerEventType::STEP_PASSED : WorkerEventType::STEP_FAILED,
+                $step,
+                $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource()),
+                $test
+            ));
         }
     }
 }
