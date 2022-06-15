@@ -34,7 +34,7 @@ class TestFactory implements EventSubscriberInterface
      */
     public function createFromSourceCompileSuccessEvent(SourceCompilationPassedEvent $event): array
     {
-        return $this->createFromManifestCollection($event->getSuiteManifest()->getTestManifests());
+        return $this->createFromManifestCollection($event->getTestManifestCollection()->getManifests());
     }
 
     /**
@@ -77,11 +77,9 @@ class TestFactory implements EventSubscriberInterface
 
     private function createFromManifest(TestManifest $manifest): Test
     {
-        $manifestConfiguration = $manifest->getConfiguration();
-
         return $this->create(
-            $manifestConfiguration->getBrowser(),
-            $manifestConfiguration->getUrl(),
+            $manifest->getBrowser(),
+            $manifest->getUrl(),
             $manifest->getSource(),
             $manifest->getTarget(),
             $manifest->getStepNames()

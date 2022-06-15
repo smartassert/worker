@@ -35,7 +35,6 @@ use App\Services\ExecutionWorkflowHandler;
 use App\Services\TestFactory;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Mock\MockTestManifest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -46,6 +45,7 @@ use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
+use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\YamlDocument\Document;
 
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
@@ -143,7 +143,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
     {
         $sourceCompileFailureEventOutput = \Mockery::mock(ErrorOutputInterface::class);
         $sourceCompileFailureEventOutput
-            ->shouldReceive('getData')
+            ->shouldReceive('toArray')
             ->andReturn([
                 'compile-failure-key' => 'value',
             ])
@@ -190,17 +190,14 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             new Document((string) json_encode($testDocumentData))
         );
 
-        $sourceCompilationPassedSuiteManifest = (new MockSuiteManifest())
-            ->withGetTestManifestsCall([
-                (new MockTestManifest())
-                    ->withGetStepNamesCall([
-                        'step one',
-                        'step two',
-                    ])
-                    ->getMock(),
-            ])
-            ->getMock()
-        ;
+        $sourceCompilationPassedManifestCollection = new TestManifestCollection([
+            (new MockTestManifest())
+                ->withGetStepNamesCall([
+                    'step one',
+                    'step two',
+                ])
+                ->getMock(),
+        ]);
 
         return [
             JobStartedEvent::class => [
@@ -234,7 +231,10 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             SourceCompilationPassedEvent::class => [
-                'event' => new SourceCompilationPassedEvent($relativeTestSource, $sourceCompilationPassedSuiteManifest),
+                'event' => new SourceCompilationPassedEvent(
+                    $relativeTestSource,
+                    $sourceCompilationPassedManifestCollection
+                ),
                 'expectedWorkerEventType' => WorkerEventType::COMPILATION_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,

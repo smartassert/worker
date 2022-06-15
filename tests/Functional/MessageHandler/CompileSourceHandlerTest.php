@@ -15,7 +15,6 @@ use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Mock\MockSuiteManifest;
 use App\Tests\Mock\Services\MockCompiler;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\ExpectedDispatchedEvent;
@@ -28,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilCompilerModels\TestManifest;
+use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
 class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
@@ -104,20 +104,15 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $compileSourceMessage = new CompileSourceMessage($sourcePath);
 
-        $testManifests = [
+        $testManifestCollection = new TestManifestCollection([
             \Mockery::mock(TestManifest::class),
             \Mockery::mock(TestManifest::class),
-        ];
-
-        $suiteManifest = (new MockSuiteManifest())
-            ->withGetTestManifestsCall($testManifests)
-            ->getMock()
-        ;
+        ]);
 
         $compiler = (new MockCompiler())
             ->withCompileCall(
                 $compileSourceMessage->path,
-                $suiteManifest
+                $testManifestCollection
             )
             ->getMock()
         ;
@@ -149,14 +144,14 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                         SourceCompilationPassedEvent $actualEvent
                     ) use (
                         $sourcePath,
-                        $suiteManifest,
+                        $testManifestCollection,
                         &$eventExpectationCount
                     ) {
                         self::assertSame(
                             $sourcePath,
                             ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
-                        self::assertSame($suiteManifest, $actualEvent->getSuiteManifest());
+                        self::assertSame($testManifestCollection, $actualEvent->getTestManifestCollection());
                         ++$eventExpectationCount;
 
                         return true;

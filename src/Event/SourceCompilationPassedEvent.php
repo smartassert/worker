@@ -6,20 +6,20 @@ namespace App\Event;
 
 use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
-use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifestCollection;
 
 class SourceCompilationPassedEvent extends AbstractSourceEvent
 {
     public function __construct(
         string $source,
-        private readonly SuiteManifest $suiteManifest
+        private readonly TestManifestCollection $testManifestCollection
     ) {
         parent::__construct($source);
     }
 
-    public function getSuiteManifest(): SuiteManifest
+    public function getTestManifestCollection(): TestManifestCollection
     {
-        return $this->suiteManifest;
+        return $this->testManifestCollection;
     }
 
     public function getType(): WorkerEventType
@@ -30,7 +30,7 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
     public function getRelatedReferenceSources(): array
     {
         $stepNames = [];
-        foreach ($this->suiteManifest->getTestManifests() as $testManifest) {
+        foreach ($this->getTestManifestCollection()->getManifests() as $testManifest) {
             $stepNames = array_unique(array_merge($stepNames, $testManifest->getStepNames()));
         }
 
