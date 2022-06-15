@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Entity;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Tests\Services\EntityRemover;
 
@@ -26,6 +27,7 @@ class WorkerEventTest extends AbstractEntityTest
         self::assertCount(0, $repository->findAll());
 
         $workerEvent = new WorkerEvent(
+            WorkerEventScope::COMPILATION,
             WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []

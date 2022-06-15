@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {
+    private WorkerEventScope $scope;
     private WorkerEventType $type;
 
     /**
@@ -20,9 +22,15 @@ class WorkerEventSetup
 
     public function __construct()
     {
+        $this->scope = WorkerEventScope::COMPILATION;
         $this->type = WorkerEventType::COMPILATION_FAILED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
+    }
+
+    public function getScope(): WorkerEventScope
+    {
+        return $this->scope;
     }
 
     public function getType(): WorkerEventType
@@ -47,6 +55,14 @@ class WorkerEventSetup
     {
         $new = clone $this;
         $new->state = $state;
+
+        return $new;
+    }
+
+    public function withScope(WorkerEventScope $scope): self
+    {
+        $new = clone $this;
+        $new->scope = $scope;
 
         return $new;
     }

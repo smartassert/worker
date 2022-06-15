@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
@@ -42,6 +43,7 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
     public function testAbort(): void
     {
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
+            WorkerEventScope::JOB,
             WorkerEventType::JOB_COMPLETED,
             'non-empty reference',
             []

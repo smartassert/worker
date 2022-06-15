@@ -103,6 +103,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         }
 
         $workerEvent = new WorkerEvent(
+            $event->getScope(),
             $event->getType(),
             $this->referenceFactory->create($event->getReferenceComponents()),
             $payload

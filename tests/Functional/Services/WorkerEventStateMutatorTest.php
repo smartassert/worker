@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Services\WorkerEventStateMutator;
@@ -243,6 +244,11 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
 
     private function createEntity(): WorkerEvent
     {
-        return new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
+        return new WorkerEvent(
+            WorkerEventScope::COMPILATION,
+            WorkerEventType::COMPILATION_FAILED,
+            'non-empty reference',
+            []
+        );
     }
 }

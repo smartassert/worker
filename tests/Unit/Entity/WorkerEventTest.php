@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +14,13 @@ class WorkerEventTest extends TestCase
 {
     public function testHasState(): void
     {
-        $workerEvent = new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
+        $workerEvent = new WorkerEvent(
+            WorkerEventScope::COMPILATION,
+            WorkerEventType::COMPILATION_FAILED,
+            'non-empty reference',
+            []
+        );
+
         self::assertTrue($workerEvent->hasState(WorkerEventState::AWAITING));
         self::assertFalse($workerEvent->hasState(WorkerEventState::COMPLETE));
 

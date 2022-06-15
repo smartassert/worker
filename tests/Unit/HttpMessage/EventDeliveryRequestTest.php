@@ -6,6 +6,7 @@ namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +21,7 @@ class EventDeliveryRequestTest extends TestCase
         $jobLabel = 'label content';
         $job = new Job($jobLabel, $jobEventDeliveryUrl, 600, ['test.yml']);
 
+        $workerEventScope = WorkerEventScope::JOB;
         $workerEventType = WorkerEventType::JOB_COMPLETED;
         $workerEventReference = 'reference value';
         $workerEventData = [
@@ -27,7 +29,12 @@ class EventDeliveryRequestTest extends TestCase
             'key2' => 'value2',
         ];
 
-        $workerEvent = new WorkerEvent($workerEventType, $workerEventReference, $workerEventData);
+        $workerEvent = new WorkerEvent(
+            $workerEventScope,
+            $workerEventType,
+            $workerEventReference,
+            $workerEventData
+        );
         ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);

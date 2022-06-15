@@ -20,6 +20,7 @@ class TestWorkerEventFactory
     public function create(WorkerEventSetup $workerEventSetup): WorkerEvent
     {
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
+            $workerEventSetup->getScope(),
             $workerEventSetup->getType(),
             'non-empty reference',
             $workerEventSetup->getPayload()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
@@ -30,15 +31,33 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testHasForType(): void
     {
-        $workerEvent0 = new WorkerEvent(WorkerEventType::COMPILATION_FAILED, 'non-empty reference', []);
+        $workerEvent0 = new WorkerEvent(
+            WorkerEventScope::COMPILATION,
+            WorkerEventType::COMPILATION_FAILED,
+            'non-empty reference',
+            []
+        );
+
         $workerEvent0->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent0);
 
-        $workerEvent1 = new WorkerEvent(WorkerEventType::TEST_STARTED, 'non-empty reference', []);
+        $workerEvent1 = new WorkerEvent(
+            WorkerEventScope::TEST,
+            WorkerEventType::TEST_STARTED,
+            'non-empty reference',
+            []
+        );
+
         $workerEvent1->setState(WorkerEventState::AWAITING);
         $this->persistEntity($workerEvent1);
 
-        $workerEvent2 = new WorkerEvent(WorkerEventType::JOB_TIME_OUT, 'non-empty reference', []);
+        $workerEvent2 = new WorkerEvent(
+            WorkerEventScope::JOB,
+            WorkerEventType::JOB_TIME_OUT,
+            'non-empty reference',
+            []
+        );
+
         $workerEvent2->setState(WorkerEventState::COMPLETE);
         $this->persistEntity($workerEvent2);
 
@@ -69,7 +88,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
     private function createWorkerEventsWithTypes(array $types): void
     {
         foreach ($types as $type) {
-            $this->repository->add(new WorkerEvent($type, 'non-empty reference', []));
+            $this->repository->add(new WorkerEvent(WorkerEventScope::UNKNOWN, $type, 'non-empty reference', []));
         }
     }
 }
