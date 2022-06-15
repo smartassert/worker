@@ -9,7 +9,10 @@ use App\Entity\TestConfiguration;
 use App\Enum\TestState;
 use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
+use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
@@ -269,6 +272,69 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                     $tests['complete'],
                 ],
                 'expectedUnfinishedCount' => 3,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider findAllSourcesDataProvider
+     *
+     * @param string[] $expectedSources
+     */
+    public function testFindAllSources(EnvironmentSetup $setup, array $expectedSources): void
+    {
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+
+        $environmentFactory->create($setup);
+
+        self::assertSame($expectedSources, $this->repository->findAllSources());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function findAllSourcesDataProvider(): array
+    {
+        return [
+            'empty' => [
+                'setup' => new EnvironmentSetup(),
+                'expectedSources' => [],
+            ],
+            'single' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withSource('test1.yaml'),
+                    ]),
+                'expectedSources' => [
+                    'test1.yaml',
+                ],
+            ],
+            'multiple' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withSource('test1.yaml'),
+                        (new TestSetup())->withSource('test2.yaml'),
+                        (new TestSetup())->withSource('test3.yaml'),
+                    ]),
+                'expectedSources' => [
+                    'test1.yaml',
+                    'test2.yaml',
+                    'test3.yaml',
+                ],
+            ],
+            'multiple, is sorted' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withSource('test2.yaml'),
+                        (new TestSetup())->withSource('test1.yaml'),
+                        (new TestSetup())->withSource('test3.yaml'),
+                    ]),
+                'expectedSources' => [
+                    'test1.yaml',
+                    'test2.yaml',
+                    'test3.yaml',
+                ],
             ],
         ];
     }
