@@ -98,6 +98,8 @@ class TestRepository extends ServiceEntityRepository
             }
         }
 
+        sort($sources);
+
         return $sources;
     }
 

@@ -196,8 +196,8 @@ class SourcePathFinderTest extends AbstractBaseFunctionalTest
                             ->withSource('{{ compiler_source_directory }}/' . $sources[1]),
                     ]),
                 'expectedCompiledSources' => [
-                    $sources[0],
                     $sources[1],
+                    $sources[0],
                 ],
             ],
         ];

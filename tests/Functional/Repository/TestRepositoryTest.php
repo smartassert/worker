@@ -323,6 +323,19 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                     'test3.yaml',
                 ],
             ],
+            'multiple, is sorted' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withSource('test2.yaml'),
+                        (new TestSetup())->withSource('test1.yaml'),
+                        (new TestSetup())->withSource('test3.yaml'),
+                    ]),
+                'expectedSources' => [
+                    'test1.yaml',
+                    'test2.yaml',
+                    'test3.yaml',
+                ],
+            ],
         ];
     }
 
