@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
+use App\Enum\TestState;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepFailedEvent;
 use App\Repository\TestRepository;
@@ -40,12 +41,12 @@ class TestCanceller implements EventSubscriberInterface
 
     public function cancelUnfinished(): void
     {
-        $this->cancelCollection($this->testRepository->findAllUnfinished());
+        $this->cancelCollection($this->testRepository->findBy(['state' => TestState::getUnfinishedValues()]));
     }
 
     public function cancelAwaiting(): void
     {
-        $this->cancelCollection($this->testRepository->findAllAwaiting());
+        $this->cancelCollection($this->testRepository->findBy(['state' => TestState::AWAITING]));
     }
 
     /**
