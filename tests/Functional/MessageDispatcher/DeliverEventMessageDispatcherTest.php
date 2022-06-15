@@ -20,8 +20,7 @@ use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
+use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
@@ -76,7 +75,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             TestStateMutator::class => [
-                StepFailedEvent::class => ['setFailedFromStepFailedEvent'],
+                StepEvent::class => ['setFailedFromStepFailedEvent'],
             ],
             TestFactory::class => [
                 SourceCompilationPassedEvent::class => ['createFromSourceCompileSuccessEvent'],
@@ -292,8 +291,13 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            StepPassedEvent::class => [
-                'event' => new StepPassedEvent(new Step($passingStepDocument), $relativeTestSource),
+            WorkerEventType::STEP_PASSED->value => [
+                'event' => new StepEvent(
+                    WorkerEventType::STEP_PASSED,
+                    new Step($passingStepDocument),
+                    $relativeTestSource,
+                    $genericTest->setState(TestState::RUNNING)
+                ),
                 'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
@@ -301,8 +305,9 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'name' => 'passing step',
                 ],
             ],
-            StepFailedEvent::class => [
-                'event' => new StepFailedEvent(
+            WorkerEventType::STEP_FAILED->value => [
+                'event' => new StepEvent(
+                    WorkerEventType::STEP_FAILED,
                     new Step($failingStepDocument),
                     $relativeTestSource,
                     $genericTest->setState(TestState::FAILED)
