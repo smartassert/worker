@@ -8,7 +8,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Services\EntityRemover;
 
@@ -35,7 +34,6 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent0 = new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
-            WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []
         );
@@ -46,7 +44,6 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent1 = new WorkerEvent(
             WorkerEventScope::TEST,
             WorkerEventOutcome::STARTED,
-            WorkerEventType::TEST_STARTED,
             'non-empty reference',
             []
         );
@@ -57,7 +54,6 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent2 = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::TIME_OUT,
-            WorkerEventType::JOB_TIME_OUT,
             'non-empty reference',
             []
         );
@@ -117,7 +113,6 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             $this->repository->add(new WorkerEvent(
                 $type[0],
                 $type[1],
-                WorkerEventType::UNKNOWN,
                 'non-empty reference',
                 []
             ));

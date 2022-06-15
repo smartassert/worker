@@ -7,7 +7,6 @@ namespace App\Tests\Functional\Messenger;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\Messenger\DeliverEventMessageRetryStrategy;
@@ -89,7 +88,6 @@ class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            WorkerEventType::JOB_STARTED,
             md5('reference source'),
             []
         );

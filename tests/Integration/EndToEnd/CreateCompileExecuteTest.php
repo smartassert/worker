@@ -10,6 +10,8 @@ use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
@@ -733,7 +735,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     WorkerEventRepository $workerEventRepository,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy(
-                        ['type' => WorkerEventType::STEP_FAILED->value],
+                        [
+                            'scope' => WorkerEventScope::STEP->value,
+                            'outcome' => WorkerEventOutcome::FAILED->value,
+                        ],
                         ['id' => 'ASC']
                     );
                     \assert($firstEvent instanceof WorkerEvent);

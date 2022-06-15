@@ -8,7 +8,6 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -24,14 +23,13 @@ class EventDeliveryRequestTest extends TestCase
 
         $eventScope = WorkerEventScope::JOB;
         $eventOutcome = WorkerEventOutcome::COMPLETED;
-        $eventType = WorkerEventType::JOB_COMPLETED;
         $eventReference = 'reference value';
         $workerEventData = [
             'key1' => 'value1',
             'key2' => 'value2',
         ];
 
-        $workerEvent = new WorkerEvent($eventScope, $eventOutcome, $eventType, $eventReference, $workerEventData);
+        $workerEvent = new WorkerEvent($eventScope, $eventOutcome, $eventReference, $workerEventData);
         ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);
@@ -44,7 +42,7 @@ class EventDeliveryRequestTest extends TestCase
             [
                 'label' => $jobLabel,
                 'identifier' => 123,
-                'type' => $eventType->value,
+                'type' => $eventScope->value . '/' . $eventOutcome->value,
                 'reference' => $eventReference,
                 'payload' => $workerEventData,
             ],

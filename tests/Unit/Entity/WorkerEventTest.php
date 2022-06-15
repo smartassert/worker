@@ -8,7 +8,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use PHPUnit\Framework\TestCase;
 
 class WorkerEventTest extends TestCase
@@ -18,7 +17,6 @@ class WorkerEventTest extends TestCase
         $workerEvent = new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
-            WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []
         );

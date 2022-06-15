@@ -8,7 +8,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
@@ -248,7 +247,6 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
         return new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
-            WorkerEventType::COMPILATION_FAILED,
             'non-empty reference',
             []
         );

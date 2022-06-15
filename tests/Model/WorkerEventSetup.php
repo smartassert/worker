@@ -7,13 +7,11 @@ namespace App\Tests\Model;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {
     private WorkerEventScope $scope;
     private WorkerEventOutcome $outcome;
-    private WorkerEventType $type;
 
     /**
      * @var array<mixed>
@@ -26,7 +24,6 @@ class WorkerEventSetup
     {
         $this->scope = WorkerEventScope::COMPILATION;
         $this->outcome = WorkerEventOutcome::FAILED;
-        $this->type = WorkerEventType::COMPILATION_FAILED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
     }
@@ -39,11 +36,6 @@ class WorkerEventSetup
     public function getOutcome(): WorkerEventOutcome
     {
         return $this->outcome;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return $this->type;
     }
 
     /**
@@ -79,14 +71,6 @@ class WorkerEventSetup
     {
         $new = clone $this;
         $new->outcome = $outcome;
-
-        return $new;
-    }
-
-    public function withType(WorkerEventType $type): self
-    {
-        $new = clone $this;
-        $new->type = $type;
 
         return $new;
     }

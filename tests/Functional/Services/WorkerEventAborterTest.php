@@ -8,7 +8,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
 use App\Services\WorkerEventStateMutator;
@@ -46,7 +45,6 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::COMPLETED,
-            WorkerEventType::JOB_COMPLETED,
             'non-empty reference',
             []
         ));

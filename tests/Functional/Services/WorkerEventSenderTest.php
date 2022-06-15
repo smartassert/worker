@@ -8,7 +8,6 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventSender;
@@ -51,7 +50,6 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -74,7 +72,6 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );
@@ -110,7 +107,6 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            WorkerEventType::JOB_STARTED,
             'non-empty reference',
             []
         );

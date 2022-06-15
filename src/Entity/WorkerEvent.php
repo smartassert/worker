@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,9 +27,6 @@ class WorkerEvent
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
     private WorkerEventOutcome $outcome;
 
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
-    private WorkerEventType $type;
-
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
 
@@ -47,14 +43,12 @@ class WorkerEvent
     public function __construct(
         WorkerEventScope $scope,
         WorkerEventOutcome $outcome,
-        WorkerEventType $type,
         string $reference,
         array $payload
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
         $this->outcome = $outcome;
-        $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
     }
