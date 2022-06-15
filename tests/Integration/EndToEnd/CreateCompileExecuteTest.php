@@ -132,7 +132,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
             self::assertIsArray($testData);
             $expectedTestData = $expectedTestDataCollection[$index];
 
-            self::assertSame($expectedTestData['configuration'], $testData['configuration']);
+            self::assertSame($expectedTestData['browser'], $testData['browser']);
+            self::assertSame($expectedTestData['url'], $testData['url']);
             self::assertSame($expectedTestData['source'], $testData['source']);
             self::assertSame($expectedTestData['step_names'], $testData['step_names']);
             self::assertSame($expectedTestData['state'], $testData['state']);
@@ -170,40 +171,32 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'expectedExecutionEndState' => ExecutionState::COMPLETE,
                 'expectedTestDataCollection' => [
                     [
-                        'configuration' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://html-fixtures/index.html',
-                        ],
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
                         'source' => 'Test/chrome-open-index.yml',
                         'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 1,
                     ],
                     [
-                        'configuration' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://html-fixtures/index.html',
-                        ],
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
                         'source' => 'Test/chrome-firefox-open-index.yml',
                         'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 2,
                     ],
                     [
-                        'configuration' => [
-                            'browser' => 'firefox',
-                            'url' => 'http://html-fixtures/index.html',
-                        ],
+                        'browser' => 'firefox',
+                        'url' => 'http://html-fixtures/index.html',
                         'source' => 'Test/chrome-firefox-open-index.yml',
                         'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
                         'position' => 3,
                     ],
                     [
-                        'configuration' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://html-fixtures/form.html',
-                        ],
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/form.html',
                         'source' => 'Test/chrome-open-form.yml',
                         'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
@@ -617,10 +610,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'expectedExecutionEndState' => ExecutionState::CANCELLED,
                 'expectedTestDataCollection' => [
                     [
-                        'configuration' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://html-fixtures/index.html',
-                        ],
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
                         'source' => 'Test/chrome-open-index-with-step-failure.yml',
                         'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
                         'state' => TestState::FAILED->value,

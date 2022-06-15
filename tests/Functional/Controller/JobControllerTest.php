@@ -826,10 +826,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     ],
                     'tests' => [
                         [
-                            'configuration' => [
-                                'browser' => 'chrome',
-                                'url' => 'http://example.com',
-                            ],
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
                             'source' => 'Test/test1.yml',
                             'target' => 'GeneratedTest1.php',
                             'step_names' => ['step 1', 'step 2', 'step 3'],
@@ -837,10 +835,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                             'position' => 1,
                         ],
                         [
-                            'configuration' => [
-                                'browser' => 'chrome',
-                                'url' => 'http://example.com',
-                            ],
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
                             'source' => 'Test/test2.yml',
                             'target' => 'GeneratedTest2.php',
                             'step_names' => ['step 1', 'step 2'],

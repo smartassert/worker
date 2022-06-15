@@ -16,9 +16,11 @@ class Test implements \JsonSerializable
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: TestConfiguration::class)]
-    #[ORM\JoinColumn(name: 'test_configuration_id', referencedColumnName: 'id', nullable: false)]
-    private TestConfiguration $configuration;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $browser;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $url;
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
@@ -42,13 +44,15 @@ class Test implements \JsonSerializable
      * @param non-empty-string[] $stepNames
      */
     public function __construct(
-        TestConfiguration $configuration,
+        string $browser,
+        string $url,
         string $source,
         string $target,
         array $stepNames,
         int $position
     ) {
-        $this->configuration = $configuration;
+        $this->browser = $browser;
+        $this->url = $url;
         $this->source = $source;
         $this->target = $target;
         $this->stepNames = $stepNames;
@@ -61,9 +65,14 @@ class Test implements \JsonSerializable
         return $this->id;
     }
 
-    public function getConfiguration(): TestConfiguration
+    public function getBrowser(): string
     {
-        return $this->configuration;
+        return $this->browser;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 
     public function getState(): TestState
@@ -112,7 +121,8 @@ class Test implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'configuration' => $this->configuration->jsonSerialize(),
+            'browser' => $this->browser,
+            'url' => $this->url,
             'source' => $this->source,
             'target' => $this->target,
             'step_names' => $this->stepNames,

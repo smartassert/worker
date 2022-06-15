@@ -6,7 +6,6 @@ namespace App\Tests\Functional\MessageDispatcher;
 
 use App\Entity\Job;
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventType;
@@ -150,11 +149,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
-        $testConfigurationBrowser = 'chrome';
-        $testConfigurationUrl = 'http://example.com';
-
-        $testConfiguration = TestConfiguration::create($testConfigurationBrowser, $testConfigurationUrl);
-
         $passingStepDocumentData = [
             'type' => 'step',
             'payload' => [
@@ -176,7 +170,10 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
 
-        $genericTest = new Test($testConfiguration, $testSource, '', ['step 1'], 1);
+        $testConfigurationBrowser = 'chrome';
+        $testConfigurationUrl = 'http://example.com';
+
+        $genericTest = new Test($testConfigurationBrowser, $testConfigurationUrl, $testSource, '', ['step 1'], 1);
 
         $testDocumentData = [
             'type' => 'test',

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
-use App\Entity\TestConfiguration;
 use App\Enum\TestState;
 
 class TestSetup
 {
-    private TestConfiguration $configuration;
+    private string $browser;
+    private string $url;
     private string $source;
     private string $target;
 
@@ -22,16 +22,22 @@ class TestSetup
 
     public function __construct()
     {
-        $this->configuration = TestConfiguration::create('chrome', 'http://example.com');
+        $this->browser = 'chrome';
+        $this->url = 'http://example.com';
         $this->source = '/app/source/Test/test.yml';
         $this->target = '/app/tests/GeneratedTest.php';
         $this->stepNames = ['step 1'];
         $this->state = TestState::AWAITING;
     }
 
-    public function getConfiguration(): TestConfiguration
+    public function getBrowser(): string
     {
-        return $this->configuration;
+        return $this->browser;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 
     public function getSource(): string

@@ -28,7 +28,8 @@ class TestTestFactory
         $target = str_replace('{{ compiler_target_directory }}', $this->compilerTargetDirectory, $target);
 
         $test = $this->testFactory->create(
-            $testSetup->getConfiguration(),
+            $testSetup->getBrowser(),
+            $testSetup->getUrl(),
             $source,
             $target,
             $testSetup->getStepNames()

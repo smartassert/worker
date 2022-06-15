@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Entity\TestConfiguration;
 use App\Event\SourceCompilationPassedEvent;
-use App\Repository\TestConfigurationRepository;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use webignition\BasilCompilerModels\TestManifest;
@@ -16,7 +14,6 @@ class TestFactory implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TestRepository $repository,
-        private readonly TestConfigurationRepository $testConfigurationRepository,
     ) {
     }
 
@@ -62,13 +59,15 @@ class TestFactory implements EventSubscriberInterface
      * @param non-empty-string[] $stepNames
      */
     public function create(
-        TestConfiguration $configuration,
+        string $browser,
+        string $url,
         string $source,
         string $target,
         array $stepNames
     ): Test {
         return $this->repository->add(new Test(
-            $this->testConfigurationRepository->get($configuration),
+            $browser,
+            $url,
             $source,
             $target,
             $stepNames,
@@ -81,10 +80,8 @@ class TestFactory implements EventSubscriberInterface
         $manifestConfiguration = $manifest->getConfiguration();
 
         return $this->create(
-            TestConfiguration::create(
-                $manifestConfiguration->getBrowser(),
-                $manifestConfiguration->getUrl()
-            ),
+            $manifestConfiguration->getBrowser(),
+            $manifestConfiguration->getUrl(),
             $manifest->getSource(),
             $manifest->getTarget(),
             $manifest->getStepNames()
