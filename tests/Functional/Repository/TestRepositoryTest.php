@@ -374,7 +374,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     private function createTestWithStateAndPosition(TestState $state, int $position): Test
     {
         $test = new Test(
-            TestConfiguration::create('chrome', 'http://example.com/complete'),
+            new TestConfiguration('chrome', 'http://example.com/complete'),
             '',
             '',
             ['step 1'],

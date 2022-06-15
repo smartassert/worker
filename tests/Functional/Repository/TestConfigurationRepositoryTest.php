@@ -30,7 +30,7 @@ class TestConfigurationRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testGet(): void
     {
-        $configuration = TestConfiguration::create('chrome', 'http://example.com');
+        $configuration = new TestConfiguration('chrome', 'http://example.com');
         self::assertNull($configuration->getId());
 
         $retrievedConfiguration = $this->repository->get($configuration);

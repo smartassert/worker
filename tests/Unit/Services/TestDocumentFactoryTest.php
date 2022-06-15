@@ -64,7 +64,7 @@ class TestDocumentFactoryTest extends TestCase
     private function createTestEntity(string $path): TestEntity
     {
         return new TestEntity(
-            TestConfiguration::create('chrome', 'http://example.com'),
+            new TestConfiguration('chrome', 'http://example.com'),
             $path,
             '/app/target/GeneratedTest.php',
             ['step 1', 'step 2'],

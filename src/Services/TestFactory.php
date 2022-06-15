@@ -81,7 +81,7 @@ class TestFactory implements EventSubscriberInterface
         $manifestConfiguration = $manifest->getConfiguration();
 
         return $this->create(
-            TestConfiguration::create(
+            new TestConfiguration(
                 $manifestConfiguration->getBrowser(),
                 $manifestConfiguration->getUrl()
             ),

@@ -26,7 +26,7 @@ class TestConfigurationTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(TestConfiguration::class);
         self::assertCount(0, $repository->findAll());
 
-        $configuration = TestConfiguration::create('chrome', 'http://example.com');
+        $configuration = new TestConfiguration('chrome', 'http://example.com');
 
         $this->entityManager->persist($configuration);
         $this->entityManager->flush();

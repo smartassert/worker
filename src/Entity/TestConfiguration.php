@@ -23,18 +23,15 @@ class TestConfiguration implements \JsonSerializable
     #[ORM\Column(type: 'string', length: 255)]
     private string $url = '';
 
+    public function __construct(string $browser, string $url)
+    {
+        $this->browser = $browser;
+        $this->url = $url;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public static function create(string $browser, string $url): self
-    {
-        $configuration = new TestConfiguration();
-        $configuration->browser = $browser;
-        $configuration->url = $url;
-
-        return $configuration;
     }
 
     public function getBrowser(): string

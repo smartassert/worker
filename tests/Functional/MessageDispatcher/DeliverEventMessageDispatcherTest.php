@@ -153,7 +153,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
 
-        $testConfiguration = TestConfiguration::create($testConfigurationBrowser, $testConfigurationUrl);
+        $testConfiguration = new TestConfiguration($testConfigurationBrowser, $testConfigurationUrl);
 
         $passingStepDocumentData = [
             'type' => 'step',

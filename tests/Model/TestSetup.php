@@ -22,7 +22,7 @@ class TestSetup
 
     public function __construct()
     {
-        $this->configuration = TestConfiguration::create('chrome', 'http://example.com');
+        $this->configuration = new TestConfiguration('chrome', 'http://example.com');
         $this->source = '/app/source/Test/test.yml';
         $this->target = '/app/tests/GeneratedTest.php';
         $this->stepNames = ['step 1'];
