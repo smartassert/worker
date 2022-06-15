@@ -80,16 +80,6 @@ class TestRepository extends ServiceEntityRepository
     /**
      * @return Test[]
      */
-    public function findAllAwaiting(): array
-    {
-        return $this->findBy([
-            'state' => TestState::AWAITING->value,
-        ]);
-    }
-
-    /**
-     * @return Test[]
-     */
     public function findAllUnfinished(): array
     {
         return $this->findBy([
