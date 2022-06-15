@@ -6,7 +6,6 @@ namespace App\Tests\Integration\Services;
 
 use App\Event\EventInterface;
 use App\Event\StepEvent;
-use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
 use App\Services\Compiler;
 use App\Services\TestExecutor;
@@ -92,7 +91,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
-                            self::assertInstanceOf(StepPassedEvent::class, $event);
+                            self::assertInstanceOf(StepEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
                                 'type' => 'step',
@@ -133,7 +132,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
-                            self::assertInstanceOf(StepPassedEvent::class, $event);
+                            self::assertInstanceOf(StepEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
                                 'type' => 'step',
@@ -168,7 +167,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                 'expectedDispatchedEventCollection' => new ExpectedDispatchedEventCollection([
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
-                            self::assertInstanceOf(StepPassedEvent::class, $event);
+                            self::assertInstanceOf(StepEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
                                 'type' => 'step',
@@ -195,7 +194,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                     ),
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
-                            self::assertInstanceOf(StepPassedEvent::class, $event);
+                            self::assertInstanceOf(StepEvent::class, $event);
 
                             $expectedDocument = new Step(new Document((string) json_encode([
                                 'type' => 'step',

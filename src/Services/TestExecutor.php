@@ -6,8 +6,7 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\WorkerEventType;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
+use App\Event\StepEvent;
 use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
@@ -60,15 +59,11 @@ class TestExecutor
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(
-                    new StepPassedEvent(WorkerEventType::STEP_PASSED, $step, $path, $test)
-                );
+                $this->eventDispatcher->dispatch(new StepEvent(WorkerEventType::STEP_PASSED, $step, $path, $test));
             }
 
             if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(
-                    new StepFailedEvent(WorkerEventType::STEP_FAILED, $step, $path, $test)
-                );
+                $this->eventDispatcher->dispatch(new StepEvent(WorkerEventType::STEP_FAILED, $step, $path, $test));
             }
         }
     }
