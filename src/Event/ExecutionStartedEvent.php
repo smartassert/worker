@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ExecutionStartedEvent extends Event implements EventInterface
@@ -19,9 +20,14 @@ class ExecutionStartedEvent extends Event implements EventInterface
         return [];
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return WorkerEventType::EXECUTION_STARTED;
+        return WorkerEventScope::EXECUTION;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return WorkerEventOutcome::STARTED;
     }
 
     public function getRelatedReferenceSources(): array

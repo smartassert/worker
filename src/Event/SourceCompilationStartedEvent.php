@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 
 class SourceCompilationStartedEvent extends AbstractSourceEvent
 {
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return WorkerEventType::COMPILATION_STARTED;
+        return WorkerEventScope::COMPILATION;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return WorkerEventOutcome::STARTED;
     }
 }

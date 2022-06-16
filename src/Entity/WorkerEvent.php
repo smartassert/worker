@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,8 +21,11 @@ class WorkerEvent
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
 
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
-    private WorkerEventType $type;
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
+    private WorkerEventScope $scope;
+
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
+    private WorkerEventOutcome $outcome;
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
@@ -36,10 +40,15 @@ class WorkerEvent
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
-    public function __construct(WorkerEventType $type, string $reference, array $payload)
-    {
+    public function __construct(
+        WorkerEventScope $scope,
+        WorkerEventOutcome $outcome,
+        string $reference,
+        array $payload
+    ) {
         $this->state = WorkerEventState::AWAITING;
-        $this->type = $type;
+        $this->scope = $scope;
+        $this->outcome = $outcome;
         $this->reference = $reference;
         $this->payload = $payload;
     }
@@ -64,9 +73,14 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return $this->type;
+        return $this->scope;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     public function getReference(): string

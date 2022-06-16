@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
 use App\Event\TestEvent;
@@ -38,7 +39,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
         }
 
@@ -51,7 +52,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchJobFailedEventForTestFailedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_FAILED !== $event->getType()) {
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
             return;
         }
 

@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobCompletedEvent;
 use App\Event\JobFailedEvent;
@@ -84,7 +84,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventType::TEST_PASSED,
+            WorkerEventOutcome::PASSED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),
             new TestDocument(new Document())
@@ -133,7 +133,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventType::TEST_PASSED,
+            WorkerEventOutcome::PASSED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),
             new TestDocument(new Document())
@@ -166,7 +166,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventType::TEST_FAILED,
+            WorkerEventOutcome::FAILED,
             'Test/test.yml',
             \Mockery::mock(TestEntity::class),
             new TestDocument(new Document())
