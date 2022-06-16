@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Exception\JobNotFoundException;
+use App\Entity\Job;
 use App\Model\JobStatus;
 use App\Model\ResourceReferenceSource;
-use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
 
 class JobStatusFactory
 {
     public function __construct(
-        private readonly JobRepository $jobRepository,
         private readonly SourceRepository $sourceRepository,
         private readonly TestRepository $testRepository,
         private readonly TestSerializer $testSerializer,
@@ -26,12 +24,8 @@ class JobStatusFactory
     ) {
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
-    public function create(): JobStatus
+    public function create(Job $job): JobStatus
     {
-        $job = $this->jobRepository->get();
         $tests = $this->testRepository->findAll();
 
         $testPathReferenceSources = [];
@@ -41,13 +35,13 @@ class JobStatusFactory
 
         return new JobStatus(
             $job,
-            $this->referenceFactory->create(),
+            $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
             $this->compilationProgress->get(),
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
             $this->testSerializer->serializeCollection($tests),
-            $this->resourceReferenceFactory->createCollection($testPathReferenceSources)
+            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources)
         );
     }
 }

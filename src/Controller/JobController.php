@@ -36,7 +36,6 @@ class JobController
 
     /**
      * @throws DeserializeException
-     * @throws JobNotFoundException
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(
@@ -94,7 +93,7 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $this->jobRepository->add(new Job(
+        $job = $this->jobRepository->add(new Job(
             $request->label,
             $request->eventDeliveryUrl,
             $request->maximumDurationInSeconds,
@@ -103,14 +102,18 @@ class JobController
 
         $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
 
-        return new JsonResponse($jobStatusFactory->create());
+        return new JsonResponse($jobStatusFactory->create($job));
     }
 
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]
     public function status(JobStatusFactory $jobStatusFactory): JsonResponse
     {
         try {
-            return new JsonResponse($jobStatusFactory->create());
+            return new JsonResponse(
+                $jobStatusFactory->create(
+                    $this->jobRepository->get()
+                )
+            );
         } catch (JobNotFoundException) {
             return new JsonResponse([], 400);
         }
