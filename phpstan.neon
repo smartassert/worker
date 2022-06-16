@@ -4,3 +4,19 @@ parameters:
     - src
     - tests
   inferPrivatePropertyTypeFromConstructor: true
+  exceptions:
+    check:
+      missingCheckedExceptionInThrows: true
+      tooWideThrowType: true
+  ignoreErrors:
+    -
+      message: '#Method .+ throws checked exception InvalidArgumentException#'
+      path: src
+
+    -
+      message: '#Method .+ has Doctrine\\ORM\\ORMException#'
+      path: src
+
+    -
+      message: '#Method .+ throws checked exception#'
+      path: tests

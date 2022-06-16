@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 use webignition\TcpCliProxyClient\HandlerFactory;
 
 class Compiler
@@ -22,6 +25,11 @@ class Compiler
     ) {
     }
 
+    /**
+     * @throws ClientCreationException
+     * @throws SocketErrorException
+     * @throws ParseException
+     */
     public function compile(string $source): ErrorOutputInterface|TestManifestCollection
     {
         $output = '';
