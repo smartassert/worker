@@ -16,15 +16,16 @@ class ResourceReferenceFactory
     }
 
     /**
+     * @param non-empty-string          $jobLabel
      * @param ResourceReferenceSource[] $referenceSources
      */
-    public function createCollection(array $referenceSources): ResourceReferenceCollection
+    public function createCollection(string $jobLabel, array $referenceSources): ResourceReferenceCollection
     {
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
             $testReferences[] = new ResourceReference(
                 $referenceSource->label,
-                $this->referenceFactory->create($referenceSource->components)
+                $this->referenceFactory->create($jobLabel, $referenceSource->components)
             );
         }
 
