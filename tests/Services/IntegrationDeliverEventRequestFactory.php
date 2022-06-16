@@ -27,7 +27,7 @@ class IntegrationDeliverEventRequestFactory
                 'content-type' => 'application/json',
             ],
             (string) json_encode([
-                'label' => $this->jobProperties->getLabel(),
+                'job' => $this->jobProperties->getLabel(),
                 'identifier' => $identifier,
                 'type' => $type,
                 'reference' => $reference,
