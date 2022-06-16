@@ -66,7 +66,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         $this->eventDispatcher->dispatch(
             new TestEvent(
-                WorkerEventOutcome::PASSED,
+                WorkerEventOutcome::STARTED,
                 WorkerEventType::TEST_STARTED,
                 $testSource,
                 $test,
