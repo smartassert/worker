@@ -7,7 +7,6 @@ namespace App\Event;
 use App\Entity\Test as TestEntity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Model\Document\Test as TestDocument;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -19,7 +18,6 @@ class TestEvent extends Event implements EventInterface
      */
     public function __construct(
         private readonly WorkerEventOutcome $outcome,
-        private readonly WorkerEventType $type,
         private readonly string $source,
         private readonly TestEntity $testEntity,
         private readonly TestDocument $document,
@@ -34,11 +32,6 @@ class TestEvent extends Event implements EventInterface
     public function getOutcome(): WorkerEventOutcome
     {
         return $this->outcome;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return $this->type;
     }
 
     public function getTest(): TestEntity

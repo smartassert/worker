@@ -6,7 +6,6 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -40,11 +39,6 @@ class JobStartedEvent extends Event implements EventInterface
     public function getOutcome(): WorkerEventOutcome
     {
         return WorkerEventOutcome::STARTED;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::JOB_STARTED;
     }
 
     public function getRelatedReferenceSources(): array

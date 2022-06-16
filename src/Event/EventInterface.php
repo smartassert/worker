@@ -6,7 +6,6 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
 interface EventInterface
@@ -20,8 +19,6 @@ interface EventInterface
      * @return string[]
      */
     public function getReferenceComponents(): array;
-
-    public function getType(): WorkerEventType;
 
     public function getScope(): WorkerEventScope;
 

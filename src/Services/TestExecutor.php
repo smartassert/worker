@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventType;
 use App\Event\StepEvent;
 use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -63,8 +62,7 @@ class TestExecutor
         $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
         $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-        $eventType = $step->statusIsPassed() ? WorkerEventType::STEP_PASSED : WorkerEventType::STEP_FAILED;
-        $event = new StepEvent($eventOutcome, $eventType, $step, $path, $test);
+        $event = new StepEvent($eventOutcome, $step, $path, $test);
 
         $this->eventDispatcher->dispatch($event);
     }

@@ -6,7 +6,6 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
@@ -34,10 +33,5 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent
     public function getOutcome(): WorkerEventOutcome
     {
         return WorkerEventOutcome::FAILED;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::COMPILATION_FAILED;
     }
 }

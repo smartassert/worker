@@ -6,7 +6,6 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobCompiledEvent extends Event implements EventInterface
@@ -29,11 +28,6 @@ class JobCompiledEvent extends Event implements EventInterface
     public function getOutcome(): WorkerEventOutcome
     {
         return WorkerEventOutcome::COMPILED;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::JOB_COMPILED;
     }
 
     public function getRelatedReferenceSources(): array
