@@ -38,16 +38,18 @@ class TestSerializer
      */
     public function serialize(Test $test): array
     {
-        return array_merge(
-            $test->jsonSerialize(),
-            [
-                'source' => (string) (new UnicodeString((string) $test->getSource()))->trimPrefix(
-                    $this->compilerSourceDirectory . '/'
-                ),
-                'target' => (string) (new UnicodeString((string) $test->getTarget()))->trimPrefix(
-                    $this->compilerTargetDirectory . '/'
-                ),
-            ]
-        );
+        return [
+            'browser' => $test->getBrowser(),
+            'url' => $test->getUrl(),
+            'source' => (string) (new UnicodeString((string) $test->getSource()))->trimPrefix(
+                $this->compilerSourceDirectory . '/'
+            ),
+            'target' => (string) (new UnicodeString((string) $test->getTarget()))->trimPrefix(
+                $this->compilerTargetDirectory . '/'
+            ),
+            'step_names' => $test->getStepNames(),
+            'state' => $test->getState()->value,
+            'position' => $test->getPosition(),
+        ];
     }
 }

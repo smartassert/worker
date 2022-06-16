@@ -9,7 +9,7 @@ use App\Repository\TestRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
-class Test implements \JsonSerializable
+class Test
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -113,21 +113,5 @@ class Test implements \JsonSerializable
     public function getPosition(): int
     {
         return $this->position;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerialize(): array
-    {
-        return [
-            'browser' => $this->browser,
-            'url' => $this->url,
-            'source' => $this->source,
-            'target' => $this->target,
-            'step_names' => $this->stepNames,
-            'state' => $this->state->value,
-            'position' => $this->position,
-        ];
     }
 }
