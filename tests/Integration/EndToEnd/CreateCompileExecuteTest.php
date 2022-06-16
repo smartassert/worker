@@ -217,8 +217,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
                             $firstEventId,
-                            WorkerEventScope::JOB,
-                            WorkerEventOutcome::STARTED,
+                            'job/started',
                             md5($jobProperties->getLabel()),
                             [
                                 'tests' => [
@@ -246,8 +245,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::STARTED,
+                            'compilation/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
@@ -255,8 +253,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::PASSED,
+                            'compilation/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
@@ -274,8 +271,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::STARTED,
+                            'compilation/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -283,8 +279,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::PASSED,
+                            'compilation/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -302,8 +297,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::STARTED,
+                            'compilation/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -311,8 +305,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'compilation/passed: chrome-open-form' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::COMPILATION,
-                            WorkerEventOutcome::PASSED,
+                            'compilation/passsed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -330,22 +323,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'job/compiled' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::JOB,
-                            WorkerEventOutcome::COMPILED,
+                            'job/compiled',
                             md5($jobProperties->getLabel()),
                             []
                         ),
                         'execution/started' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::EXECUTION,
-                            WorkerEventOutcome::STARTED,
+                            'execution/started',
                             md5($jobProperties->getLabel()),
                             []
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::STARTED,
+                            'test/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
@@ -376,8 +366,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::STEP,
-                            WorkerEventOutcome::PASSED,
+                            'step/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml' . 'verify page is open'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
@@ -406,8 +395,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::PASSED,
+                            'test/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
@@ -438,8 +426,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::STARTED,
+                            'test/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -470,8 +457,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::STEP,
-                            WorkerEventOutcome::PASSED,
+                            'step/passed',
                             md5(
                                 $jobProperties->getLabel() .
                                 'Test/chrome-firefox-open-index.yml' .
@@ -498,8 +484,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::PASSED,
+                            'test/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -530,8 +515,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::STARTED,
+                            'test/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -562,8 +546,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::STEP,
-                            WorkerEventOutcome::PASSED,
+                            'step/passsed',
                             md5(
                                 $jobProperties->getLabel() .
                                 'Test/chrome-firefox-open-index.yml' .
@@ -590,8 +573,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::PASSED,
+                            'test/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
@@ -622,8 +604,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::STARTED,
+                            'test/started',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -654,8 +635,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::STEP,
-                            WorkerEventOutcome::PASSED,
+                            'step/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml' . 'verify page is open'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -678,8 +658,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::PASSED,
+                            'test/passed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
@@ -710,15 +689,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'execution/completed' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::EXECUTION,
-                            WorkerEventOutcome::COMPLETED,
+                            'execution/completed',
                             md5($jobProperties->getLabel()),
                             []
                         ),
                         'job/completed' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::JOB,
-                            WorkerEventOutcome::COMPLETED,
+                            'job/completed',
                             md5($jobProperties->getLabel()),
                             []
                         ),
@@ -772,8 +749,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
                             $firstEventId,
-                            WorkerEventScope::STEP,
-                            WorkerEventOutcome::FAILED,
+                            'step/failed',
                             md5(
                                 $jobProperties->getLabel() .
                                 'Test/chrome-open-index-with-step-failure.yml' .
@@ -817,8 +793,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'test/failed' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::TEST,
-                            WorkerEventOutcome::FAILED,
+                            'test/failed',
                             md5($jobProperties->getLabel() . 'Test/chrome-open-index-with-step-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-with-step-failure.yml',
@@ -858,8 +833,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                         ),
                         'job/failed' => $requestFactory->create(
                             ++$firstEventId,
-                            WorkerEventScope::JOB,
-                            WorkerEventOutcome::FAILED,
+                            'job/failed',
                             md5($jobProperties->getLabel()),
                             []
                         ),
