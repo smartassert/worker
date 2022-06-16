@@ -6,7 +6,8 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepEvent;
 use App\Repository\TestRepository;
@@ -37,9 +38,11 @@ class TestCanceller implements EventSubscriberInterface
 
     public function cancelAwaitingFromTestFailedEvent(StepEvent $event): void
     {
-        if (WorkerEventType::STEP_FAILED === $event->getType()) {
-            $this->cancelAwaiting();
+        if (!(WorkerEventScope::STEP === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+            return;
         }
+
+        $this->cancelAwaiting();
     }
 
     public function cancelUnfinished(): void

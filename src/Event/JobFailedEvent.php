@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobFailedEvent extends Event implements EventInterface
@@ -19,9 +20,14 @@ class JobFailedEvent extends Event implements EventInterface
         return [];
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return WorkerEventType::JOB_FAILED;
+        return WorkerEventScope::JOB;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return WorkerEventOutcome::FAILED;
     }
 
     public function getRelatedReferenceSources(): array

@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -184,7 +184,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $test = $tests[$eventTestIndex];
         $event = new TestEvent(
-            WorkerEventType::TEST_PASSED,
+            WorkerEventOutcome::PASSED,
             'Test/test1.yml',
             $test,
             new TestDocument(new Document())
@@ -290,7 +290,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestEvent(
-                WorkerEventType::TEST_PASSED,
+                WorkerEventOutcome::PASSED,
                 $test0RelativeSource,
                 $tests[0],
                 new TestDocument(
@@ -337,7 +337,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestEvent(
-                WorkerEventType::TEST_PASSED,
+                WorkerEventOutcome::PASSED,
                 $test0RelativeSource,
                 $tests[0],
                 new TestDocument(
