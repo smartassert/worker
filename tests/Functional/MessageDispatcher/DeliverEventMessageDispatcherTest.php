@@ -10,7 +10,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventType;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -279,7 +278,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'expectedWorkerEventOutcome' => WorkerEventOutcome::STARTED,
                 'expectedWorkerEventPayload' => [],
             ],
-            WorkerEventType::TEST_STARTED->value => [
+            'test/started' => [
                 'event' => new TestEvent(
                     WorkerEventOutcome::STARTED,
                     $relativeTestSource,
@@ -302,7 +301,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            WorkerEventType::STEP_PASSED->value => [
+            'step/passed' => [
                 'event' => new StepEvent(
                     WorkerEventOutcome::PASSED,
                     new Step($passingStepDocument),
@@ -317,7 +316,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'name' => 'passing step',
                 ],
             ],
-            WorkerEventType::STEP_FAILED->value => [
+            'step/failed' => [
                 'event' => new StepEvent(
                     WorkerEventOutcome::FAILED,
                     new Step($failingStepDocument),
@@ -332,7 +331,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     'name' => 'failing step',
                 ],
             ],
-            WorkerEventType::TEST_PASSED->value => [
+            'test/passed' => [
                 'event' => new TestEvent(
                     WorkerEventOutcome::PASSED,
                     $relativeTestSource,
@@ -355,7 +354,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     ],
                 ],
             ],
-            WorkerEventType::TEST_FAILED->value => [
+            'test/failed' => [
                 'event' => new TestEvent(
                     WorkerEventOutcome::FAILED,
                     $relativeTestSource,
