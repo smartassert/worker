@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Entity\WorkerEvent;
+use App\Exception\JobNotFoundException;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\Repository\WorkerEventRepository;
@@ -25,6 +26,7 @@ class DeliverEventHandler implements MessageHandlerInterface
     /**
      * @throws NonSuccessfulHttpResponseException
      * @throws ClientExceptionInterface
+     * @throws JobNotFoundException
      */
     public function __invoke(DeliverEventMessage $message): void
     {

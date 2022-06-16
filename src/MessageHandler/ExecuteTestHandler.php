@@ -19,6 +19,8 @@ use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
 class ExecuteTestHandler implements MessageHandlerInterface
 {
@@ -35,6 +37,8 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
     /**
      * @throws JobNotFoundException
+     * @throws ClientCreationException
+     * @throws SocketErrorException
      */
     public function __invoke(ExecuteTestMessage $message): void
     {

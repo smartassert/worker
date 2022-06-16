@@ -10,6 +10,8 @@ use App\Event\StepPassedEvent;
 use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 use webignition\TcpCliProxyClient\Handler;
 use webignition\YamlDocument\Document;
 use webignition\YamlDocument\Factory;
@@ -24,6 +26,10 @@ class TestExecutor
     ) {
     }
 
+    /**
+     * @throws ClientCreationException
+     * @throws SocketErrorException
+     */
     public function execute(Test $test): void
     {
         $delegatorClientHandler = new Handler();
