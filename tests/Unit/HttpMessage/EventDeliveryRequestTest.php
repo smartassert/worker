@@ -40,7 +40,7 @@ class EventDeliveryRequestTest extends TestCase
         self::assertSame('application/json', $request->getHeaderLine('content-type'));
         self::assertSame(
             [
-                'label' => $jobLabel,
+                'job' => $jobLabel,
                 'identifier' => 123,
                 'type' => $eventScope->value . '/' . $eventOutcome->value,
                 'reference' => $eventReference,
