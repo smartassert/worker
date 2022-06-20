@@ -6,8 +6,6 @@ namespace App\Model\Document;
 
 class Test extends AbstractDocument
 {
-    private const TYPE = 'test';
-
     public function __construct(
         private readonly string $path,
         array $data
