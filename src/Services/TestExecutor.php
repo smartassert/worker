@@ -8,7 +8,6 @@ use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Exception\Document\InvalidDocumentException;
-use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
@@ -68,8 +67,8 @@ class TestExecutor
         $documentData = $document->parse();
         $documentData = is_array($documentData) ? $documentData : [];
 
-        $step = $this->documentFactory->create($documentData);
-        if ($step instanceof Step) {
+        if ('step' === $this->documentFactory->getType($documentData)) {
+            $step = $this->documentFactory->createStep($documentData);
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
