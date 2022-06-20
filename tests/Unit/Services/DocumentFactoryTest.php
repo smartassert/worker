@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Services;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Exception\Document\InvalidTestException;
-use App\Model\Document\DocumentInterface;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
 use App\Services\DocumentFactory;
@@ -159,11 +158,10 @@ class DocumentFactoryTest extends TestCase
      *
      * @throws InvalidDocumentException
      */
-    public function testCreateTest(array $data, DocumentInterface $expected): void
+    public function testCreateTest(array $data, Test $expected): void
     {
         $document = $this->factory->createTest($data);
 
-        self::assertInstanceOf(DocumentInterface::class, $document);
         self::assertEquals($expected, $document);
     }
 

@@ -69,10 +69,11 @@ class TestExecutor
     private function dispatchStepProgressEvent(Test $test, YamlDocument $yamlDocument): void
     {
         $documentData = $yamlDocument->parse();
-        $document = new Document(is_array($documentData) ? $documentData : []);
+        $documentData = is_array($documentData) ? $documentData : [];
+        $document = new Document($documentData);
 
         if ('step' === $document->getType()) {
-            $step = $this->documentFactory->createStep($document->getData());
+            $step = $this->documentFactory->createStep($documentData);
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {

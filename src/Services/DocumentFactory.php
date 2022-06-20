@@ -34,7 +34,7 @@ class DocumentFactory
 
             if (null === $path) {
                 throw new InvalidTestException(
-                    $document->getData(),
+                    $data,
                     'Payload path missing',
                     InvalidTestException::CODE_PATH_MISSING
                 );
@@ -51,7 +51,7 @@ class DocumentFactory
         }
 
         throw new InvalidDocumentException(
-            $document->getData(),
+            $data,
             sprintf('Type "%s" is not "test"', $type),
             InvalidDocumentException::CODE_TYPE_INVALID
         );
@@ -73,17 +73,17 @@ class DocumentFactory
 
             if (null === $name) {
                 throw new InvalidStepException(
-                    $document->getData(),
+                    $data,
                     'Payload name missing',
                     InvalidStepException::CODE_NAME_MISSING
                 );
             }
 
-            return new Step($name, $document->getData());
+            return new Step($name, $data);
         }
 
         throw new InvalidDocumentException(
-            $document->getData(),
+            $data,
             sprintf('Type "%s" is not "step"', $type),
             InvalidDocumentException::CODE_TYPE_INVALID
         );
