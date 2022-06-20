@@ -16,7 +16,6 @@ use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use webignition\BasilCompilerModels\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
-use webignition\YamlDocument\Document;
 
 class TestExecutorTest extends AbstractTestCreationTest
 {
@@ -94,7 +93,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
+                            $expectedDocument = new Step([
                                 'type' => 'step',
                                 'payload' => [
                                     'name' => 'verify page is open',
@@ -113,7 +112,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                         ],
                                     ],
                                 ],
-                            ])));
+                            ]);
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -135,7 +134,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
+                            $expectedDocument = new Step([
                                 'type' => 'step',
                                 'payload' => [
                                     'name' => 'verify page is open',
@@ -148,7 +147,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                         ],
                                     ],
                                 ],
-                            ])));
+                            ]);
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -170,7 +169,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
+                            $expectedDocument = new Step([
                                 'type' => 'step',
                                 'payload' => [
                                     'name' => 'verify page is open',
@@ -183,7 +182,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                         ],
                                     ],
                                 ],
-                            ])));
+                            ]);
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -197,7 +196,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
+                            $expectedDocument = new Step([
                                 'type' => 'step',
                                 'payload' => [
                                     'name' => 'verify page is open',
@@ -210,7 +209,7 @@ class TestExecutorTest extends AbstractTestCreationTest
                                         ],
                                     ],
                                 ],
-                            ])));
+                            ]);
 
                             self::assertEquals(
                                 $expectedDocument,

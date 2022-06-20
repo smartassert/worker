@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Model\Document;
 use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Step;
 use PHPUnit\Framework\TestCase;
-use webignition\YamlDocument\Document;
 
 class StepTest extends TestCase
 {
@@ -29,15 +28,11 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step(
-                    new Document()
-                ),
+                'step' => new Step([]),
                 'expectedIsStep' => false,
             ],
             'no type' => [
-                'step' => new Step(
-                    new Document('key: value')
-                ),
+                'step' => new Step(['key' => 'value']),
                 'expectedIsStep' => false,
             ],
         ];
@@ -58,15 +53,11 @@ class StepTest extends TestCase
     {
         return [
             'type is not step' => [
-                'step' => new Step(
-                    new Document('type: test')
-                ),
+                'step' => new Step(['type' => 'test']),
                 'expectedIsStep' => false,
             ],
             'is a step' => [
-                'step' => new Step(
-                    new Document('type: step')
-                ),
+                'step' => new Step(['type' => 'step']),
                 'expectedIsStep' => true,
             ],
         ];
@@ -87,33 +78,23 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step(
-                    new Document()
-                ),
+                'step' => new Step([]),
                 'expectedIsPassed' => false,
             ],
             'no payload' => [
-                'step' => new Step(
-                    new Document('key: value')
-                ),
+                'step' => new Step(['key' => 'value']),
                 'expectedIsPassed' => false,
             ],
             'no status' => [
-                'step' => new Step(
-                    new Document('payload: {}')
-                ),
+                'step' => new Step(['payload' => []]),
                 'expectedIsPassed' => false,
             ],
             'status is not passed' => [
-                'step' => new Step(
-                    new Document('payload: { status: failed }')
-                ),
+                'step' => new Step(['payload' => ['status' => 'failed']]),
                 'expectedIsPassed' => false,
             ],
             'status is passed' => [
-                'step' => new Step(
-                    new Document('payload: { status: passed }')
-                ),
+                'step' => new Step(['payload' => ['status' => 'passed']]),
                 'expectedIsPassed' => true,
             ],
         ];
@@ -134,34 +115,24 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step(
-                    new Document()
-                ),
+                'step' => new Step([]),
                 'expectedIsFailed' => false,
             ],
             'no payload' => [
-                'step' => new Step(
-                    new Document('key: value')
-                ),
+                'step' => new Step(['key' => 'value']),
                 'expectedIsFailed' => false,
             ],
             'no status' => [
-                'step' => new Step(
-                    new Document('payload: {}')
-                ),
+                'step' => new Step(['payload' => []]),
                 'expectedIsFailed' => false,
             ],
             'status is not failed' => [
-                'step' => new Step(
-                    new Document('payload: { status: failed }')
-                ),
-                'expectedIsFailed' => true,
+                'step' => new Step(['payload' => ['status' => 'passed']]),
+                'expectedIsFailed' => false,
             ],
             'status is failed' => [
-                'step' => new Step(
-                    new Document('payload: { status: passed }')
-                ),
-                'expectedIsFailed' => false,
+                'step' => new Step(['payload' => ['status' => 'failed']]),
+                'expectedIsFailed' => true,
             ],
         ];
     }
@@ -181,45 +152,46 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step(
-                    new Document()
-                ),
+                'step' => new Step([]),
                 'expectedName' => null,
             ],
             'document has no type' => [
-                'step' => new Step(
-                    new Document('key: value')
-                ),
+                'step' => new Step(['key' => 'value']),
                 'expectedName' => null,
             ],
             'not a step' => [
-                'step' => new Step(
-                    new Document('type: test')
-                ),
+                'step' => new Step(['type' => 'test']),
                 'expectedName' => null,
             ],
             'no name' => [
-                'step' => new Step(
-                    new Document('type: step')
-                ),
+                'step' => new Step(['type' => 'step']),
                 'expectedName' => null,
             ],
             'null name' => [
-                'step' => new Step(
-                    new Document('type: step' . "\n" . 'payload: { name: ~ }')
-                ),
+                'step' => new Step([
+                    'type' => 'step',
+                    'payload' => [
+                        'name' => null
+                    ]
+                ]),
                 'expectedName' => null,
             ],
             'empty name' => [
-                'step' => new Step(
-                    new Document('type: step' . "\n" . 'payload: { name: "" }')
-                ),
+                'step' => new Step([
+                    'type' => 'step',
+                    'payload' => [
+                        'name' => ''
+                    ]
+                ]),
                 'expectedName' => '',
             ],
             'non-empty name' => [
-                'step' => new Step(
-                    new Document('type: step' . "\n" . 'payload: { name: "non-empty name" }')
-                ),
+                'step' => new Step([
+                    'type' => 'step',
+                    'payload' => [
+                        'name' => 'non-empty name'
+                    ]
+                ]),
                 'expectedName' => 'non-empty name',
             ],
         ];

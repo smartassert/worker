@@ -64,7 +64,10 @@ class TestExecutor
      */
     private function dispatchStepProgressEvent(Test $test, Document $document): void
     {
-        $step = new Step($document);
+        $documentData = $document->parse();
+        $documentData = is_array($documentData) ? $documentData : [];
+
+        $step = new Step($documentData);
 
         if ($step->isStep()) {
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());

@@ -28,7 +28,6 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\YamlDocument\Document;
 
 class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -182,7 +181,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent(new TestDocument(new Document()), $test);
+        $event = new TestPassedEvent(new TestDocument([]), $test);
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -284,14 +283,12 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
-                new TestDocument(
-                    new Document((string) json_encode([
-                        'type' => 'test',
-                        'payload' => [
-                            'path' => $test0RelativeSource,
-                        ],
-                    ]))
-                ),
+                new TestDocument([
+                    'type' => 'test',
+                    'payload' => [
+                        'path' => $test0RelativeSource,
+                    ],
+                ]),
                 $tests[0]
             )
         );
@@ -329,14 +326,12 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
-                new TestDocument(
-                    new Document((string) json_encode([
-                        'type' => 'test',
-                        'payload' => [
-                            'path' => $test0RelativeSource,
-                        ],
-                    ]))
-                ),
+                new TestDocument([
+                    'type' => 'test',
+                    'payload' => [
+                        'path' => $test0RelativeSource,
+                    ],
+                ]),
                 $tests[0],
             )
         );

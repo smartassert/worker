@@ -16,7 +16,6 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\YamlDocument\Document;
 
 class TestCancellerTest extends AbstractBaseFunctionalTest
 {
@@ -336,9 +335,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $test = $tests[0];
         self::assertInstanceOf(Test::class, $test);
 
-        $document = new Document();
-
-        $event = new StepFailedEvent(new Step($document), '', $test);
+        $event = new StepFailedEvent(new Step([]), '', $test);
         $execute($event);
 
         $this->assertTestStates($expectedStates);

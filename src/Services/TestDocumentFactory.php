@@ -28,7 +28,10 @@ class TestDocumentFactory
         $runnerTestString = $this->yamlGenerator->generate($runnerTest->getData());
 
         $document = new Document($runnerTestString);
-        $testDocument = new TestDocument($document);
+        $documentData = $document->parse();
+        $documentData = is_array($documentData) ? $documentData : [];
+
+        $testDocument = new TestDocument($documentData);
 
         if ($testDocument->isTest()) {
             $path = $testDocument->getPath();
