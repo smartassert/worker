@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Document;
 
 use App\Exception\Document\InvalidDocumentException;
-use webignition\YamlDocument\Document;
 
 abstract class AbstractDocument implements DocumentInterface
 {
@@ -13,14 +12,10 @@ abstract class AbstractDocument implements DocumentInterface
     private const KEY_TYPE = 'type';
 
     /**
-     * @var array<mixed>
+     * @param array<mixed> $data
      */
-    private array $data;
-
-    public function __construct(Document $document)
+    public function __construct(private array $data)
     {
-        $data = $document->parse();
-        $this->data = is_array($data) ? $data : [];
     }
 
     /**

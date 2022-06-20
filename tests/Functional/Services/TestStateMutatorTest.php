@@ -14,7 +14,6 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\TestTestFactory;
 use App\Tests\Services\TestTestMutator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\YamlDocument\Document;
 
 class TestStateMutatorTest extends AbstractBaseFunctionalTest
 {
@@ -88,11 +87,13 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider handleStepFailedEventDataProvider
+     *
+     * @param array<mixed> $documentData
      */
-    public function testSetFailedFromStepFailedEventEvent(Document $document, TestState $expectedState): void
+    public function testSetFailedFromStepFailedEventEvent(array $documentData, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
-            $document,
+            $documentData,
             $expectedState,
             function (StepFailedEvent $event) {
                 $this->mutator->setFailedFromStepFailedEvent($event);
@@ -102,11 +103,13 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
 
     /**
      * @dataProvider handleStepFailedEventDataProvider
+     *
+     * @param array<mixed> $documentData
      */
-    public function testSubscribesToStepFailedEvent(Document $document, TestState $expectedState): void
+    public function testSubscribesToStepFailedEvent(array $documentData, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
-            $document,
+            $documentData,
             $expectedState,
             function (StepFailedEvent $event) {
                 $this->eventDispatcher->dispatch($event);
@@ -121,20 +124,26 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     {
         return [
             'step failed' => [
-                'document' => new Document('{ type: step, status: failed }'),
+                'documentData' => [
+                    'type' => 'step',
+                    'status' => 'failed',
+                ],
                 'expectedState' => TestState::FAILED,
             ],
         ];
     }
 
+    /**
+     * @param array<mixed> $documentData
+     */
     private function doTestExecuteDocumentReceivedEventDrivenTest(
-        Document $document,
+        array $documentData,
         TestState $expectedState,
         callable $execute
     ): void {
         self::assertSame(TestState::AWAITING, $this->test->getState());
 
-        $event = new StepFailedEvent(new Step($document), '', $this->test);
+        $event = new StepFailedEvent(new Step($documentData), '', $this->test);
         $execute($event);
 
         self::assertSame($expectedState, $this->test->getState());
