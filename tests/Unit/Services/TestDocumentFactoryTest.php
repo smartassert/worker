@@ -9,7 +9,6 @@ use App\Model\Document\Test as TestDocument;
 use App\Services\TestDocumentFactory;
 use App\Services\TestPathMutator;
 use PHPUnit\Framework\TestCase;
-use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class TestDocumentFactoryTest extends TestCase
 {
@@ -22,7 +21,6 @@ class TestDocumentFactoryTest extends TestCase
         parent::setUp();
 
         $this->factory = new TestDocumentFactory(
-            new YamlGenerator(),
             new TestPathMutator(self::COMPILER_SOURCE_DIRECTORY)
         );
     }
