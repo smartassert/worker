@@ -6,7 +6,7 @@ namespace App\Model\Document;
 
 use App\Exception\Document\InvalidDocumentException;
 
-class Document implements DocumentInterface
+class Document
 {
     private const KEY_TYPE = 'type';
     private const KEY_PAYLOAD = 'payload';
@@ -38,11 +38,6 @@ class Document implements DocumentInterface
         return $type;
     }
 
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
     public function getPayloadStringValue(string $key): ?string
     {
         $value = $this->getPayload()[$key] ?? null;
@@ -55,7 +50,7 @@ class Document implements DocumentInterface
      */
     public function getPayload(): array
     {
-        $payload = $this->getData()[self::KEY_PAYLOAD] ?? [];
+        $payload = $this->data[self::KEY_PAYLOAD] ?? [];
 
         return is_array($payload) ? $payload : [];
     }
