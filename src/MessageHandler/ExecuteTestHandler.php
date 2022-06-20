@@ -14,12 +14,14 @@ use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
+use App\Services\DocumentFactory;
 use App\Services\ExecutionProgress;
-use App\Services\TestDocumentFactory;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use webignition\BasilRunnerDocuments\Test as RunnerTest;
+use webignition\BasilRunnerDocuments\TestConfiguration as RunnerTestConfiguration;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
@@ -32,7 +34,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
-        private TestDocumentFactory $testDocumentFactory
+        private DocumentFactory $documentFactory,
     ) {
     }
 
@@ -64,7 +66,12 @@ class ExecuteTestHandler implements MessageHandlerInterface
             $this->jobRepository->add($job);
         }
 
-        $testDocument = $this->testDocumentFactory->create($test);
+        $runnerTest = new RunnerTest(
+            (string) $test->getSource(),
+            new RunnerTestConfiguration($test->getBrowser(), $test->getUrl()),
+        );
+
+        $testDocument = $this->documentFactory->createTest($runnerTest->getData());
 
         $this->eventDispatcher->dispatch(new TestStartedEvent($testDocument));
 
