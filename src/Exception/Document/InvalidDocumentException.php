@@ -7,6 +7,7 @@ namespace App\Exception\Document;
 class InvalidDocumentException extends \Exception
 {
     public const CODE_TYPE_EMPTY = 100;
+    public const CODE_TYPE_INVALID = 101;
 
     /**
      * @param array<mixed> $data
