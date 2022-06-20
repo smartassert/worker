@@ -7,14 +7,12 @@ namespace App\Services;
 use App\Entity\Test as TestEntity;
 use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Test as TestDocument;
-use App\Model\RunnerTest\TestProxy;
-use webignition\YamlDocument\Document;
-use webignition\YamlDocumentGenerator\YamlGenerator;
+use webignition\BasilRunnerDocuments\Test as RunnerTest;
+use webignition\BasilRunnerDocuments\TestConfiguration as RunnerTestConfiguration;
 
 class TestDocumentFactory
 {
     public function __construct(
-        private readonly YamlGenerator $yamlGenerator,
         private readonly TestPathMutator $testPathMutator
     ) {
     }
@@ -22,16 +20,14 @@ class TestDocumentFactory
     /**
      * @throws InvalidDocumentException
      */
-    public function create(TestEntity $test): TestDocument
+    public function create(TestEntity $testEntity): TestDocument
     {
-        $runnerTest = new TestProxy($test);
-        $runnerTestString = $this->yamlGenerator->generate($runnerTest->getData());
+        $runnerTest = new RunnerTest(
+            (string) $testEntity->getSource(),
+            new RunnerTestConfiguration($testEntity->getBrowser(), $testEntity->getUrl()),
+        );
 
-        $document = new Document($runnerTestString);
-        $documentData = $document->parse();
-        $documentData = is_array($documentData) ? $documentData : [];
-
-        $testDocument = new TestDocument($documentData);
+        $testDocument = new TestDocument($runnerTest->getData());
 
         if ($testDocument->isTest()) {
             $path = $testDocument->getPath();
