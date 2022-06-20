@@ -9,6 +9,7 @@ use App\Enum\TestState;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
+use App\Exception\Document\InvalidDocumentException;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
@@ -39,6 +40,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
      * @throws JobNotFoundException
      * @throws ClientCreationException
      * @throws SocketErrorException
+     * @throws InvalidDocumentException
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
