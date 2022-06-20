@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Services;
 
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
+use App\Exception\Document\InvalidTestException;
 use App\Model\Document\DocumentInterface;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
@@ -117,6 +118,41 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider createTestInvalidTestDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreateTestInvalidTest(array $data, InvalidTestException $expected): void
+    {
+        self::expectExceptionObject($expected);
+
+        $this->factory->createTest($data);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createTestInvalidTestDataProvider(): array
+    {
+        return [
+            'path missing' => [
+                'data' => [
+                    'type' => 'test',
+                    'payload' => [],
+                ],
+                'expected' => new InvalidTestException(
+                    [
+                        'type' => 'test',
+                        'payload' => [],
+                    ],
+                    'Payload path missing',
+                    InvalidTestException::CODE_PATH_MISSING
+                )
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider createTestDataProvider
      *
      * @param array<mixed> $data
@@ -140,23 +176,22 @@ class DocumentFactoryTest extends TestCase
         $transformablePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $transformedPath;
 
         return [
-            'test with no path' => [
-                'data' => [
-                    'type' => 'test',
-                ],
-                'expected' => new Test([
-                    'type' => 'test',
-                ]),
-            ],
             'test with already transformed path' => [
                 'data' => [
                     'type' => 'test',
-                    'path' => $transformedPath,
+                    'payload' => [
+                        'path' => $transformedPath,
+                    ],
                 ],
-                'expected' => new Test([
-                    'type' => 'test',
-                    'path' => $transformedPath,
-                ]),
+                'expected' => new Test(
+                    $transformedPath,
+                    [
+                        'type' => 'test',
+                        'payload' => [
+                            'path' => $transformedPath,
+                        ],
+                    ]
+                ),
             ],
             'test with transformable path' => [
                 'data' => [
@@ -165,12 +200,15 @@ class DocumentFactoryTest extends TestCase
                         'path' => $transformablePath,
                     ],
                 ],
-                'expected' => new Test([
-                    'type' => 'test',
-                    'payload' => [
-                        'path' => $transformedPath,
-                    ],
-                ]),
+                'expected' => new Test(
+                    $transformedPath,
+                    [
+                        'type' => 'test',
+                        'payload' => [
+                            'path' => $transformedPath,
+                        ],
+                    ]
+                ),
             ],
             'test with non-transformable absolute path' => [
                 'data' => [
@@ -179,12 +217,15 @@ class DocumentFactoryTest extends TestCase
                         'path' => '/app/Test/non-transformable.yml',
                     ],
                 ],
-                'expected' => new Test([
-                    'type' => 'test',
-                    'payload' => [
-                        'path' => '/app/Test/non-transformable.yml',
-                    ],
-                ]),
+                'expected' => new Test(
+                    '/app/Test/non-transformable.yml',
+                    [
+                        'type' => 'test',
+                        'payload' => [
+                            'path' => '/app/Test/non-transformable.yml',
+                        ],
+                    ]
+                ),
             ],
         ];
     }
