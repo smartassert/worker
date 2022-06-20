@@ -181,7 +181,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $testDocument = new TestDocument($testDocumentData);
+        $testDocument = new TestDocument($relativeTestSource, $testDocumentData);
 
         $sourceCompilationPassedManifestCollection = new TestManifestCollection([
             (new MockTestManifest())

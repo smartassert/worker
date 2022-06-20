@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
+use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
@@ -21,6 +22,7 @@ class DocumentFactory
      * @param array<mixed> $data
      *
      * @throws InvalidDocumentException
+     * @throws InvalidTestException
      */
     public function createTest(array $data): Test
     {
@@ -28,16 +30,24 @@ class DocumentFactory
         $type = $document->getType();
 
         if ('test' === $type) {
-            $test = new Test($document->getData());
+            $path = $document->getPayloadStringValue('path');
 
-            $path = $test->getPath();
-            $mutatedPath = $this->testPathMutator->removeCompilerSourceDirectoryFromPath($test->getPath());
-
-            if ($mutatedPath !== $path) {
-                $test->setPath($mutatedPath);
+            if (null === $path) {
+                throw new InvalidTestException(
+                    $document->getData(),
+                    'Payload path missing',
+                    InvalidTestException::CODE_PATH_MISSING
+                );
             }
 
-            return $test;
+            $mutatedPath = $this->testPathMutator->removeCompilerSourceDirectoryFromPath($path);
+            if ($mutatedPath !== $path) {
+                $payload = $document->getPayload();
+                $payload['path'] = $mutatedPath;
+                $data['payload'] = $payload;
+            }
+
+            return new Test($mutatedPath, $data);
         }
 
         throw new InvalidDocumentException(
