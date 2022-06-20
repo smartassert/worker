@@ -53,7 +53,7 @@ class Document implements DocumentInterface
     /**
      * @return array<mixed>
      */
-    private function getPayload(): array
+    public function getPayload(): array
     {
         $payload = $this->getData()[self::KEY_PAYLOAD] ?? [];
 

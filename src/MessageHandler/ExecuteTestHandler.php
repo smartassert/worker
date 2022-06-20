@@ -11,6 +11,7 @@ use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
+use App\Exception\Document\InvalidTestException;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
@@ -45,6 +46,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
      * @throws SocketErrorException
      * @throws InvalidDocumentException
      * @throws InvalidStepException
+     * @throws InvalidTestException
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
