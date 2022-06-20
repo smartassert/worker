@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test as TestEntity;
+use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Test as TestDocument;
 use App\Model\RunnerTest\TestProxy;
 use webignition\YamlDocument\Document;
@@ -18,6 +19,9 @@ class TestDocumentFactory
     ) {
     }
 
+    /**
+     * @throws InvalidDocumentException
+     */
     public function create(TestEntity $test): TestDocument
     {
         $runnerTest = new TestProxy($test);

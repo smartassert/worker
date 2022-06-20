@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Model\Document;
 
+use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Step;
 use PHPUnit\Framework\TestCase;
 use webignition\YamlDocument\Document;
@@ -11,17 +12,20 @@ use webignition\YamlDocument\Document;
 class StepTest extends TestCase
 {
     /**
-     * @dataProvider isStepDataProvider
+     * @dataProvider isStepThrowsInvalidDocumentExceptionDataProvider
      */
-    public function testIsStep(Step $step, bool $expectedIsStep): void
+    public function testIsStepThrowsInvalidDocumentException(Step $step): void
     {
-        self::assertSame($expectedIsStep, $step->isStep());
+        self::expectException(InvalidDocumentException::class);
+        self::expectExceptionMessage('Type empty');
+
+        $step->isStep();
     }
 
     /**
      * @return array<mixed>
      */
-    public function isStepDataProvider(): array
+    public function isStepThrowsInvalidDocumentExceptionDataProvider(): array
     {
         return [
             'empty' => [
@@ -36,6 +40,23 @@ class StepTest extends TestCase
                 ),
                 'expectedIsStep' => false,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider isStepDataProvider
+     */
+    public function testIsStep(Step $step, bool $expectedIsStep): void
+    {
+        self::assertSame($expectedIsStep, $step->isStep());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function isStepDataProvider(): array
+    {
+        return [
             'type is not step' => [
                 'step' => new Step(
                     new Document('type: test')

@@ -18,5 +18,9 @@ parameters:
       path: src
 
     -
+      message: '#Method App\\Services\\TestExecutor::execute\(\) has .+InvalidDocumentException#'
+      path: src/Services/TestExecutor.php
+
+    -
       message: '#Method .+ throws checked exception#'
       path: tests
