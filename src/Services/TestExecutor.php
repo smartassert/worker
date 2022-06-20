@@ -24,6 +24,7 @@ class TestExecutor
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
         private readonly TestPathMutator $testPathMutator,
+        private readonly DocumentFactory $documentFactory,
     ) {
     }
 
@@ -67,9 +68,8 @@ class TestExecutor
         $documentData = $document->parse();
         $documentData = is_array($documentData) ? $documentData : [];
 
-        $step = new Step($documentData);
-
-        if ($step->isStep()) {
+        $step = $this->documentFactory->create($documentData);
+        if ($step instanceof Step) {
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
