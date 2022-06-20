@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Document;
 
-class Step extends AbstractDocument
+class Step extends Document
 {
     private const KEY_PAYLOAD_STATUS = 'status';
     private const STATUS_PASSED = 'passed';
