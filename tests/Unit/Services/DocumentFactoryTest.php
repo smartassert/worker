@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
 use App\Model\Document\DocumentInterface;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
@@ -48,19 +49,19 @@ class DocumentFactoryTest extends TestCase
         return [
             'no data' => [
                 'data' => [],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type not present' => [
                 'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is empty' => [
                 'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is whitespace-only' => [
                 'data' => ['type' => '  '],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is not step: test' => [
                 'data' => ['type' => 'test'],
@@ -94,15 +95,15 @@ class DocumentFactoryTest extends TestCase
         return [
             'no data' => [
                 'data' => [],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type not present' => [
                 'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is empty' => [
                 'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is not test: step' => [
                 'data' => ['type' => 'step'],
@@ -189,6 +190,41 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider createStepInvalidStepDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreateStepInvalidStep(array $data, InvalidStepException $expected): void
+    {
+        self::expectExceptionObject($expected);
+
+        $this->factory->createStep($data);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createStepInvalidStepDataProvider(): array
+    {
+        return [
+            'name missing' => [
+                'data' => [
+                    'type' => 'step',
+                    'payload' => [],
+                ],
+                'expected' => new InvalidStepException(
+                    [
+                        'type' => 'step',
+                        'payload' => [],
+                    ],
+                    'Payload name missing',
+                    InvalidStepException::CODE_NAME_MISSING
+                )
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider createStepDataProvider
      *
      * @param array<mixed> $data
@@ -207,10 +243,19 @@ class DocumentFactoryTest extends TestCase
             'step' => [
                 'data' => [
                     'type' => 'step',
+                    'payload' => [
+                        'name' => 'step name',
+                    ],
                 ],
-                'expected' => new Step([
-                    'type' => 'step',
-                ]),
+                'expected' => new Step(
+                    'step name',
+                    [
+                        'type' => 'step',
+                        'payload' => [
+                            'name' => 'step name',
+                        ],
+                    ]
+                ),
             ],
         ];
     }

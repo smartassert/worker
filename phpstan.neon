@@ -18,7 +18,7 @@ parameters:
       path: src
 
     -
-      message: '#Method App\\Services\\TestExecutor::execute\(\) has .+InvalidDocumentException#'
+      message: '#Method App\\Services\\TestExecutor::execute\(\) has .+Invalid(Document|Step)Exception#'
       path: src/Services/TestExecutor.php
 
     -
