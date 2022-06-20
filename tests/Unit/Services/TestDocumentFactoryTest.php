@@ -9,7 +9,6 @@ use App\Model\Document\Test as TestDocument;
 use App\Services\TestDocumentFactory;
 use App\Services\TestPathMutator;
 use PHPUnit\Framework\TestCase;
-use webignition\YamlDocument\Document;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class TestDocumentFactoryTest extends TestCase
@@ -74,17 +73,15 @@ class TestDocumentFactoryTest extends TestCase
 
     private function createTestDocument(string $path): TestDocument
     {
-        return new TestDocument(
-            new Document((string) json_encode([
-                'type' => 'test',
-                'payload' => [
-                    'path' => $path,
-                    'config' => [
-                        'browser' => 'chrome',
-                        'url' => 'http://example.com',
-                    ],
+        return new TestDocument([
+            'type' => 'test',
+            'payload' => [
+                'path' => $path,
+                'config' => [
+                    'browser' => 'chrome',
+                    'url' => 'http://example.com',
                 ],
-            ]))
-        );
+            ],
+        ]);
     }
 }
