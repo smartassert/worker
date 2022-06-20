@@ -38,16 +38,6 @@ abstract class AbstractDocument
     }
 
     /**
-     * @param array<mixed> $mutations
-     *
-     * @return array<mixed>
-     */
-    public function getMutatedData(array $mutations): array
-    {
-        return array_merge($this->data, $mutations);
-    }
-
-    /**
      * @return array<mixed>
      */
     public function getPayload(): array
