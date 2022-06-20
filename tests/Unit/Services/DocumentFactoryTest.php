@@ -32,12 +32,25 @@ class DocumentFactoryTest extends TestCase
      *
      * @param array<mixed> $data
      */
-    public function testInvalidType(array $data, string $expectedExceptionMessage): void
+    public function testCreateStepInvalidType(array $data, string $expectedExceptionMessage): void
     {
         $this->expectException(InvalidDocumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $this->factory->create($data);
+        $this->factory->createStep($data);
+    }
+
+    /**
+     * @dataProvider invalidTypeDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreateTestInvalidType(array $data, string $expectedExceptionMessage): void
+    {
+        $this->expectException(InvalidDocumentException::class);
+        $this->expectExceptionMessage($expectedExceptionMessage);
+
+        $this->factory->createTest($data);
     }
 
     /**
@@ -70,15 +83,15 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createDataProvider
+     * @dataProvider createTestDataProvider
      *
      * @param array<mixed> $data
      *
      * @throws InvalidDocumentException
      */
-    public function testCreateFoo(array $data, DocumentInterface $expected): void
+    public function testCreateTest(array $data, DocumentInterface $expected): void
     {
-        $document = $this->factory->create($data);
+        $document = $this->factory->createTest($data);
 
         self::assertInstanceOf(DocumentInterface::class, $document);
         self::assertEquals($expected, $document);
@@ -87,20 +100,12 @@ class DocumentFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public function createTestDataProvider(): array
     {
         $transformedPath = 'Test/test.yml';
         $transformablePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $transformedPath;
 
         return [
-            'step' => [
-                'data' => [
-                    'type' => 'step',
-                ],
-                'expected' => new Step([
-                    'type' => 'step',
-                ]),
-            ],
             'test with no path' => [
                 'data' => [
                     'type' => 'test',
@@ -145,6 +150,33 @@ class DocumentFactoryTest extends TestCase
                     'payload' => [
                         'path' => '/app/Test/non-transformable.yml',
                     ],
+                ]),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createStepDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreateStep(array $data, Step $expected): void
+    {
+        self::assertEquals($expected, $this->factory->createStep($data));
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createStepDataProvider(): array
+    {
+        return [
+            'step' => [
+                'data' => [
+                    'type' => 'step',
+                ],
+                'expected' => new Step([
+                    'type' => 'step',
                 ]),
             ],
         ];

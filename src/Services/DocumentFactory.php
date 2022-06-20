@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exception\Document\InvalidDocumentException;
-use App\Model\Document\DocumentInterface;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
 
 class DocumentFactory
 {
-    private const TYPE_TEST = 'test';
-    private const TYPE_STEP = 'step';
-    private const VALID_TYPES = [self::TYPE_TEST, self::TYPE_STEP];
-
     public function __construct(
         private readonly TestPathMutator $testPathMutator,
     ) {
@@ -25,14 +20,9 @@ class DocumentFactory
      *
      * @throws InvalidDocumentException
      */
-    public function create(array $data): DocumentInterface
+    public function createTest(array $data): Test
     {
-        $type = $data['type'] ?? null;
-        $type = is_string($type) ? trim($type) : null;
-
-        if ('step' === $type) {
-            return new Step($data);
-        }
+        $type = $this->getType($data);
 
         if ('test' === $type) {
             $test = new Test($data);
@@ -49,12 +39,38 @@ class DocumentFactory
 
         throw new InvalidDocumentException(
             $data,
-            sprintf(
-                'Type "%s" is not one of "%s"',
-                (string) $type,
-                implode(', ', self::VALID_TYPES)
-            ),
+            sprintf('Type "%s" is not "test"', $type),
             InvalidDocumentException::CODE_TYPE_INVALID
         );
+    }
+
+    /**
+     * @param array<mixed> $data
+     *
+     * @throws InvalidDocumentException
+     */
+    public function createStep(array $data): Step
+    {
+        $type = $this->getType($data);
+
+        if ('step' === $type) {
+            return new Step($data);
+        }
+
+        throw new InvalidDocumentException(
+            $data,
+            sprintf('Type "%s" is not "step"', $type),
+            InvalidDocumentException::CODE_TYPE_INVALID
+        );
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public function getType(array $data): ?string
+    {
+        $type = $data['type'] ?? null;
+
+        return is_string($type) ? trim($type) : null;
     }
 }
