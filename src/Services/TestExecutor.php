@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
+use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Step;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
@@ -29,6 +30,7 @@ class TestExecutor
     /**
      * @throws ClientCreationException
      * @throws SocketErrorException
+     * @throws InvalidDocumentException
      */
     public function execute(Test $test): void
     {
@@ -57,6 +59,9 @@ class TestExecutor
         $this->yamlDocumentFactory->stop();
     }
 
+    /**
+     * @throws InvalidDocumentException
+     */
     private function dispatchStepProgressEvent(Test $test, Document $document): void
     {
         $step = new Step($document);
