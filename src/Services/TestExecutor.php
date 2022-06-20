@@ -8,6 +8,7 @@ use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
@@ -32,6 +33,7 @@ class TestExecutor
      * @throws ClientCreationException
      * @throws SocketErrorException
      * @throws InvalidDocumentException
+     * @throws InvalidStepException
      */
     public function execute(Test $test): void
     {
@@ -62,6 +64,7 @@ class TestExecutor
 
     /**
      * @throws InvalidDocumentException
+     * @throws InvalidStepException
      */
     private function dispatchStepProgressEvent(Test $test, YamlDocument $yamlDocument): void
     {

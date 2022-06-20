@@ -9,6 +9,7 @@ use App\Exception\Document\InvalidDocumentException;
 class Document implements DocumentInterface
 {
     private const KEY_TYPE = 'type';
+    private const KEY_PAYLOAD = 'payload';
 
     /**
      * @param array<mixed> $data
@@ -40,5 +41,22 @@ class Document implements DocumentInterface
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getPayloadStringValue(string $key): ?string
+    {
+        $value = $this->getPayload()[$key] ?? null;
+
+        return is_string($value) ? $value : null;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPayload(): array
+    {
+        $payload = $this->getData()[self::KEY_PAYLOAD] ?? [];
+
+        return is_array($payload) ? $payload : [];
     }
 }

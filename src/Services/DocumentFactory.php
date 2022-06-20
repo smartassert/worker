@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
@@ -50,6 +51,7 @@ class DocumentFactory
      * @param array<mixed> $data
      *
      * @throws InvalidDocumentException
+     * @throws InvalidStepException
      */
     public function createStep(array $data): Step
     {
@@ -57,7 +59,17 @@ class DocumentFactory
         $type = $document->getType();
 
         if ('step' === $type) {
-            return new Step($document->getData());
+            $name = $document->getPayloadStringValue('name');
+
+            if (null === $name) {
+                throw new InvalidStepException(
+                    $document->getData(),
+                    'Payload name missing',
+                    InvalidStepException::CODE_NAME_MISSING
+                );
+            }
+
+            return new Step($name, $document->getData());
         }
 
         throw new InvalidDocumentException(

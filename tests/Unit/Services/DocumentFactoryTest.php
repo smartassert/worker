@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
 use App\Model\Document\DocumentInterface;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
@@ -189,6 +190,41 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider createStepInvalidStepDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreateStepInvalidStep(array $data, InvalidStepException $expected): void
+    {
+        self::expectExceptionObject($expected);
+
+        $this->factory->createStep($data);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function createStepInvalidStepDataProvider(): array
+    {
+        return [
+            'name missing' => [
+                'data' => [
+                    'type' => 'step',
+                    'payload' => [],
+                ],
+                'expected' => new InvalidStepException(
+                    [
+                        'type' => 'step',
+                        'payload' => [],
+                    ],
+                    'Payload name missing',
+                    InvalidStepException::CODE_NAME_MISSING
+                )
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider createStepDataProvider
      *
      * @param array<mixed> $data
@@ -207,10 +243,19 @@ class DocumentFactoryTest extends TestCase
             'step' => [
                 'data' => [
                     'type' => 'step',
+                    'payload' => [
+                        'name' => 'step name',
+                    ],
                 ],
-                'expected' => new Step([
-                    'type' => 'step',
-                ]),
+                'expected' => new Step(
+                    'step name',
+                    [
+                        'type' => 'step',
+                        'payload' => [
+                            'name' => 'step name',
+                        ],
+                    ]
+                ),
             ],
         ];
     }

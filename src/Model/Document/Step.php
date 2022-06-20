@@ -12,7 +12,13 @@ class Step extends AbstractDocument
     private const TYPE = 'step';
     private const STATUS_PASSED = 'passed';
     private const STATUS_FAILED = 'failed';
-    private const KEY_PAYLOAD_NAME = 'name';
+
+    public function __construct(
+        private readonly string $name,
+        array $data
+    ) {
+        parent::__construct($data);
+    }
 
     /**
      * @throws InvalidDocumentException
@@ -32,9 +38,9 @@ class Step extends AbstractDocument
         return $this->hasStatusValue(self::STATUS_FAILED);
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
-        return $this->getPayloadStringValue(self::KEY_PAYLOAD_NAME);
+        return $this->name;
     }
 
     private function hasStatusValue(string $status): bool

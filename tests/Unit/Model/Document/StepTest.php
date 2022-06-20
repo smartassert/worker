@@ -28,11 +28,11 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step([]),
+                'step' => new Step('step name', []),
                 'expectedIsStep' => false,
             ],
             'no type' => [
-                'step' => new Step(['key' => 'value']),
+                'step' => new Step('step name', ['key' => 'value']),
                 'expectedIsStep' => false,
             ],
         ];
@@ -53,11 +53,11 @@ class StepTest extends TestCase
     {
         return [
             'type is not step' => [
-                'step' => new Step(['type' => 'test']),
+                'step' => new Step('step name', ['type' => 'test']),
                 'expectedIsStep' => false,
             ],
             'is a step' => [
-                'step' => new Step(['type' => 'step']),
+                'step' => new Step('step name', ['type' => 'step']),
                 'expectedIsStep' => true,
             ],
         ];
@@ -78,23 +78,23 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step([]),
+                'step' => new Step('step name', []),
                 'expectedIsPassed' => false,
             ],
             'no payload' => [
-                'step' => new Step(['key' => 'value']),
+                'step' => new Step('step name', ['key' => 'value']),
                 'expectedIsPassed' => false,
             ],
             'no status' => [
-                'step' => new Step(['payload' => []]),
+                'step' => new Step('step name', ['payload' => []]),
                 'expectedIsPassed' => false,
             ],
             'status is not passed' => [
-                'step' => new Step(['payload' => ['status' => 'failed']]),
+                'step' => new Step('step name', ['payload' => ['status' => 'failed']]),
                 'expectedIsPassed' => false,
             ],
             'status is passed' => [
-                'step' => new Step(['payload' => ['status' => 'passed']]),
+                'step' => new Step('step name', ['payload' => ['status' => 'passed']]),
                 'expectedIsPassed' => true,
             ],
         ];
@@ -115,23 +115,23 @@ class StepTest extends TestCase
     {
         return [
             'empty' => [
-                'step' => new Step([]),
+                'step' => new Step('step name', []),
                 'expectedIsFailed' => false,
             ],
             'no payload' => [
-                'step' => new Step(['key' => 'value']),
+                'step' => new Step('step name', ['key' => 'value']),
                 'expectedIsFailed' => false,
             ],
             'no status' => [
-                'step' => new Step(['payload' => []]),
+                'step' => new Step('step name', ['payload' => []]),
                 'expectedIsFailed' => false,
             ],
             'status is not failed' => [
-                'step' => new Step(['payload' => ['status' => 'passed']]),
+                'step' => new Step('step name', ['payload' => ['status' => 'passed']]),
                 'expectedIsFailed' => false,
             ],
             'status is failed' => [
-                'step' => new Step(['payload' => ['status' => 'failed']]),
+                'step' => new Step('step name', ['payload' => ['status' => 'failed']]),
                 'expectedIsFailed' => true,
             ],
         ];
@@ -140,7 +140,7 @@ class StepTest extends TestCase
     /**
      * @dataProvider getNameDataProvider
      */
-    public function testGetName(Step $step, ?string $expectedName): void
+    public function testGetName(Step $step, string $expectedName): void
     {
         self::assertSame($expectedName, $step->getName());
     }
@@ -151,47 +151,28 @@ class StepTest extends TestCase
     public function getNameDataProvider(): array
     {
         return [
-            'empty' => [
-                'step' => new Step([]),
-                'expectedName' => null,
-            ],
-            'document has no type' => [
-                'step' => new Step(['key' => 'value']),
-                'expectedName' => null,
-            ],
-            'not a step' => [
-                'step' => new Step(['type' => 'test']),
-                'expectedName' => null,
-            ],
-            'no name' => [
-                'step' => new Step(['type' => 'step']),
-                'expectedName' => null,
-            ],
-            'null name' => [
-                'step' => new Step([
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => null
-                    ]
-                ]),
-                'expectedName' => null,
-            ],
             'empty name' => [
-                'step' => new Step([
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => ''
+                'step' => new Step(
+                    '',
+                    [
+                        'type' => 'step',
+                        'payload' => [
+                            'name' => ''
+                        ]
                     ]
-                ]),
+                ),
                 'expectedName' => '',
             ],
             'non-empty name' => [
-                'step' => new Step([
-                    'type' => 'step',
-                    'payload' => [
-                        'name' => 'non-empty name'
+                'step' => new Step(
+                    'non-empty name',
+                    [
+                        'type' => 'step',
+                        'payload' => [
+                            'name' => 'non-empty name'
+                        ]
                     ]
-                ]),
+                ),
                 'expectedName' => 'non-empty name',
             ],
         ];
