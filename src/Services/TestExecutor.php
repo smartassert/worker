@@ -8,12 +8,13 @@ use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
 use App\Exception\Document\InvalidDocumentException;
+use App\Model\Document\Document;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 use webignition\TcpCliProxyClient\Handler;
-use webignition\YamlDocument\Document;
+use webignition\YamlDocument\Document as YamlDocument;
 use webignition\YamlDocument\Factory;
 
 class TestExecutor
@@ -43,7 +44,7 @@ class TestExecutor
             })
         ;
 
-        $this->yamlDocumentFactory->reset(function (Document $document) use ($test) {
+        $this->yamlDocumentFactory->reset(function (YamlDocument $document) use ($test) {
             $this->dispatchStepProgressEvent($test, $document);
         });
 
@@ -62,13 +63,13 @@ class TestExecutor
     /**
      * @throws InvalidDocumentException
      */
-    private function dispatchStepProgressEvent(Test $test, Document $document): void
+    private function dispatchStepProgressEvent(Test $test, YamlDocument $yamlDocument): void
     {
-        $documentData = $document->parse();
-        $documentData = is_array($documentData) ? $documentData : [];
+        $documentData = $yamlDocument->parse();
+        $document = new Document(is_array($documentData) ? $documentData : []);
 
-        if ('step' === $this->documentFactory->getType($documentData)) {
-            $step = $this->documentFactory->createStep($documentData);
+        if ('step' === $document->getType()) {
+            $step = $this->documentFactory->createStep($document->getData());
             $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
 
             if ($step->statusIsPassed()) {

@@ -48,19 +48,19 @@ class DocumentFactoryTest extends TestCase
         return [
             'no data' => [
                 'data' => [],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type not present' => [
                 'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is empty' => [
                 'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is whitespace-only' => [
                 'data' => ['type' => '  '],
-                'expectedExceptionMessage' => 'Type "" is not "step"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is not step: test' => [
                 'data' => ['type' => 'test'],
@@ -94,15 +94,15 @@ class DocumentFactoryTest extends TestCase
         return [
             'no data' => [
                 'data' => [],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type not present' => [
                 'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is empty' => [
                 'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type "" is not "test"',
+                'expectedExceptionMessage' => 'Type empty',
             ],
             'type is not test: step' => [
                 'data' => ['type' => 'step'],

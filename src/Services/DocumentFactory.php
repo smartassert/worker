@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exception\Document\InvalidDocumentException;
+use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
 
@@ -22,10 +23,11 @@ class DocumentFactory
      */
     public function createTest(array $data): Test
     {
-        $type = $this->getType($data);
+        $document = new Document($data);
+        $type = $document->getType();
 
         if ('test' === $type) {
-            $test = new Test($data);
+            $test = new Test($document->getData());
 
             $path = $test->getPath();
             $mutatedPath = $this->testPathMutator->removeCompilerSourceDirectoryFromPath($test->getPath());
@@ -38,7 +40,7 @@ class DocumentFactory
         }
 
         throw new InvalidDocumentException(
-            $data,
+            $document->getData(),
             sprintf('Type "%s" is not "test"', $type),
             InvalidDocumentException::CODE_TYPE_INVALID
         );
@@ -51,26 +53,17 @@ class DocumentFactory
      */
     public function createStep(array $data): Step
     {
-        $type = $this->getType($data);
+        $document = new Document($data);
+        $type = $document->getType();
 
         if ('step' === $type) {
-            return new Step($data);
+            return new Step($document->getData());
         }
 
         throw new InvalidDocumentException(
-            $data,
+            $document->getData(),
             sprintf('Type "%s" is not "step"', $type),
             InvalidDocumentException::CODE_TYPE_INVALID
         );
-    }
-
-    /**
-     * @param array<mixed> $data
-     */
-    public function getType(array $data): ?string
-    {
-        $type = $data['type'] ?? null;
-
-        return is_string($type) ? trim($type) : null;
     }
 }
