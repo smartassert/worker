@@ -28,7 +28,7 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidTypeDataProvider
+     * @dataProvider createStepInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
@@ -41,7 +41,40 @@ class DocumentFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidTypeDataProvider
+     * @return array<mixed>
+     */
+    public function createStepInvalidTypeDataProvider(): array
+    {
+        return [
+            'no data' => [
+                'data' => [],
+                'expectedExceptionMessage' => 'Type "" is not "step"',
+            ],
+            'type not present' => [
+                'data' => ['key1' => 'value1', 'key2' => 'value2'],
+                'expectedExceptionMessage' => 'Type "" is not "step"',
+            ],
+            'type is empty' => [
+                'data' => ['type' => ''],
+                'expectedExceptionMessage' => 'Type "" is not "step"',
+            ],
+            'type is whitespace-only' => [
+                'data' => ['type' => '  '],
+                'expectedExceptionMessage' => 'Type "" is not "step"',
+            ],
+            'type is not step: test' => [
+                'data' => ['type' => 'test'],
+                'expectedExceptionMessage' => 'Type "test" is not "step"',
+            ],
+            'type is not step: invalid' => [
+                'data' => ['type' => 'invalid'],
+                'expectedExceptionMessage' => 'Type "invalid" is not "step"',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createTestInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
@@ -56,28 +89,28 @@ class DocumentFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function invalidTypeDataProvider(): array
+    public function createTestInvalidTypeDataProvider(): array
     {
         return [
             'no data' => [
                 'data' => [],
-                'expectedExceptionMessage' => 'Type "" is not one of "test, step"',
+                'expectedExceptionMessage' => 'Type "" is not "test"',
             ],
             'type not present' => [
                 'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type "" is not one of "test, step"',
+                'expectedExceptionMessage' => 'Type "" is not "test"',
             ],
             'type is empty' => [
                 'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type "" is not one of "test, step"',
+                'expectedExceptionMessage' => 'Type "" is not "test"',
             ],
-            'type is whitespace-only' => [
-                'data' => ['type' => '  '],
-                'expectedExceptionMessage' => 'Type "" is not one of "test, step"',
+            'type is not test: step' => [
+                'data' => ['type' => 'step'],
+                'expectedExceptionMessage' => 'Type "step" is not "test"',
             ],
-            'type is not one of test, step' => [
+            'type is not test: invalid' => [
                 'data' => ['type' => 'invalid'],
-                'expectedExceptionMessage' => 'Type "invalid" is not one of "test, step"',
+                'expectedExceptionMessage' => 'Type "invalid" is not "test"',
             ],
         ];
     }
