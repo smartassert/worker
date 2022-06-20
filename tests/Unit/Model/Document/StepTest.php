@@ -4,65 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Model\Document;
 
-use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Step;
 use PHPUnit\Framework\TestCase;
 
 class StepTest extends TestCase
 {
-    /**
-     * @dataProvider isStepThrowsInvalidDocumentExceptionDataProvider
-     */
-    public function testIsStepThrowsInvalidDocumentException(Step $step): void
-    {
-        self::expectException(InvalidDocumentException::class);
-        self::expectExceptionMessage('Type empty');
-
-        $step->isStep();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function isStepThrowsInvalidDocumentExceptionDataProvider(): array
-    {
-        return [
-            'empty' => [
-                'step' => new Step('step name', []),
-                'expectedIsStep' => false,
-            ],
-            'no type' => [
-                'step' => new Step('step name', ['key' => 'value']),
-                'expectedIsStep' => false,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider isStepDataProvider
-     */
-    public function testIsStep(Step $step, bool $expectedIsStep): void
-    {
-        self::assertSame($expectedIsStep, $step->isStep());
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function isStepDataProvider(): array
-    {
-        return [
-            'type is not step' => [
-                'step' => new Step('step name', ['type' => 'test']),
-                'expectedIsStep' => false,
-            ],
-            'is a step' => [
-                'step' => new Step('step name', ['type' => 'step']),
-                'expectedIsStep' => true,
-            ],
-        ];
-    }
-
     /**
      * @dataProvider statusIsPassedDataProvider
      */

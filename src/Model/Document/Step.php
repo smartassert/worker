@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model\Document;
 
-use App\Exception\Document\InvalidDocumentException;
-
 class Step extends AbstractDocument
 {
     private const KEY_PAYLOAD_STATUS = 'status';
-    private const TYPE = 'step';
     private const STATUS_PASSED = 'passed';
     private const STATUS_FAILED = 'failed';
 
@@ -18,14 +15,6 @@ class Step extends AbstractDocument
         array $data
     ) {
         parent::__construct($data);
-    }
-
-    /**
-     * @throws InvalidDocumentException
-     */
-    public function isStep(): bool
-    {
-        return self::TYPE === $this->getType();
     }
 
     public function statusIsPassed(): bool
