@@ -6,8 +6,6 @@ namespace App\Model\Document;
 
 interface DocumentInterface
 {
-    public function getType(): string;
-
     /**
      * @return array<mixed>
      */
