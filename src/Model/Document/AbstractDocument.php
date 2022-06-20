@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Document;
 
-abstract class AbstractDocument implements DocumentInterface
+abstract class AbstractDocument
 {
     public const KEY_PAYLOAD = 'payload';
 
