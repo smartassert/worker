@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Document;
 
-class Test extends AbstractDocument
+class Test extends Document
 {
     public function __construct(
         private readonly string $path,
