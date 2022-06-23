@@ -123,3 +123,9 @@ services:
     SmartAssert\YamlFile\Collection\Deserializer: ~
 
     webignition\YamlDocument\Factory: ~
+
+    webignition\BasilCompilerModels\Factory\ErrorOutputFactory: ~
+
+    webignition\BasilCompilerModels\Factory\TestManifestFactory: ~
+
+    webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory: ~
