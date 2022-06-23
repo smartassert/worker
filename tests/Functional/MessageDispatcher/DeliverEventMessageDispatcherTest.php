@@ -44,8 +44,8 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\YamlDocument\Document;
 
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest

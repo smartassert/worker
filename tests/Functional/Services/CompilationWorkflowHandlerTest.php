@@ -25,7 +25,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {

@@ -14,7 +14,7 @@ use App\Services\TestFactory;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 use webignition\YamlDocument\Document;
 

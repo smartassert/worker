@@ -6,9 +6,11 @@ namespace App\Services;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser as YamlParser;
-use webignition\BasilCompilerModels\ErrorOutput;
-use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Exception\InvalidTestManifestException;
+use webignition\BasilCompilerModels\Factory\ErrorOutputFactory;
+use webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory;
+use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -21,7 +23,9 @@ class Compiler
         private string $compilerSourceDirectory,
         private string $compilerTargetDirectory,
         private YamlParser $yamlParser,
-        private HandlerFactory $handlerFactory
+        private HandlerFactory $handlerFactory,
+        private readonly ErrorOutputFactory $errorOutputFactory,
+        private readonly TestManifestCollectionFactory $testManifestCollectionFactory,
     ) {
     }
 
@@ -29,6 +33,7 @@ class Compiler
      * @throws ClientCreationException
      * @throws SocketErrorException
      * @throws ParseException
+     * @throws InvalidTestManifestException
      */
     public function compile(string $source): ErrorOutputInterface|TestManifestCollection
     {
@@ -50,7 +55,7 @@ class Compiler
         $outputData = is_array($outputData) ? $outputData : [];
 
         return 0 === $exitCode
-            ? TestManifestCollection::fromArray($outputData)
-            : ErrorOutput::fromArray($outputData);
+            ? $this->testManifestCollectionFactory->create($outputData)
+            : $this->errorOutputFactory->create($outputData);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Enum\WorkerEventType;
-use webignition\BasilCompilerModels\ErrorOutputInterface;
+use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
 {

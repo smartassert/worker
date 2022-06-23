@@ -8,7 +8,7 @@ use App\Entity\Test;
 use App\Event\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use webignition\BasilCompilerModels\TestManifest;
+use webignition\BasilCompilerModels\Model\TestManifest;
 
 class TestFactory implements EventSubscriberInterface
 {

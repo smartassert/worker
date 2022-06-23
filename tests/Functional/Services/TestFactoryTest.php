@@ -12,8 +12,8 @@ use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\TestManifest;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\TestManifest;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
