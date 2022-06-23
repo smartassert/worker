@@ -25,9 +25,9 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\BasilCompilerModels\TestManifest;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
+use webignition\BasilCompilerModels\Model\TestManifest;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
 class CompileSourceHandlerTest extends AbstractBaseFunctionalTest

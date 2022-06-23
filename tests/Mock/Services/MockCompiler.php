@@ -6,7 +6,7 @@ namespace App\Tests\Mock\Services;
 
 use App\Services\Compiler;
 use Mockery\MockInterface;
-use webignition\BasilCompilerModels\OutputInterface;
+use webignition\BasilCompilerModels\Model\OutputInterface;
 
 class MockCompiler
 {

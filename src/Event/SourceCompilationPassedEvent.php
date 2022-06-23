@@ -6,7 +6,7 @@ namespace App\Event;
 
 use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class SourceCompilationPassedEvent extends AbstractSourceEvent
 {

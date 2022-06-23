@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Mock;
 
 use Mockery\MockInterface;
-use webignition\BasilCompilerModels\TestManifest;
+use webignition\BasilCompilerModels\Model\TestManifest;
 
 class MockTestManifest
 {

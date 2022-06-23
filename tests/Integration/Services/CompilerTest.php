@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Services;
 
 use App\Services\Compiler;
-use webignition\BasilCompilerModels\ErrorOutput;
-use webignition\BasilCompilerModels\TestManifestCollection;
+use webignition\BasilCompilerModels\Factory\ErrorOutputFactory;
+use webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory;
+use webignition\BasilCompilerModels\Model\ErrorOutput;
+use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class CompilerTest extends AbstractTestCreationTest
 {
     private Compiler $compiler;
+    private ErrorOutputFactory $errorOutputFactory;
+    private TestManifestCollectionFactory $testManifestCollectionFactory;
     private string $compilerSourceDirectory;
 
     protected function setUp(): void
@@ -20,6 +24,14 @@ class CompilerTest extends AbstractTestCreationTest
         $compiler = self::getContainer()->get(Compiler::class);
         \assert($compiler instanceof Compiler);
         $this->compiler = $compiler;
+
+        $errorOutputFactory = self::getContainer()->get(ErrorOutputFactory::class);
+        \assert($errorOutputFactory instanceof ErrorOutputFactory);
+        $this->errorOutputFactory = $errorOutputFactory;
+
+        $testManifestCollectionFactory = self::getContainer()->get(TestManifestCollectionFactory::class);
+        \assert($testManifestCollectionFactory instanceof TestManifestCollectionFactory);
+        $this->testManifestCollectionFactory = $testManifestCollectionFactory;
 
         $compilerSourceDirectory = self::getContainer()->getParameter('compiler_source_directory');
         if (is_string($compilerSourceDirectory)) {
@@ -43,7 +55,7 @@ class CompilerTest extends AbstractTestCreationTest
         self::assertInstanceOf(TestManifestCollection::class, $manifestCollection);
 
         $expectedManifestCollectionData = $this->replaceCompilerDirectories($expectedManifestCollectionData);
-        $expectedManifestCollection = TestManifestCollection::fromArray($expectedManifestCollectionData);
+        $expectedManifestCollection = $this->testManifestCollectionFactory->create($expectedManifestCollectionData);
 
         self::assertEquals($expectedManifestCollection, $manifestCollection);
     }
@@ -125,7 +137,7 @@ class CompilerTest extends AbstractTestCreationTest
         self::assertInstanceOf(ErrorOutput::class, $errorOutput);
 
         $expectedErrorOutputData = $this->replaceCompilerDirectories($expectedErrorOutputData);
-        $expectedErrorOutput = ErrorOutput::fromArray($expectedErrorOutputData);
+        $expectedErrorOutput = $this->errorOutputFactory->create($expectedErrorOutputData);
 
         self::assertEquals($expectedErrorOutput, $errorOutput);
     }
