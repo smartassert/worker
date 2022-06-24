@@ -46,7 +46,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
-use webignition\YamlDocument\Document;
 
 class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
 {
@@ -156,16 +155,12 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $passingStepDocument = new Document((string) json_encode($passingStepDocumentData));
-
         $failingStepDocumentData = [
             'type' => 'step',
             'payload' => [
                 'name' => 'failing step',
             ],
         ];
-
-        $failingStepDocument = new Document((string) json_encode($failingStepDocumentData));
 
         $relativeTestSource = 'Test/test.yml';
         $testSource = '/app/source/' . $relativeTestSource;
@@ -186,9 +181,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $testDocument = new TestDocument(
-            new Document((string) json_encode($testDocumentData))
-        );
+        $testDocument = new TestDocument($relativeTestSource, $testDocumentData);
 
         $sourceCompilationPassedManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
@@ -279,7 +272,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             StepPassedEvent::class => [
-                'event' => new StepPassedEvent(new Step($passingStepDocument), $relativeTestSource),
+                'event' => new StepPassedEvent(new Step('passing step', $passingStepDocumentData), $relativeTestSource),
                 'expectedWorkerEventType' => WorkerEventType::STEP_PASSED,
                 'expectedWorkerEventPayload' => [
                     'source' => $relativeTestSource,
@@ -288,7 +281,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             StepFailedEvent::class => [
                 'event' => new StepFailedEvent(
-                    new Step($failingStepDocument),
+                    new Step('failing step', $failingStepDocumentData),
                     $relativeTestSource,
                     $genericTest->setState(TestState::FAILED)
                 ),

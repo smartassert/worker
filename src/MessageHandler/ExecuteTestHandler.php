@@ -9,16 +9,21 @@ use App\Enum\TestState;
 use App\Event\TestFailedEvent;
 use App\Event\TestPassedEvent;
 use App\Event\TestStartedEvent;
+use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
+use App\Exception\Document\InvalidTestException;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
+use App\Services\DocumentFactory\TestFactory;
 use App\Services\ExecutionProgress;
-use App\Services\TestDocumentFactory;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use webignition\BasilRunnerDocuments\Test as RunnerTest;
+use webignition\BasilRunnerDocuments\TestConfiguration as RunnerTestConfiguration;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
@@ -31,7 +36,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
-        private TestDocumentFactory $testDocumentFactory
+        private TestFactory $testFactory,
     ) {
     }
 
@@ -39,6 +44,9 @@ class ExecuteTestHandler implements MessageHandlerInterface
      * @throws JobNotFoundException
      * @throws ClientCreationException
      * @throws SocketErrorException
+     * @throws InvalidDocumentException
+     * @throws InvalidStepException
+     * @throws InvalidTestException
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
@@ -62,7 +70,12 @@ class ExecuteTestHandler implements MessageHandlerInterface
             $this->jobRepository->add($job);
         }
 
-        $testDocument = $this->testDocumentFactory->create($test);
+        $runnerTest = new RunnerTest(
+            (string) $test->getSource(),
+            new RunnerTestConfiguration($test->getBrowser(), $test->getUrl()),
+        );
+
+        $testDocument = $this->testFactory->create($runnerTest->getData());
 
         $this->eventDispatcher->dispatch(new TestStartedEvent($testDocument));
 

@@ -7,13 +7,16 @@ namespace App\Services;
 use App\Entity\Test;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
-use App\Model\Document\Step;
+use App\Exception\Document\InvalidDocumentException;
+use App\Exception\Document\InvalidStepException;
+use App\Model\Document\Document;
+use App\Services\DocumentFactory\StepFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 use webignition\TcpCliProxyClient\Handler;
-use webignition\YamlDocument\Document;
+use webignition\YamlDocument\Document as YamlDocument;
 use webignition\YamlDocument\Factory;
 
 class TestExecutor
@@ -22,13 +25,16 @@ class TestExecutor
         private readonly Client $delegatorClient,
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
-        private readonly TestPathMutator $testPathMutator,
+        private readonly TestPathNormalizer $testPathNormalizer,
+        private readonly StepFactory $stepFactory,
     ) {
     }
 
     /**
      * @throws ClientCreationException
      * @throws SocketErrorException
+     * @throws InvalidDocumentException
+     * @throws InvalidStepException
      */
     public function execute(Test $test): void
     {
@@ -41,7 +47,7 @@ class TestExecutor
             })
         ;
 
-        $this->yamlDocumentFactory->reset(function (Document $document) use ($test) {
+        $this->yamlDocumentFactory->reset(function (YamlDocument $document) use ($test) {
             $this->dispatchStepProgressEvent($test, $document);
         });
 
@@ -57,12 +63,19 @@ class TestExecutor
         $this->yamlDocumentFactory->stop();
     }
 
-    private function dispatchStepProgressEvent(Test $test, Document $document): void
+    /**
+     * @throws InvalidDocumentException
+     * @throws InvalidStepException
+     */
+    private function dispatchStepProgressEvent(Test $test, YamlDocument $yamlDocument): void
     {
-        $step = new Step($document);
+        $documentData = $yamlDocument->parse();
+        $documentData = is_array($documentData) ? $documentData : [];
+        $document = new Document($documentData);
 
-        if ($step->isStep()) {
-            $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
+        if ('step' === $document->getType()) {
+            $step = $this->stepFactory->create($documentData);
+            $path = $this->testPathNormalizer->normalize((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
                 $this->eventDispatcher->dispatch(new StepPassedEvent($step, $path));

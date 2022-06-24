@@ -16,7 +16,6 @@ use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
-use webignition\YamlDocument\Document;
 
 class TestExecutorTest extends AbstractTestCreationTest
 {
@@ -94,26 +93,29 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
-                                            'transformations' => [
-                                                [
-                                                    'type' => 'resolution',
-                                                    'source' => '$page.url is $index.url',
+                            $expectedDocument = new Step(
+                                'verify page is open',
+                                [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                                'transformations' => [
+                                                    [
+                                                        'type' => 'resolution',
+                                                        'source' => '$page.url is $index.url',
+                                                    ],
                                                 ],
                                             ],
                                         ],
                                     ],
-                                ],
-                            ])));
+                                ]
+                            );
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -135,20 +137,23 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
+                            $expectedDocument = new Step(
+                                'verify page is open',
+                                [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
-                                ],
-                            ])));
+                                ]
+                            );
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -170,20 +175,23 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
+                            $expectedDocument = new Step(
+                                'verify page is open',
+                                [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
-                                ],
-                            ])));
+                                ]
+                            );
 
                             self::assertEquals(
                                 $expectedDocument,
@@ -197,20 +205,23 @@ class TestExecutorTest extends AbstractTestCreationTest
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepPassedEvent::class, $event);
 
-                            $expectedDocument = new Step(new Document((string) json_encode([
-                                'type' => 'step',
-                                'payload' => [
-                                    'name' => 'verify page is open',
-                                    'status' => 'passed',
-                                    'statements' => [
-                                        [
-                                            'type' => 'assertion',
-                                            'source' => '$page.url is "http://html-fixtures/index.html"',
-                                            'status' => 'passed',
+                            $expectedDocument = new Step(
+                                'verify page is open',
+                                [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
                                         ],
                                     ],
-                                ],
-                            ])));
+                                ]
+                            );
 
                             self::assertEquals(
                                 $expectedDocument,

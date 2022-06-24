@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Model\Document;
 
-class Test extends AbstractDocument
+class Test extends Document
 {
-    public const KEY_PAYLOAD_PATH = 'path';
-    private const TYPE = 'test';
-
-    public function isTest(): bool
-    {
-        return self::TYPE === $this->getType();
+    /**
+     * @param non-empty-string $path
+     */
+    public function __construct(
+        private readonly string $path,
+        array $data
+    ) {
+        parent::__construct($data);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getPath(): string
     {
-        return (string) $this->getPayloadStringValue(self::KEY_PAYLOAD_PATH);
-    }
-
-    public function setPath(string $path): void
-    {
-        $this->setPayloadStringValue(self::KEY_PAYLOAD_PATH, $path);
+        return $this->path;
     }
 }

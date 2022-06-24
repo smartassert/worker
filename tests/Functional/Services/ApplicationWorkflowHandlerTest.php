@@ -26,7 +26,6 @@ use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\ObjectReflector\ObjectReflector;
-use webignition\YamlDocument\Document;
 
 class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -85,7 +84,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new TestDocument(new Document()),
+            new TestDocument('test.yml', []),
             \Mockery::mock(TestEntity::class)
         ));
 
@@ -132,7 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new TestDocument(new Document()),
+            new TestDocument('test.yml', []),
             \Mockery::mock(TestEntity::class)
         ));
 
@@ -162,7 +161,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $this->eventDispatcher->dispatch(new TestFailedEvent(new TestDocument(new Document())));
+        $this->eventDispatcher->dispatch(new TestFailedEvent(new TestDocument('test.yml', [])));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
