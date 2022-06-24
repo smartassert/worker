@@ -37,6 +37,10 @@ class TestPathNormalizerTest extends TestCase
         $compilerSourceAbsolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $relativePath;
 
         return [
+            'empty' => [
+                'path' => '',
+                'expectedPath' => '',
+            ],
             'without prefixed path' => [
                 'path' => $relativePath,
                 'expectedPath' => $relativePath,

@@ -15,6 +15,8 @@ class TestPathNormalizer
 
     public function normalize(string $path): string
     {
+        $path = trim($path);
+
         return (string) (new UnicodeString($path))->trimPrefix($this->compilerSourceDirectory . '/');
     }
 }
