@@ -4,39 +4,43 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services;
 
-use App\Services\TestPathMutator;
+use App\Services\TestPathNormalizer;
 use PHPUnit\Framework\TestCase;
 
-class TestPathMutatorTest extends TestCase
+class TestPathNormalizerTest extends TestCase
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
 
-    private TestPathMutator $mutator;
+    private TestPathNormalizer $normalizer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mutator = new TestPathMutator(self::COMPILER_SOURCE_DIRECTORY);
+        $this->normalizer = new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY);
     }
 
     /**
-     * @dataProvider removeCompilerSourceDirectoryFromPathDataProvider
+     * @dataProvider normalizeDataProvider
      */
-    public function testRemoveCompilerSourceDirectoryFromPath(string $path, string $expectedPath): void
+    public function testNormalize(string $path, string $expectedPath): void
     {
-        self::assertEquals($expectedPath, $this->mutator->removeCompilerSourceDirectoryFromPath($path));
+        self::assertEquals($expectedPath, $this->normalizer->normalize($path));
     }
 
     /**
      * @return array<mixed>
      */
-    public function removeCompilerSourceDirectoryFromPathDataProvider(): array
+    public function normalizeDataProvider(): array
     {
         $relativePath = 'Test/test.yml';
         $compilerSourceAbsolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $relativePath;
 
         return [
+            'empty' => [
+                'path' => '',
+                'expectedPath' => '',
+            ],
             'without prefixed path' => [
                 'path' => $relativePath,
                 'expectedPath' => $relativePath,

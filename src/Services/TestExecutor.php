@@ -24,7 +24,7 @@ class TestExecutor
         private readonly Client $delegatorClient,
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
-        private readonly TestPathMutator $testPathMutator,
+        private readonly TestPathNormalizer $testPathNormalizer,
         private readonly DocumentFactory $documentFactory,
     ) {
     }
@@ -74,7 +74,7 @@ class TestExecutor
 
         if ('step' === $document->getType()) {
             $step = $this->documentFactory->createStep($documentData);
-            $path = $this->testPathMutator->removeCompilerSourceDirectoryFromPath((string) $test->getSource());
+            $path = $this->testPathNormalizer->normalize((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
                 $this->eventDispatcher->dispatch(new StepPassedEvent($step, $path));
