@@ -68,9 +68,9 @@ class DocumentFactory
         $type = $document->getType();
 
         if ('step' === $type) {
-            $name = $document->getPayloadStringValue('name');
+            $name = trim((string) $document->getPayloadStringValue('name'));
 
-            if (null === $name) {
+            if ('' === $name) {
                 throw new InvalidStepException(
                     $data,
                     'Payload name missing',
