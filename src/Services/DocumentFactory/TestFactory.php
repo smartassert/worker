@@ -10,7 +10,7 @@ use App\Model\Document\Document;
 use App\Model\Document\Test;
 use App\Services\TestPathNormalizer;
 
-class DocumentFactory
+class TestFactory
 {
     public function __construct(
         private readonly TestPathNormalizer $testPathNormalizer,
@@ -23,7 +23,7 @@ class DocumentFactory
      * @throws InvalidDocumentException
      * @throws InvalidTestException
      */
-    public function createTest(array $data): Test
+    public function create(array $data): Test
     {
         $document = new Document($data);
         $type = $document->getType();

@@ -7,21 +7,21 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Test;
-use App\Services\DocumentFactory\DocumentFactory;
+use App\Services\DocumentFactory\TestFactory;
 use App\Services\TestPathNormalizer;
 use PHPUnit\Framework\TestCase;
 
-class DocumentFactoryTest extends TestCase
+class TestFactoryTest extends TestCase
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
 
-    private DocumentFactory $factory;
+    private TestFactory $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->factory = new DocumentFactory(
+        $this->factory = new TestFactory(
             new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY)
         );
     }
@@ -36,7 +36,7 @@ class DocumentFactoryTest extends TestCase
         $this->expectException(InvalidDocumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $this->factory->createTest($data);
+        $this->factory->create($data);
     }
 
     /**
@@ -77,7 +77,7 @@ class DocumentFactoryTest extends TestCase
     {
         self::expectExceptionObject($expected);
 
-        $this->factory->createTest($data);
+        $this->factory->create($data);
     }
 
     /**
@@ -112,7 +112,7 @@ class DocumentFactoryTest extends TestCase
      */
     public function testCreateTest(array $data, Test $expected): void
     {
-        $document = $this->factory->createTest($data);
+        $document = $this->factory->create($data);
 
         self::assertEquals($expected, $document);
     }

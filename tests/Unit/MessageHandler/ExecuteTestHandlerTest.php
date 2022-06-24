@@ -13,7 +13,7 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\DocumentFactory\DocumentFactory;
+use App\Services\DocumentFactory\TestFactory;
 use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
@@ -40,7 +40,7 @@ class ExecuteTestHandlerTest extends TestCase
             \Mockery::mock(TestStateMutator::class),
             \Mockery::mock(TestRepository::class),
             \Mockery::mock(ExecutionProgress::class),
-            \Mockery::mock(DocumentFactory::class)
+            \Mockery::mock(TestFactory::class)
         );
 
         self::expectExceptionObject($exception);
@@ -69,7 +69,7 @@ class ExecuteTestHandlerTest extends TestCase
             \Mockery::mock(TestStateMutator::class),
             $testRepository,
             $executionProgress,
-            \Mockery::mock(DocumentFactory::class)
+            \Mockery::mock(TestFactory::class)
         );
 
         $handler($message);

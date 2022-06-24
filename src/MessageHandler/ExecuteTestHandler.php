@@ -16,7 +16,7 @@ use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\DocumentFactory\DocumentFactory;
+use App\Services\DocumentFactory\TestFactory;
 use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
@@ -36,7 +36,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
-        private DocumentFactory $documentFactory,
+        private TestFactory $testFactory,
     ) {
     }
 
@@ -75,7 +75,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
             new RunnerTestConfiguration($test->getBrowser(), $test->getUrl()),
         );
 
-        $testDocument = $this->documentFactory->createTest($runnerTest->getData());
+        $testDocument = $this->testFactory->create($runnerTest->getData());
 
         $this->eventDispatcher->dispatch(new TestStartedEvent($testDocument));
 
