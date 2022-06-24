@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Services;
+namespace App\Tests\Unit\Services\DocumentFactory;
 
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
-use App\Services\DocumentFactory;
+use App\Services\DocumentFactory\DocumentFactory;
 use App\Services\TestPathNormalizer;
 use PHPUnit\Framework\TestCase;
 

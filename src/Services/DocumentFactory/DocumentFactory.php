@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\DocumentFactory;
 
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
@@ -10,6 +10,7 @@ use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
+use App\Services\TestPathNormalizer;
 
 class DocumentFactory
 {

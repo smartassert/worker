@@ -13,7 +13,7 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\DocumentFactory;
+use App\Services\DocumentFactory\DocumentFactory;
 use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
