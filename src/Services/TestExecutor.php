@@ -10,7 +10,7 @@ use App\Event\StepPassedEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
-use App\Services\DocumentFactory\DocumentFactory;
+use App\Services\DocumentFactory\StepFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
@@ -26,7 +26,7 @@ class TestExecutor
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
         private readonly TestPathNormalizer $testPathNormalizer,
-        private readonly DocumentFactory $documentFactory,
+        private readonly StepFactory $stepFactory,
     ) {
     }
 
@@ -74,7 +74,7 @@ class TestExecutor
         $document = new Document($documentData);
 
         if ('step' === $document->getType()) {
-            $step = $this->documentFactory->createStep($documentData);
+            $step = $this->stepFactory->create($documentData);
             $path = $this->testPathNormalizer->normalize((string) $test->getSource());
 
             if ($step->statusIsPassed()) {
