@@ -30,9 +30,11 @@ class DocumentFactory
         $type = $document->getType();
 
         if ('test' === $type) {
-            $path = $document->getPayloadStringValue('path');
+            $path = $this->testPathNormalizer->normalize(
+                (string) $document->getPayloadStringValue('path')
+            );
 
-            if (null === $path) {
+            if ('' === $path) {
                 throw new InvalidTestException(
                     $data,
                     'Payload path missing',
@@ -40,14 +42,11 @@ class DocumentFactory
                 );
             }
 
-            $normalizedPath = $this->testPathNormalizer->normalize($path);
-            if ($normalizedPath !== $path) {
-                $payload = $document->getPayload();
-                $payload['path'] = $normalizedPath;
-                $data['payload'] = $payload;
-            }
+            $payload = $document->getPayload();
+            $payload['path'] = $path;
+            $data['payload'] = $payload;
 
-            return new Test($normalizedPath, $data);
+            return new Test($path, $data);
         }
 
         throw new InvalidDocumentException(
