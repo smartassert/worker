@@ -14,7 +14,7 @@ use App\Model\Document\Test;
 class DocumentFactory
 {
     public function __construct(
-        private readonly TestPathMutator $testPathMutator,
+        private readonly TestPathNormalizer $testPathNormalizer,
     ) {
     }
 
@@ -40,14 +40,14 @@ class DocumentFactory
                 );
             }
 
-            $mutatedPath = $this->testPathMutator->removeCompilerSourceDirectoryFromPath($path);
-            if ($mutatedPath !== $path) {
+            $normalizedPath = $this->testPathNormalizer->normalize($path);
+            if ($normalizedPath !== $path) {
                 $payload = $document->getPayload();
-                $payload['path'] = $mutatedPath;
+                $payload['path'] = $normalizedPath;
                 $data['payload'] = $payload;
             }
 
-            return new Test($mutatedPath, $data);
+            return new Test($normalizedPath, $data);
         }
 
         throw new InvalidDocumentException(

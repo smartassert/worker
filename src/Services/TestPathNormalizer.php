@@ -6,14 +6,14 @@ namespace App\Services;
 
 use Symfony\Component\String\UnicodeString;
 
-class TestPathMutator
+class TestPathNormalizer
 {
     public function __construct(
         private readonly string $compilerSourceDirectory,
     ) {
     }
 
-    public function removeCompilerSourceDirectoryFromPath(string $path): string
+    public function normalize(string $path): string
     {
         return (string) (new UnicodeString($path))->trimPrefix($this->compilerSourceDirectory . '/');
     }

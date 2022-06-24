@@ -10,7 +10,7 @@ use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Step;
 use App\Model\Document\Test;
 use App\Services\DocumentFactory;
-use App\Services\TestPathMutator;
+use App\Services\TestPathNormalizer;
 use PHPUnit\Framework\TestCase;
 
 class DocumentFactoryTest extends TestCase
@@ -24,7 +24,7 @@ class DocumentFactoryTest extends TestCase
         parent::setUp();
 
         $this->factory = new DocumentFactory(
-            new TestPathMutator(self::COMPILER_SOURCE_DIRECTORY)
+            new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY)
         );
     }
 
