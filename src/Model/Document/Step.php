@@ -10,6 +10,9 @@ class Step extends Document
     private const STATUS_PASSED = 'passed';
     private const STATUS_FAILED = 'failed';
 
+    /**
+     * @param non-empty-string $name
+     */
     public function __construct(
         private readonly string $name,
         array $data

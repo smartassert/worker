@@ -97,18 +97,6 @@ class StepTest extends TestCase
     public function getNameDataProvider(): array
     {
         return [
-            'empty name' => [
-                'step' => new Step(
-                    '',
-                    [
-                        'type' => 'step',
-                        'payload' => [
-                            'name' => ''
-                        ]
-                    ]
-                ),
-                'expectedName' => '',
-            ],
             'non-empty name' => [
                 'step' => new Step(
                     'non-empty name',
