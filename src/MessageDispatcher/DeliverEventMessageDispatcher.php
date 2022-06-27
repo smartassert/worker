@@ -19,9 +19,7 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepFailedEvent;
 use App\Event\StepPassedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
+use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
@@ -78,19 +76,13 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             JobCompletedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            TestStartedEvent::class => [
+            TestEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             StepPassedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             StepFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            TestPassedEvent::class => [
-                ['dispatchForEvent', 100],
-            ],
-            TestFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             JobFailedEvent::class => [

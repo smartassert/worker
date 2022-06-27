@@ -10,7 +10,7 @@ use App\Enum\WorkerEventType;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\TestPassedEvent;
+use App\Event\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
@@ -35,9 +35,9 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestPassedEvent::class => [
-                ['dispatchNextExecuteTestMessageFromTestPassedEvent', 0],
-                ['dispatchExecutionCompletedEvent', 10],
+            TestEvent::class => [
+                ['dispatchNextExecuteTestMessageForTestPassedEvent', -100],
+                ['dispatchExecutionCompletedEventForTestPassedEvent', -90],
             ],
             JobCompiledEvent::class => [
                 ['dispatchNextExecuteTestMessage', 0],
@@ -46,8 +46,12 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchNextExecuteTestMessageFromTestPassedEvent(TestPassedEvent $event): void
+    public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+            return;
+        }
+
         $test = $event->getTest();
 
         if ($test->hasState(TestState::COMPLETE)) {
@@ -69,8 +73,12 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
     }
 
-    public function dispatchExecutionCompletedEvent(): void
+    public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+            return;
+        }
+
         $executionStateComplete = $this->executionProgress->is(ExecutionState::COMPLETE);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             WorkerEventType::EXECUTION_COMPLETED

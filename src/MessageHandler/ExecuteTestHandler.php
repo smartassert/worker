@@ -6,9 +6,8 @@ namespace App\MessageHandler;
 
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
+use App\Enum\WorkerEventType;
+use App\Event\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Exception\Document\InvalidTestException;
@@ -77,16 +76,16 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         $testDocument = $this->testFactory->create($runnerTest->getData());
 
-        $this->eventDispatcher->dispatch(new TestStartedEvent($test, $testDocument));
+        $this->eventDispatcher->dispatch(new TestEvent(WorkerEventType::TEST_STARTED, $test, $testDocument));
 
         $this->testStateMutator->setRunning($test);
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if ($test->hasState(TestState::COMPLETE)) {
-            $this->eventDispatcher->dispatch(new TestPassedEvent($test, $testDocument));
+            $this->eventDispatcher->dispatch(new TestEvent(WorkerEventType::TEST_PASSED, $test, $testDocument));
         } else {
-            $this->eventDispatcher->dispatch(new TestFailedEvent($test, $testDocument));
+            $this->eventDispatcher->dispatch(new TestEvent(WorkerEventType::TEST_FAILED, $test, $testDocument));
         }
     }
 }
