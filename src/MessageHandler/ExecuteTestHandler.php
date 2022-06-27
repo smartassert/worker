@@ -82,10 +82,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
-        if ($test->hasState(TestState::COMPLETE)) {
-            $this->eventDispatcher->dispatch(new TestEvent(WorkerEventType::TEST_PASSED, $test, $testDocument));
-        } else {
-            $this->eventDispatcher->dispatch(new TestEvent(WorkerEventType::TEST_FAILED, $test, $testDocument));
-        }
+        $eventType = $test->hasState(TestState::COMPLETE) ? WorkerEventType::TEST_PASSED : WorkerEventType::TEST_FAILED;
+        $this->eventDispatcher->dispatch(new TestEvent($eventType, $test, $testDocument));
     }
 }
