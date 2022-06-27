@@ -8,10 +8,11 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
+use App\Enum\WorkerEventType;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\SourceCompilationPassedEvent;
-use App\Event\TestPassedEvent;
+use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Message\ExecuteTestMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
@@ -63,11 +64,11 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             DeliverEventMessageDispatcher::class => [
                 SourceCompilationPassedEvent::class => ['dispatchForEvent'],
                 JobCompiledEvent::class => ['dispatchForEvent'],
-                TestPassedEvent::class => ['dispatchForEvent'],
+                TestEvent::class => ['dispatchForEvent'],
                 ExecutionStartedEvent::class => ['dispatchForEvent'],
             ],
             ApplicationWorkflowHandler::class => [
-                TestPassedEvent::class => ['dispatchJobCompletedEvent'],
+                TestEvent::class => ['dispatchJobCompletedEventForTestPassedEvent'],
             ],
         ]);
 
@@ -181,9 +182,13 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent($test, new TestDocument('test.yml', []));
+        $event = new TestEvent(
+            WorkerEventType::TEST_PASSED,
+            $test,
+            new TestDocument('test.yml', [])
+        );
 
-        $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
+        $this->handler->dispatchNextExecuteTestMessageForTestPassedEvent($event);
 
         $this->messengerAsserter->assertQueueCount($expectedQueuedMessageCount);
 
@@ -282,7 +287,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $tests = $environment->getTests();
 
         $this->eventDispatcher->dispatch(
-            new TestPassedEvent(
+            new TestEvent(
+                WorkerEventType::TEST_PASSED,
                 $tests[0],
                 new TestDocument(
                     $test0RelativeSource,
@@ -328,7 +334,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $tests = $environment->getTests();
 
         $this->eventDispatcher->dispatch(
-            new TestPassedEvent(
+            new TestEvent(
+                WorkerEventType::TEST_PASSED,
                 $tests[0],
                 new TestDocument(
                     $test0RelativeSource,
