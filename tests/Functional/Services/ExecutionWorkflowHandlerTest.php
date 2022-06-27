@@ -181,7 +181,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestPassedEvent(new TestDocument('test.yml', []), $test);
+        $event = new TestPassedEvent($test, new TestDocument('test.yml', []));
 
         $this->handler->dispatchNextExecuteTestMessageFromTestPassedEvent($event);
 
@@ -283,6 +283,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
+                $tests[0],
                 new TestDocument(
                     $test0RelativeSource,
                     [
@@ -291,8 +292,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                             'path' => $test0RelativeSource,
                         ],
                     ]
-                ),
-                $tests[0]
+                )
             )
         );
 
@@ -329,6 +329,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->eventDispatcher->dispatch(
             new TestPassedEvent(
+                $tests[0],
                 new TestDocument(
                     $test0RelativeSource,
                     [
@@ -337,8 +338,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                             'path' => $test0RelativeSource,
                         ],
                     ]
-                ),
-                $tests[0],
+                )
             )
         );
 

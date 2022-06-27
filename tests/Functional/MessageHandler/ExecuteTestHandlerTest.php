@@ -101,10 +101,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
                 ),
                 new ExpectedDispatchedEvent(
                     function (TestPassedEvent $actualEvent) use ($test, &$eventExpectationCount) {
-                        self::assertSame(
-                            $test,
-                            ObjectReflector::getProperty($actualEvent, 'test')
-                        );
+                        self::assertSame($test, $actualEvent->getTest());
                         ++$eventExpectationCount;
 
                         return true;
