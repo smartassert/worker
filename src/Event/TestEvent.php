@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test as TestEntity;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Model\Document\Test as TestDocument;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -13,15 +14,20 @@ use Symfony\Contracts\EventDispatcher\Event;
 class TestEvent extends Event implements EventInterface
 {
     public function __construct(
-        private readonly WorkerEventType $type,
+        private readonly WorkerEventOutcome $outcome,
         private readonly TestEntity $testEntity,
         private readonly TestDocument $document
     ) {
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return $this->type;
+        return WorkerEventScope::TEST;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     public function getTest(): TestEntity

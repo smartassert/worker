@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Services;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\StepEvent;
 use App\Model\Document\Step;
@@ -92,7 +93,8 @@ class TestExecutorTest extends AbstractTestCreationTest
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepEvent::class, $event);
-                            self::assertSame(WorkerEventType::STEP_PASSED, $event->getType());
+                            self::assertSame(WorkerEventScope::STEP, $event->getScope());
+                            self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
                             $expectedDocument = new Step(
                                 'verify page is open',
@@ -137,7 +139,8 @@ class TestExecutorTest extends AbstractTestCreationTest
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepEvent::class, $event);
-                            self::assertSame(WorkerEventType::STEP_PASSED, $event->getType());
+                            self::assertSame(WorkerEventScope::STEP, $event->getScope());
+                            self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
                             $expectedDocument = new Step(
                                 'verify page is open',
@@ -176,7 +179,8 @@ class TestExecutorTest extends AbstractTestCreationTest
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepEvent::class, $event);
-                            self::assertSame(WorkerEventType::STEP_PASSED, $event->getType());
+                            self::assertSame(WorkerEventScope::STEP, $event->getScope());
+                            self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
                             $expectedDocument = new Step(
                                 'verify page is open',
@@ -207,7 +211,8 @@ class TestExecutorTest extends AbstractTestCreationTest
                     new ExpectedDispatchedEvent(
                         function (EventInterface $event): bool {
                             self::assertInstanceOf(StepEvent::class, $event);
-                            self::assertSame(WorkerEventType::STEP_PASSED, $event->getType());
+                            self::assertSame(WorkerEventScope::STEP, $event->getScope());
+                            self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
                             $expectedDocument = new Step(
                                 'verify page is open',
