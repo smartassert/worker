@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\Test as TestEntity;
 use App\Model\Document\Test as TestDocument;
+use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractTestEvent extends Event implements EventInterface
 {
     public function __construct(
+        private readonly TestEntity $testEntity,
         private readonly TestDocument $document
     ) {
+    }
+
+    public function getTest(): TestEntity
+    {
+        return $this->testEntity;
     }
 
     public function getPayload(): array
@@ -19,6 +27,7 @@ abstract class AbstractTestEvent extends Event implements EventInterface
         return [
             'source' => $this->document->getPath(),
             'document' => $this->document->getData(),
+            'step_names' => $this->testEntity->getStepNames(),
         ];
     }
 
@@ -31,6 +40,11 @@ abstract class AbstractTestEvent extends Event implements EventInterface
 
     public function getRelatedReferenceSources(): array
     {
-        return [];
+        $referenceSources = [];
+        foreach ($this->testEntity->getStepNames() as $stepName) {
+            $referenceSources[] = new ResourceReferenceSource($stepName, [$this->document->getPath(), $stepName]);
+        }
+
+        return $referenceSources;
     }
 }
