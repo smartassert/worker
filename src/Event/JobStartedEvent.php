@@ -13,9 +13,10 @@ class JobStartedEvent extends JobEvent implements EventInterface
      * @param non-empty-string[] $testPaths
      */
     public function __construct(
+        string $label,
         private readonly array $testPaths,
     ) {
-        parent::__construct(WorkerEventOutcome::STARTED);
+        parent::__construct($label, WorkerEventOutcome::STARTED);
     }
 
     public function getPayload(): array

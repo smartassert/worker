@@ -143,10 +143,13 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
 
         return [
             JobStartedEvent::class => [
-                'event' => new JobStartedEvent([
-                    'Test/test1.yaml',
-                    'Test/test2.yaml',
-                ]),
+                'event' => new JobStartedEvent(
+                    self::JOB_LABEL,
+                    [
+                        'Test/test1.yaml',
+                        'Test/test2.yaml',
+                    ]
+                ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::STARTED,
@@ -219,7 +222,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/compiled' => [
-                'event' => new JobEvent(WorkerEventOutcome::COMPILED),
+                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPILED,
@@ -344,7 +347,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             JobTimeoutEvent::class => [
-                'event' => new JobTimeoutEvent(10),
+                'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::TIME_OUT,
@@ -355,7 +358,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/completed' => [
-                'event' => new JobEvent(WorkerEventOutcome::COMPLETED),
+                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPLETED,
@@ -364,7 +367,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/failed' => [
-                'event' => new JobEvent(WorkerEventOutcome::FAILED),
+                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::FAILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::FAILED,

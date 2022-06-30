@@ -9,7 +9,9 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\SourceCompilationPassedEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\CompileSourceMessage;
+use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -21,6 +23,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
         private SourcePathFinder $sourcePathFinder,
+        private JobRepository $jobRepository,
     ) {
     }
 
@@ -51,10 +54,14 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function dispatchCompilationCompletedEvent(): void
     {
         if ($this->compilationProgress->is(CompilationState::COMPLETE)) {
-            $this->eventDispatcher->dispatch(new JobEvent(WorkerEventOutcome::COMPILED));
+            $job = $this->jobRepository->get();
+            $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::COMPILED));
         }
     }
 }

@@ -9,9 +9,10 @@ use App\Enum\WorkerEventOutcome;
 class JobTimeoutEvent extends JobEvent implements EventInterface
 {
     public function __construct(
+        string $label,
         private readonly int $jobMaximumDuration
     ) {
-        parent::__construct(WorkerEventOutcome::TIME_OUT);
+        parent::__construct($label, WorkerEventOutcome::TIME_OUT);
     }
 
     public function getJobMaximumDuration(): int
