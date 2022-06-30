@@ -10,7 +10,7 @@ use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\ExecutionCompletedEvent;
+use App\Event\ExecutionEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
@@ -258,8 +258,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             'job/failed' => [
                 'event' => new JobEvent(WorkerEventOutcome::FAILED),
             ],
-            ExecutionCompletedEvent::class => [
-                'event' => new ExecutionCompletedEvent(),
+            'execution/completed' => [
+                'event' => new ExecutionEvent(WorkerEventOutcome::COMPLETED),
             ],
         ];
     }
