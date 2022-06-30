@@ -34,7 +34,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchCompilationCompletedEvent', 60],
             ],
             JobStartedEvent::class => [
-                ['dispatchNextCompileSourceMessage', 50],
+                ['dispatchNextCompileSourceMessage', -50],
             ],
         ];
     }

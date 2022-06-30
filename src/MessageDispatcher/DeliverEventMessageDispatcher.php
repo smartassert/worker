@@ -45,7 +45,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     {
         return [
             JobStartedEvent::class => [
-                ['dispatchForEvent', 500],
+                ['dispatchForEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],

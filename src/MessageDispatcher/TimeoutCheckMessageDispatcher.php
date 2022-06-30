@@ -26,7 +26,7 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
     {
         return [
             JobStartedEvent::class => [
-                ['dispatch', 0],
+                ['dispatch', -100],
             ],
         ];
     }
