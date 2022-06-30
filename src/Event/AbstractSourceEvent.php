@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractSourceEvent extends Event implements EventInterface
@@ -11,8 +13,20 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
     /**
      * @param non-empty-string $source
      */
-    public function __construct(protected readonly string $source)
+    public function __construct(
+        protected readonly string $source,
+        private readonly WorkerEventOutcome $outcome,
+    ) {
+    }
+
+    public function getScope(): WorkerEventScope
     {
+        return WorkerEventScope::COMPILATION;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     /**
