@@ -14,7 +14,6 @@ use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobEvent;
-use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -365,8 +364,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     []
                 ),
             ],
-            JobFailedEvent::class => [
-                'event' => new JobFailedEvent(),
+            'job/failed' => [
+                'event' => new JobEvent(WorkerEventOutcome::FAILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::FAILED,

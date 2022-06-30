@@ -8,7 +8,6 @@ use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobEvent;
-use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -71,9 +70,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 0],
             ],
             StepEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            JobFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];

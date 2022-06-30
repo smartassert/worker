@@ -8,7 +8,6 @@ use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
-use App\Event\JobFailedEvent;
 use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -56,6 +55,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $this->eventDispatcher->dispatch(new JobFailedEvent());
+        $this->eventDispatcher->dispatch(new JobEvent(WorkerEventOutcome::FAILED));
     }
 }

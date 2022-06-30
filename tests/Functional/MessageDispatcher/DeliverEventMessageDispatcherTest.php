@@ -13,7 +13,6 @@ use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobEvent;
-use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -256,8 +255,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             'job/completed' => [
                 'event' => new JobEvent(WorkerEventOutcome::COMPLETED),
             ],
-            JobFailedEvent::class => [
-                'event' => new JobFailedEvent(),
+            'job/failed' => [
+                'event' => new JobEvent(WorkerEventOutcome::FAILED),
             ],
             ExecutionCompletedEvent::class => [
                 'event' => new ExecutionCompletedEvent(),
