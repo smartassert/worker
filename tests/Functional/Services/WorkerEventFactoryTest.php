@@ -13,8 +13,8 @@ use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
+use App\Event\JobEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
@@ -221,8 +221,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ]
                 ),
             ],
-            JobCompiledEvent::class => [
-                'event' => new JobCompiledEvent(),
+            'job/compiled' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPILED,

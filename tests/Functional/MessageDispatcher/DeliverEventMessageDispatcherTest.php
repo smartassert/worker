@@ -12,8 +12,8 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
 use App\Event\JobCompletedEvent;
+use App\Event\JobEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
@@ -81,7 +81,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 SourceCompilationPassedEvent::class => ['createFromSourceCompileSuccessEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                JobCompiledEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
+                JobEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
             ],
             TimeoutCheckMessageDispatcher::class => [
                 JobStartedEvent::class => ['dispatch'],
@@ -212,8 +212,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             SourceCompilationFailedEvent::class => [
                 'event' => new SourceCompilationFailedEvent($relativeTestSource, $sourceCompileFailureEventOutput),
             ],
-            JobCompiledEvent::class => [
-                'event' => new JobCompiledEvent(),
+            'job/compiled' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPILED),
             ],
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
