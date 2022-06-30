@@ -22,7 +22,7 @@ class EventDeliveryRequest extends GuzzleRequest
             ],
             (string) json_encode([
                 'job' => $job->getLabel(),
-                'identifier' => $workerEvent->getId(),
+                'sequence_number' => $workerEvent->getId(),
                 'type' => $workerEvent->getScope()->value . '/' . $workerEvent->getOutcome()->value,
                 'reference' => $workerEvent->getReference(),
                 'payload' => $workerEvent->getPayload(),
