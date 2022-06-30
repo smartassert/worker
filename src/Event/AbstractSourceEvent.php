@@ -29,6 +29,11 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
         return $this->outcome;
     }
 
+    public function getLabel(): string
+    {
+        return $this->source;
+    }
+
     /**
      * @return array{source: non-empty-string}
      */
