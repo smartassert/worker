@@ -7,9 +7,7 @@ namespace App\MessageDispatcher;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
+use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -45,7 +43,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     {
         return [
             JobStartedEvent::class => [
-                ['dispatchForEvent', 500],
+                ['dispatchForEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
@@ -56,8 +54,8 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobCompiledEvent::class => [
-                ['dispatchForEvent', 100],
+            JobEvent::class => [
+                ['dispatchForEvent', 0],
             ],
             ExecutionStartedEvent::class => [
                 ['dispatchForEvent', 0],
@@ -68,16 +66,10 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             JobTimeoutEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobCompletedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
             TestEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             StepEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            JobFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];

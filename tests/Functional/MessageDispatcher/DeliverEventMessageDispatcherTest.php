@@ -12,9 +12,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
+use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -81,7 +79,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 SourceCompilationPassedEvent::class => ['createFromSourceCompileSuccessEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
+                JobEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
             ],
             TimeoutCheckMessageDispatcher::class => [
                 JobStartedEvent::class => ['dispatch'],
@@ -212,8 +210,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             SourceCompilationFailedEvent::class => [
                 'event' => new SourceCompilationFailedEvent($relativeTestSource, $sourceCompileFailureEventOutput),
             ],
-            JobCompiledEvent::class => [
-                'event' => new JobCompiledEvent(),
+            'job/compiled' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPILED),
             ],
             ExecutionStartedEvent::class => [
                 'event' => new ExecutionStartedEvent(),
@@ -254,11 +252,11 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),
             ],
-            JobCompletedEvent::class => [
-                'event' => new JobCompletedEvent(),
+            'job/completed' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPLETED),
             ],
-            JobFailedEvent::class => [
-                'event' => new JobFailedEvent(),
+            'job/failed' => [
+                'event' => new JobEvent(WorkerEventOutcome::FAILED),
             ],
             ExecutionCompletedEvent::class => [
                 'event' => new ExecutionCompletedEvent(),

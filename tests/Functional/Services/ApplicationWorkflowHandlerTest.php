@@ -8,8 +8,7 @@ use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
+use App\Event\JobEvent;
 use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
@@ -102,7 +101,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
-                    self::assertInstanceOf(JobCompletedEvent::class, $event);
+                    self::assertInstanceOf(JobEvent::class, $event);
+                    self::assertSame(WorkerEventOutcome::COMPLETED->value, $event->getOutcome()->value);
                     ++$eventExpectationCount;
 
                     return true;
@@ -146,7 +146,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
-                    self::assertInstanceOf(JobFailedEvent::class, $event);
+                    self::assertInstanceOf(JobEvent::class, $event);
+                    self::assertSame(WorkerEventOutcome::FAILED->value, $event->getOutcome()->value);
                     ++$eventExpectationCount;
 
                     return true;
