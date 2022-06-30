@@ -41,7 +41,7 @@ class EventDeliveryRequestTest extends TestCase
         self::assertSame(
             [
                 'job' => $jobLabel,
-                'identifier' => 123,
+                'sequence_number' => 123,
                 'type' => $eventScope->value . '/' . $eventOutcome->value,
                 'reference' => $eventReference,
                 'payload' => $workerEventData,
