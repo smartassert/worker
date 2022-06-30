@@ -20,6 +20,11 @@ class TestEvent extends Event implements EventInterface
     ) {
     }
 
+    public function getLabel(): string
+    {
+        return $this->document->getPath();
+    }
+
     public function getScope(): WorkerEventScope
     {
         return WorkerEventScope::TEST;
