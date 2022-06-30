@@ -8,6 +8,7 @@ use App\Event\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
+use App\Services\CompilationWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EventListenerRemover;
@@ -45,6 +46,9 @@ class TimeoutCheckMessageDispatcherTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
                 JobStartedEvent::class => ['dispatchForEvent'],
+            ],
+            CompilationWorkflowHandler::class => [
+                JobStartedEvent::class => ['dispatchNextCompileSourceMessage'],
             ],
         ]);
     }

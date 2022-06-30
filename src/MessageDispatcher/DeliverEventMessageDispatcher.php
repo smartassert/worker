@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Entity\Job;
-use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
@@ -23,8 +21,7 @@ use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Services\ReferenceFactory;
-use App\Services\ResourceReferenceFactory;
+use App\Services\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -36,9 +33,8 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private readonly MessageBusInterface $messageBus,
         private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly WorkerEventRepository $workerEventRepository,
-        private readonly ReferenceFactory $referenceFactory,
-        private readonly ResourceReferenceFactory $resourceReferenceFactory,
         private readonly JobRepository $jobRepository,
+        private readonly WorkerEventFactory $workerEventFactory,
     ) {
     }
 
@@ -94,33 +90,11 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
 
-        $workerEvent = $this->createWorkerEvent($job, $event);
+        $workerEvent = $this->workerEventFactory->create($job, $event);
+        $this->workerEventRepository->add($workerEvent);
+
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
-    }
-
-    private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
-    {
-        $payload = $event->getPayload();
-        $relatedReferenceSources = $event->getRelatedReferenceSources();
-
-        if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
-            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
-                $job->getLabel(),
-                $relatedReferenceSources
-            );
-
-            $payload['related_references'] = $resourceReferenceCollection->toArray();
-        }
-
-        $workerEvent = new WorkerEvent(
-            $event->getScope(),
-            $event->getOutcome(),
-            $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
-            $payload
-        );
-
-        return $this->workerEventRepository->add($workerEvent);
     }
 }
