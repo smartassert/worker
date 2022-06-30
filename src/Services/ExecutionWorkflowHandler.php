@@ -41,8 +41,8 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
                 ['dispatchExecutionCompletedEventForTestPassedEvent', -90],
             ],
             JobCompiledEvent::class => [
-                ['dispatchNextExecuteTestMessage', 0],
-                ['dispatchExecutionStartedEvent', 50],
+                ['dispatchNextExecuteTestMessage', -100],
+                ['dispatchExecutionStartedEvent', -50],
             ],
         ];
     }
