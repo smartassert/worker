@@ -10,7 +10,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
+use App\Event\JobEvent;
 use App\Event\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Repository\TestRepository;
@@ -40,9 +40,9 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
                 ['dispatchNextExecuteTestMessageForTestPassedEvent', -100],
                 ['dispatchExecutionCompletedEventForTestPassedEvent', -90],
             ],
-            JobCompiledEvent::class => [
-                ['dispatchNextExecuteTestMessage', 0],
-                ['dispatchExecutionStartedEvent', 50],
+            JobEvent::class => [
+                ['dispatchNextExecuteTestMessageForJobCompiledEvent', -100],
+                ['dispatchExecutionStartedEventForJobCompiledEvent', -50],
             ],
         ];
     }
@@ -60,6 +60,13 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
+    public function dispatchNextExecuteTestMessageForJobCompiledEvent(JobEvent $event): void
+    {
+        if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
+            $this->dispatchNextExecuteTestMessage();
+        }
+    }
+
     public function dispatchNextExecuteTestMessage(): void
     {
         $testId = $this->testRepository->findNextAwaitingId();
@@ -69,9 +76,11 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
-    public function dispatchExecutionStartedEvent(): void
+    public function dispatchExecutionStartedEventForJobCompiledEvent(JobEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
+        if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
+            $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
+        }
     }
 
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void

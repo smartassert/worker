@@ -13,9 +13,7 @@ use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
+use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -221,8 +219,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ]
                 ),
             ],
-            JobCompiledEvent::class => [
-                'event' => new JobCompiledEvent(),
+            'job/compiled' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPILED,
@@ -357,8 +355,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ]
                 ),
             ],
-            JobCompletedEvent::class => [
-                'event' => new JobCompletedEvent(),
+            'job/completed' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPLETED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPLETED,
@@ -366,8 +364,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     []
                 ),
             ],
-            JobFailedEvent::class => [
-                'event' => new JobFailedEvent(),
+            'job/failed' => [
+                'event' => new JobEvent(WorkerEventOutcome::FAILED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::FAILED,

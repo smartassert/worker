@@ -10,7 +10,7 @@ use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
+use App\Event\JobEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
@@ -63,7 +63,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
                 SourceCompilationPassedEvent::class => ['dispatchForEvent'],
-                JobCompiledEvent::class => ['dispatchForEvent'],
+                JobEvent::class => ['dispatchForEvent'],
                 TestEvent::class => ['dispatchForEvent'],
                 ExecutionStartedEvent::class => ['dispatchForEvent'],
             ],
@@ -162,7 +162,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->doCompilationCompleteEventDrivenTest(
             $environmentSetup,
             function () {
-                $this->eventDispatcher->dispatch(new JobCompiledEvent());
+                $this->eventDispatcher->dispatch(new JobEvent(WorkerEventOutcome::COMPILED));
             },
             1,
         );
