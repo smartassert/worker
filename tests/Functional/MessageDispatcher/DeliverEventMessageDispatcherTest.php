@@ -12,7 +12,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompletedEvent;
 use App\Event\JobEvent;
 use App\Event\JobFailedEvent;
 use App\Event\JobStartedEvent;
@@ -254,8 +253,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(10),
             ],
-            JobCompletedEvent::class => [
-                'event' => new JobCompletedEvent(),
+            'job/completed' => [
+                'event' => new JobEvent(WorkerEventOutcome::COMPLETED),
             ],
             JobFailedEvent::class => [
                 'event' => new JobFailedEvent(),
