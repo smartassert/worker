@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 
 class SourceCompilationStartedEvent extends AbstractSourceEvent
 {
-    public function getScope(): WorkerEventScope
+    public function __construct(string $source)
     {
-        return WorkerEventScope::COMPILATION;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return WorkerEventOutcome::STARTED;
+        parent::__construct($source, WorkerEventOutcome::STARTED);
     }
 }
