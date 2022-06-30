@@ -81,7 +81,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 SourceCompilationPassedEvent::class => ['createFromSourceCompileSuccessEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                JobCompiledEvent::class => ['dispatchExecutionStartedEvent'],
+                JobCompiledEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
             ],
             TimeoutCheckMessageDispatcher::class => [
                 JobStartedEvent::class => ['dispatch'],

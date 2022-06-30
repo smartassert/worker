@@ -41,8 +41,8 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
                 ['dispatchExecutionCompletedEventForTestPassedEvent', -90],
             ],
             JobCompiledEvent::class => [
-                ['dispatchNextExecuteTestMessage', -100],
-                ['dispatchExecutionStartedEvent', -50],
+                ['dispatchNextExecuteTestMessageForJobCompiledEvent', -100],
+                ['dispatchExecutionStartedEventForJobCompiledEvent', -50],
             ],
         ];
     }
@@ -60,6 +60,13 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
+    public function dispatchNextExecuteTestMessageForJobCompiledEvent(JobCompiledEvent $event): void
+    {
+        if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
+            $this->dispatchNextExecuteTestMessage();
+        }
+    }
+
     public function dispatchNextExecuteTestMessage(): void
     {
         $testId = $this->testRepository->findNextAwaitingId();
@@ -69,9 +76,11 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
-    public function dispatchExecutionStartedEvent(): void
+    public function dispatchExecutionStartedEventForJobCompiledEvent(JobCompiledEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
+        if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
+            $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
+        }
     }
 
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
