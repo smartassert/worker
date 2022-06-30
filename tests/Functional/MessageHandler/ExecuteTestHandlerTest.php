@@ -8,7 +8,8 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
@@ -93,7 +94,8 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
                     function (TestEvent $actualEvent) use (&$eventExpectationCount) {
-                        self::assertSame(WorkerEventType::TEST_STARTED, $actualEvent->getType());
+                        self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());
+                        self::assertSame(WorkerEventOutcome::STARTED, $actualEvent->getOutcome());
                         ++$eventExpectationCount;
 
                         return true;
@@ -101,7 +103,8 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
                 ),
                 new ExpectedDispatchedEvent(
                     function (TestEvent $actualEvent) use ($test, &$eventExpectationCount) {
-                        self::assertSame(WorkerEventType::TEST_PASSED, $actualEvent->getType());
+                        self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());
+                        self::assertSame(WorkerEventOutcome::PASSED, $actualEvent->getOutcome());
                         self::assertSame($test, $actualEvent->getTest());
                         ++$eventExpectationCount;
 

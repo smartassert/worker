@@ -8,7 +8,8 @@ use App\Enum\ApplicationState;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
@@ -31,7 +32,12 @@ class ApplicationProgress
             return ApplicationState::AWAITING_JOB;
         }
 
-        if (0 !== $this->workerEventRepository->getTypeCount(WorkerEventType::JOB_TIME_OUT)) {
+        $jobTimeoutCount = $this->workerEventRepository->getTypeCount(
+            WorkerEventScope::JOB,
+            WorkerEventOutcome::TIME_OUT
+        );
+
+        if (0 !== $jobTimeoutCount) {
             return ApplicationState::TIMED_OUT;
         }
 
