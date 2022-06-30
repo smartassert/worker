@@ -6,7 +6,8 @@ namespace App\Services;
 
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\ExecutionStartedEvent;
 use App\Event\JobCompiledEvent;
@@ -48,7 +49,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
         }
 
@@ -75,13 +76,14 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
         }
 
         $executionStateComplete = $this->executionProgress->is(ExecutionState::COMPLETE);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
-            WorkerEventType::EXECUTION_COMPLETED
+            WorkerEventScope::EXECUTION,
+            WorkerEventOutcome::COMPLETED
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {

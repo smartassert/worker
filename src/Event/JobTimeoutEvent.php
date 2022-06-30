@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobTimeoutEvent extends Event implements EventInterface
@@ -30,9 +31,14 @@ class JobTimeoutEvent extends Event implements EventInterface
         return [];
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return WorkerEventType::JOB_TIME_OUT;
+        return WorkerEventScope::JOB;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return WorkerEventOutcome::TIME_OUT;
     }
 
     public function getRelatedReferenceSources(): array

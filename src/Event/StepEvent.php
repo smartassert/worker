@@ -5,23 +5,29 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Test;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class StepEvent extends Event implements EventInterface
 {
     public function __construct(
-        private readonly WorkerEventType $type,
+        private readonly WorkerEventOutcome $outcome,
         private readonly Step $step,
         private readonly string $path,
         private readonly Test $test,
     ) {
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return $this->type;
+        return WorkerEventScope::STEP;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     public function getTest(): Test
@@ -42,7 +48,7 @@ class StepEvent extends Event implements EventInterface
     {
         return [
             $this->path,
-            (string) $this->step->getName(),
+            $this->step->getName(),
         ];
     }
 
