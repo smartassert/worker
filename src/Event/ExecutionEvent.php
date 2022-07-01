@@ -10,9 +10,21 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ExecutionEvent extends Event implements EventInterface
 {
+    /**
+     * @param non-empty-string $label
+     */
     public function __construct(
+        private readonly string $label,
         private readonly WorkerEventOutcome $outcome
     ) {
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
     }
 
     public function getPayload(): array

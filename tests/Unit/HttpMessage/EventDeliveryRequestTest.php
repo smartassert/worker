@@ -23,13 +23,14 @@ class EventDeliveryRequestTest extends TestCase
 
         $eventScope = WorkerEventScope::JOB;
         $eventOutcome = WorkerEventOutcome::COMPLETED;
+        $eventLabel = 'non-empty label';
         $eventReference = 'reference value';
         $workerEventData = [
             'key1' => 'value1',
             'key2' => 'value2',
         ];
 
-        $workerEvent = new WorkerEvent($eventScope, $eventOutcome, $eventReference, $workerEventData);
+        $workerEvent = new WorkerEvent($eventScope, $eventOutcome, $eventLabel, $eventReference, $workerEventData);
         ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);
@@ -43,6 +44,7 @@ class EventDeliveryRequestTest extends TestCase
                 'job' => $jobLabel,
                 'sequence_number' => 123,
                 'type' => $eventScope->value . '/' . $eventOutcome->value,
+                'label' => $eventLabel,
                 'reference' => $eventReference,
                 'payload' => $workerEventData,
             ],

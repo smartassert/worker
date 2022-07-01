@@ -88,6 +88,7 @@ class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             md5('reference source'),
             []
         );

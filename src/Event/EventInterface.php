@@ -28,4 +28,9 @@ interface EventInterface
      * @return ResourceReferenceSource[]
      */
     public function getRelatedReferenceSources(): array;
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string;
 }

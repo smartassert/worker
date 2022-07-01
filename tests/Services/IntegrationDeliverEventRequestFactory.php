@@ -18,8 +18,13 @@ class IntegrationDeliverEventRequestFactory
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
-    public function create(int $sequenceNumber, string $type, string $reference, array $payload): RequestInterface
-    {
+    public function create(
+        int $sequenceNumber,
+        string $type,
+        string $label,
+        string $reference,
+        array $payload
+    ): RequestInterface {
         return new Request(
             'POST',
             $this->jobProperties->getEventDeliveryUrl(),
@@ -30,6 +35,7 @@ class IntegrationDeliverEventRequestFactory
                 'job' => $this->jobProperties->getLabel(),
                 'sequence_number' => $sequenceNumber,
                 'type' => $type,
+                'label' => $label,
                 'reference' => $reference,
                 'payload' => $payload,
             ])

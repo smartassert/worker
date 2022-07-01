@@ -11,7 +11,9 @@ use App\Enum\WorkerEventScope;
 use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
+use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -25,7 +27,8 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
         private WorkerEventRepository $workerEventRepository,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
+        private readonly JobRepository $jobRepository,
     ) {
     }
 
@@ -75,13 +78,20 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobEvent $event): void
     {
         if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
-            $this->eventDispatcher->dispatch(new ExecutionEvent(WorkerEventOutcome::STARTED));
+            $job = $this->jobRepository->get();
+            $this->eventDispatcher->dispatch(new ExecutionEvent($job->getLabel(), WorkerEventOutcome::STARTED));
         }
     }
 
+    /**
+     * @throws JobNotFoundException
+     */
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
@@ -95,7 +105,8 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
-            $this->eventDispatcher->dispatch(new ExecutionEvent(WorkerEventOutcome::COMPLETED));
+            $job = $this->jobRepository->get();
+            $this->eventDispatcher->dispatch(new ExecutionEvent($job->getLabel(), WorkerEventOutcome::COMPLETED));
         }
     }
 }

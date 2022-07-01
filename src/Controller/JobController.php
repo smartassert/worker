@@ -100,7 +100,10 @@ class JobController
             $yamlSourceCollection->getManifest()->testPaths
         ));
 
-        $eventDispatcher->dispatch(new JobStartedEvent($sourceRepository->findAllPaths(Source::TYPE_TEST)));
+        $eventDispatcher->dispatch(new JobStartedEvent(
+            $job->getLabel(),
+            $sourceRepository->findAllPaths(Source::TYPE_TEST)
+        ));
 
         return new JsonResponse($jobStatusFactory->create($job));
     }

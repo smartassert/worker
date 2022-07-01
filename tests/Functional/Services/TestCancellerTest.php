@@ -270,7 +270,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $test = $tests[0];
         self::assertInstanceOf(Test::class, $test);
 
-        $event = new JobTimeoutEvent(10);
+        $event = new JobTimeoutEvent('job label', 10);
         $this->eventDispatcher->dispatch($event);
 
         $this->assertTestStates($expectedStates);

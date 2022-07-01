@@ -159,7 +159,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->doCompilationCompleteEventDrivenTest(
             $environmentSetup,
             function () {
-                $this->eventDispatcher->dispatch(new JobEvent(WorkerEventOutcome::COMPILED));
+                $this->eventDispatcher->dispatch(new JobEvent('job label', WorkerEventOutcome::COMPILED));
             },
             1,
         );

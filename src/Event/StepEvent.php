@@ -20,6 +20,11 @@ class StepEvent extends Event implements EventInterface
     ) {
     }
 
+    public function getLabel(): string
+    {
+        return $this->step->getName();
+    }
+
     public function getScope(): WorkerEventScope
     {
         return WorkerEventScope::STEP;

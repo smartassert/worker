@@ -133,6 +133,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
                     new WorkerEvent(
                         WorkerEventScope::JOB,
                         WorkerEventOutcome::STARTED,
+                        'non-empty label',
                         md5('reference source'),
                         []
                     ),

@@ -33,6 +33,7 @@ class WorkerEventFactory
         return new WorkerEvent(
             $event->getScope(),
             $event->getOutcome(),
+            $event->getLabel(),
             $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
             $payload
         );

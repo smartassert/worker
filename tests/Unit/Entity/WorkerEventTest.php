@@ -17,6 +17,7 @@ class WorkerEventTest extends TestCase
         $workerEvent = new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
+            'non-empty label',
             'non-empty reference',
             []
         );

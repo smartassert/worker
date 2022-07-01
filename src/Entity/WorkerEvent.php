@@ -27,6 +27,12 @@ class WorkerEvent
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
     private WorkerEventOutcome $outcome;
 
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'text')]
+    private string $label;
+
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
 
@@ -37,18 +43,21 @@ class WorkerEvent
     private array $payload;
 
     /**
+     * @param non-empty-string $label
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
     public function __construct(
         WorkerEventScope $scope,
         WorkerEventOutcome $outcome,
+        string $label,
         string $reference,
         array $payload
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
         $this->outcome = $outcome;
+        $this->label = $label;
         $this->reference = $reference;
         $this->payload = $payload;
     }
@@ -94,5 +103,13 @@ class WorkerEvent
     public function getPayload(): array
     {
         return $this->payload;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
     }
 }
