@@ -36,6 +36,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     private EventDispatcherInterface $eventDispatcher;
     private MessengerAsserter $messengerAsserter;
     private EnvironmentFactory $environmentFactory;
+    private EventListenerRemover $eventListenerRemover;
 
     protected function setUp(): void
     {
@@ -59,18 +60,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
-
-        $eventListenerRemover->remove([
-            DeliverEventMessageDispatcher::class => [
-                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
-                JobEvent::class => ['dispatchForEvent'],
-                TestEvent::class => ['dispatchForEvent'],
-                ExecutionEvent::class => ['dispatchForEvent'],
-            ],
-            ApplicationWorkflowHandler::class => [
-                TestEvent::class => ['dispatchJobCompletedEventForTestPassedEvent'],
-            ],
-        ]);
+        $this->eventListenerRemover = $eventListenerRemover;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -148,6 +138,13 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToCompilationCompletedEvent(): void
     {
+        $this->eventListenerRemover->remove([
+            DeliverEventMessageDispatcher::class => [
+                JobEvent::class => ['dispatchForEvent'],
+                ExecutionEvent::class => ['dispatchForEvent'],
+            ],
+        ]);
+
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
@@ -268,6 +265,15 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventExecutionNotComplete(): void
     {
+        $this->eventListenerRemover->remove([
+            DeliverEventMessageDispatcher::class => [
+                TestEvent::class => ['dispatchForEvent'],
+            ],
+            ApplicationWorkflowHandler::class => [
+                TestEvent::class => ['dispatchJobCompletedEventForTestPassedEvent'],
+            ],
+        ]);
+
         $test0RelativeSource = 'Test/test1.yml';
         $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
 
@@ -315,6 +321,17 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventExecutionComplete(): void
     {
+        $this->eventListenerRemover->remove([
+            DeliverEventMessageDispatcher::class => [
+                SourceCompilationPassedEvent::class => ['dispatchForEvent'],
+                JobEvent::class => ['dispatchForEvent'],
+                ExecutionEvent::class => ['dispatchForEvent'],
+            ],
+            ApplicationWorkflowHandler::class => [
+                TestEvent::class => ['dispatchJobCompletedEventForTestPassedEvent'],
+            ],
+        ]);
+
         $test0RelativeSource = 'Test/test1.yml';
         $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
 
