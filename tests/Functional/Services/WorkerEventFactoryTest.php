@@ -153,6 +153,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::STARTED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     [
                         'tests' => [
@@ -177,6 +178,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::STARTED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -191,6 +193,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::PASSED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -212,6 +215,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::FAILED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -226,6 +230,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPILED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
                 ),
@@ -235,6 +240,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::STARTED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
                 ),
@@ -244,6 +250,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -270,6 +277,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::STEP,
                     WorkerEventOutcome::PASSED,
+                    'passing step',
                     md5(self::JOB_LABEL . $relativeTestSource . 'passing step'),
                     [
                         'source' => $relativeTestSource,
@@ -288,6 +296,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::STEP,
                     WorkerEventOutcome::FAILED,
+                    'failing step',
                     md5(self::JOB_LABEL . $relativeTestSource . 'failing step'),
                     [
                         'source' => $relativeTestSource,
@@ -305,6 +314,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::PASSED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -330,6 +340,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::FAILED,
+                    $relativeTestSource,
                     md5(self::JOB_LABEL . $relativeTestSource),
                     [
                         'source' => $relativeTestSource,
@@ -351,6 +362,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::TIME_OUT,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     [
                         'maximum_duration_in_seconds' => 10,
@@ -362,6 +374,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::COMPLETED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
                 ),
@@ -371,6 +384,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::FAILED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
                 ),
@@ -380,6 +394,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::COMPLETED,
+                    self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
                 ),

@@ -34,6 +34,7 @@ class WorkerEventSenderTest extends TestCase
         $sender->send(new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             'non-empty reference',
             []
         ));

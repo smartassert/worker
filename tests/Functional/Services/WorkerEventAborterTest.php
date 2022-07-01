@@ -45,6 +45,7 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::COMPLETED,
+            'non-empty label',
             'non-empty reference',
             []
         ));

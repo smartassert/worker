@@ -34,6 +34,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent0 = new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
+            'non-empty label',
             'non-empty reference',
             []
         );
@@ -43,6 +44,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent1 = new WorkerEvent(
             WorkerEventScope::TEST,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             'non-empty reference',
             []
         );
@@ -52,6 +54,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         $workerEvent2 = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::TIME_OUT,
+            'non-empty label',
             'non-empty reference',
             []
         );
@@ -107,7 +110,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
     private function createWorkerEventsWithTypes(array $types): void
     {
         foreach ($types as $type) {
-            $this->repository->add(new WorkerEvent($type[0], $type[1], 'non-empty reference', []));
+            $this->repository->add(new WorkerEvent($type[0], $type[1], 'non-empty label', 'non-empty reference', []));
         }
     }
 }

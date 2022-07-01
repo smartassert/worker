@@ -22,6 +22,7 @@ class TestWorkerEventFactory
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
             $workerEventSetup->getScope(),
             $workerEventSetup->getOutcome(),
+            $workerEventSetup->getLabel(),
             'non-empty reference',
             $workerEventSetup->getPayload()
         ));

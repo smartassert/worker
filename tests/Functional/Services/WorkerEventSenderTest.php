@@ -50,6 +50,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             'non-empty reference',
             []
         );
@@ -72,6 +73,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             'non-empty reference',
             []
         );
@@ -107,6 +109,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
+            'non-empty label',
             'non-empty reference',
             []
         );

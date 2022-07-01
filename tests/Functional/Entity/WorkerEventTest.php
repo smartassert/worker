@@ -29,6 +29,7 @@ class WorkerEventTest extends AbstractEntityTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
+            'non-empty label',
             'non-empty reference',
             []
         );
