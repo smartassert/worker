@@ -219,7 +219,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
             ],
             'test/started' => [
-                'event' => new TestEvent(WorkerEventOutcome::STARTED, $genericTest, $testDocument),
+                'event' => new TestEvent($genericTest, $testDocument, WorkerEventOutcome::STARTED),
             ],
             'step/passed' => [
                 'event' => new StepEvent(
@@ -239,16 +239,16 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             'test/passed' => [
                 'event' => new TestEvent(
-                    WorkerEventOutcome::PASSED,
                     $genericTest->setState(TestState::COMPLETE),
-                    $testDocument
+                    $testDocument,
+                    WorkerEventOutcome::PASSED
                 ),
             ],
             'test/failed' => [
                 'event' => new TestEvent(
-                    WorkerEventOutcome::FAILED,
                     $genericTest->setState(TestState::FAILED),
-                    $testDocument
+                    $testDocument,
+                    WorkerEventOutcome::FAILED
                 ),
             ],
             JobTimeoutEvent::class => [

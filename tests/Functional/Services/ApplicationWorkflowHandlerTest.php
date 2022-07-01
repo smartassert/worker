@@ -81,10 +81,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueIsEmpty();
 
+        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
+
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventOutcome::PASSED,
-            \Mockery::mock(TestEntity::class),
-            new TestDocument('test.yml', [])
+            $testEntity,
+            new TestDocument('test.yml', []),
+            WorkerEventOutcome::PASSED
         ));
 
         $this->messengerAsserter->assertQueueCount(1);
@@ -130,10 +132,11 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $applicationProgress
         );
 
+        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventOutcome::PASSED,
-            \Mockery::mock(TestEntity::class),
-            new TestDocument('test.yml', [])
+            $testEntity,
+            new TestDocument('test.yml', []),
+            WorkerEventOutcome::PASSED
         ));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
@@ -163,10 +166,11 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
+        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
         $this->eventDispatcher->dispatch(new TestEvent(
-            WorkerEventOutcome::FAILED,
-            \Mockery::mock(TestEntity::class),
-            new TestDocument('test.yml', [])
+            $testEntity,
+            new TestDocument('test.yml', []),
+            WorkerEventOutcome::FAILED
         ));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');

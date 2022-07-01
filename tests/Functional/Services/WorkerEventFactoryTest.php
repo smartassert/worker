@@ -247,7 +247,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/started' => [
-                'event' => new TestEvent(WorkerEventOutcome::STARTED, $genericTest, $testDocument),
+                'event' => new TestEvent($genericTest, $testDocument, WorkerEventOutcome::STARTED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,
@@ -308,9 +308,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             ],
             'test/passed' => [
                 'event' => new TestEvent(
-                    WorkerEventOutcome::PASSED,
                     $genericTest->setState(TestState::COMPLETE),
-                    $testDocument
+                    $testDocument,
+                    WorkerEventOutcome::PASSED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
@@ -334,9 +334,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             ],
             'test/failed' => [
                 'event' => new TestEvent(
-                    WorkerEventOutcome::FAILED,
                     $genericTest->setState(TestState::FAILED),
-                    $testDocument
+                    $testDocument,
+                    WorkerEventOutcome::FAILED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
