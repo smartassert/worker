@@ -115,7 +115,10 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
                         self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
 
                         if ($actualEvent instanceof JobTimeoutEvent) {
-                            self::assertSame($jobMaximumDuration, $actualEvent->getJobMaximumDuration());
+                            $payload = $actualEvent->getPayload();
+                            self::assertIsArray($payload);
+                            self::assertArrayHasKey('maximum_duration_in_seconds', $payload);
+                            self::assertSame($jobMaximumDuration, $payload['maximum_duration_in_seconds']);
                         }
 
                         ++$eventExpectationCount;
