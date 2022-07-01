@@ -8,8 +8,13 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ExecutionCompletedEvent extends Event implements EventInterface
+class ExecutionEvent extends Event implements EventInterface
 {
+    public function __construct(
+        private readonly WorkerEventOutcome $outcome
+    ) {
+    }
+
     public function getPayload(): array
     {
         return [];
@@ -27,7 +32,7 @@ class ExecutionCompletedEvent extends Event implements EventInterface
 
     public function getOutcome(): WorkerEventOutcome
     {
-        return WorkerEventOutcome::COMPLETED;
+        return $this->outcome;
     }
 
     public function getRelatedReferenceSources(): array

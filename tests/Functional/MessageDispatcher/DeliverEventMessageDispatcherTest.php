@@ -10,8 +10,7 @@ use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\ExecutionCompletedEvent;
-use App\Event\ExecutionStartedEvent;
+use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
@@ -213,8 +212,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             'job/compiled' => [
                 'event' => new JobEvent(WorkerEventOutcome::COMPILED),
             ],
-            ExecutionStartedEvent::class => [
-                'event' => new ExecutionStartedEvent(),
+            'execution/started' => [
+                'event' => new ExecutionEvent(WorkerEventOutcome::STARTED),
             ],
             'test/started' => [
                 'event' => new TestEvent(WorkerEventOutcome::STARTED, $genericTest, $testDocument),
@@ -258,8 +257,8 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             'job/failed' => [
                 'event' => new JobEvent(WorkerEventOutcome::FAILED),
             ],
-            ExecutionCompletedEvent::class => [
-                'event' => new ExecutionCompletedEvent(),
+            'execution/completed' => [
+                'event' => new ExecutionEvent(WorkerEventOutcome::COMPLETED),
             ],
         ];
     }

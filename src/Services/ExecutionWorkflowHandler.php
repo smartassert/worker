@@ -8,8 +8,7 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\ExecutionCompletedEvent;
-use App\Event\ExecutionStartedEvent;
+use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
 use App\Message\ExecuteTestMessage;
@@ -79,7 +78,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobEvent $event): void
     {
         if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
-            $this->eventDispatcher->dispatch(new ExecutionStartedEvent());
+            $this->eventDispatcher->dispatch(new ExecutionEvent(WorkerEventOutcome::STARTED));
         }
     }
 
@@ -96,7 +95,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
-            $this->eventDispatcher->dispatch(new ExecutionCompletedEvent());
+            $this->eventDispatcher->dispatch(new ExecutionEvent(WorkerEventOutcome::COMPLETED));
         }
     }
 }
