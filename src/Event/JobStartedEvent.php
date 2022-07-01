@@ -14,23 +14,23 @@ class JobStartedEvent extends JobEvent implements EventInterface
      */
     public function __construct(
         string $label,
-        private readonly array $testPaths,
+        array $testPaths,
     ) {
-        parent::__construct($label, WorkerEventOutcome::STARTED);
+        $relatedReferenceSources = $this->createRelatedReferenceSources($testPaths);
+
+        parent::__construct($label, WorkerEventOutcome::STARTED, ['tests' => $testPaths], [], $relatedReferenceSources);
     }
 
-    public function getPayload(): array
-    {
-        return [
-            'tests' => $this->testPaths,
-        ];
-    }
-
-    public function getRelatedReferenceSources(): array
+    /**
+     * @param non-empty-string[] $testPaths
+     *
+     * @return ResourceReferenceSource[]
+     */
+    private function createRelatedReferenceSources(array $testPaths): array
     {
         $referenceSources = [];
 
-        foreach ($this->testPaths as $testPath) {
+        foreach ($testPaths as $testPath) {
             $referenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
         }
 

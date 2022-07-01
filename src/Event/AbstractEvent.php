@@ -21,9 +21,9 @@ class AbstractEvent extends Event implements EventInterface
         private readonly string $label,
         private readonly WorkerEventScope $scope,
         private readonly WorkerEventOutcome $outcome,
-        private readonly array $payload,
-        private readonly array $referenceComponents,
-        private readonly array $relatedReferenceSources,
+        private readonly array $payload = [],
+        private readonly array $referenceComponents = [],
+        private readonly array $relatedReferenceSources = [],
     ) {
     }
 
