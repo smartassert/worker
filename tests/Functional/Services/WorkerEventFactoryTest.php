@@ -231,7 +231,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'execution/started' => [
-                'event' => new ExecutionEvent(WorkerEventOutcome::STARTED),
+                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::STARTED,
@@ -376,7 +376,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'execution/completed' => [
-                'event' => new ExecutionEvent(WorkerEventOutcome::COMPLETED),
+                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::COMPLETED,
