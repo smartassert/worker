@@ -6,56 +6,30 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use Symfony\Contracts\EventDispatcher\Event;
+use App\Model\ResourceReferenceSource;
 
-abstract class AbstractSourceEvent extends Event implements EventInterface
+abstract class AbstractSourceEvent extends AbstractEvent implements EventInterface
 {
     /**
-     * @param non-empty-string $source
+     * @param non-empty-string          $source
+     * @param array<mixed>              $payload
+     * @param string[]                  $referenceComponents
+     * @param ResourceReferenceSource[] $relatedReferenceSources
      */
     public function __construct(
         protected readonly string $source,
-        private readonly WorkerEventOutcome $outcome,
+        readonly WorkerEventOutcome $outcome,
+        array $payload = [],
+        array $referenceComponents = [],
+        array $relatedReferenceSources = []
     ) {
-    }
-
-    public function getScope(): WorkerEventScope
-    {
-        return WorkerEventScope::COMPILATION;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->source;
-    }
-
-    /**
-     * @return array{source: non-empty-string}
-     */
-    public function getPayload(): array
-    {
-        return [
-            'source' => $this->source,
-        ];
-    }
-
-    /**
-     * @return array{0: non-empty-string}
-     */
-    public function getReferenceComponents(): array
-    {
-        return [
-            $this->source,
-        ];
-    }
-
-    public function getRelatedReferenceSources(): array
-    {
-        return [];
+        parent::__construct(
+            $source,
+            WorkerEventScope::COMPILATION,
+            $outcome,
+            array_merge(['source' => $source], $payload),
+            array_merge([$source], $referenceComponents),
+            $relatedReferenceSources,
+        );
     }
 }

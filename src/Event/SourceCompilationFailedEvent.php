@@ -9,17 +9,13 @@ use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
 {
-    public function __construct(string $source, private ErrorOutputInterface $errorOutput)
+    public function __construct(string $source, ErrorOutputInterface $errorOutput)
     {
-        parent::__construct($source, WorkerEventOutcome::FAILED);
-    }
-
-    public function getPayload(): array
-    {
-        return array_merge(
-            parent::getPayload(),
+        parent::__construct(
+            $source,
+            WorkerEventOutcome::FAILED,
             [
-                'output' => $this->errorOutput->toArray(),
+                'output' => $errorOutput->toArray(),
             ]
         );
     }

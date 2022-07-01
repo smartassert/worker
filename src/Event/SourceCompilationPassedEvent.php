@@ -10,11 +10,20 @@ use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class SourceCompilationPassedEvent extends AbstractSourceEvent
 {
+    /**
+     * @param non-empty-string $source
+     */
     public function __construct(
         string $source,
         private readonly TestManifestCollection $testManifestCollection
     ) {
-        parent::__construct($source, WorkerEventOutcome::PASSED);
+        parent::__construct(
+            $source,
+            WorkerEventOutcome::PASSED,
+            [],
+            [],
+            $this->createRelatedReferenceSources($testManifestCollection, $source)
+        );
     }
 
     public function getTestManifestCollection(): TestManifestCollection
@@ -22,16 +31,21 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
         return $this->testManifestCollection;
     }
 
-    public function getRelatedReferenceSources(): array
+    /**
+     * @param non-empty-string $source
+     *
+     * @return ResourceReferenceSource[]
+     */
+    private function createRelatedReferenceSources(TestManifestCollection $collection, string $source): array
     {
         $stepNames = [];
-        foreach ($this->getTestManifestCollection()->getManifests() as $testManifest) {
+        foreach ($collection->getManifests() as $testManifest) {
             $stepNames = array_unique(array_merge($stepNames, $testManifest->getStepNames()));
         }
 
         $referenceSources = [];
         foreach ($stepNames as $stepName) {
-            $referenceSources[] = new ResourceReferenceSource($stepName, [$this->source, $stepName]);
+            $referenceSources[] = new ResourceReferenceSource($stepName, [$source, $stepName]);
         }
 
         return $referenceSources;

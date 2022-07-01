@@ -14,7 +14,9 @@ use App\Event\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Mock\MockErrorOutput;
 use App\Tests\Mock\MockEventDispatcher;
+use App\Tests\Mock\MockTestManifest;
 use App\Tests\Mock\Services\MockCompiler;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\ExpectedDispatchedEvent;
@@ -25,8 +27,6 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
-use webignition\BasilCompilerModels\Model\TestManifest;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
@@ -105,8 +105,12 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
         $compileSourceMessage = new CompileSourceMessage($sourcePath);
 
         $testManifestCollection = new TestManifestCollection([
-            \Mockery::mock(TestManifest::class),
-            \Mockery::mock(TestManifest::class),
+            (new MockTestManifest())
+                ->withGetStepNamesCall([])
+                ->getMock(),
+            (new MockTestManifest())
+                ->withGetStepNamesCall([])
+                ->getMock(),
         ]);
 
         $compiler = (new MockCompiler())
@@ -183,7 +187,16 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
         $this->environmentFactory->create($environmentSetup);
 
         $compileSourceMessage = new CompileSourceMessage($sourcePath);
-        $errorOutput = \Mockery::mock(ErrorOutputInterface::class);
+
+        $errorOutputData = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+            'key3' => 'value3',
+        ];
+        $errorOutput = (new MockErrorOutput())
+            ->withToArrayCall($errorOutputData)
+            ->getMock()
+        ;
 
         $compiler = (new MockCompiler())
             ->withCompileCall(
@@ -220,17 +233,15 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                         SourceCompilationFailedEvent $actualEvent
                     ) use (
                         $sourcePath,
-                        $errorOutput,
+                        $errorOutputData,
                         &$eventExpectationCount
                     ) {
-                        self::assertSame(
-                            $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
-                        );
-                        self::assertSame(
-                            $errorOutput,
-                            ObjectReflector::getProperty($actualEvent, 'errorOutput')
-                        );
+                        $payload = $actualEvent->getPayload();
+                        self::assertArrayHasKey('source', $payload);
+                        self::assertSame($sourcePath, $payload['source']);
+
+                        self::assertArrayHasKey('output', $payload);
+                        self::assertSame($errorOutputData, $payload['output']);
                         ++$eventExpectationCount;
 
                         return true;
