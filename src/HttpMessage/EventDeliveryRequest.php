@@ -24,6 +24,7 @@ class EventDeliveryRequest extends GuzzleRequest
                 'job' => $job->getLabel(),
                 'sequence_number' => $workerEvent->getId(),
                 'type' => $workerEvent->getScope()->value . '/' . $workerEvent->getOutcome()->value,
+                'label' => $workerEvent->getLabel(),
                 'reference' => $workerEvent->getReference(),
                 'payload' => $workerEvent->getPayload(),
             ])

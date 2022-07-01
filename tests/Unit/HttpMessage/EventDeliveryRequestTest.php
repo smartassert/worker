@@ -44,6 +44,7 @@ class EventDeliveryRequestTest extends TestCase
                 'job' => $jobLabel,
                 'sequence_number' => 123,
                 'type' => $eventScope->value . '/' . $eventOutcome->value,
+                'label' => $eventLabel,
                 'reference' => $eventReference,
                 'payload' => $workerEventData,
             ],

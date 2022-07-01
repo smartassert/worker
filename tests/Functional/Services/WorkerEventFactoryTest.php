@@ -80,6 +80,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
 
         self::assertSame($expected->getScope()->value, $workerEvent->getScope()->value);
         self::assertSame($expected->getOutcome()->value, $workerEvent->getOutcome()->value);
+        self::assertSame($expected->getLabel(), $workerEvent->getLabel());
         self::assertSame($expected->getReference(), $workerEvent->getReference());
         self::assertSame($expected->getPayload(), $workerEvent->getPayload());
     }
