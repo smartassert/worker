@@ -9,7 +9,7 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\ExecutionStartedEvent;
+use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\TestEvent;
@@ -65,7 +65,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 SourceCompilationPassedEvent::class => ['dispatchForEvent'],
                 JobEvent::class => ['dispatchForEvent'],
                 TestEvent::class => ['dispatchForEvent'],
-                ExecutionStartedEvent::class => ['dispatchForEvent'],
+                ExecutionEvent::class => ['dispatchForEvent'],
             ],
             ApplicationWorkflowHandler::class => [
                 TestEvent::class => ['dispatchJobCompletedEventForTestPassedEvent'],

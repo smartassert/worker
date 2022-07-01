@@ -12,7 +12,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
-use App\Event\ExecutionStartedEvent;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
@@ -228,8 +227,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     []
                 ),
             ],
-            ExecutionStartedEvent::class => [
-                'event' => new ExecutionStartedEvent(),
+            'execution/started' => [
+                'event' => new ExecutionEvent(WorkerEventOutcome::STARTED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::STARTED,
