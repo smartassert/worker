@@ -4,24 +4,30 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Model\Document\Step;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractSourceEvent extends Event implements EventInterface
+class StepEvent extends Event implements EventInterface
 {
-    /**
-     * @param non-empty-string $source
-     */
     public function __construct(
-        protected readonly string $source,
         private readonly WorkerEventOutcome $outcome,
+        private readonly Step $step,
+        private readonly string $path,
+        private readonly Test $test,
     ) {
+    }
+
+    public function getLabel(): string
+    {
+        return $this->step->getName();
     }
 
     public function getScope(): WorkerEventScope
     {
-        return WorkerEventScope::COMPILATION;
+        return WorkerEventScope::STEP;
     }
 
     public function getOutcome(): WorkerEventOutcome
@@ -29,28 +35,25 @@ abstract class AbstractSourceEvent extends Event implements EventInterface
         return $this->outcome;
     }
 
-    public function getLabel(): string
+    public function getTest(): Test
     {
-        return $this->source;
+        return $this->test;
     }
 
-    /**
-     * @return array{source: non-empty-string}
-     */
     public function getPayload(): array
     {
         return [
-            'source' => $this->source,
+            'source' => $this->path,
+            'document' => $this->step->getData(),
+            'name' => $this->step->getName(),
         ];
     }
 
-    /**
-     * @return array{0: non-empty-string}
-     */
     public function getReferenceComponents(): array
     {
         return [
-            $this->source,
+            $this->path,
+            $this->step->getName(),
         ];
     }
 

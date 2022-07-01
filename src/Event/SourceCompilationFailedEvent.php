@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
 {
     public function __construct(string $source, private ErrorOutputInterface $errorOutput)
     {
-        parent::__construct($source);
+        parent::__construct($source, WorkerEventOutcome::FAILED);
     }
 
     public function getPayload(): array
@@ -22,10 +22,5 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent
                 'output' => $this->errorOutput->toArray(),
             ]
         );
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::COMPILATION_FAILED;
     }
 }

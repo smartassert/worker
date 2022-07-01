@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Exception\JobNotFoundException;
 use App\Services\WorkerEventSender;
 use App\Tests\Mock\Repository\MockJobRepository;
@@ -30,6 +31,12 @@ class WorkerEventSenderTest extends TestCase
 
         self::expectExceptionObject($exception);
 
-        $sender->send(new WorkerEvent(WorkerEventType::JOB_STARTED, 'non-empty reference', []));
+        $sender->send(new WorkerEvent(
+            WorkerEventScope::JOB,
+            WorkerEventOutcome::STARTED,
+            'non-empty label',
+            'non-empty reference',
+            []
+        ));
     }
 }

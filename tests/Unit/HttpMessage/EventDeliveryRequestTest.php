@@ -6,7 +6,8 @@ namespace App\Tests\Unit\HttpMessage;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\HttpMessage\EventDeliveryRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -20,14 +21,16 @@ class EventDeliveryRequestTest extends TestCase
         $jobLabel = 'label content';
         $job = new Job($jobLabel, $jobEventDeliveryUrl, 600, ['test.yml']);
 
-        $workerEventType = WorkerEventType::JOB_COMPLETED;
-        $workerEventReference = 'reference value';
+        $eventScope = WorkerEventScope::JOB;
+        $eventOutcome = WorkerEventOutcome::COMPLETED;
+        $eventLabel = 'non-empty label';
+        $eventReference = 'reference value';
         $workerEventData = [
             'key1' => 'value1',
             'key2' => 'value2',
         ];
 
-        $workerEvent = new WorkerEvent($workerEventType, $workerEventReference, $workerEventData);
+        $workerEvent = new WorkerEvent($eventScope, $eventOutcome, $eventLabel, $eventReference, $workerEventData);
         ObjectReflector::setProperty($workerEvent, $workerEvent::class, 'id', 123);
 
         $request = new EventDeliveryRequest($workerEvent, $job);
@@ -38,10 +41,11 @@ class EventDeliveryRequestTest extends TestCase
         self::assertSame('application/json', $request->getHeaderLine('content-type'));
         self::assertSame(
             [
-                'label' => $jobLabel,
-                'identifier' => 123,
-                'type' => $workerEventType->value,
-                'reference' => $workerEventReference,
+                'job' => $jobLabel,
+                'sequence_number' => 123,
+                'type' => $eventScope->value . '/' . $eventOutcome->value,
+                'label' => $eventLabel,
+                'reference' => $eventReference,
                 'payload' => $workerEventData,
             ],
             json_decode((string) $request->getBody(), true)

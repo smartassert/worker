@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
-use Symfony\Contracts\EventDispatcher\Event;
 
-class JobStartedEvent extends Event implements EventInterface
+class JobStartedEvent extends JobEvent implements EventInterface
 {
     /**
      * @param non-empty-string[] $testPaths
      */
     public function __construct(
+        string $label,
         private readonly array $testPaths,
     ) {
+        parent::__construct($label, WorkerEventOutcome::STARTED);
     }
 
     public function getPayload(): array
@@ -23,16 +24,6 @@ class JobStartedEvent extends Event implements EventInterface
         return [
             'tests' => $this->testPaths,
         ];
-    }
-
-    public function getReferenceComponents(): array
-    {
-        return [];
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::JOB_STARTED;
     }
 
     public function getRelatedReferenceSources(): array

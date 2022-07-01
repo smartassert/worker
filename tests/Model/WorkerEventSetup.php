@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {
-    private WorkerEventType $type;
+    private WorkerEventScope $scope;
+    private WorkerEventOutcome $outcome;
 
     /**
      * @var array<mixed>
@@ -18,16 +20,28 @@ class WorkerEventSetup
 
     private WorkerEventState $state;
 
+    /**
+     * @var non-empty-string
+     */
+    private string $label;
+
     public function __construct()
     {
-        $this->type = WorkerEventType::COMPILATION_FAILED;
+        $this->scope = WorkerEventScope::COMPILATION;
+        $this->outcome = WorkerEventOutcome::FAILED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
+        $this->label = 'non-empty label';
     }
 
-    public function getType(): WorkerEventType
+    public function getScope(): WorkerEventScope
     {
-        return $this->type;
+        return $this->scope;
+    }
+
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
     }
 
     /**
@@ -51,10 +65,37 @@ class WorkerEventSetup
         return $new;
     }
 
-    public function withType(WorkerEventType $type): self
+    public function withScope(WorkerEventScope $scope): self
     {
         $new = clone $this;
-        $new->type = $type;
+        $new->scope = $scope;
+
+        return $new;
+    }
+
+    public function withOutcome(WorkerEventOutcome $outcome): self
+    {
+        $new = clone $this;
+        $new->outcome = $outcome;
+
+        return $new;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param non-empty-string $label
+     */
+    public function withLabel(string $label): self
+    {
+        $new = clone $this;
+        $new->label = $label;
 
         return $new;
     }

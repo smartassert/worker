@@ -10,8 +10,9 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Services\ApplicationProgress;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
@@ -185,7 +186,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEventType::JOB_TIME_OUT)
+                            ->withScope(WorkerEventScope::JOB)
+                            ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::TIMED_OUT,
@@ -427,7 +429,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withType(WorkerEventType::JOB_TIME_OUT)
+                            ->withScope(WorkerEventScope::JOB)
+                            ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [

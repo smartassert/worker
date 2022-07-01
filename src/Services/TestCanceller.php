@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Event\JobTimeoutEvent;
-use App\Event\StepFailedEvent;
+use App\Event\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,7 +27,7 @@ class TestCanceller implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            StepFailedEvent::class => [
+            StepEvent::class => [
                 ['cancelAwaitingFromTestFailedEvent', 0],
             ],
             JobTimeoutEvent::class => [
@@ -34,8 +36,12 @@ class TestCanceller implements EventSubscriberInterface
         ];
     }
 
-    public function cancelAwaitingFromTestFailedEvent(StepFailedEvent $event): void
+    public function cancelAwaitingFromTestFailedEvent(StepEvent $event): void
     {
+        if (!(WorkerEventScope::STEP === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+            return;
+        }
+
         $this->cancelAwaiting();
     }
 

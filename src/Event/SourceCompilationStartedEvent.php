@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 
 class SourceCompilationStartedEvent extends AbstractSourceEvent
 {
-    public function getType(): WorkerEventType
+    public function __construct(string $source)
     {
-        return WorkerEventType::COMPILATION_STARTED;
+        parent::__construct($source, WorkerEventOutcome::STARTED);
     }
 }

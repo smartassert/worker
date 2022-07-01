@@ -4,39 +4,21 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
-use Symfony\Contracts\EventDispatcher\Event;
+use App\Enum\WorkerEventOutcome;
 
-class JobTimeoutEvent extends Event implements EventInterface
+class JobTimeoutEvent extends JobEvent implements EventInterface
 {
-    public function __construct(private int $jobMaximumDuration)
-    {
-    }
-
-    public function getJobMaximumDuration(): int
-    {
-        return $this->jobMaximumDuration;
+    public function __construct(
+        string $label,
+        private readonly int $jobMaximumDuration
+    ) {
+        parent::__construct($label, WorkerEventOutcome::TIME_OUT);
     }
 
     public function getPayload(): array
     {
         return [
-            'maximum_duration_in_seconds' => $this->getJobMaximumDuration(),
+            'maximum_duration_in_seconds' => $this->jobMaximumDuration,
         ];
-    }
-
-    public function getReferenceComponents(): array
-    {
-        return [];
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::JOB_TIME_OUT;
-    }
-
-    public function getRelatedReferenceSources(): array
-    {
-        return [];
     }
 }

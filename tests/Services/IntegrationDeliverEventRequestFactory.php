@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
-use App\Enum\WorkerEventType;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
@@ -19,8 +18,13 @@ class IntegrationDeliverEventRequestFactory
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
      */
-    public function create(int $identifier, WorkerEventType $type, string $reference, array $payload): RequestInterface
-    {
+    public function create(
+        int $sequenceNumber,
+        string $type,
+        string $label,
+        string $reference,
+        array $payload
+    ): RequestInterface {
         return new Request(
             'POST',
             $this->jobProperties->getEventDeliveryUrl(),
@@ -28,9 +32,10 @@ class IntegrationDeliverEventRequestFactory
                 'content-type' => 'application/json',
             ],
             (string) json_encode([
-                'label' => $this->jobProperties->getLabel(),
-                'identifier' => $identifier,
-                'type' => $type->value,
+                'job' => $this->jobProperties->getLabel(),
+                'sequence_number' => $sequenceNumber,
+                'type' => $type,
+                'label' => $label,
                 'reference' => $reference,
                 'payload' => $payload,
             ])

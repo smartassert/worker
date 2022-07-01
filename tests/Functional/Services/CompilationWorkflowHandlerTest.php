@@ -14,7 +14,6 @@ use App\Message\CompileSourceMessage;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Services\CompilationWorkflowHandler;
-use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -60,9 +59,6 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             DeliverEventMessageDispatcher::class => [
                 JobStartedEvent::class => ['dispatchForEvent'],
                 SourceCompilationPassedEvent::class => ['dispatchForEvent'],
-            ],
-            ExecutionWorkflowHandler::class => [
-                SourceCompilationPassedEvent::class => ['dispatchExecutionStartedEvent'],
             ],
         ]);
 
@@ -194,7 +190,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 ],
             ],
             JobStartedEvent::class => [
-                'event' => new JobStartedEvent([]),
+                'event' => new JobStartedEvent('job label', []),
                 'expectedQueuedMessages' => [
                     new CompileSourceMessage('Test/test1.yml'),
                     new TimeoutCheckMessage(),

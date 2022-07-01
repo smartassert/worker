@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
@@ -14,17 +14,12 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
         string $source,
         private readonly TestManifestCollection $testManifestCollection
     ) {
-        parent::__construct($source);
+        parent::__construct($source, WorkerEventOutcome::PASSED);
     }
 
     public function getTestManifestCollection(): TestManifestCollection
     {
         return $this->testManifestCollection;
-    }
-
-    public function getType(): WorkerEventType
-    {
-        return WorkerEventType::COMPILATION_PASSED;
     }
 
     public function getRelatedReferenceSources(): array

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
+use App\Event\JobEvent;
+use App\Event\TestEvent;
+use App\Exception\JobNotFoundException;
 use App\Message\JobCompletedCheckMessage;
+use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,6 +22,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         private ApplicationProgress $applicationProgress,
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
+        private JobRepository $jobRepository,
     ) {
     }
 
@@ -29,26 +32,40 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestPassedEvent::class => [
-                ['dispatchJobCompletedEvent', 0],
-            ],
-            TestFailedEvent::class => [
-                ['dispatchJobFailedEvent', 0],
+            TestEvent::class => [
+                ['dispatchJobCompletedEventForTestPassedEvent', -100],
+                ['dispatchJobFailedEventForTestFailedEvent', -100],
             ],
         ];
     }
 
-    public function dispatchJobCompletedEvent(TestPassedEvent $testEvent): void
+    /**
+     * @throws JobNotFoundException
+     */
+    public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
+            return;
+        }
+
         if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
-            $this->eventDispatcher->dispatch(new JobCompletedEvent());
+            $job = $this->jobRepository->get();
+            $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::COMPLETED));
         } else {
             $this->messageBus->dispatch(new JobCompletedCheckMessage());
         }
     }
 
-    public function dispatchJobFailedEvent(TestFailedEvent $testEvent): void
+    /**
+     * @throws JobNotFoundException
+     */
+    public function dispatchJobFailedEventForTestFailedEvent(TestEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new JobFailedEvent());
+        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+            return;
+        }
+
+        $job = $this->jobRepository->get();
+        $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::FAILED));
     }
 }

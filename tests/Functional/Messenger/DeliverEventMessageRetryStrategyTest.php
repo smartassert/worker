@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Messenger;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\Messenger\DeliverEventMessageRetryStrategy;
@@ -84,7 +85,13 @@ class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
      */
     public function getWaitingTimeDataProvider(): array
     {
-        $workerEvent = new WorkerEvent(WorkerEventType::JOB_STARTED, md5('reference source'), []);
+        $workerEvent = new WorkerEvent(
+            WorkerEventScope::JOB,
+            WorkerEventOutcome::STARTED,
+            'non-empty label',
+            md5('reference source'),
+            []
+        );
 
         return [
             'throwable is null, retry count is max minus 1' => [

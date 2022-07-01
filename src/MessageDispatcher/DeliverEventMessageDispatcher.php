@@ -4,30 +4,21 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Entity\Job;
-use App\Entity\WorkerEvent;
 use App\Event\EventInterface;
-use App\Event\ExecutionCompletedEvent;
-use App\Event\ExecutionStartedEvent;
-use App\Event\JobCompiledEvent;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
+use App\Event\ExecutionEvent;
+use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
-use App\Event\TestStartedEvent;
+use App\Event\StepEvent;
+use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Services\ReferenceFactory;
-use App\Services\ResourceReferenceFactory;
+use App\Services\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -39,9 +30,8 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private readonly MessageBusInterface $messageBus,
         private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly WorkerEventRepository $workerEventRepository,
-        private readonly ReferenceFactory $referenceFactory,
-        private readonly ResourceReferenceFactory $resourceReferenceFactory,
         private readonly JobRepository $jobRepository,
+        private readonly WorkerEventFactory $workerEventFactory,
     ) {
     }
 
@@ -52,7 +42,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     {
         return [
             JobStartedEvent::class => [
-                ['dispatchForEvent', 500],
+                ['dispatchForEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
@@ -63,37 +53,19 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobCompiledEvent::class => [
-                ['dispatchForEvent', 100],
-            ],
-            ExecutionStartedEvent::class => [
+            JobEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            ExecutionCompletedEvent::class => [
-                ['dispatchForEvent', 50],
+            ExecutionEvent::class => [
+                ['dispatchForEvent', 0],
             ],
             JobTimeoutEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobCompletedEvent::class => [
+            TestEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            TestStartedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            StepPassedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            StepFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            TestPassedEvent::class => [
-                ['dispatchForEvent', 100],
-            ],
-            TestFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            JobFailedEvent::class => [
+            StepEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];
@@ -106,32 +78,11 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
 
-        $workerEvent = $this->createWorkerEvent($job, $event);
+        $workerEvent = $this->workerEventFactory->create($job, $event);
+        $this->workerEventRepository->add($workerEvent);
+
         $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
-    }
-
-    private function createWorkerEvent(Job $job, EventInterface $event): WorkerEvent
-    {
-        $payload = $event->getPayload();
-        $relatedReferenceSources = $event->getRelatedReferenceSources();
-
-        if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
-            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
-                $job->getLabel(),
-                $relatedReferenceSources
-            );
-
-            $payload['related_references'] = $resourceReferenceCollection->toArray();
-        }
-
-        $workerEvent = new WorkerEvent(
-            $event->getType(),
-            $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
-            $payload
-        );
-
-        return $this->workerEventRepository->add($workerEvent);
     }
 }

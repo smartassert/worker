@@ -6,11 +6,10 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
+use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\JobCompletedEvent;
-use App\Event\JobFailedEvent;
-use App\Event\TestFailedEvent;
-use App\Event\TestPassedEvent;
+use App\Event\JobEvent;
+use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Test as TestDocument;
@@ -55,13 +54,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
             DeliverEventMessageDispatcher::class => [
-                TestPassedEvent::class => ['dispatchForEvent'],
-                TestFailedEvent::class => ['dispatchForEvent'],
+                TestEvent::class => ['dispatchForEvent'],
             ],
             ExecutionWorkflowHandler::class => [
-                TestPassedEvent::class => [
-                    'dispatchExecutionCompletedEvent',
-                    'dispatchNextExecuteTestMessageFromTestPassedEvent',
+                TestEvent::class => [
+                    'dispatchExecutionCompletedEventForTestPassedEvent',
+                    'dispatchNextExecuteTestMessageForTestPassedEvent',
                 ],
             ],
         ]);
@@ -83,9 +81,10 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertQueueIsEmpty();
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new TestDocument('test.yml', []),
-            \Mockery::mock(TestEntity::class)
+        $this->eventDispatcher->dispatch(new TestEvent(
+            WorkerEventOutcome::PASSED,
+            \Mockery::mock(TestEntity::class),
+            new TestDocument('test.yml', [])
         ));
 
         $this->messengerAsserter->assertQueueCount(1);
@@ -102,7 +101,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
-                    self::assertInstanceOf(JobCompletedEvent::class, $event);
+                    self::assertInstanceOf(JobEvent::class, $event);
+                    self::assertSame(WorkerEventOutcome::COMPLETED->value, $event->getOutcome()->value);
                     ++$eventExpectationCount;
 
                     return true;
@@ -130,9 +130,10 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $applicationProgress
         );
 
-        $this->eventDispatcher->dispatch(new TestPassedEvent(
-            new TestDocument('test.yml', []),
-            \Mockery::mock(TestEntity::class)
+        $this->eventDispatcher->dispatch(new TestEvent(
+            WorkerEventOutcome::PASSED,
+            \Mockery::mock(TestEntity::class),
+            new TestDocument('test.yml', [])
         ));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
@@ -145,7 +146,8 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
-                    self::assertInstanceOf(JobFailedEvent::class, $event);
+                    self::assertInstanceOf(JobEvent::class, $event);
+                    self::assertSame(WorkerEventOutcome::FAILED->value, $event->getOutcome()->value);
                     ++$eventExpectationCount;
 
                     return true;
@@ -161,7 +163,11 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $this->eventDispatcher->dispatch(new TestFailedEvent(new TestDocument('test.yml', [])));
+        $this->eventDispatcher->dispatch(new TestEvent(
+            WorkerEventOutcome::FAILED,
+            \Mockery::mock(TestEntity::class),
+            new TestDocument('test.yml', [])
+        ));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }

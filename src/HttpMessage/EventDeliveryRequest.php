@@ -16,14 +16,15 @@ class EventDeliveryRequest extends GuzzleRequest
     {
         parent::__construct(
             self::METHOD,
-            (string) $job->getEventDeliveryUrl(),
+            $job->getEventDeliveryUrl(),
             [
                 'content-type' => 'application/json',
             ],
             (string) json_encode([
-                'label' => $job->getLabel(),
-                'identifier' => $workerEvent->getId(),
-                'type' => $workerEvent->getType(),
+                'job' => $job->getLabel(),
+                'sequence_number' => $workerEvent->getId(),
+                'type' => $workerEvent->getScope()->value . '/' . $workerEvent->getOutcome()->value,
+                'label' => $workerEvent->getLabel(),
                 'reference' => $workerEvent->getReference(),
                 'payload' => $workerEvent->getPayload(),
             ])

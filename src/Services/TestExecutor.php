@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Event\StepFailedEvent;
-use App\Event\StepPassedEvent;
+use App\Enum\WorkerEventOutcome;
+use App\Event\StepEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
@@ -77,13 +77,10 @@ class TestExecutor
             $step = $this->stepFactory->create($documentData);
             $path = $this->testPathNormalizer->normalize((string) $test->getSource());
 
-            if ($step->statusIsPassed()) {
-                $this->eventDispatcher->dispatch(new StepPassedEvent($step, $path));
-            }
+            $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
+            $event = new StepEvent($eventOutcome, $step, $path, $test);
 
-            if ($step->statusIsFailed()) {
-                $this->eventDispatcher->dispatch(new StepFailedEvent($step, $path, $test));
-            }
+            $this->eventDispatcher->dispatch($event);
         }
     }
 }

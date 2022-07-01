@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
-use App\Event\StepFailedEvent;
+use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventScope;
+use App\Event\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,14 +25,18 @@ class TestStateMutator implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            StepFailedEvent::class => [
+            StepEvent::class => [
                 ['setFailedFromStepFailedEvent', 50],
             ],
         ];
     }
 
-    public function setFailedFromStepFailedEvent(StepFailedEvent $event): void
+    public function setFailedFromStepFailedEvent(StepEvent $event): void
     {
+        if (!(WorkerEventScope::STEP === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+            return;
+        }
+
         $this->setFailed($event->getTest());
     }
 
