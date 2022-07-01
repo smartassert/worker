@@ -30,6 +30,9 @@ class Step extends Document
         return $this->hasStatusValue(self::STATUS_FAILED);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;
