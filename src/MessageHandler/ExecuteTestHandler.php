@@ -76,13 +76,13 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         $testDocument = $this->testFactory->create($runnerTest->getData());
 
-        $this->eventDispatcher->dispatch(new TestEvent(WorkerEventOutcome::STARTED, $test, $testDocument));
+        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, WorkerEventOutcome::STARTED));
 
         $this->testStateMutator->setRunning($test);
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
         $eventOutcome = $test->hasState(TestState::COMPLETE) ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-        $this->eventDispatcher->dispatch(new TestEvent($eventOutcome, $test, $testDocument));
+        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $eventOutcome));
     }
 }

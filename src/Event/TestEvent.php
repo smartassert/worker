@@ -9,30 +9,28 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\Document\Test as TestDocument;
 use App\Model\ResourceReferenceSource;
-use Symfony\Contracts\EventDispatcher\Event;
 
-class TestEvent extends Event implements EventInterface
+class TestEvent extends AbstractEvent implements EventInterface
 {
     public function __construct(
-        private readonly WorkerEventOutcome $outcome,
         private readonly TestEntity $testEntity,
-        private readonly TestDocument $document
+        TestDocument $document,
+        WorkerEventOutcome $outcome
     ) {
-    }
-
-    public function getLabel(): string
-    {
-        return $this->document->getPath();
-    }
-
-    public function getScope(): WorkerEventScope
-    {
-        return WorkerEventScope::TEST;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
+        parent::__construct(
+            $document->getPath(),
+            WorkerEventScope::TEST,
+            $outcome,
+            [
+                'source' => $document->getPath(),
+                'document' => $document->getData(),
+                'step_names' => $testEntity->getStepNames(),
+            ],
+            [
+                $document->getPath(),
+            ],
+            $this->createRelatedReferenceSources($testEntity, $document)
+        );
     }
 
     public function getTest(): TestEntity
@@ -40,27 +38,14 @@ class TestEvent extends Event implements EventInterface
         return $this->testEntity;
     }
 
-    public function getPayload(): array
-    {
-        return [
-            'source' => $this->document->getPath(),
-            'document' => $this->document->getData(),
-            'step_names' => $this->testEntity->getStepNames(),
-        ];
-    }
-
-    public function getReferenceComponents(): array
-    {
-        return [
-            $this->document->getPath(),
-        ];
-    }
-
-    public function getRelatedReferenceSources(): array
+    /**
+     * @return ResourceReferenceSource[]
+     */
+    private function createRelatedReferenceSources(TestEntity $testEntity, TestDocument $testDocument): array
     {
         $referenceSources = [];
-        foreach ($this->testEntity->getStepNames() as $stepName) {
-            $referenceSources[] = new ResourceReferenceSource($stepName, [$this->document->getPath(), $stepName]);
+        foreach ($testEntity->getStepNames() as $stepName) {
+            $referenceSources[] = new ResourceReferenceSource($stepName, [$testDocument->getPath(), $stepName]);
         }
 
         return $referenceSources;

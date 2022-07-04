@@ -6,49 +6,14 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use Symfony\Contracts\EventDispatcher\Event;
 
-class ExecutionEvent extends Event implements EventInterface
+class ExecutionEvent extends AbstractEvent implements EventInterface
 {
     /**
      * @param non-empty-string $label
      */
-    public function __construct(
-        private readonly string $label,
-        private readonly WorkerEventOutcome $outcome
-    ) {
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
+    public function __construct(string $label, WorkerEventOutcome $outcome)
     {
-        return $this->label;
-    }
-
-    public function getPayload(): array
-    {
-        return [];
-    }
-
-    public function getReferenceComponents(): array
-    {
-        return [];
-    }
-
-    public function getScope(): WorkerEventScope
-    {
-        return WorkerEventScope::EXECUTION;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
-    public function getRelatedReferenceSources(): array
-    {
-        return [];
+        parent::__construct($label, WorkerEventScope::EXECUTION, $outcome, [], [], []);
     }
 }

@@ -6,49 +6,30 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use Symfony\Contracts\EventDispatcher\Event;
+use App\Model\ResourceReferenceSource;
 
-class JobEvent extends Event implements EventInterface
+class JobEvent extends AbstractEvent implements EventInterface
 {
     /**
-     * @param non-empty-string $label
+     * @param non-empty-string          $label
+     * @param array<mixed>              $payload
+     * @param string[]                  $referenceComponents
+     * @param ResourceReferenceSource[] $relatedReferenceSources
      */
     public function __construct(
-        private readonly string $label,
-        private readonly WorkerEventOutcome $outcome,
+        string $label,
+        WorkerEventOutcome $outcome,
+        array $payload = [],
+        array $referenceComponents = [],
+        array $relatedReferenceSources = []
     ) {
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    public function getPayload(): array
-    {
-        return [];
-    }
-
-    public function getReferenceComponents(): array
-    {
-        return [];
-    }
-
-    public function getScope(): WorkerEventScope
-    {
-        return WorkerEventScope::JOB;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
-    public function getRelatedReferenceSources(): array
-    {
-        return [];
+        parent::__construct(
+            $label,
+            WorkerEventScope::JOB,
+            $outcome,
+            $payload,
+            $referenceComponents,
+            $relatedReferenceSources
+        );
     }
 }

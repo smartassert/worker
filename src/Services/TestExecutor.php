@@ -78,7 +78,7 @@ class TestExecutor
             $path = $this->testPathNormalizer->normalize((string) $test->getSource());
 
             $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-            $event = new StepEvent($eventOutcome, $step, $path, $test);
+            $event = new StepEvent($test, $step, $path, $eventOutcome);
 
             $this->eventDispatcher->dispatch($event);
         }

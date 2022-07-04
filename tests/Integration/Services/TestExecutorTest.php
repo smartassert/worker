@@ -8,7 +8,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\StepEvent;
-use App\Model\Document\Step;
 use App\Services\Compiler;
 use App\Services\TestExecutor;
 use App\Services\TestFactory;
@@ -96,33 +95,32 @@ class TestExecutorTest extends AbstractTestCreationTest
                             self::assertSame(WorkerEventScope::STEP, $event->getScope());
                             self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
-                            $expectedDocument = new Step(
-                                'verify page is open',
+                            self::assertSame(
                                 [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                                'transformations' => [
-                                                    [
-                                                        'type' => 'resolution',
-                                                        'source' => '$page.url is $index.url',
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                    'transformations' => [
+                                                        [
+                                                            'type' => 'resolution',
+                                                            'source' => '$page.url is $index.url',
+                                                        ],
                                                     ],
                                                 ],
                                             ],
                                         ],
                                     ],
-                                ]
-                            );
-
-                            self::assertEquals(
-                                $expectedDocument,
-                                ObjectReflector::getProperty($event, 'step', StepEvent::class)
+                                    'name' => 'verify page is open',
+                                ],
+                                $event->getPayload()
                             );
 
                             return true;
@@ -142,27 +140,26 @@ class TestExecutorTest extends AbstractTestCreationTest
                             self::assertSame(WorkerEventScope::STEP, $event->getScope());
                             self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
-                            $expectedDocument = new Step(
-                                'verify page is open',
+                            self::assertSame(
                                 [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
+                                    'source' => 'Test/firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
                                             ],
                                         ],
                                     ],
-                                ]
-                            );
-
-                            self::assertEquals(
-                                $expectedDocument,
-                                ObjectReflector::getProperty($event, 'step', StepEvent::class)
+                                    'name' => 'verify page is open',
+                                ],
+                                $event->getPayload()
                             );
 
                             return true;
@@ -182,27 +179,26 @@ class TestExecutorTest extends AbstractTestCreationTest
                             self::assertSame(WorkerEventScope::STEP, $event->getScope());
                             self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
-                            $expectedDocument = new Step(
-                                'verify page is open',
+                            self::assertSame(
                                 [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
                                             ],
                                         ],
                                     ],
-                                ]
-                            );
-
-                            self::assertEquals(
-                                $expectedDocument,
-                                ObjectReflector::getProperty($event, 'step', StepEvent::class)
+                                    'name' => 'verify page is open',
+                                ],
+                                $event->getPayload()
                             );
 
                             return true;
@@ -214,27 +210,26 @@ class TestExecutorTest extends AbstractTestCreationTest
                             self::assertSame(WorkerEventScope::STEP, $event->getScope());
                             self::assertSame(WorkerEventOutcome::PASSED, $event->getOutcome());
 
-                            $expectedDocument = new Step(
-                                'verify page is open',
+                            self::assertSame(
                                 [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
                                             ],
                                         ],
                                     ],
-                                ]
-                            );
-
-                            self::assertEquals(
-                                $expectedDocument,
-                                ObjectReflector::getProperty($event, 'step', StepEvent::class)
+                                    'name' => 'verify page is open',
+                                ],
+                                $event->getPayload()
                             );
 
                             return true;

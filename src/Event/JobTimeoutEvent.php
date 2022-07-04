@@ -12,13 +12,8 @@ class JobTimeoutEvent extends JobEvent implements EventInterface
         string $label,
         private readonly int $jobMaximumDuration
     ) {
-        parent::__construct($label, WorkerEventOutcome::TIME_OUT);
-    }
-
-    public function getPayload(): array
-    {
-        return [
+        parent::__construct($label, WorkerEventOutcome::TIME_OUT, [
             'maximum_duration_in_seconds' => $this->jobMaximumDuration,
-        ];
+        ]);
     }
 }
