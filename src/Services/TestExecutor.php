@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Enum\WorkerEventOutcome;
-use App\Event\StepEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
-use App\Model\Document\Document;
-use App\Services\DocumentFactory\StepFactory;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -24,9 +19,7 @@ class TestExecutor
     public function __construct(
         private readonly Client $delegatorClient,
         private readonly Factory $yamlDocumentFactory,
-        private EventDispatcherInterface $eventDispatcher,
-        private readonly StepFactory $stepFactory,
-        private readonly string $compilerTargetDirectory,
+        private readonly TestProgressHandler $testProgressHandler,
     ) {
     }
 
@@ -48,7 +41,7 @@ class TestExecutor
         ;
 
         $this->yamlDocumentFactory->reset(function (YamlDocument $document) use ($test) {
-            $this->dispatchStepProgressEvent($test, $document);
+            $this->testProgressHandler->handle($test, $document);
         });
 
         $this->delegatorClient->request(
@@ -61,25 +54,5 @@ class TestExecutor
         );
 
         $this->yamlDocumentFactory->stop();
-    }
-
-    /**
-     * @throws InvalidDocumentException
-     * @throws InvalidStepException
-     */
-    private function dispatchStepProgressEvent(Test $test, YamlDocument $yamlDocument): void
-    {
-        $documentData = $yamlDocument->parse();
-        $documentData = is_array($documentData) ? $documentData : [];
-        $document = new Document($documentData);
-
-        if ('step' === $document->getType()) {
-            $step = $this->stepFactory->create($documentData);
-
-            $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-            $event = new StepEvent($test, $step, $test->getSource(), $eventOutcome);
-
-            $this->eventDispatcher->dispatch($event);
-        }
     }
 }
