@@ -36,10 +36,6 @@ class StepFactory implements DocumentFactoryInterface
             return new Step($name, $data);
         }
 
-        throw new InvalidDocumentException(
-            $data,
-            sprintf('Type "%s" is not "step"', $type),
-            InvalidDocumentException::CODE_TYPE_INVALID
-        );
+        throw InvalidDocumentException::createForInvalidType($data, $type, 'step');
     }
 }

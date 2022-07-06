@@ -30,10 +30,6 @@ class ExceptionFactory implements DocumentFactoryInterface
             );
         }
 
-        throw new InvalidDocumentException(
-            $data,
-            sprintf('Type "%s" is not "exception"', $type),
-            InvalidDocumentException::CODE_TYPE_INVALID
-        );
+        throw InvalidDocumentException::createForInvalidType($data, $type, 'exception');
     }
 }
