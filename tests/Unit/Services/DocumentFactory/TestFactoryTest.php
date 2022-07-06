@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\DocumentFactory;
 
-use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Test;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
@@ -14,19 +13,6 @@ use App\Services\TestPathNormalizer;
 class TestFactoryTest extends AbstractDocumentFactoryTest
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
-
-    /**
-     * @dataProvider createInvalidTypeDataProvider
-     *
-     * @param array<mixed> $data
-     */
-    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
-    {
-        $this->expectException(InvalidDocumentException::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
-
-        $this->factory->create($data);
-    }
 
     /**
      * @return array<mixed>

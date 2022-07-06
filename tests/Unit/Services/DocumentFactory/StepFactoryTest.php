@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\DocumentFactory;
 
-use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Step;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
@@ -12,19 +11,6 @@ use App\Services\DocumentFactory\StepFactory;
 
 class StepFactoryTest extends AbstractDocumentFactoryTest
 {
-    /**
-     * @dataProvider createInvalidTypeDataProvider
-     *
-     * @param array<mixed> $data
-     */
-    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
-    {
-        $this->expectException(InvalidDocumentException::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
-
-        $this->factory->create($data);
-    }
-
     /**
      * @return array<mixed>
      */

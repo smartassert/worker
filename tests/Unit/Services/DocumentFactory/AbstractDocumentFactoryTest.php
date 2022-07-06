@@ -26,6 +26,16 @@ abstract class AbstractDocumentFactoryTest extends TestCase
     abstract public function createDataProvider(): array;
 
     /**
+     * @dataProvider createDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreate(array $data, Document $expected): void
+    {
+        self::assertEquals($expected, $this->factory->create($data));
+    }
+
+    /**
      * @dataProvider createEmptyTypeDataProvider
      *
      * @param array<mixed> $data
@@ -60,14 +70,22 @@ abstract class AbstractDocumentFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createDataProvider
+     * @dataProvider createInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreate(array $data, Document $expected): void
+    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
     {
-        self::assertEquals($expected, $this->factory->create($data));
+        $this->expectException(InvalidDocumentException::class);
+        $this->expectExceptionMessage($expectedExceptionMessage);
+
+        $this->factory->create($data);
     }
+
+    /**
+     * @return array<mixed>
+     */
+    abstract public function createInvalidTypeDataProvider(): array;
 
     abstract protected function createFactory(): DocumentFactoryInterface;
 }

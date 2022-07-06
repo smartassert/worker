@@ -5,26 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Services\DocumentFactory;
 
 use App\Enum\ExecutionExceptionScope;
-use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Exception;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\ExceptionFactory;
 
 class ExceptionFactoryTest extends AbstractDocumentFactoryTest
 {
-    /**
-     * @dataProvider createInvalidTypeDataProvider
-     *
-     * @param array<mixed> $data
-     */
-    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
-    {
-        $this->expectException(InvalidDocumentException::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
-
-        $this->factory->create($data);
-    }
-
     /**
      * @return array<mixed>
      */
