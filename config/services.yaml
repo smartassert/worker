@@ -50,6 +50,7 @@ services:
     App\Services\TestPathNormalizer:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
+            $compilerTargetDirectory: '%compiler_target_directory%'
 
     webignition\TcpCliProxyClient\HandlerFactory:
         class: webignition\TcpCliProxyClient\HandlerFactory

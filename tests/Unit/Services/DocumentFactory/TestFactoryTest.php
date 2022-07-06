@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 class TestFactoryTest extends TestCase
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
+    private const COMPILER_TARGET_DIRECTORY = '/app/target';
 
     private TestFactory $factory;
 
@@ -22,7 +23,10 @@ class TestFactoryTest extends TestCase
         parent::setUp();
 
         $this->factory = new TestFactory(
-            new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY)
+            new TestPathNormalizer(
+                self::COMPILER_SOURCE_DIRECTORY,
+                self::COMPILER_TARGET_DIRECTORY
+            )
         );
     }
 

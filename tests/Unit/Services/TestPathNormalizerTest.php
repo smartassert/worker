@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 class TestPathNormalizerTest extends TestCase
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
+    private const COMPILER_TARGET_DIRECTORY = '/app/target';
 
     private TestPathNormalizer $normalizer;
 
@@ -17,7 +18,10 @@ class TestPathNormalizerTest extends TestCase
     {
         parent::setUp();
 
-        $this->normalizer = new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY);
+        $this->normalizer = new TestPathNormalizer(
+            self::COMPILER_SOURCE_DIRECTORY,
+            self::COMPILER_TARGET_DIRECTORY
+        );
     }
 
     /**
@@ -33,8 +37,11 @@ class TestPathNormalizerTest extends TestCase
      */
     public function normalizeDataProvider(): array
     {
-        $relativePath = 'Test/test.yml';
-        $compilerSourceAbsolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $relativePath;
+        $sourceRelativePath = 'Test/test.yml';
+        $targetRelativePath = 'GeneratedTest1234.php';
+
+        $compilerSourceAbsolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $sourceRelativePath;
+        $compilerTargetAbsolutePath = self::COMPILER_TARGET_DIRECTORY . '/' . $targetRelativePath;
 
         return [
             'empty' => [
@@ -42,12 +49,20 @@ class TestPathNormalizerTest extends TestCase
                 'expectedPath' => '',
             ],
             'without prefixed path' => [
-                'path' => $relativePath,
-                'expectedPath' => $relativePath,
+                'path' => $sourceRelativePath,
+                'expectedPath' => $sourceRelativePath,
             ],
-            'with prefixed path' => [
+            'with source-prefixed path' => [
                 'path' => $compilerSourceAbsolutePath,
-                'expectedPath' => $relativePath,
+                'expectedPath' => $sourceRelativePath,
+            ],
+            'with target-prefixed path' => [
+                'path' => $compilerTargetAbsolutePath,
+                'expectedPath' => $targetRelativePath,
+            ],
+            'with source-prefixed and target-prefixed path' => [
+                'path' => self::COMPILER_SOURCE_DIRECTORY . '/' . self::COMPILER_TARGET_DIRECTORY . $sourceRelativePath,
+                'expectedPath' => self::COMPILER_TARGET_DIRECTORY . $sourceRelativePath,
             ],
         ];
     }

@@ -10,6 +10,7 @@ class TestPathNormalizer
 {
     public function __construct(
         private readonly string $compilerSourceDirectory,
+        private readonly string $compilerTargetDirectory,
     ) {
     }
 
@@ -17,6 +18,16 @@ class TestPathNormalizer
     {
         $path = trim($path);
 
-        return (string) (new UnicodeString($path))->trimPrefix($this->compilerSourceDirectory . '/');
+        $normalizedPath = $this->trimPrefix($path, $this->compilerSourceDirectory);
+        if ($path !== $normalizedPath) {
+            return $normalizedPath;
+        }
+
+        return $this->trimPrefix($path, $this->compilerTargetDirectory);
+    }
+
+    private function trimPrefix(string $path, string $prefix): string
+    {
+        return (string) (new UnicodeString($path))->trimPrefix($prefix . '/');
     }
 }
