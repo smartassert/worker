@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use Symfony\Component\String\UnicodeString;
 
 class TestSerializer
 {
     public function __construct(
-        private string $compilerSourceDirectory,
-        private string $compilerTargetDirectory,
+        private readonly TestPathNormalizer $testPathNormalizer,
     ) {
     }
 
@@ -41,12 +39,8 @@ class TestSerializer
         return [
             'browser' => $test->getBrowser(),
             'url' => $test->getUrl(),
-            'source' => (string) (new UnicodeString((string) $test->getSource()))->trimPrefix(
-                $this->compilerSourceDirectory . '/'
-            ),
-            'target' => (string) (new UnicodeString((string) $test->getTarget()))->trimPrefix(
-                $this->compilerTargetDirectory . '/'
-            ),
+            'source' => $this->testPathNormalizer->normalize($test->getSource()),
+            'target' => $this->testPathNormalizer->normalize($test->getTarget()),
             'step_names' => $test->getStepNames(),
             'state' => $test->getState()->value,
             'position' => $test->getPosition(),
