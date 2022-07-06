@@ -10,6 +10,10 @@ class TestSetup
 {
     private string $browser;
     private string $url;
+
+    /**
+     * @var non-empty-string
+     */
     private string $source;
     private string $target;
 
@@ -40,6 +44,9 @@ class TestSetup
         return $this->url;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getSource(): string
     {
         return $this->source;
@@ -63,6 +70,9 @@ class TestSetup
         return $this->state;
     }
 
+    /**
+     * @param non-empty-string $source
+     */
     public function withSource(string $source): self
     {
         $new = clone $this;
