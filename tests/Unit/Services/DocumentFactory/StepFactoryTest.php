@@ -60,6 +60,10 @@ class StepFactoryTest extends TestCase
                 'data' => ['type' => 'test'],
                 'expectedExceptionMessage' => 'Type "test" is not "step"',
             ],
+            'type is not step: exception' => [
+                'data' => ['type' => 'exception'],
+                'expectedExceptionMessage' => 'Type "exception" is not "step"',
+            ],
             'type is not step: invalid' => [
                 'data' => ['type' => 'invalid'],
                 'expectedExceptionMessage' => 'Type "invalid" is not "step"',
