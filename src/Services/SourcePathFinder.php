@@ -46,7 +46,7 @@ class SourcePathFinder
 
         foreach ($paths as $path) {
             if (is_string($path)) {
-                $strippedPaths[] = $this->testPathNormalizer->normalize($path);
+                $strippedPaths[] = $this->testPathNormalizer->removeCompilerSourcePrefix($path);
             }
         }
 

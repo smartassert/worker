@@ -75,7 +75,7 @@ class TestExecutor
 
         if ('step' === $document->getType()) {
             $step = $this->stepFactory->create($documentData);
-            $path = $this->testPathNormalizer->normalize((string) $test->getSource());
+            $path = $this->testPathNormalizer->removeCompilerSourcePrefix($test->getSource());
 
             $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
             $event = new StepEvent($test, $step, $path, $eventOutcome);

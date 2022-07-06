@@ -25,23 +25,20 @@ class TestPathNormalizerTest extends TestCase
     }
 
     /**
-     * @dataProvider normalizeDataProvider
+     * @dataProvider removeCompilerSourcePrefixDataProvider
      */
-    public function testNormalize(string $path, string $expectedPath): void
+    public function testRemoveCompilerSourcePrefix(string $path, string $expectedPath): void
     {
-        self::assertEquals($expectedPath, $this->normalizer->normalize($path));
+        self::assertEquals($expectedPath, $this->normalizer->removeCompilerSourcePrefix($path));
     }
 
     /**
      * @return array<mixed>
      */
-    public function normalizeDataProvider(): array
+    public function removeCompilerSourcePrefixDataProvider(): array
     {
-        $sourceRelativePath = 'Test/test.yml';
-        $targetRelativePath = 'GeneratedTest1234.php';
-
-        $compilerSourceAbsolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $sourceRelativePath;
-        $compilerTargetAbsolutePath = self::COMPILER_TARGET_DIRECTORY . '/' . $targetRelativePath;
+        $relativePath = 'Test/test.yml';
+        $absolutePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $relativePath;
 
         return [
             'empty' => [
@@ -49,20 +46,44 @@ class TestPathNormalizerTest extends TestCase
                 'expectedPath' => '',
             ],
             'without prefixed path' => [
-                'path' => $sourceRelativePath,
-                'expectedPath' => $sourceRelativePath,
+                'path' => $relativePath,
+                'expectedPath' => $relativePath,
             ],
             'with source-prefixed path' => [
-                'path' => $compilerSourceAbsolutePath,
-                'expectedPath' => $sourceRelativePath,
+                'path' => $absolutePath,
+                'expectedPath' => $relativePath,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider removeCompilerTargetPrefixDataProvider
+     */
+    public function testRemoveCompilerTargetPrefix(string $path, string $expectedPath): void
+    {
+        self::assertEquals($expectedPath, $this->normalizer->removeCompilerTargetPrefix($path));
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function removeCompilerTargetPrefixDataProvider(): array
+    {
+        $relativePath = 'GeneratedTest1234.php';
+        $absolutePath = self::COMPILER_TARGET_DIRECTORY . '/' . $relativePath;
+
+        return [
+            'empty' => [
+                'path' => '',
+                'expectedPath' => '',
+            ],
+            'without prefixed path' => [
+                'path' => $relativePath,
+                'expectedPath' => $relativePath,
             ],
             'with target-prefixed path' => [
-                'path' => $compilerTargetAbsolutePath,
-                'expectedPath' => $targetRelativePath,
-            ],
-            'with source-prefixed and target-prefixed path' => [
-                'path' => self::COMPILER_SOURCE_DIRECTORY . '/' . self::COMPILER_TARGET_DIRECTORY . $sourceRelativePath,
-                'expectedPath' => self::COMPILER_TARGET_DIRECTORY . $sourceRelativePath,
+                'path' => $absolutePath,
+                'expectedPath' => $relativePath,
             ],
         ];
     }

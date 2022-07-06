@@ -39,8 +39,8 @@ class TestSerializer
         return [
             'browser' => $test->getBrowser(),
             'url' => $test->getUrl(),
-            'source' => $this->testPathNormalizer->normalize($test->getSource()),
-            'target' => $this->testPathNormalizer->normalize($test->getTarget()),
+            'source' => $this->testPathNormalizer->removeCompilerSourcePrefix($test->getSource()),
+            'target' => $this->testPathNormalizer->removeCompilerTargetPrefix($test->getTarget()),
             'step_names' => $test->getStepNames(),
             'state' => $test->getState()->value,
             'position' => $test->getPosition(),

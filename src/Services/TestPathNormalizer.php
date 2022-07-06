@@ -26,6 +26,20 @@ class TestPathNormalizer
         return $this->trimPrefix($path, $this->compilerTargetDirectory);
     }
 
+    public function removeCompilerSourcePrefix(string $path): string
+    {
+        $path = trim($path);
+
+        return $this->trimPrefix($path, $this->compilerSourceDirectory);
+    }
+
+    public function removeCompilerTargetPrefix(string $path): string
+    {
+        $path = trim($path);
+
+        return $this->trimPrefix($path, $this->compilerTargetDirectory);
+    }
+
     private function trimPrefix(string $path, string $prefix): string
     {
         return (string) (new UnicodeString($path))->trimPrefix($prefix . '/');
