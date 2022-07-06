@@ -166,7 +166,14 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
 
-        $genericTest = new Test($testConfigurationBrowser, $testConfigurationUrl, $testSource, '', ['step 1'], 1);
+        $genericTest = new Test(
+            $testConfigurationBrowser,
+            $testConfigurationUrl,
+            $testSource,
+            '/app/target/GeneratedTest1234.php',
+            ['step 1'],
+            1
+        );
 
         $testDocumentData = [
             'type' => 'test',

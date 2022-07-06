@@ -31,6 +31,9 @@ class Test
     #[ORM\Column(type: 'text')]
     private string $source;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(type: 'text')]
     private string $target;
 
@@ -45,6 +48,7 @@ class Test
 
     /**
      * @param non-empty-string   $source
+     * @param non-empty-string   $target
      * @param non-empty-string[] $stepNames
      */
     public function __construct(
@@ -104,7 +108,10 @@ class Test
         return $this->source;
     }
 
-    public function getTarget(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getTarget(): string
     {
         return $this->target;
     }
