@@ -15,8 +15,8 @@ class TestTest extends TestCase
         $test = new Test(
             '',
             '',
-            'test.yml',
-            '',
+            '/app/source/test.yml',
+            '/app/target/GeneratedTest1234.php',
             ['step 1'],
             0
         );

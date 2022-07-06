@@ -57,6 +57,7 @@ class TestFactory implements EventSubscriberInterface
 
     /**
      * @param non-empty-string   $source
+     * @param non-empty-string   $target
      * @param non-empty-string[] $stepNames
      */
     public function create(

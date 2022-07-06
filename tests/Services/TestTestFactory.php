@@ -27,6 +27,7 @@ class TestTestFactory
 
         $target = $testSetup->getTarget();
         $target = str_replace('{{ compiler_target_directory }}', $this->compilerTargetDirectory, $target);
+        \assert('' !== $target);
 
         $test = $this->testFactory->create(
             $testSetup->getBrowser(),
