@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Services\DocumentFactory;
 
-use App\Enum\ExecutionExceptionScope;
 use App\Exception\Document\InvalidDocumentException;
-use App\Model\Document\Exception;
+use App\Model\Document\Document;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -20,6 +19,11 @@ abstract class AbstractDocumentFactoryTest extends TestCase
 
         $this->factory = $this->createFactory();
     }
+
+    /**
+     * @return array<mixed>
+     */
+    abstract public function createDataProvider(): array;
 
     /**
      * @dataProvider createEmptyTypeDataProvider
@@ -55,70 +59,15 @@ abstract class AbstractDocumentFactoryTest extends TestCase
         ];
     }
 
-    abstract protected function createFactory(): DocumentFactoryInterface;
+    /**
+     * @dataProvider createDataProvider
+     *
+     * @param array<mixed> $data
+     */
+    public function testCreate(array $data, Document $expected): void
+    {
+        self::assertEquals($expected, $this->factory->create($data));
+    }
 
-//    /**
-//     * @dataProvider createProvider
-//     *
-//     * @param array<mixed> $data
-//     */
-//    public function testCreate(array $data, Exception $expected): void
-//    {
-//        self::assertEquals($expected, $this->factory->create($data));
-//    }
-//
-//    /**
-//     * @return array<mixed>
-//     */
-//    public function createProvider(): array
-//    {
-//        return [
-//            'test-scope exception' => [
-//                'data' => [
-//                    'type' => 'exception',
-//                    'payload' => [
-//                        'step' => null,
-//                        'class' => self::class,
-//                        'message' => 'test-scope exception message',
-//                        'code' => 123,
-//                    ],
-//                ],
-//                'expected' => new Exception(
-//                    ExecutionExceptionScope::TEST,
-//                    [
-//                        'type' => 'exception',
-//                        'payload' => [
-//                            'step' => null,
-//                            'class' => self::class,
-//                            'message' => 'test-scope exception message',
-//                            'code' => 123,
-//                        ],
-//                    ]
-//                ),
-//            ],
-//            'step-scope exception' => [
-//                'data' => [
-//                    'type' => 'exception',
-//                    'payload' => [
-//                        'step' => 'step name',
-//                        'class' => self::class,
-//                        'message' => 'step-scope exception message',
-//                        'code' => 456,
-//                    ],
-//                ],
-//                'expected' => new Exception(
-//                    ExecutionExceptionScope::STEP,
-//                    [
-//                        'type' => 'exception',
-//                        'payload' => [
-//                            'step' => 'step name',
-//                            'class' => self::class,
-//                            'message' => 'step-scope exception message',
-//                            'code' => 456,
-//                        ],
-//                    ]
-//                ),
-//            ],
-//        ];
-//    }
+    abstract protected function createFactory(): DocumentFactoryInterface;
 }

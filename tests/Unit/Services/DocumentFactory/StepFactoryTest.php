@@ -82,16 +82,6 @@ class StepFactoryTest extends AbstractDocumentFactoryTest
     }
 
     /**
-     * @dataProvider createDataProvider
-     *
-     * @param array<mixed> $data
-     */
-    public function testCreate(array $data, Step $expected): void
-    {
-        self::assertEquals($expected, $this->factory->create($data));
-    }
-
-    /**
      * @return array<mixed>
      */
     public function createDataProvider(): array

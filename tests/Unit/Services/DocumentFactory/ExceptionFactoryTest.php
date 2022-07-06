@@ -47,19 +47,9 @@ class ExceptionFactoryTest extends AbstractDocumentFactoryTest
     }
 
     /**
-     * @dataProvider createProvider
-     *
-     * @param array<mixed> $data
-     */
-    public function testCreate(array $data, Exception $expected): void
-    {
-        self::assertEquals($expected, $this->factory->create($data));
-    }
-
-    /**
      * @return array<mixed>
      */
-    public function createProvider(): array
+    public function createDataProvider(): array
     {
         return [
             'test-scope exception' => [

@@ -85,20 +85,6 @@ class TestFactoryTest extends AbstractDocumentFactoryTest
     }
 
     /**
-     * @dataProvider createDataProvider
-     *
-     * @param array<mixed> $data
-     *
-     * @throws InvalidDocumentException
-     */
-    public function testCreate(array $data, Test $expected): void
-    {
-        $document = $this->factory->create($data);
-
-        self::assertEquals($expected, $document);
-    }
-
-    /**
      * @return array<mixed>
      */
     public function createDataProvider(): array
