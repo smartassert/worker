@@ -19,4 +19,16 @@ class InvalidDocumentException extends \Exception
     ) {
         parent::__construct($message, $code);
     }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function createForInvalidType(array $data, string $type, string $expectedType): self
+    {
+        return new InvalidDocumentException(
+            $data,
+            sprintf('Type "%s" is not "%s"', $type, $expectedType),
+            InvalidDocumentException::CODE_TYPE_INVALID
+        );
+    }
 }

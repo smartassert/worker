@@ -9,7 +9,7 @@ use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 
-class StepFactory
+class StepFactory implements DocumentFactoryInterface
 {
     /**
      * @param array<mixed> $data
@@ -36,10 +36,6 @@ class StepFactory
             return new Step($name, $data);
         }
 
-        throw new InvalidDocumentException(
-            $data,
-            sprintf('Type "%s" is not "step"', $type),
-            InvalidDocumentException::CODE_TYPE_INVALID
-        );
+        throw InvalidDocumentException::createForInvalidType($data, $type, 'step');
     }
 }

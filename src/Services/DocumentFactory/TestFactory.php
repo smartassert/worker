@@ -10,7 +10,7 @@ use App\Model\Document\Document;
 use App\Model\Document\Test;
 use App\Services\TestPathNormalizer;
 
-class TestFactory
+class TestFactory implements DocumentFactoryInterface
 {
     public function __construct(
         private readonly TestPathNormalizer $testPathNormalizer,
@@ -48,10 +48,6 @@ class TestFactory
             return new Test($path, $data);
         }
 
-        throw new InvalidDocumentException(
-            $data,
-            sprintf('Type "%s" is not "test"', $type),
-            InvalidDocumentException::CODE_TYPE_INVALID
-        );
+        throw InvalidDocumentException::createForInvalidType($data, $type, 'test');
     }
 }
