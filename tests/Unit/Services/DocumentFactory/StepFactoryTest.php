@@ -7,26 +7,17 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Step;
+use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\StepFactory;
-use PHPUnit\Framework\TestCase;
 
-class StepFactoryTest extends TestCase
+class StepFactoryTest extends AbstractDocumentFactoryTest
 {
-    private StepFactory $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->factory = new StepFactory();
-    }
-
     /**
-     * @dataProvider createStepInvalidTypeDataProvider
+     * @dataProvider createInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateStepInvalidType(array $data, string $expectedExceptionMessage): void
+    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
     {
         $this->expectException(InvalidDocumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
@@ -37,25 +28,9 @@ class StepFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createStepInvalidTypeDataProvider(): array
+    public function createInvalidTypeDataProvider(): array
     {
         return [
-            'no data' => [
-                'data' => [],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type not present' => [
-                'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type is empty' => [
-                'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type is whitespace-only' => [
-                'data' => ['type' => '  '],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
             'type is not step: test' => [
                 'data' => ['type' => 'test'],
                 'expectedExceptionMessage' => 'Type "test" is not "step"',
@@ -72,11 +47,11 @@ class StepFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createStepInvalidStepDataProvider
+     * @dataProvider createInvalidStepDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateStepInvalidStep(array $data, InvalidStepException $expected): void
+    public function testCreateInvalidStep(array $data, InvalidStepException $expected): void
     {
         self::expectExceptionObject($expected);
 
@@ -86,7 +61,7 @@ class StepFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createStepInvalidStepDataProvider(): array
+    public function createInvalidStepDataProvider(): array
     {
         return [
             'name missing' => [
@@ -107,11 +82,11 @@ class StepFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createStepDataProvider
+     * @dataProvider createDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateStep(array $data, Step $expected): void
+    public function testCreate(array $data, Step $expected): void
     {
         self::assertEquals($expected, $this->factory->create($data));
     }
@@ -119,7 +94,7 @@ class StepFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createStepDataProvider(): array
+    public function createDataProvider(): array
     {
         return [
             'step' => [
@@ -140,5 +115,10 @@ class StepFactoryTest extends TestCase
                 ),
             ],
         ];
+    }
+
+    protected function createFactory(): DocumentFactoryInterface
+    {
+        return new StepFactory();
     }
 }

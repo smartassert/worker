@@ -7,26 +7,17 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 use App\Enum\ExecutionExceptionScope;
 use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Exception;
+use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\ExceptionFactory;
-use PHPUnit\Framework\TestCase;
 
-class ExceptionFactoryTest extends TestCase
+class ExceptionFactoryTest extends AbstractDocumentFactoryTest
 {
-    private ExceptionFactory $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->factory = new ExceptionFactory();
-    }
-
     /**
-     * @dataProvider createStepInvalidTypeDataProvider
+     * @dataProvider createInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateStepInvalidType(array $data, string $expectedExceptionMessage): void
+    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
     {
         $this->expectException(InvalidDocumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
@@ -37,25 +28,9 @@ class ExceptionFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createStepInvalidTypeDataProvider(): array
+    public function createInvalidTypeDataProvider(): array
     {
         return [
-            'no data' => [
-                'data' => [],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type not present' => [
-                'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type is empty' => [
-                'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type is whitespace-only' => [
-                'data' => ['type' => '  '],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
             'type is not exception: test' => [
                 'data' => ['type' => 'test'],
                 'expectedExceptionMessage' => 'Type "test" is not "exception"',
@@ -134,5 +109,10 @@ class ExceptionFactoryTest extends TestCase
                 ),
             ],
         ];
+    }
+
+    protected function createFactory(): DocumentFactoryInterface
+    {
+        return new ExceptionFactory();
     }
 }

@@ -10,7 +10,7 @@ use App\Model\Document\Document;
 use App\Model\Document\Test;
 use App\Services\TestPathNormalizer;
 
-class TestFactory
+class TestFactory implements DocumentFactoryInterface
 {
     public function __construct(
         private readonly TestPathNormalizer $testPathNormalizer,

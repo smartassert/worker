@@ -9,7 +9,7 @@ use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 
-class StepFactory
+class StepFactory implements DocumentFactoryInterface
 {
     /**
      * @param array<mixed> $data

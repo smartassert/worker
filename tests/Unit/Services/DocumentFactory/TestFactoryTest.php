@@ -7,31 +7,20 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidTestException;
 use App\Model\Document\Test;
+use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\TestFactory;
 use App\Services\TestPathNormalizer;
-use PHPUnit\Framework\TestCase;
 
-class TestFactoryTest extends TestCase
+class TestFactoryTest extends AbstractDocumentFactoryTest
 {
     private const COMPILER_SOURCE_DIRECTORY = '/app/source';
 
-    private TestFactory $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->factory = new TestFactory(
-            new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY)
-        );
-    }
-
     /**
-     * @dataProvider createTestInvalidTypeDataProvider
+     * @dataProvider createInvalidTypeDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateTestInvalidType(array $data, string $expectedExceptionMessage): void
+    public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
     {
         $this->expectException(InvalidDocumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
@@ -42,21 +31,9 @@ class TestFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createTestInvalidTypeDataProvider(): array
+    public function createInvalidTypeDataProvider(): array
     {
         return [
-            'no data' => [
-                'data' => [],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type not present' => [
-                'data' => ['key1' => 'value1', 'key2' => 'value2'],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
-            'type is empty' => [
-                'data' => ['type' => ''],
-                'expectedExceptionMessage' => 'Type empty',
-            ],
             'type is not test: step' => [
                 'data' => ['type' => 'step'],
                 'expectedExceptionMessage' => 'Type "step" is not "test"',
@@ -73,11 +50,11 @@ class TestFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createTestInvalidTestDataProvider
+     * @dataProvider createInvalidTestDataProvider
      *
      * @param array<mixed> $data
      */
-    public function testCreateTestInvalidTest(array $data, InvalidTestException $expected): void
+    public function testCreateInvalidTest(array $data, InvalidTestException $expected): void
     {
         self::expectExceptionObject($expected);
 
@@ -87,7 +64,7 @@ class TestFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createTestInvalidTestDataProvider(): array
+    public function createInvalidTestDataProvider(): array
     {
         return [
             'path missing' => [
@@ -108,13 +85,13 @@ class TestFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider createTestDataProvider
+     * @dataProvider createDataProvider
      *
      * @param array<mixed> $data
      *
      * @throws InvalidDocumentException
      */
-    public function testCreateTest(array $data, Test $expected): void
+    public function testCreate(array $data, Test $expected): void
     {
         $document = $this->factory->create($data);
 
@@ -124,7 +101,7 @@ class TestFactoryTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createTestDataProvider(): array
+    public function createDataProvider(): array
     {
         $transformedPath = 'Test/test.yml';
         $transformablePath = self::COMPILER_SOURCE_DIRECTORY . '/' . $transformedPath;
@@ -182,5 +159,12 @@ class TestFactoryTest extends TestCase
                 ),
             ],
         ];
+    }
+
+    protected function createFactory(): DocumentFactoryInterface
+    {
+        return new TestFactory(
+            new TestPathNormalizer(self::COMPILER_SOURCE_DIRECTORY)
+        );
     }
 }

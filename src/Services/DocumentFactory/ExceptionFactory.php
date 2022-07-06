@@ -9,7 +9,7 @@ use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Document;
 use App\Model\Document\Exception;
 
-class ExceptionFactory
+class ExceptionFactory implements DocumentFactoryInterface
 {
     /**
      * @param array<mixed> $data
