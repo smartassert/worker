@@ -25,6 +25,9 @@ class Test
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(type: 'text')]
     private string $source;
 
@@ -41,6 +44,7 @@ class Test
     private int $position;
 
     /**
+     * @param non-empty-string   $source
      * @param non-empty-string[] $stepNames
      */
     public function __construct(
@@ -92,7 +96,10 @@ class Test
         return $this;
     }
 
-    public function getSource(): ?string
+    /**
+     * @return non-empty-string
+     */
+    public function getSource(): string
     {
         return $this->source;
     }

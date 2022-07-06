@@ -354,7 +354,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         $test = new Test(
             'chrome',
             'http://example.com/complete',
-            '',
+            'test.yml',
             '',
             ['step 1'],
             $position

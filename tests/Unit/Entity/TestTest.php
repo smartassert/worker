@@ -15,7 +15,7 @@ class TestTest extends TestCase
         $test = new Test(
             '',
             '',
-            '',
+            'test.yml',
             '',
             ['step 1'],
             0
