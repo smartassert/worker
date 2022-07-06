@@ -29,7 +29,7 @@ class TestFactory
         $type = $document->getType();
 
         if ('test' === $type) {
-            $path = $this->testPathNormalizer->normalize(
+            $path = $this->testPathNormalizer->removeCompilerSourcePrefix(
                 (string) $document->getPayloadStringValue('path')
             );
 
