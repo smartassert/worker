@@ -14,18 +14,6 @@ class TestPathNormalizer
     ) {
     }
 
-    public function normalize(string $path): string
-    {
-        $path = trim($path);
-
-        $normalizedPath = $this->trimPrefix($path, $this->compilerSourceDirectory);
-        if ($path !== $normalizedPath) {
-            return $normalizedPath;
-        }
-
-        return $this->trimPrefix($path, $this->compilerTargetDirectory);
-    }
-
     public function removeCompilerSourcePrefix(string $path): string
     {
         $path = trim($path);
