@@ -9,16 +9,8 @@ use Symfony\Component\String\UnicodeString;
 class TestPathNormalizer
 {
     public function __construct(
-        private readonly string $compilerSourceDirectory,
         private readonly string $compilerTargetDirectory,
     ) {
-    }
-
-    public function removeCompilerSourcePrefix(string $path): string
-    {
-        $path = trim($path);
-
-        return $this->trimPrefix($path, $this->compilerSourceDirectory);
     }
 
     public function removeCompilerTargetPrefix(string $path): string

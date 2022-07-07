@@ -91,7 +91,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                        (new TestSetup())->withSource('Test/test1.yml'),
                     ]),
                 'expectedState' => ApplicationState::COMPILING,
             ],
@@ -103,8 +103,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test1.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::EXECUTING,
             ],
@@ -117,9 +117,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::EXECUTING,
             ],
@@ -132,9 +132,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
@@ -150,9 +150,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                        (new TestSetup())->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
@@ -170,9 +170,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                        (new TestSetup())->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
@@ -274,7 +274,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                        (new TestSetup())->withSource('Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPILING,
@@ -296,8 +296,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test1.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::EXECUTING,
@@ -320,9 +320,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::EXECUTING,
@@ -345,9 +345,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
@@ -373,9 +373,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                        (new TestSetup())->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
@@ -403,9 +403,9 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                        (new TestSetup())->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([

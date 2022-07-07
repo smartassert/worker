@@ -25,7 +25,6 @@ class TestExecutor
         private readonly Client $delegatorClient,
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
-        private readonly TestPathNormalizer $testPathNormalizer,
         private readonly StepFactory $stepFactory,
     ) {
     }
@@ -75,10 +74,9 @@ class TestExecutor
 
         if ('step' === $document->getType()) {
             $step = $this->stepFactory->create($documentData);
-            $path = $this->testPathNormalizer->removeCompilerSourcePrefix($test->getSource());
 
             $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-            $event = new StepEvent($test, $step, $path, $eventOutcome);
+            $event = new StepEvent($test, $step, $test->getSource(), $eventOutcome);
 
             $this->eventDispatcher->dispatch($event);
         }
