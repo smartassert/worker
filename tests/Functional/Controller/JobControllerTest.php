@@ -784,11 +784,11 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         (new SourceSetup())->withPath('Test/test3.yml'),
                     ])->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withTarget('{{ compiler_target_directory }}/GeneratedTest1.php')
                             ->withStepNames(['step 1', 'step 2', 'step 3']),
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test2.yml')
+                            ->withSource('Test/test2.yml')
                             ->withTarget('{{ compiler_target_directory }}/GeneratedTest2.php')
                             ->withStepNames(['step 1', 'step 2']),
                     ]),
