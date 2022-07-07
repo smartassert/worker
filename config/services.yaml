@@ -38,11 +38,6 @@ services:
         arguments:
             $path: '%compiler_source_directory%'
 
-    App\Services\TestPathNormalizer:
-        arguments:
-            $compilerSourceDirectory: '%compiler_source_directory%'
-            $compilerTargetDirectory: '%compiler_target_directory%'
-
     webignition\TcpCliProxyClient\HandlerFactory:
         class: webignition\TcpCliProxyClient\HandlerFactory
 
@@ -63,6 +58,7 @@ services:
     App\Services\TestExecutor:
         arguments:
             $delegatorClient: '@app.services.delegator-client'
+            $compilerTargetDirectory: '%compiler_target_directory%'
 
     Symfony\Component\Yaml\Parser:
         class: Symfony\Component\Yaml\Parser
@@ -118,7 +114,13 @@ services:
 
     webignition\BasilCompilerModels\Factory\ErrorOutputFactory: ~
 
+    webignition\BasilCompilerModels\Factory\TestManifestFactory: ~
+
     webignition\BasilCompilerModels\Factory\TestManifestFactoryInterface:
-        class: webignition\BasilCompilerModels\Factory\TestManifestFactory
+        class: App\Services\TestManifestFactory
+        arguments:
+            $baseTestManifestFactory: '@webignition\BasilCompilerModels\Factory\TestManifestFactory'
+            $compilerSourceDirectory: '%compiler_source_directory%'
+            $compilerTargetDirectory: '%compiler_target_directory%'
 
     webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory: ~

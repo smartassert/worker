@@ -108,7 +108,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                            ->withSource('Test/test1.yml'),
                     ]),
                 'expectedState' => CompilationState::COMPLETE,
             ],
@@ -215,7 +215,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                            ->withSource('Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::COMPLETE,

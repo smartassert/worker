@@ -9,9 +9,6 @@ services:
 
     App\Tests\Services\TestTestFactory:
         public: true
-        arguments:
-            $compilerSourceDirectory: '%compiler_source_directory%'
-            $compilerTargetDirectory: '%compiler_target_directory%'
 
     App\Tests\Services\TestWorkerEventFactory:
         public: true

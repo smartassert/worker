@@ -105,7 +105,7 @@ class SourcePathFinderTest extends AbstractBaseFunctionalTest
                     ->withSourceSetups($sourceSetups)
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                            ->withSource('Test/test1.yml'),
                     ]),
                 'expectedNextNonCompiledSource' => 'Test/test2.yml',
             ],
@@ -115,9 +115,9 @@ class SourcePathFinderTest extends AbstractBaseFunctionalTest
                     ->withSourceSetups($sourceSetups)
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test1.yml'),
+                            ->withSource('Test/test1.yml'),
                         (new TestSetup())
-                            ->withSource('{{ compiler_source_directory }}/Test/test2.yml'),
+                            ->withSource('Test/test2.yml'),
                     ]),
                 'expectedNextNonCompiledSource' => null,
             ],

@@ -420,9 +420,6 @@
     "webignition/basil-compiler-models": {
         "version": "0.15"
     },
-    "webignition/basil-runner-documents": {
-        "version": "1.0"
-    },
     "webignition/error-handler": {
         "version": "0.2"
     },

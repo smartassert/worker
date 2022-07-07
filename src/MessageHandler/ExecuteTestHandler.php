@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
-use App\Exception\Document\InvalidTestException;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
+use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
-use App\Services\DocumentFactory\TestFactory;
 use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use webignition\BasilRunnerDocuments\Test as RunnerTest;
-use webignition\BasilRunnerDocuments\TestConfiguration as RunnerTestConfiguration;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
@@ -35,7 +33,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
-        private TestFactory $testFactory,
     ) {
     }
 
@@ -45,7 +42,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
      * @throws SocketErrorException
      * @throws InvalidDocumentException
      * @throws InvalidStepException
-     * @throws InvalidTestException
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
@@ -69,12 +65,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
             $this->jobRepository->add($job);
         }
 
-        $runnerTest = new RunnerTest(
-            (string) $test->getSource(),
-            new RunnerTestConfiguration($test->getBrowser(), $test->getUrl()),
-        );
-
-        $testDocument = $this->testFactory->create($runnerTest->getData());
+        $testDocument = $this->createTestDocumentFromTestEntity($test);
 
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, WorkerEventOutcome::STARTED));
 
@@ -84,5 +75,19 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         $eventOutcome = $test->hasState(TestState::COMPLETE) ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $eventOutcome));
+    }
+
+    public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument
+    {
+        return new TestDocument($testEntity->getSource(), [
+            'type' => 'test',
+            'payload' => [
+                'path' => $testEntity->getSource(),
+                'config' => [
+                    'browser' => $testEntity->getBrowser(),
+                    'url' => $testEntity->getUrl(),
+                ],
+            ],
+        ]);
     }
 }
