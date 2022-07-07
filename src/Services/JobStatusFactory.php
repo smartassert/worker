@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Job;
+use App\Entity\Test;
 use App\Model\JobStatus;
 use App\Model\ResourceReferenceSource;
 use App\Repository\SourceRepository;
@@ -15,7 +16,6 @@ class JobStatusFactory
     public function __construct(
         private readonly SourceRepository $sourceRepository,
         private readonly TestRepository $testRepository,
-        private readonly TestSerializer $testSerializer,
         private readonly CompilationProgress $compilationProgress,
         private readonly ExecutionProgress $executionProgress,
         private readonly EventDeliveryProgress $eventDeliveryProgress,
@@ -40,8 +40,34 @@ class JobStatusFactory
             $this->compilationProgress->get(),
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
-            $this->testSerializer->serializeCollection($tests),
+            $this->createSerializedTestCollection($tests),
             $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources)
         );
+    }
+
+    /**
+     * @param Test[] $tests
+     *
+     * @return array<int, array<mixed>>
+     */
+    private function createSerializedTestCollection(array $tests): array
+    {
+        $serializedTests = [];
+
+        foreach ($tests as $test) {
+            if ($test instanceof Test) {
+                $serializedTests[] = [
+                    'browser' => $test->getBrowser(),
+                    'url' => $test->getUrl(),
+                    'source' => $test->getSource(),
+                    'target' => $test->getTarget(),
+                    'step_names' => $test->getStepNames(),
+                    'state' => $test->getState()->value,
+                    'position' => $test->getPosition(),
+                ];
+            }
+        }
+
+        return $serializedTests;
     }
 }
