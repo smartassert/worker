@@ -12,10 +12,12 @@ class TestManifestFactory implements TestManifestFactoryInterface
 {
     /**
      * @param non-empty-string $compilerSourceDirectory
+     * @param non-empty-string $compilerTargetDirectory
      */
     public function __construct(
         private readonly BaseTestManifestFactory $baseTestManifestFactory,
         private readonly string $compilerSourceDirectory,
+        private readonly string $compilerTargetDirectory,
     ) {
     }
 
@@ -23,19 +25,24 @@ class TestManifestFactory implements TestManifestFactoryInterface
     {
         $source = $data['source'] ?? null;
         if (is_string($source)) {
-            $data['source'] = $this->makeSourcePathRelative($source);
+            $data['source'] = $this->removePathPrefix($source, $this->compilerSourceDirectory);
+        }
+
+        $target = $data['target'] ?? null;
+        if (is_string($target)) {
+            $data['target'] = $this->removePathPrefix($target, $this->compilerTargetDirectory);
         }
 
         return $this->baseTestManifestFactory->create($data);
     }
 
-    private function makeSourcePathRelative(string $path): string
+    private function removePathPrefix(string $path, string $prefix): string
     {
-        if (!str_starts_with($path, $this->compilerSourceDirectory)) {
+        if (!str_starts_with($path, $prefix)) {
             return $path;
         }
 
-        $prefixLength = strlen($this->compilerSourceDirectory);
+        $prefixLength = strlen($prefix);
         $pathWithoutPrefix = substr($path, $prefixLength);
 
         if (str_starts_with($pathWithoutPrefix, '/')) {

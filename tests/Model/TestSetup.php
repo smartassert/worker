@@ -15,6 +15,10 @@ class TestSetup
      * @var non-empty-string
      */
     private string $source;
+
+    /**
+     * @var non-empty-string
+     */
     private string $target;
 
     /**
@@ -52,6 +56,9 @@ class TestSetup
         return $this->source;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getTarget(): string
     {
         return $this->target;
@@ -81,6 +88,9 @@ class TestSetup
         return $new;
     }
 
+    /**
+     * @param non-empty-string $target
+     */
     public function withTarget(string $target): self
     {
         $new = clone $this;

@@ -65,10 +65,3 @@ services:
         class: App\Services\AbsolutePathCreator
         arguments:
             $prefix: '%compiler_target_directory%'
-
-    webignition\BasilCompilerModels\Factory\TestManifestFactoryInterface:
-        public: true
-        class: App\Services\TestManifestFactory
-        arguments:
-            $baseTestManifestFactory: '@webignition\BasilCompilerModels\Factory\TestManifestFactory'
-            $compilerSourceDirectory: '%compiler_source_directory%'

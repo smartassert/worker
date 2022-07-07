@@ -8,11 +8,6 @@ use App\Entity\Test;
 
 class TestSerializer
 {
-    public function __construct(
-        private readonly TestPathNormalizer $testPathNormalizer,
-    ) {
-    }
-
     /**
      * @param Test[] $tests
      *
@@ -40,7 +35,7 @@ class TestSerializer
             'browser' => $test->getBrowser(),
             'url' => $test->getUrl(),
             'source' => $test->getSource(),
-            'target' => $this->testPathNormalizer->removeCompilerTargetPrefix($test->getTarget()),
+            'target' => $test->getTarget(),
             'step_names' => $test->getStepNames(),
             'state' => $test->getState()->value,
             'position' => $test->getPosition(),
