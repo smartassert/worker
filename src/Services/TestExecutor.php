@@ -20,6 +20,7 @@ class TestExecutor
         private readonly Client $delegatorClient,
         private readonly Factory $yamlDocumentFactory,
         private readonly TestProgressHandler $testProgressHandler,
+        private readonly string $compilerTargetDirectory,
     ) {
     }
 
