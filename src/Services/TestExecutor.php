@@ -26,6 +26,7 @@ class TestExecutor
         private readonly Factory $yamlDocumentFactory,
         private EventDispatcherInterface $eventDispatcher,
         private readonly StepFactory $stepFactory,
+        private readonly string $compilerTargetDirectory,
     ) {
     }
 
@@ -54,7 +55,7 @@ class TestExecutor
             sprintf(
                 './bin/delegator --browser %s %s',
                 $test->getBrowser(),
-                $test->getTarget()
+                $this->compilerTargetDirectory . '/' . $test->getTarget()
             ),
             $delegatorClientHandler
         );
