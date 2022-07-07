@@ -128,13 +128,3 @@ services:
             $compilerTargetDirectory: '%compiler_target_directory%'
 
     webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory: ~
-
-    app.services.absolute_path_creator.source:
-        class: App\Services\AbsolutePathCreator
-        arguments:
-            $prefix: '%compiler_source_directory%'
-
-    app.services.absolute_path_creator.target:
-        class: App\Services\AbsolutePathCreator
-        arguments:
-            $prefix: '%compiler_target_directory%'

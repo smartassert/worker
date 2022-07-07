@@ -53,15 +53,3 @@ services:
         public: true
         arguments:
             $path: '%compiler_source_directory%'
-
-    app.services.absolute_path_creator.source:
-        public: true
-        class: App\Services\AbsolutePathCreator
-        arguments:
-            $prefix: '%compiler_source_directory%'
-
-    app.services.absolute_path_creator.target:
-        public: true
-        class: App\Services\AbsolutePathCreator
-        arguments:
-            $prefix: '%compiler_target_directory%'
