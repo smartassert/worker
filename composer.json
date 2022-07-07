@@ -18,7 +18,6 @@
         "symfony/flex": "^1.13",
         "symfony/framework-bundle": "6.1.*",
         "symfony/messenger": "6.1.*",
-        "symfony/string": "6.1.*",
         "symfony/yaml": "6.1.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
