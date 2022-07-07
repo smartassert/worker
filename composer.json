@@ -21,7 +21,6 @@
         "symfony/string": "6.1.*",
         "symfony/yaml": "6.1.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
-        "webignition/basil-runner-documents": "^1.0",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
         "webignition/yaml-document": "^1.1",
         "webignition/yaml-document-generator": "^1.0"
