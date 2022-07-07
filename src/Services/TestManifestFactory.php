@@ -25,40 +25,24 @@ class TestManifestFactory implements TestManifestFactoryInterface
     {
         $source = $data['source'] ?? null;
         if (is_string($source)) {
-            $data['source'] = $this->makeSourcePathRelative($source);
+            $data['source'] = $this->removePathPrefix($source, $this->compilerSourceDirectory);
         }
 
         $target = $data['target'] ?? null;
         if (is_string($target)) {
-            $data['target'] = $this->makeTargetPathRelative($target);
+            $data['target'] = $this->removePathPrefix($target, $this->compilerTargetDirectory);
         }
 
         return $this->baseTestManifestFactory->create($data);
     }
 
-    private function makeSourcePathRelative(string $path): string
+    private function removePathPrefix(string $path, string $prefix): string
     {
-        if (!str_starts_with($path, $this->compilerSourceDirectory)) {
+        if (!str_starts_with($path, $prefix)) {
             return $path;
         }
 
-        $prefixLength = strlen($this->compilerSourceDirectory);
-        $pathWithoutPrefix = substr($path, $prefixLength);
-
-        if (str_starts_with($pathWithoutPrefix, '/')) {
-            $pathWithoutPrefix = ltrim($pathWithoutPrefix, '/');
-        }
-
-        return $pathWithoutPrefix;
-    }
-
-    private function makeTargetPathRelative(string $path): string
-    {
-        if (!str_starts_with($path, $this->compilerTargetDirectory)) {
-            return $path;
-        }
-
-        $prefixLength = strlen($this->compilerTargetDirectory);
+        $prefixLength = strlen($prefix);
         $pathWithoutPrefix = substr($path, $prefixLength);
 
         if (str_starts_with($pathWithoutPrefix, '/')) {
