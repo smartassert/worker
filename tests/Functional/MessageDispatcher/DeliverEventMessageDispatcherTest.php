@@ -160,9 +160,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $relativeTestSource = 'Test/test.yml';
-        $testSource = '/app/source/' . $relativeTestSource;
-
+        $testSource = 'Test/test.yml';
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
 
@@ -178,7 +176,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testDocumentData = [
             'type' => 'test',
             'payload' => [
-                'path' => $relativeTestSource,
+                'path' => $testSource,
                 'config' => [
                     'browser' => $testConfigurationBrowser,
                     'url' => $testConfigurationUrl,
@@ -186,7 +184,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $testDocument = new TestDocument($relativeTestSource, $testDocumentData);
+        $testDocument = new TestDocument($testSource, $testDocumentData);
 
         $sourceCompilationPassedManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
@@ -208,16 +206,16 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ),
             ],
             SourceCompilationStartedEvent::class => [
-                'event' => new SourceCompilationStartedEvent($relativeTestSource),
+                'event' => new SourceCompilationStartedEvent($testSource),
             ],
             SourceCompilationPassedEvent::class => [
                 'event' => new SourceCompilationPassedEvent(
-                    $relativeTestSource,
+                    $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
             ],
             SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent($relativeTestSource, $sourceCompileFailureEventOutput),
+                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
             ],
             'job/compiled' => [
                 'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPILED),
@@ -226,13 +224,13 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
             ],
             'test/started' => [
-                'event' => new TestEvent($genericTest, $testDocument, WorkerEventOutcome::STARTED),
+                'event' => new TestEvent($genericTest, $testDocument, $testSource, WorkerEventOutcome::STARTED),
             ],
             'step/passed' => [
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
                     new Step('passing step', $passingStepDocumentData),
-                    $relativeTestSource,
+                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
             ],
@@ -240,7 +238,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::FAILED),
                     new Step('failing step', $failingStepDocumentData),
-                    $relativeTestSource,
+                    $testSource,
                     WorkerEventOutcome::FAILED
                 ),
             ],
@@ -248,6 +246,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument,
+                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
             ],
@@ -255,6 +254,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
                     $testDocument,
+                    $testSource,
                     WorkerEventOutcome::FAILED
                 ),
             ],

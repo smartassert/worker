@@ -112,9 +112,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $relativeTestSource = 'Test/test.yml';
-        $testSource = '/app/source/' . $relativeTestSource;
-
+        $testSource = 'Test/test.yml';
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
 
@@ -130,7 +128,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
         $testDocumentData = [
             'type' => 'test',
             'payload' => [
-                'path' => $relativeTestSource,
+                'path' => $testSource,
                 'config' => [
                     'browser' => $testConfigurationBrowser,
                     'url' => $testConfigurationUrl,
@@ -138,7 +136,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $testDocument = new TestDocument($relativeTestSource, $testDocumentData);
+        $testDocument = new TestDocument($testSource, $testDocumentData);
 
         $sourceCompilationPassedManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
@@ -182,51 +180,51 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             SourceCompilationStartedEvent::class => [
-                'event' => new SourceCompilationStartedEvent($relativeTestSource),
+                'event' => new SourceCompilationStartedEvent($testSource),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::STARTED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                     ]
                 ),
             ],
             SourceCompilationPassedEvent::class => [
                 'event' => new SourceCompilationPassedEvent(
-                    $relativeTestSource,
+                    $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::PASSED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'related_references' => [
                             [
                                 'label' => 'step one',
-                                'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step one'),
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step one'),
                             ],
                             [
                                 'label' => 'step two',
-                                'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step two'),
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step two'),
                             ],
                         ],
                     ]
                 ),
             ],
             SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent($relativeTestSource, $sourceCompileFailureEventOutput),
+                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::FAILED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'output' => [
                             'compile-failure-key' => 'value',
                         ],
@@ -254,14 +252,14 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/started' => [
-                'event' => new TestEvent($genericTest, $testDocument, WorkerEventOutcome::STARTED),
+                'event' => new TestEvent($genericTest, $testDocument, $testSource, WorkerEventOutcome::STARTED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'document' => $testDocumentData,
                         'step_names' => [
                             'step 1',
@@ -269,7 +267,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'related_references' => [
                             [
                                 'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
                             ],
                         ],
                     ]
@@ -279,16 +277,16 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
                     new Step('passing step', $passingStepDocumentData),
-                    $relativeTestSource,
+                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::STEP,
                     WorkerEventOutcome::PASSED,
                     'passing step',
-                    md5(self::JOB_LABEL . $relativeTestSource . 'passing step'),
+                    md5(self::JOB_LABEL . $testSource . 'passing step'),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'document' => $passingStepDocumentData,
                         'name' => 'passing step',
                     ]
@@ -298,16 +296,16 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::FAILED),
                     new Step('failing step', $failingStepDocumentData),
-                    $relativeTestSource,
+                    $testSource,
                     WorkerEventOutcome::FAILED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::STEP,
                     WorkerEventOutcome::FAILED,
                     'failing step',
-                    md5(self::JOB_LABEL . $relativeTestSource . 'failing step'),
+                    md5(self::JOB_LABEL . $testSource . 'failing step'),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'document' => $failingStepDocumentData,
                         'name' => 'failing step',
                     ]
@@ -317,15 +315,16 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument,
+                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::PASSED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'document' => $testDocumentData,
                         'step_names' => [
                             'step 1',
@@ -333,7 +332,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'related_references' => [
                             [
                                 'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
                             ],
                         ],
                     ]
@@ -343,15 +342,16 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
                     $testDocument,
+                    $testSource,
                     WorkerEventOutcome::FAILED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::FAILED,
-                    $relativeTestSource,
-                    md5(self::JOB_LABEL . $relativeTestSource),
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
                     [
-                        'source' => $relativeTestSource,
+                        'source' => $testSource,
                         'document' => $testDocumentData,
                         'step_names' => [
                             'step 1',
@@ -359,7 +359,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'related_references' => [
                             [
                                 'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $relativeTestSource . 'step 1'),
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
                             ],
                         ],
                     ]

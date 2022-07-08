@@ -102,8 +102,8 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())->withSource('/app/source/Test/test1.yml'),
-                        (new TestSetup())->withSource('/app/source/Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test1.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
                     ]),
                 'expectedNextTestIndex' => 0,
             ],
@@ -112,10 +112,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('/app/source/Test/test2.yml'),
-                        (new TestSetup())->withSource('/app/source/Test/test3.yml'),
+                        (new TestSetup())->withSource('Test/test2.yml'),
+                        (new TestSetup())->withSource('Test/test3.yml'),
                     ]),
                 'expectedNextTestIndex' => 1,
             ],
@@ -124,12 +124,12 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test2.yml')
+                            ->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('/app/source/Test/test3.yml'),
+                        (new TestSetup())->withSource('Test/test3.yml'),
                     ]),
                 'expectedNextTestIndex' => 2,
             ],
@@ -149,10 +149,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test1.yml')
+                    ->withSource('Test/test1.yml')
                     ->withState(TestState::COMPLETE),
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test2.yml'),
+                    ->withSource('Test/test2.yml'),
             ])
         ;
 
@@ -182,6 +182,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $event = new TestEvent(
             $test,
             new TestDocument('test.yml', []),
+            'test.yml',
             WorkerEventOutcome::PASSED
         );
 
@@ -211,7 +212,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
                     ]),
                 'eventTestIndex' => 0,
@@ -223,7 +224,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::CANCELLED),
                     ]),
                 'eventTestIndex' => 0,
@@ -235,10 +236,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test2.yml')
+                            ->withSource('Test/test2.yml')
                             ->withState(TestState::AWAITING),
                     ]),
                 'eventTestIndex' => 0,
@@ -250,10 +251,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test1.yml')
+                            ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
                         (new TestSetup())
-                            ->withSource('/app/source/Test/test2.yml')
+                            ->withSource('Test/test2.yml')
                             ->withState(TestState::AWAITING),
                     ]),
                 'eventTestIndex' => 0,
@@ -274,17 +275,16 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             ],
         ]);
 
-        $test0RelativeSource = 'Test/test1.yml';
-        $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
+        $test0Source = 'Test/test1.yml';
 
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 (new TestSetup())
-                    ->withSource($test0AbsoluteSource)
+                    ->withSource($test0Source)
                     ->withState(TestState::COMPLETE),
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test2.yml')
+                    ->withSource('Test/test2.yml')
                     ->withState(TestState::AWAITING),
             ])
         ;
@@ -296,14 +296,15 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             new TestEvent(
                 $tests[0],
                 new TestDocument(
-                    $test0RelativeSource,
+                    $test0Source,
                     [
                         'type' => 'test',
                         'payload' => [
-                            'path' => $test0RelativeSource,
+                            'path' => $test0Source,
                         ],
                     ]
                 ),
+                $test0Source,
                 WorkerEventOutcome::PASSED
             )
         );
@@ -332,17 +333,16 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             ],
         ]);
 
-        $test0RelativeSource = 'Test/test1.yml';
-        $test0AbsoluteSource = '/app/source/' . $test0RelativeSource;
+        $test0Source = 'Test/test1.yml';
 
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 (new TestSetup())
-                    ->withSource($test0AbsoluteSource)
+                    ->withSource($test0Source)
                     ->withState(TestState::COMPLETE),
                 (new TestSetup())
-                    ->withSource('/app/source/Test/test2.yml')
+                    ->withSource('Test/test2.yml')
                     ->withState(TestState::COMPLETE),
             ])
         ;
@@ -354,14 +354,15 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             new TestEvent(
                 $tests[0],
                 new TestDocument(
-                    $test0RelativeSource,
+                    $test0Source,
                     [
                         'type' => 'test',
                         'payload' => [
-                            'path' => $test0RelativeSource,
+                            'path' => $test0Source,
                         ],
                     ]
                 ),
+                $test0Source,
                 WorkerEventOutcome::PASSED
             )
         );
