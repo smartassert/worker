@@ -22,7 +22,7 @@ class TestEvent extends AbstractEvent implements EventInterface
         WorkerEventOutcome $outcome
     ) {
         parent::__construct(
-            $document->getPath(),
+            $path,
             WorkerEventScope::TEST,
             $outcome,
             [
