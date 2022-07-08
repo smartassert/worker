@@ -35,7 +35,13 @@ class TestProgressHandler
         if ('step' === $document->getType()) {
             $step = $this->stepFactory->create($documentData);
             $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-            $event = new StepEvent($test, $step, $test->getSource(), $eventOutcome);
+            $event = new StepEvent(
+                $test,
+                $step,
+                $test->getSource(),
+                $step->getName(),
+                $eventOutcome
+            );
 
             $this->eventDispatcher->dispatch($event);
         }

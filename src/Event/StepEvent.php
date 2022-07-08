@@ -11,24 +11,29 @@ use App\Model\Document\Step;
 
 class StepEvent extends AbstractEvent implements EventInterface
 {
+    /**
+     * @param non-empty-string $path
+     * @param non-empty-string $stepName
+     */
     public function __construct(
         private readonly Test $test,
         Step $step,
         string $path,
+        string $stepName,
         WorkerEventOutcome $outcome
     ) {
         parent::__construct(
-            $step->getName(),
+            $stepName,
             WorkerEventScope::STEP,
             $outcome,
             [
                 'source' => $path,
                 'document' => $step->getData(),
-                'name' => $step->getName(),
+                'name' => $stepName,
             ],
             [
                 $path,
-                $step->getName(),
+                $stepName,
             ]
         );
     }
