@@ -182,6 +182,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $event = new TestEvent(
             $test,
             new TestDocument('test.yml', []),
+            'test.yml',
             WorkerEventOutcome::PASSED
         );
 
@@ -303,6 +304,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                         ],
                     ]
                 ),
+                $test0Source,
                 WorkerEventOutcome::PASSED
             )
         );
@@ -360,6 +362,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
                         ],
                     ]
                 ),
+                $test0Source,
                 WorkerEventOutcome::PASSED
             )
         );
