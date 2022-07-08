@@ -14,7 +14,6 @@ class StepEvent extends AbstractEvent implements EventInterface
     public function __construct(
         private readonly Test $test,
         Step $step,
-        string $path,
         WorkerEventOutcome $outcome
     ) {
         parent::__construct(
@@ -22,12 +21,12 @@ class StepEvent extends AbstractEvent implements EventInterface
             WorkerEventScope::STEP,
             $outcome,
             [
-                'source' => $path,
+                'source' => $test->getSource(),
                 'document' => $step->getData(),
                 'name' => $step->getName(),
             ],
             [
-                $path,
+                $test->getSource(),
                 $step->getName(),
             ]
         );
