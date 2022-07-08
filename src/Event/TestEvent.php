@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Entity\Test as TestEntity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Model\Document\Test as TestDocument;
+use App\Model\Document\Document;
 use App\Model\ResourceReferenceSource;
 
 class TestEvent extends AbstractEvent implements EventInterface
@@ -17,12 +17,12 @@ class TestEvent extends AbstractEvent implements EventInterface
      */
     public function __construct(
         private readonly TestEntity $testEntity,
-        TestDocument $document,
+        Document $document,
         private readonly string $path,
         WorkerEventOutcome $outcome
     ) {
         parent::__construct(
-            $document->getPath(),
+            $path,
             WorkerEventScope::TEST,
             $outcome,
             [
@@ -33,7 +33,7 @@ class TestEvent extends AbstractEvent implements EventInterface
             [
                 $path,
             ],
-            $this->createRelatedReferenceSources($testEntity, $document)
+            $this->createRelatedReferenceSources($testEntity)
         );
     }
 
@@ -45,7 +45,7 @@ class TestEvent extends AbstractEvent implements EventInterface
     /**
      * @return ResourceReferenceSource[]
      */
-    private function createRelatedReferenceSources(TestEntity $testEntity, TestDocument $testDocument): array
+    private function createRelatedReferenceSources(TestEntity $testEntity): array
     {
         $referenceSources = [];
         foreach ($testEntity->getStepNames() as $stepName) {
