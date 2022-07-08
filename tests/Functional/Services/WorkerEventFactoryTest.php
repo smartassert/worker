@@ -277,7 +277,6 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
                     new Step('passing step', $passingStepDocumentData),
-                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
                 'expected' => new WorkerEvent(
@@ -296,7 +295,6 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::FAILED),
                     new Step('failing step', $failingStepDocumentData),
-                    $testSource,
                     WorkerEventOutcome::FAILED,
                 ),
                 'expected' => new WorkerEvent(

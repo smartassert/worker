@@ -230,7 +230,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
                     new Step('passing step', $passingStepDocumentData),
-                    $testSource,
                     WorkerEventOutcome::PASSED
                 ),
             ],
@@ -238,7 +237,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::FAILED),
                     new Step('failing step', $failingStepDocumentData),
-                    $testSource,
                     WorkerEventOutcome::FAILED
                 ),
             ],
