@@ -86,7 +86,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
-            'test.yml',
             WorkerEventOutcome::PASSED
         ));
 
@@ -137,7 +136,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
-            'test.yml',
             WorkerEventOutcome::PASSED
         ));
 
@@ -172,7 +170,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
-            'test.yml',
             WorkerEventOutcome::FAILED
         ));
 

@@ -12,13 +12,9 @@ use App\Model\ResourceReferenceSource;
 
 class TestEvent extends AbstractEvent implements EventInterface
 {
-    /**
-     * @param non-empty-string $path
-     */
     public function __construct(
         private readonly TestEntity $testEntity,
         TestDocument $document,
-        private readonly string $path,
         WorkerEventOutcome $outcome
     ) {
         parent::__construct(
@@ -26,14 +22,14 @@ class TestEvent extends AbstractEvent implements EventInterface
             WorkerEventScope::TEST,
             $outcome,
             [
-                'source' => $path,
+                'source' => $testEntity->getSource(),
                 'document' => $document->getData(),
                 'step_names' => $testEntity->getStepNames(),
             ],
             [
-                $path,
+                $testEntity->getSource(),
             ],
-            $this->createRelatedReferenceSources($testEntity, $document)
+            $this->createRelatedReferenceSources($testEntity)
         );
     }
 
@@ -45,11 +41,11 @@ class TestEvent extends AbstractEvent implements EventInterface
     /**
      * @return ResourceReferenceSource[]
      */
-    private function createRelatedReferenceSources(TestEntity $testEntity, TestDocument $testDocument): array
+    private function createRelatedReferenceSources(TestEntity $testEntity): array
     {
         $referenceSources = [];
         foreach ($testEntity->getStepNames() as $stepName) {
-            $referenceSources[] = new ResourceReferenceSource($stepName, [$this->path, $stepName]);
+            $referenceSources[] = new ResourceReferenceSource($stepName, [$testEntity->getSource(), $stepName]);
         }
 
         return $referenceSources;
