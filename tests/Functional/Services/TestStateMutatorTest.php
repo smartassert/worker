@@ -147,7 +147,8 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
         $event = new StepEvent(
             $this->test,
             new Step('step name', $documentData),
-            '',
+            'test.yml',
+            'step name',
             WorkerEventOutcome::FAILED
         );
         $execute($event);

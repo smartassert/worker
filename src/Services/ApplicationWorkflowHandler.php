@@ -34,7 +34,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         return [
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
-                ['dispatchJobFailedEventForTestFailedEvent', -100],
+                ['dispatchJobFailedEventForTestFailureEvent', -100],
             ],
         ];
     }
@@ -59,9 +59,12 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function dispatchJobFailedEventForTestFailedEvent(TestEvent $event): void
+    public function dispatchJobFailedEventForTestFailureEvent(TestEvent $event): void
     {
-        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+        if (
+            WorkerEventScope::TEST !== $event->getScope()
+            || !in_array($event->getOutcome(), [WorkerEventOutcome::FAILED, WorkerEventOutcome::EXCEPTION])
+        ) {
             return;
         }
 

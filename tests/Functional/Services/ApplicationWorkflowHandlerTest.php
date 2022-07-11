@@ -6,12 +6,14 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
+use App\Enum\ExecutionExceptionScope;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\MessageDispatcher\DeliverEventMessageDispatcher;
+use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -86,6 +88,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
+            'test.yml',
             WorkerEventOutcome::PASSED
         ));
 
@@ -136,13 +139,17 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
+            'test.yml',
             WorkerEventOutcome::PASSED
         ));
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
     }
 
-    public function testSubscribesToTestFailedEvent(): void
+    /**
+     * @dataProvider subscribesToTestFailureEventDataProvider
+     */
+    public function testSubscribesToTestFailedEvent(TestEvent $event): void
     {
         $eventExpectationCount = 0;
 
@@ -166,13 +173,35 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $eventDispatcher
         );
 
-        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
-        $this->eventDispatcher->dispatch(new TestEvent(
-            $testEntity,
-            new TestDocument('test.yml', []),
-            WorkerEventOutcome::FAILED
-        ));
+        $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function subscribesToTestFailureEventDataProvider(): array
+    {
+        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
+
+        return [
+            'test/failed' => [
+                'event' => new TestEvent(
+                    $testEntity,
+                    new TestDocument('test.yml', []),
+                    'test.yml',
+                    WorkerEventOutcome::FAILED
+                ),
+            ],
+            'test/exception' => [
+                'event' => new TestEvent(
+                    $testEntity,
+                    new Exception(ExecutionExceptionScope::TEST, []),
+                    'test.yml',
+                    WorkerEventOutcome::FAILED
+                ),
+            ],
+        ];
     }
 }
