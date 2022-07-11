@@ -133,13 +133,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
         ];
 
-        $failingStepDocumentData = [
-            'type' => 'step',
-            'payload' => [
-                'name' => 'failing step',
-            ],
-        ];
-
         $testSource = 'Test/test.yml';
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
@@ -177,15 +170,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $testSource,
                     'passing step',
                     WorkerEventOutcome::PASSED
-                ),
-            ],
-            'step/failed' => [
-                'event' => new StepEvent(
-                    $genericTest->setState(TestState::FAILED),
-                    new Step('failing step', $failingStepDocumentData),
-                    $testSource,
-                    'failing step',
-                    WorkerEventOutcome::FAILED
                 ),
             ],
             'test/passed' => [
