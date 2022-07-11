@@ -8,6 +8,7 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Event\EventInterface;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepEvent;
 use App\Repository\TestRepository;
@@ -28,7 +29,7 @@ class TestCanceller implements EventSubscriberInterface
     {
         return [
             StepEvent::class => [
-                ['cancelAwaitingFromTestFailedEvent', 0],
+                ['cancelAwaitingFromTestFailureEvent', 0],
             ],
             JobTimeoutEvent::class => [
                 ['cancelUnfinished', 0],
@@ -36,9 +37,12 @@ class TestCanceller implements EventSubscriberInterface
         ];
     }
 
-    public function cancelAwaitingFromTestFailedEvent(StepEvent $event): void
+    public function cancelAwaitingFromTestFailureEvent(EventInterface $event): void
     {
-        if (!(WorkerEventScope::STEP === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
+        if (
+            WorkerEventScope::STEP !== $event->getScope()
+            || !in_array($event->getOutcome(), [WorkerEventOutcome::FAILED, WorkerEventOutcome::EXCEPTION])
+        ) {
             return;
         }
 
