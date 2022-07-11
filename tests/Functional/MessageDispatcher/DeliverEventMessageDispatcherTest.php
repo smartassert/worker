@@ -7,6 +7,7 @@ namespace App\Tests\Functional\MessageDispatcher;
 use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
@@ -21,6 +22,7 @@ use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
+use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\WorkerEventRepository;
@@ -85,7 +87,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             ApplicationWorkflowHandler::class => [
                 TestEvent::class => [
-                    'dispatchJobFailedEventForTestFailedEvent',
+                    'dispatchJobFailedEventForTestFailureEvent',
                     'dispatchJobCompletedEventForTestPassedEvent',
                 ],
             ],
@@ -258,6 +260,14 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $testDocument,
                     $testSource,
                     WorkerEventOutcome::FAILED
+                ),
+            ],
+            'test/exception' => [
+                'event' => new TestEvent(
+                    $genericTest->setState(TestState::FAILED),
+                    new Exception(ExecutionExceptionScope::TEST, []),
+                    $testSource,
+                    WorkerEventOutcome::EXCEPTION
                 ),
             ],
             JobTimeoutEvent::class => [
