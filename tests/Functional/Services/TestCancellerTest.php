@@ -9,7 +9,9 @@ use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepEvent;
+use App\Model\Document\Document;
 use App\Model\Document\Step;
+use App\Model\Document\StepException;
 use App\Repository\TestRepository;
 use App\Services\TestCanceller;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -188,35 +190,43 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
+     * @dataProvider cancelAwaitingFromStepFailureEventDataProvider
      *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
-    public function testCancelAwaitingFromStepFailedEvent(
+    public function testCancelAwaitingFromStepFailureEvent(
+        Document $eventDocument,
+        WorkerEventOutcome $eventOutcome,
         array $states,
         array $expectedStates
     ): void {
-        $this->doTestStepFailedEventDrivenTest(
+        $this->doTestStepFailureEventDrivenTest(
+            $eventDocument,
+            $eventOutcome,
             $states,
             function (StepEvent $event) {
-                $this->testCanceller->cancelAwaitingFromTestFailedEvent($event);
+                $this->testCanceller->cancelAwaitingFromTestFailureEvent($event);
             },
             $expectedStates
         );
     }
 
     /**
-     * @dataProvider cancelAwaitingFromStepFailedEventDataProvider
+     * @dataProvider cancelAwaitingFromStepFailureEventDataProvider
      *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
-    public function testSubscribesToStepFailedEvent(
+    public function testSubscribesToStepFailureEvent(
+        Document $eventDocument,
+        WorkerEventOutcome $eventOutcome,
         array $states,
         array $expectedStates
     ): void {
-        $this->doTestStepFailedEventDrivenTest(
+        $this->doTestStepFailureEventDrivenTest(
+            $eventDocument,
+            $eventOutcome,
             $states,
             function (StepEvent $event) {
                 $this->eventDispatcher->dispatch($event);
@@ -228,10 +238,12 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
     /**
      * @return array<mixed>
      */
-    public function cancelAwaitingFromStepFailedEventDataProvider(): array
+    public function cancelAwaitingFromStepFailureEventDataProvider(): array
     {
         return [
-            'no awaiting tests, test failed' => [
+            'step/failed, no awaiting tests, test failed' => [
+                'eventDocument' => new Step('step name', []),
+                'eventOutcome' => WorkerEventOutcome::FAILED,
                 'states' => [
                     TestState::FAILED,
                     TestState::COMPLETE,
@@ -241,7 +253,35 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
                     TestState::COMPLETE,
                 ],
             ],
-            'has awaiting tests, test failed' => [
+            'step/failed, has awaiting tests, test failed' => [
+                'eventDocument' => new Step('step name', []),
+                'eventOutcome' => WorkerEventOutcome::FAILED,
+                'states' => [
+                    TestState::FAILED,
+                    TestState::AWAITING,
+                    TestState::AWAITING,
+                ],
+                'expectedStates' => [
+                    TestState::FAILED,
+                    TestState::CANCELLED,
+                    TestState::CANCELLED,
+                ],
+            ],
+            'step/exception, no awaiting tests, test failed' => [
+                'eventDocument' => new StepException('step name', []),
+                'eventOutcome' => WorkerEventOutcome::EXCEPTION,
+                'states' => [
+                    TestState::FAILED,
+                    TestState::COMPLETE,
+                ],
+                'expectedStates' => [
+                    TestState::FAILED,
+                    TestState::COMPLETE,
+                ],
+            ],
+            'step/exception, has awaiting tests, test failed' => [
+                'eventDocument' => new StepException('step name', []),
+                'eventOutcome' => WorkerEventOutcome::EXCEPTION,
                 'states' => [
                     TestState::FAILED,
                     TestState::AWAITING,
@@ -327,7 +367,9 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
-    private function doTestStepFailedEventDrivenTest(
+    private function doTestStepFailureEventDrivenTest(
+        Document $eventDocument,
+        WorkerEventOutcome $eventOutcome,
         array $states,
         callable $execute,
         array $expectedStates
@@ -338,10 +380,10 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
 
         $execute(new StepEvent(
             $test,
-            new Step('step name', []),
+            $eventDocument,
             'test.yml',
             'step name',
-            WorkerEventOutcome::FAILED
+            $eventOutcome
         ));
 
         $this->assertTestStates($expectedStates);
