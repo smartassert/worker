@@ -1,0 +1,6 @@
+config:
+  browsers:
+    - chrome
+  url: http://example.com
+
+"verify page is open":
