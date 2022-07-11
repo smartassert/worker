@@ -11,7 +11,6 @@ use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\StepEvent;
@@ -190,9 +189,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             'job/completed' => [
                 'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
-            ],
-            'job/failed' => [
-                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::FAILED),
             ],
         ];
     }
