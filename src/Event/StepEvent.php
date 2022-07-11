@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Model\Document\Step;
+use App\Model\Document\Document;
 
 class StepEvent extends AbstractEvent implements EventInterface
 {
@@ -17,7 +17,7 @@ class StepEvent extends AbstractEvent implements EventInterface
      */
     public function __construct(
         private readonly Test $test,
-        Step $step,
+        Document $document,
         string $path,
         string $stepName,
         WorkerEventOutcome $outcome
@@ -28,7 +28,7 @@ class StepEvent extends AbstractEvent implements EventInterface
             $outcome,
             [
                 'source' => $path,
-                'document' => $step->getData(),
+                'document' => $document->getData(),
                 'name' => $stepName,
             ],
             [
