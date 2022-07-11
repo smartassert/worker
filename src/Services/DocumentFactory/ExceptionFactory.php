@@ -8,6 +8,7 @@ use App\Enum\ExecutionExceptionScope;
 use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Document;
 use App\Model\Document\Exception;
+use App\Model\Document\StepException;
 
 class ExceptionFactory implements DocumentFactoryInterface
 {
@@ -23,11 +24,11 @@ class ExceptionFactory implements DocumentFactoryInterface
 
         if ('exception' === $type) {
             $stepName = trim((string) $document->getPayloadStringValue('step'));
+            $stepName = '' === $stepName ? null : $stepName;
 
-            return new Exception(
-                '' === $stepName ? ExecutionExceptionScope::TEST : ExecutionExceptionScope::STEP,
-                $data
-            );
+            return null === $stepName
+                ? new Exception(ExecutionExceptionScope::TEST, $data)
+                : new StepException($stepName, $data);
         }
 
         throw InvalidDocumentException::createForInvalidType($data, $type, 'exception');

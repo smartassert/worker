@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 
 use App\Enum\ExecutionExceptionScope;
 use App\Model\Document\Exception;
+use App\Model\Document\StepException;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\ExceptionFactory;
 
@@ -71,8 +72,8 @@ class ExceptionFactoryTest extends AbstractDocumentFactoryTest
                         'code' => 456,
                     ],
                 ],
-                'expected' => new Exception(
-                    ExecutionExceptionScope::STEP,
+                'expected' => new StepException(
+                    'step name',
                     [
                         'type' => 'exception',
                         'payload' => [
