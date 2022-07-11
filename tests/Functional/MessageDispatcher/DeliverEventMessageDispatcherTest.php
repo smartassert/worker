@@ -196,9 +196,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $sourceCompilationPassedManifestCollection
                 ),
             ],
-            'job/compiled' => [
-                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPILED),
-            ],
             'execution/started' => [
                 'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
             ],
