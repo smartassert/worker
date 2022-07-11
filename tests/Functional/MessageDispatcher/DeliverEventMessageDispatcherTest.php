@@ -14,16 +14,13 @@ use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Model\Document\Exception;
-use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
-use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -64,9 +61,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
-            TestStateMutator::class => [
-                StepEvent::class => ['setFailedFromStepFailedEvent'],
-            ],
             ExecutionWorkflowHandler::class => [
                 JobEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
             ],
@@ -126,13 +120,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ])
         ;
 
-        $passingStepDocumentData = [
-            'type' => 'step',
-            'payload' => [
-                'name' => 'passing step',
-            ],
-        ];
-
         $testSource = 'Test/test.yml';
         $testConfigurationBrowser = 'chrome';
         $testConfigurationUrl = 'http://example.com';
@@ -160,15 +147,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testDocument = new TestDocument($testSource, $testDocumentData);
 
         return [
-            'step/passed' => [
-                'event' => new StepEvent(
-                    $genericTest->setState(TestState::RUNNING),
-                    new Step('passing step', $passingStepDocumentData),
-                    $testSource,
-                    'passing step',
-                    WorkerEventOutcome::PASSED
-                ),
-            ],
             'test/failed' => [
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
