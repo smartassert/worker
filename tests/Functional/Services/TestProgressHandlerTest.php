@@ -11,6 +11,7 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\StepEvent;
+use App\Event\TestEvent;
 use App\Services\TestProgressHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
@@ -64,9 +65,9 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @dataProvider fooDataProvider
+     * @dataProvider handleDataProvider
      */
-    public function testFoo(YamlDocument $yamlDocument, callable $expectedDispatchedEventCollectionCreator): void
+    public function testHandle(YamlDocument $yamlDocument, callable $expectedDispatchedEventCollectionCreator): void
     {
         $eventExpectationCount = 0;
 
@@ -87,7 +88,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
     /**
      * @return array<mixed>
      */
-    public function fooDataProvider(): array
+    public function handleDataProvider(): array
     {
         return [
             'step, passed' => [
@@ -239,6 +240,55 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                                             ],
                                         ],
                                         'name' => 'failing step name',
+                                    ],
+                                    $actualEvent->getPayload()
+                                );
+
+                                ++$eventExpectationCount;
+
+                                return true;
+                            },
+                        ),
+                    ]);
+                },
+            ],
+            'test-scoped exception document' => [
+                'yamlDocument' => new YamlDocument(
+                    <<< 'EOF'
+                    type: exception
+                    payload:
+                      step: null
+                      class: RuntimeException
+                      message: 'Exception thrown in setUpBeforeClass'
+                      code: 123                       
+                    EOF
+                ),
+                'expectedDispatchedEventCollectionCreator' => function (
+                    Test $test,
+                    int &$eventExpectationCount
+                ): ExpectedDispatchedEventCollection {
+                    return new ExpectedDispatchedEventCollection([
+                        new ExpectedDispatchedEvent(
+                            function (TestEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                                self::assertSame($test, $actualEvent->getTest());
+
+                                self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());
+                                self::assertSame(WorkerEventOutcome::EXCEPTION, $actualEvent->getOutcome());
+                                self::assertSame(
+                                    [
+                                        'source' => '/app/source/Test/test.yml',
+                                        'document' => [
+                                            'type' => 'exception',
+                                            'payload' => [
+                                                'step' => null,
+                                                'class' => 'RuntimeException',
+                                                'message' => 'Exception thrown in setUpBeforeClass',
+                                                'code' => 123,
+                                            ],
+                                        ],
+                                        'step_names' => [
+                                            'step 1',
+                                        ],
                                     ],
                                     $actualEvent->getPayload()
                                 );

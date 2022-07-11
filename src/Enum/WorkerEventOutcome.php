@@ -13,4 +13,5 @@ enum WorkerEventOutcome: string
     case COMPILED = 'compiled';
     case TIME_OUT = 'timed-out';
     case UNKNOWN = 'unknown';
+    case EXCEPTION = 'exception';
 }
