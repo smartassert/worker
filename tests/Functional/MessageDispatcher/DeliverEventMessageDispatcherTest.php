@@ -11,13 +11,11 @@ use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Model\Document\Exception;
-use App\Model\Document\Test as TestDocument;
 use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Services\ExecutionWorkflowHandler;
@@ -133,28 +131,7 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             1
         );
 
-        $testDocumentData = [
-            'type' => 'test',
-            'payload' => [
-                'path' => $testSource,
-                'config' => [
-                    'browser' => $testConfigurationBrowser,
-                    'url' => $testConfigurationUrl,
-                ],
-            ],
-        ];
-
-        $testDocument = new TestDocument($testSource, $testDocumentData);
-
         return [
-            'test/failed' => [
-                'event' => new TestEvent(
-                    $genericTest->setState(TestState::FAILED),
-                    $testDocument,
-                    $testSource,
-                    WorkerEventOutcome::FAILED
-                ),
-            ],
             'test/exception' => [
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
