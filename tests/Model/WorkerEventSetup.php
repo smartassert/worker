@@ -28,7 +28,7 @@ class WorkerEventSetup
     public function __construct()
     {
         $this->scope = WorkerEventScope::COMPILATION;
-        $this->outcome = WorkerEventOutcome::FAILED;
+        $this->outcome = WorkerEventOutcome::PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->label = 'non-empty label';

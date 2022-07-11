@@ -192,6 +192,19 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ]),
                 'expectedState' => ApplicationState::TIMED_OUT,
             ],
+            'compilation failed' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withJobSetup(new JobSetup())
+                    ->withSourceSetups([
+                        (new SourceSetup())->withPath('Test/test1.yml'),
+                    ])
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
+                            ->withScope(WorkerEventScope::COMPILATION)
+                            ->withOutcome(WorkerEventOutcome::FAILED),
+                    ]),
+                'expectedState' => ApplicationState::COMPLETE,
+            ],
         ];
     }
 
