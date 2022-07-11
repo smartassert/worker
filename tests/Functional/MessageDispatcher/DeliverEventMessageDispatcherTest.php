@@ -13,7 +13,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
-use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
@@ -21,7 +20,6 @@ use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
-use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
@@ -82,9 +80,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ExecutionWorkflowHandler::class => [
                 JobEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
             ],
-            TimeoutCheckMessageDispatcher::class => [
-                JobStartedEvent::class => ['dispatch'],
-            ],
             ApplicationWorkflowHandler::class => [
                 TestEvent::class => [
                     'dispatchJobFailedEventForTestFailureEvent',
@@ -92,7 +87,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                 ],
             ],
             CompilationWorkflowHandler::class => [
-                JobStartedEvent::class => ['dispatchNextCompileSourceMessage'],
                 SourceCompilationPassedEvent::class => [
                     'dispatchNextCompileSourceMessage',
                     'dispatchCompilationCompletedEvent'
@@ -198,15 +192,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         ]);
 
         return [
-            JobStartedEvent::class => [
-                'event' => new JobStartedEvent(
-                    self::JOB_LABEL,
-                    [
-                        'Test/test1.yaml',
-                        'Test/test2.yaml',
-                    ]
-                ),
-            ],
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),
             ],
