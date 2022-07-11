@@ -11,14 +11,12 @@ use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Model\Document\Exception;
 use App\Repository\WorkerEventRepository;
 use App\Services\ApplicationWorkflowHandler;
-use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -59,9 +57,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
         \assert($eventListenerRemover instanceof EventListenerRemover);
         $eventListenerRemover->remove([
-            ExecutionWorkflowHandler::class => [
-                JobEvent::class => ['dispatchExecutionStartedEventForJobCompiledEvent'],
-            ],
             ApplicationWorkflowHandler::class => [
                 TestEvent::class => [
                     'dispatchJobFailedEventForTestFailureEvent',
@@ -142,9 +137,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
-            ],
-            'job/completed' => [
-                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
             ],
         ];
     }
