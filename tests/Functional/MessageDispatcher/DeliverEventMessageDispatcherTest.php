@@ -194,9 +194,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
             'job/failed' => [
                 'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::FAILED),
             ],
-            'execution/completed' => [
-                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
-            ],
         ];
     }
 }
