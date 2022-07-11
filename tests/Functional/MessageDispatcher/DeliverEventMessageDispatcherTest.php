@@ -15,7 +15,6 @@ use App\Event\ExecutionEvent;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepEvent;
@@ -215,9 +214,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
-            ],
-            SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
             ],
             'job/compiled' => [
                 'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPILED),
