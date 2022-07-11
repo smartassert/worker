@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Enum\ExecutionExceptionScope;
 use App\Enum\WorkerEventOutcome;
 use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
+use App\Model\Document\StepException;
 use App\Services\DocumentFactory\ExceptionFactory;
 use App\Services\DocumentFactory\StepFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -53,11 +53,19 @@ class TestProgressHandler
         if ('exception' == $document->getType()) {
             $exception = $this->exceptionFactory->create($documentData);
 
-            if (ExecutionExceptionScope::TEST === $exception->scope) {
+            if ($exception instanceof StepException) {
+                $event = new StepEvent(
+                    $test,
+                    $exception,
+                    $test->getSource(),
+                    $exception->stepName,
+                    WorkerEventOutcome::EXCEPTION
+                );
+            } else {
                 $event = new TestEvent($test, $exception, $test->getSource(), WorkerEventOutcome::EXCEPTION);
-
-                $this->eventDispatcher->dispatch($event);
             }
+
+            $this->eventDispatcher->dispatch($event);
         }
     }
 }
