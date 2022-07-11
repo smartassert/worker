@@ -160,9 +160,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
         $testDocument = new TestDocument($testSource, $testDocumentData);
 
         return [
-            'execution/started' => [
-                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
-            ],
             'step/passed' => [
                 'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
