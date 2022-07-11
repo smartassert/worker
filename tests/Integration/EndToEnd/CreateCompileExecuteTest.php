@@ -243,6 +243,139 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $transactions->getRequests());
                 },
             ],
+            'compilation failed on second test' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'sourcePaths' => [
+                    'Page/index.yml',
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'jobMaximumDurationInSeconds' => 60,
+                'expectedCompilationEndState' => CompilationState::FAILED,
+                'expectedExecutionEndState' => ExecutionState::AWAITING,
+                'expectedTestDataCollection' => [
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => TestState::AWAITING->value,
+                        'position' => 1,
+                    ],
+                ],
+                'assertions' => function (
+                    HttpLogReader $httpLogReader,
+                    IntegrationJobProperties $jobProperties,
+                    IntegrationDeliverEventRequestFactory $requestFactory,
+                    WorkerEventRepository $workerEventRepository,
+                ) {
+                    $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
+                    \assert($firstEvent instanceof WorkerEvent);
+                    $firstEventId = (int) $firstEvent->getId();
+
+                    $expectedHttpRequests = new RequestCollection([
+                        'job/started' => $requestFactory->create(
+                            $firstEventId,
+                            'job/started',
+                            $jobProperties->getLabel(),
+                            md5($jobProperties->getLabel()),
+                            [
+                                'tests' => [
+                                    'Test/chrome-open-index.yml',
+                                    'Test/chrome-open-index-compilation-failure.yml',
+                                ],
+                                'related_references' => [
+                                    [
+                                        'label' => 'Test/chrome-open-index.yml',
+                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                                    ],
+                                    [
+                                        'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index-compilation-failure.yml'
+                                        ),
+                                    ],
+                                ],
+                            ]
+                        ),
+                        'compilation/started: chrome-open-index' => $requestFactory->create(
+                            ++$firstEventId,
+                            'compilation/started',
+                            'Test/chrome-open-index.yml',
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            [
+                                'source' => 'Test/chrome-open-index.yml',
+                            ]
+                        ),
+                        'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            ++$firstEventId,
+                            'compilation/passed',
+                            'Test/chrome-open-index.yml',
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            [
+                                'source' => 'Test/chrome-open-index.yml',
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $jobProperties->getLabel() .
+                                            'Test/chrome-open-index.yml' .
+                                            'verify page is open'
+                                        )
+                                    ],
+                                ],
+                            ]
+                        ),
+                        'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            ++$firstEventId,
+                            'compilation/started',
+                            'Test/chrome-open-index-compilation-failure.yml',
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            [
+                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                            ]
+                        ),
+                        'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            ++$firstEventId,
+                            'compilation/failed',
+                            'Test/chrome-open-index-compilation-failure.yml',
+                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            [
+                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                'output' => [
+                                    'message' => 'Invalid test at path ' .
+                                        '"/app/source/Test/chrome-open-index-compilation-failure.yml"' .
+                                        ': test-step-invalid',
+                                    'code' => 204,
+                                    'context' => [
+                                        'test_path' => '/app/source/Test/chrome-open-index-compilation-failure.yml',
+                                        'validation_result' => [
+                                            'type' => 'test',
+                                            'reason' => 'test-step-invalid',
+                                            'context' => [
+                                                'step-name' => 'verify page is open',
+                                            ],
+                                            'previous' => [
+                                                'type' => 'step',
+                                                'reason' => 'step-no-assertions',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ]
+                        ),
+                    ]);
+
+                    $transactions = $httpLogReader->getTransactions();
+                    $httpLogReader->reset();
+
+                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $transactions->getRequests());
+                },
+            ],
             'three successful tests' => [
                 'manifestPaths' => [
                     'Test/chrome-open-index.yml',
