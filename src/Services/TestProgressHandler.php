@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
+use App\Enum\ExecutionExceptionScope;
 use App\Enum\WorkerEventOutcome;
 use App\Event\StepEvent;
+use App\Event\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
+use App\Services\DocumentFactory\ExceptionFactory;
 use App\Services\DocumentFactory\StepFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use webignition\YamlDocument\Document as YamlDocument;
@@ -19,6 +22,7 @@ class TestProgressHandler
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private readonly StepFactory $stepFactory,
+        private readonly ExceptionFactory $exceptionFactory,
     ) {
     }
 
@@ -44,6 +48,16 @@ class TestProgressHandler
             );
 
             $this->eventDispatcher->dispatch($event);
+        }
+
+        if ('exception' == $document->getType()) {
+            $exception = $this->exceptionFactory->create($documentData);
+
+            if (ExecutionExceptionScope::TEST === $exception->scope) {
+                $event = new TestEvent($test, $exception, $test->getSource(), WorkerEventOutcome::EXCEPTION);
+
+                $this->eventDispatcher->dispatch($event);
+            }
         }
     }
 }
