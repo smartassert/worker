@@ -172,14 +172,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     WorkerEventOutcome::PASSED
                 ),
             ],
-            'test/passed' => [
-                'event' => new TestEvent(
-                    $genericTest->setState(TestState::COMPLETE),
-                    $testDocument,
-                    $testSource,
-                    WorkerEventOutcome::PASSED
-                ),
-            ],
             'test/failed' => [
                 'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
