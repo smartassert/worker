@@ -79,6 +79,7 @@ services:
       context: ../..
       args:
         DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/worker-db?serverVersion=12&charset=utf8
+        JOB_TIMEOUT_CHECK_PERIOD_MS: 1000
     container_name: app-web
     depends_on:
       - compiler
