@@ -125,6 +125,7 @@ class AppTest extends TestCase
                 'Test/chrome-open-form.yml',
                 'Page/index.yml',
             ],
+            'application_state' => 'complete',
             'compilation_state' => 'complete',
             'execution_state' => 'complete',
             'event_delivery_state' => 'complete',

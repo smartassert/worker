@@ -29,6 +29,7 @@ class SerializedJobAsserter
         TestCase::assertSame($expectedJob['event_delivery_url'], $job['event_delivery_url']);
         TestCase::assertSame($expectedJob['maximum_duration_in_seconds'], $job['maximum_duration_in_seconds']);
         TestCase::assertSame($expectedJob['sources'], $job['sources']);
+        TestCase::assertSame($expectedJob['application_state'], $job['application_state']);
         TestCase::assertSame($expectedJob['compilation_state'], $job['compilation_state']);
         TestCase::assertSame($expectedJob['execution_state'], $job['execution_state']);
         TestCase::assertSame($expectedJob['event_delivery_state'], $job['event_delivery_state']);
