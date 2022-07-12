@@ -69,11 +69,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 'setup' => new EnvironmentSetup(),
                 'expectedState' => ApplicationState::AWAITING_JOB,
             ],
-            'has job, no sources' => [
-                'setup' => (new EnvironmentSetup())
-                    ->withJobSetup(new JobSetup()),
-                'expectedState' => ApplicationState::AWAITING_SOURCES,
-            ],
             'no sources compiled' => [
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
@@ -237,22 +232,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ApplicationState::AWAITING_JOB,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_SOURCES,
-                    ApplicationState::COMPILING,
-                    ApplicationState::EXECUTING,
-                    ApplicationState::COMPLETING_EVENT_DELIVERY,
-                    ApplicationState::COMPLETE,
-                    ApplicationState::TIMED_OUT,
-                ],
-            ],
-            'has job, no sources' => [
-                'setup' => (new EnvironmentSetup())
-                    ->withJobSetup(new JobSetup()),
-                'expectedIsStates' => [
-                    ApplicationState::AWAITING_SOURCES,
-                ],
-                'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
@@ -272,7 +251,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -294,7 +272,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -317,7 +294,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -342,7 +318,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -370,7 +345,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -400,7 +374,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETE,
@@ -430,7 +403,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
@@ -451,7 +423,6 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::AWAITING_JOB,
-                    ApplicationState::AWAITING_SOURCES,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
