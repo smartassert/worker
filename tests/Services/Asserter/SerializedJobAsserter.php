@@ -71,7 +71,7 @@ class SerializedJobAsserter
 
         TestCase::assertSame($expectedSource, $actual['source']);
         TestCase::assertArrayHasKey('target', $actual);
-        TestCase::assertMatchesRegularExpression('/^Generated[0-9a-f]{32}Test\.php$/', $actual['target']);
+        TestCase::assertMatchesRegularExpression('/^Generated[0-9a-f]{32}Test\.php$/i', $actual['target']);
         TestCase::assertSame($expectedStepNames, $actual['step_names']);
         TestCase::assertSame($expectedState, $actual['state']);
         TestCase::assertSame($expectedPosition, $actual['position']);
