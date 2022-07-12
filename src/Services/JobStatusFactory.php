@@ -21,6 +21,7 @@ class JobStatusFactory
         private readonly EventDeliveryProgress $eventDeliveryProgress,
         private readonly ReferenceFactory $referenceFactory,
         private readonly ResourceReferenceFactory $resourceReferenceFactory,
+        private readonly ApplicationProgress $applicationProgress,
     ) {
     }
 
@@ -37,6 +38,7 @@ class JobStatusFactory
             $job,
             $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
+            $this->applicationProgress->get(),
             $this->compilationProgress->get(),
             $this->executionProgress->get(),
             $this->eventDeliveryProgress->get(),
