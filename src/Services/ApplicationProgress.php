@@ -11,7 +11,6 @@ use App\Enum\ExecutionState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Repository\JobRepository;
-use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 
 class ApplicationProgress
@@ -22,7 +21,6 @@ class ApplicationProgress
         private ExecutionProgress $executionProgress,
         private EventDeliveryProgress $eventDeliveryProgress,
         private WorkerEventRepository $workerEventRepository,
-        private SourceRepository $sourceRepository,
     ) {
     }
 
@@ -39,10 +37,6 @@ class ApplicationProgress
 
         if (0 !== $jobTimeoutCount) {
             return ApplicationState::TIMED_OUT;
-        }
-
-        if (0 === $this->sourceRepository->count([])) {
-            return ApplicationState::AWAITING_SOURCES;
         }
 
         if (false === $this->compilationProgress->is(...CompilationState::getFinishedStates())) {
