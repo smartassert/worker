@@ -26,7 +26,7 @@ class Job
     #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
 
-    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $startDateTime = null;
 
     /**
