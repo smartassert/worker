@@ -46,6 +46,13 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+      - name: Setup image test environment
+        run: |
+          composer integration-setup
+          composer image-start
+          sleep 5
+          composer image-chown-app-source
+
       - name: Run tests
         run: |
           composer image-start
