@@ -85,12 +85,16 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "db-start": "docker-compose -f ./tests/build/docker-compose.yml up -d postgres",
         "db-setup": [
-            "php bin/console doctrine:database:create --if-not-exists --quiet",
-            "php bin/console doctrine:schema:update --force --quiet"
+            "@db-start",
+            "php bin/console doctrine:database:create --if-not-exists || true",
+            "php bin/console doctrine:schema:update --force"
         ],
         "db-recreate": [
-            "php bin/console doctrine:database:drop --if-exists --force --quiet",
+            "@db-start",
+            "sleep 3",
+            "php bin/console doctrine:database:drop --if-exists --force",
             "@db-setup"
         ],
         "cs-fixer-dry-run": "docker run --rm $(if [ ! -z \"${NO_TTY}\" ]; then echo \"\"; else echo \"-t\"; fi) -w=/app -v ${PWD}:/app oskarstark/php-cs-fixer-ga:latest --allow-risky=yes --dry-run --verbose --show-progress none",
@@ -117,13 +121,16 @@
             "sleep 2",
             "@db-setup"
         ],
+        "integration-build": [
+            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml build)"
+        ],
         "integration-start": [
-            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d --build)",
-            "docker-compose -f ./tests/build/docker-compose.yml stop app-web"
+            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d event-receiver html-fixtures compiler chrome-runner firefox-runner delegator postgres caddy)"
         ],
         "image-start": [
             "docker-compose -f ./tests/build/docker-compose.yml stop app-web",
             "@db-recreate",
+            "@integration-setup",
             "docker-compose -f ./tests/build/docker-compose.yml start app-web"
         ],
         "image-chown-app-source": [
@@ -134,12 +141,18 @@
             "@functional-teardown"
         ],
         "integration-setup": [
+            "@integration-build",
             "@integration-start",
             "sleep 2",
             "@db-setup"
         ],
         "test-image": [
-            "./vendor/bin/phpunit tests/Image/AppTest.php"
+            "@image-start",
+            "sleep 1",
+            "./vendor/bin/phpunit tests/Image/AppTest.php",
+            "@image-start",
+            "sleep 1",
+            "./vendor/bin/phpunit tests/Image/JobTimeoutTest.php"
         ],
         "test-integration-sync": "./vendor/bin/phpunit -c phpunit.integration.xml",
         "ci": [
