@@ -9,11 +9,6 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Exception\ClientException;
-use SmartAssert\YamlFile\Collection\ArrayCollection;
-use SmartAssert\YamlFile\Collection\Serializer as YamlFileCollectionSerializer;
-use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
-use SmartAssert\YamlFile\YamlFile;
-use Symfony\Component\Yaml\Dumper;
 
 class AppTest extends AbstractImageTest
 {
@@ -22,19 +17,12 @@ class AppTest extends AbstractImageTest
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
 
     private SerializedJobAsserter $jobAsserter;
-    private YamlFileCollectionSerializer $yamlFileCollectionSerializer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->jobAsserter = new SerializedJobAsserter();
-
-        $this->yamlFileCollectionSerializer = new YamlFileCollectionSerializer(
-            new FileHashesSerializer(
-                new Dumper()
-            )
-        );
     }
 
     public function testInitialStatus(): void
@@ -53,33 +41,19 @@ class AppTest extends AbstractImageTest
      */
     public function testCreateJob(): void
     {
-        $yamlFiles = [];
-
-        $yamlFiles[] = YamlFile::create(
-            'manifest.yaml',
-            <<< 'EOT'
-            - Test/chrome-open-index.yml
-            - Test/chrome-firefox-open-index.yml
-            - Test/chrome-open-form.yml
-            EOT
+        $serializedSource = $this->createSerializedSource(
+            [
+                'Test/chrome-open-index.yml',
+                'Test/chrome-firefox-open-index.yml',
+                'Test/chrome-open-form.yml',
+            ],
+            [
+                'Test/chrome-open-index.yml',
+                'Test/chrome-firefox-open-index.yml',
+                'Test/chrome-open-form.yml',
+                'Page/index.yml',
+            ]
         );
-
-        $sourcePaths = [
-            'Test/chrome-open-index.yml',
-            'Test/chrome-firefox-open-index.yml',
-            'Test/chrome-open-form.yml',
-            'Page/index.yml',
-        ];
-
-        foreach ($sourcePaths as $sourcePath) {
-            $yamlFiles[] = YamlFile::create(
-                $sourcePath,
-                trim((string) file_get_contents(getcwd() . '/tests/Fixtures/Basil/' . $sourcePath))
-            );
-        }
-
-        $yamlFileCollection = new ArrayCollection($yamlFiles);
-        $serializedSource = $this->yamlFileCollectionSerializer->serialize($yamlFileCollection);
 
         $response = $this->makeCreateJobRequest([
             'label' => md5('label content'),

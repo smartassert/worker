@@ -8,6 +8,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use SmartAssert\YamlFile\Collection\ArrayCollection;
+use SmartAssert\YamlFile\Collection\Serializer as YamlFileCollectionSerializer;
+use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
+use SmartAssert\YamlFile\YamlFile;
+use Symfony\Component\Yaml\Dumper;
 
 abstract class AbstractImageTest extends TestCase
 {
@@ -53,5 +58,39 @@ abstract class AbstractImageTest extends TestCase
         \assert(is_array($data));
 
         return $data;
+    }
+
+    /**
+     * @param string[] $manifestPaths
+     * @param string[] $sourcePaths
+     */
+    protected function createSerializedSource(array $manifestPaths, array $sourcePaths): string
+    {
+        $manifestContent = '';
+
+        foreach ($manifestPaths as $manifestPath) {
+            $manifestContent .= '- ' . $manifestPath . "\n";
+        }
+        $manifestContent = trim($manifestContent);
+
+        $yamlFiles = [];
+        $yamlFiles[] = YamlFile::create('manifest.yaml', $manifestContent);
+
+        foreach ($sourcePaths as $sourcePath) {
+            $yamlFiles[] = YamlFile::create(
+                $sourcePath,
+                trim((string) file_get_contents(getcwd() . '/tests/Fixtures/Basil/' . $sourcePath))
+            );
+        }
+
+        $yamlFileCollection = new ArrayCollection($yamlFiles);
+
+        $yamlFileCollectionSerializer = new YamlFileCollectionSerializer(
+            new FileHashesSerializer(
+                new Dumper()
+            )
+        );
+
+        return $yamlFileCollectionSerializer->serialize($yamlFileCollection);
     }
 }
