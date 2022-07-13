@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Image;
 
 use App\Enum\ApplicationState;
-use GuzzleHttp\Exception\ClientException;
 
 class JobTimeoutTest extends AbstractImageTest
 {
@@ -13,22 +12,10 @@ class JobTimeoutTest extends AbstractImageTest
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
 
-    public function testInitialStatus(): void
+    protected function setUp(): void
     {
-        try {
-            $response = $this->makeGetJobRequest();
-        } catch (ClientException $exception) {
-            $response = $exception->getResponse();
-        }
+        parent::setUp();
 
-        self::assertSame(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testInitialStatus
-     */
-    public function testCreateJob(): void
-    {
         $serializedSource = $this->createSerializedSource(
             [
                 'Test/chrome-open-index.yml',
@@ -45,19 +32,14 @@ class JobTimeoutTest extends AbstractImageTest
             ]
         );
 
-        $response = $this->makeCreateJobRequest([
+        $this->makeCreateJobRequest([
             'label' => md5('label content'),
             'event_delivery_url' => 'http://event-receiver/events',
             'maximum_duration_in_seconds' => 1,
             'source' => $serializedSource,
         ]);
-
-        self::assertSame(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testCreateJob
-     */
     public function testCompilationExecution(): void
     {
         $duration = 0;
