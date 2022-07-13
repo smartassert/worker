@@ -41,4 +41,17 @@ abstract class AbstractImageTest extends TestCase
             http_build_query($parameters)
         ));
     }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function fetchJob(): array
+    {
+        $response = $this->makeGetJobRequest();
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        \assert(is_array($data));
+
+        return $data;
+    }
 }

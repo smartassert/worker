@@ -176,30 +176,13 @@ class JobTimeoutTest extends AbstractImageTest
                     ],
                 ],
             ],
-            $this->getJobStatus()
+            $this->fetchJob()
         );
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getJobStatus(): array
-    {
-        $response = $this->makeGetJobRequest();
-
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('application/json', $response->getHeaderLine('content-type'));
-
-        $body = $response->getBody()->getContents();
-        $data = json_decode($body, true);
-        self::assertIsArray($data);
-
-        return $data;
     }
 
     private function waitForApplicationToComplete(): bool
     {
-        $jobStatus = $this->getJobStatus();
+        $jobStatus = $this->fetchJob();
 
         return ApplicationState::TIMED_OUT->value === $jobStatus['application_state'];
     }
