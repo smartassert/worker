@@ -1,0 +1,58 @@
+name: tests-integration-image
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      test_names: ${{ steps.test_names.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set test names
+        id: test_names
+        run: |
+          TEST_NAMES=$(ls tests/Image --ignore=Abstract*)
+          TEST_NAMES_LACKING_EXTENSION="${TEST_NAMES//.php/}"          
+          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$TEST_NAMES_LACKING_EXTENSION")
+
+          echo "::set-output name=value::$TEST_NAMES_AS_JSON_ARRAY"
+
+  integration-app:
+    name: Integration Image - ${{ matrix.test_name }}
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php: ['8.1']
+        test_name: ${{ fromJson(needs.setup.outputs.test_names) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Setup image test environment
+        run: |
+          composer image-start
+          sleep 5
+          composer image-chown-app-source
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}.php
