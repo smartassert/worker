@@ -7,13 +7,32 @@ on:
   pull_request:
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      test_names: ${{ steps.test_names.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set test names
+        id: test_names
+        run: |
+          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$(ls tests/Image | grep -v Abstract)")
+
+          echo "::set-output name=value::$TEST_NAMES_AS_JSON_ARRAY"
+
   integration-app:
-    name: Integration Image - PHP ${{ matrix.php }}
+    name: Integration Image - ${{ matrix.test_name }}
+    needs: setup
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
         php: ['8.1']
-    runs-on: ${{ matrix.operating-system }}
+        test_name: ${{ fromJson(needs.setup.outputs.test_names) }}
 
     steps:
       - name: Checkout
@@ -28,4 +47,7 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Run tests
-        run: composer test-image
+        run: |
+          composer image-start
+          sleep 3
+          ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}
