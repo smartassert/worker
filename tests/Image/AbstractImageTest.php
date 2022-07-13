@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
+use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
@@ -19,12 +20,14 @@ abstract class AbstractImageTest extends TestCase
     private const JOB_URL = 'https://localhost:/job';
 
     private Client $httpClient;
+    private SerializedJobAsserter $jobAsserter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->httpClient = new Client(['verify' => false]);
+        $this->jobAsserter = new SerializedJobAsserter();
     }
 
     protected function makeGetJobRequest(): ResponseInterface
@@ -92,5 +95,14 @@ abstract class AbstractImageTest extends TestCase
         );
 
         return $yamlFileCollectionSerializer->serialize($yamlFileCollection);
+    }
+
+    /**
+     * @param array<mixed> $expected
+     * @param array<mixed> $actual
+     */
+    protected function assertJob(array $expected, array $actual): void
+    {
+        $this->jobAsserter->assertJob($expected, $actual);
     }
 }

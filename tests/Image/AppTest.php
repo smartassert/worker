@@ -7,7 +7,6 @@ namespace App\Tests\Image;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
-use App\Tests\Services\Asserter\SerializedJobAsserter;
 use GuzzleHttp\Exception\ClientException;
 
 class AppTest extends AbstractImageTest
@@ -15,15 +14,6 @@ class AppTest extends AbstractImageTest
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
-
-    private SerializedJobAsserter $jobAsserter;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->jobAsserter = new SerializedJobAsserter();
-    }
 
     public function testInitialStatus(): void
     {
@@ -81,7 +71,7 @@ class AppTest extends AbstractImageTest
 
         self::assertFalse($durationExceeded);
 
-        $this->jobAsserter->assertJob(
+        $this->assertJob(
             [
                 'label' => md5('label content'),
                 'event_delivery_url' => 'http://event-receiver/events',
