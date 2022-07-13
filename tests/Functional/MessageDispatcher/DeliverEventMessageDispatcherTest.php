@@ -11,7 +11,6 @@ use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
-use App\Event\JobTimeoutEvent;
 use App\Event\TestEvent;
 use App\Message\DeliverEventMessage;
 use App\Model\Document\Exception;
@@ -134,9 +133,6 @@ class DeliverEventMessageDispatcherTest extends AbstractBaseFunctionalTest
                     $testSource,
                     WorkerEventOutcome::EXCEPTION
                 ),
-            ],
-            JobTimeoutEvent::class => [
-                'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
             ],
         ];
     }
