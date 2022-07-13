@@ -20,7 +20,9 @@ jobs:
       - name: Set test names
         id: test_names
         run: |
-          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$(ls tests/Image --ignore=Abstract*)")
+          TEST_NAMES=$(ls tests/Image --ignore=Abstract*)
+          TEST_NAMES_LACKING_EXTENSION="${TEST_NAMES//.php/}"          
+          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$TEST_NAMES_LACKING_EXTENSION")
 
           echo "::set-output name=value::$TEST_NAMES_AS_JSON_ARRAY"
 
@@ -53,4 +55,4 @@ jobs:
           composer image-chown-app-source
 
       - name: Run tests
-        run: ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}
+        run: ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}.php
