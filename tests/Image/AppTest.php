@@ -8,24 +8,19 @@ use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Tests\Services\Asserter\SerializedJobAsserter;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Request;
-use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\Serializer as YamlFileCollectionSerializer;
 use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
 use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Dumper;
 
-class AppTest extends TestCase
+class AppTest extends AbstractImageTest
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
-    private const JOB_URL = 'https://localhost:/job';
 
-    private Client $httpClient;
     private SerializedJobAsserter $jobAsserter;
     private YamlFileCollectionSerializer $yamlFileCollectionSerializer;
 
@@ -33,7 +28,6 @@ class AppTest extends TestCase
     {
         parent::setUp();
 
-        $this->httpClient = new Client(['verify' => false]);
         $this->jobAsserter = new SerializedJobAsserter();
 
         $this->yamlFileCollectionSerializer = new YamlFileCollectionSerializer(
@@ -46,7 +40,7 @@ class AppTest extends TestCase
     public function testInitialStatus(): void
     {
         try {
-            $response = $this->httpClient->sendRequest(new Request('GET', self::JOB_URL));
+            $response = $this->makeGetJobRequest();
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
         }
@@ -87,19 +81,12 @@ class AppTest extends TestCase
         $yamlFileCollection = new ArrayCollection($yamlFiles);
         $serializedSource = $this->yamlFileCollectionSerializer->serialize($yamlFileCollection);
 
-        $response = $this->httpClient->sendRequest(new Request(
-            'POST',
-            self::JOB_URL,
-            [
-                'content-type' => 'application/x-www-form-urlencoded',
-            ],
-            http_build_query([
-                'label' => md5('label content'),
-                'event_delivery_url' => 'http://event-receiver/events',
-                'maximum_duration_in_seconds' => 600,
-                'source' => $serializedSource,
-            ])
-        ));
+        $response = $this->makeCreateJobRequest([
+            'label' => md5('label content'),
+            'event_delivery_url' => 'http://event-receiver/events',
+            'maximum_duration_in_seconds' => 600,
+            'source' => $serializedSource,
+        ]);
 
         self::assertSame(200, $response->getStatusCode());
     }
@@ -187,7 +174,7 @@ class AppTest extends TestCase
      */
     private function getJobStatus(): array
     {
-        $response = $this->httpClient->sendRequest(new Request('GET', self::JOB_URL));
+        $response = $this->makeGetJobRequest();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('application/json', $response->getHeaderLine('content-type'));
