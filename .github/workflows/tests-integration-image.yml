@@ -48,13 +48,9 @@ jobs:
 
       - name: Setup image test environment
         run: |
-          composer integration-setup
           composer image-start
           sleep 5
           composer image-chown-app-source
 
       - name: Run tests
-        run: |
-          composer image-start
-          sleep 3
-          ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}
+        run: ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}
