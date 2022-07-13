@@ -20,7 +20,7 @@ jobs:
       - name: Set test names
         id: test_names
         run: |
-          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$(ls tests/Image | grep -v Abstract)")
+          TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$(ls tests/Image --ignore=Abstract*)")
 
           echo "::set-output name=value::$TEST_NAMES_AS_JSON_ARRAY"
 
