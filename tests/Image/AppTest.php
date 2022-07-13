@@ -34,7 +34,7 @@ class AppTest extends TestCase
         parent::setUp();
 
         $this->httpClient = new Client(['verify' => false]);
-        $this->jobAsserter = new SerializedJobAsserter($this->httpClient);
+        $this->jobAsserter = new SerializedJobAsserter();
 
         $this->yamlFileCollectionSerializer = new YamlFileCollectionSerializer(
             new FileHashesSerializer(
@@ -115,63 +115,66 @@ class AppTest extends TestCase
 
         self::assertFalse($durationExceeded);
 
-        $this->jobAsserter->assertJob([
-            'label' => md5('label content'),
-            'event_delivery_url' => 'http://event-receiver/events',
-            'maximum_duration_in_seconds' => 600,
-            'sources' => [
-                'Test/chrome-open-index.yml',
-                'Test/chrome-firefox-open-index.yml',
-                'Test/chrome-open-form.yml',
-                'Page/index.yml',
+        $this->jobAsserter->assertJob(
+            [
+                'label' => md5('label content'),
+                'event_delivery_url' => 'http://event-receiver/events',
+                'maximum_duration_in_seconds' => 600,
+                'sources' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
+                    'Test/chrome-open-form.yml',
+                    'Page/index.yml',
+                ],
+                'application_state' => 'complete',
+                'compilation_state' => 'complete',
+                'execution_state' => 'complete',
+                'event_delivery_state' => 'complete',
+                'tests' => [
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-open-index.yml',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                        'state' => 'complete',
+                        'position' => 1,
+                    ],
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                        'state' => 'complete',
+                        'position' => 2,
+                    ],
+                    [
+                        'browser' => 'firefox',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                        'state' => 'complete',
+                        'position' => 3,
+                    ],
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/form.html',
+                        'source' => 'Test/chrome-open-form.yml',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                        'state' => 'complete',
+                        'position' => 4,
+                    ],
+                ],
             ],
-            'application_state' => 'complete',
-            'compilation_state' => 'complete',
-            'execution_state' => 'complete',
-            'event_delivery_state' => 'complete',
-            'tests' => [
-                [
-                    'browser' => 'chrome',
-                    'url' => 'http://html-fixtures/index.html',
-                    'source' => 'Test/chrome-open-index.yml',
-                    'step_names' => [
-                        'verify page is open',
-                    ],
-                    'state' => 'complete',
-                    'position' => 1,
-                ],
-                [
-                    'browser' => 'chrome',
-                    'url' => 'http://html-fixtures/index.html',
-                    'source' => 'Test/chrome-firefox-open-index.yml',
-                    'step_names' => [
-                        'verify page is open',
-                    ],
-                    'state' => 'complete',
-                    'position' => 2,
-                ],
-                [
-                    'browser' => 'firefox',
-                    'url' => 'http://html-fixtures/index.html',
-                    'source' => 'Test/chrome-firefox-open-index.yml',
-                    'step_names' => [
-                        'verify page is open',
-                    ],
-                    'state' => 'complete',
-                    'position' => 3,
-                ],
-                [
-                    'browser' => 'chrome',
-                    'url' => 'http://html-fixtures/form.html',
-                    'source' => 'Test/chrome-open-form.yml',
-                    'step_names' => [
-                        'verify page is open',
-                    ],
-                    'state' => 'complete',
-                    'position' => 4,
-                ],
-            ],
-        ]);
+            $this->getJobStatus()
+        );
     }
 
     /**

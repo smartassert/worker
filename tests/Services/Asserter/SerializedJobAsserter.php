@@ -4,42 +4,33 @@ declare(strict_types=1);
 
 namespace App\Tests\Services\Asserter;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
 class SerializedJobAsserter
 {
-    private const URL = 'https://localhost/job';
-
-    public function __construct(private Client $httpClient)
-    {
-    }
-
     /**
-     * @param array<mixed> $expectedJob
+     * @param array<mixed> $expected
+     * @param array<mixed> $actual
      */
-    public function assertJob(array $expectedJob): void
+    public function assertJob(array $expected, array $actual): void
     {
-        $job = $this->fetchJob();
+        TestCase::assertIsArray($actual);
 
-        TestCase::assertIsArray($job);
+        TestCase::assertSame($expected['label'], $actual['label']);
+        TestCase::assertSame($expected['event_delivery_url'], $actual['event_delivery_url']);
+        TestCase::assertSame($expected['maximum_duration_in_seconds'], $actual['maximum_duration_in_seconds']);
+        TestCase::assertSame($expected['sources'], $actual['sources']);
+        TestCase::assertSame($expected['application_state'], $actual['application_state']);
+        TestCase::assertSame($expected['compilation_state'], $actual['compilation_state']);
+        TestCase::assertSame($expected['execution_state'], $actual['execution_state']);
+        TestCase::assertSame($expected['event_delivery_state'], $actual['event_delivery_state']);
 
-        TestCase::assertSame($expectedJob['label'], $job['label']);
-        TestCase::assertSame($expectedJob['event_delivery_url'], $job['event_delivery_url']);
-        TestCase::assertSame($expectedJob['maximum_duration_in_seconds'], $job['maximum_duration_in_seconds']);
-        TestCase::assertSame($expectedJob['sources'], $job['sources']);
-        TestCase::assertSame($expectedJob['application_state'], $job['application_state']);
-        TestCase::assertSame($expectedJob['compilation_state'], $job['compilation_state']);
-        TestCase::assertSame($expectedJob['execution_state'], $job['execution_state']);
-        TestCase::assertSame($expectedJob['event_delivery_state'], $job['event_delivery_state']);
+        TestCase::assertIsArray($actual['tests']);
+        TestCase::assertIsArray($expected['tests']);
 
-        TestCase::assertIsArray($job['tests']);
-        TestCase::assertIsArray($expectedJob['tests']);
-
-        foreach ($expectedJob['tests'] as $index => $expectedTest) {
-            TestCase::assertArrayHasKey($index, $job['tests']);
-            $actualTest = $job['tests'][$index];
+        foreach ($expected['tests'] as $index => $expectedTest) {
+            TestCase::assertArrayHasKey($index, $actual['tests']);
+            $actualTest = $actual['tests'][$index];
             TestCase::assertIsArray($actualTest);
 
             $this->assertTest(
@@ -76,22 +67,5 @@ class SerializedJobAsserter
         TestCase::assertSame($expectedStepNames, $actual['step_names']);
         TestCase::assertSame($expectedState, $actual['state']);
         TestCase::assertSame($expectedPosition, $actual['position']);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function fetchJob(): array
-    {
-        $response = $this->httpClient->sendRequest(new Request('GET', self::URL));
-
-        TestCase::assertSame(200, $response->getStatusCode());
-        TestCase::assertSame('application/json', $response->getHeaderLine('content-type'));
-
-        $body = $response->getBody()->getContents();
-        $data = json_decode($body, true);
-        TestCase::assertIsArray($data);
-
-        return $data;
     }
 }
