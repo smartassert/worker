@@ -4,60 +4,42 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
-use App\Enum\CompilationState;
-use App\Enum\EventDeliveryState;
-use App\Enum\ExecutionState;
-use GuzzleHttp\Exception\ClientException;
+use App\Enum\ApplicationState;
 
-class AppTest extends AbstractImageTest
+class JobTimeoutTest extends AbstractImageTest
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
+    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
 
-    public function testInitialStatus(): void
+    protected function setUp(): void
     {
-        try {
-            $response = $this->makeGetJobRequest();
-        } catch (ClientException $exception) {
-            $response = $exception->getResponse();
-        }
+        parent::setUp();
 
-        self::assertSame(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testInitialStatus
-     */
-    public function testCreateJob(): void
-    {
         $serializedSource = $this->createSerializedSource(
             [
                 'Test/chrome-open-index.yml',
+                'Test/firefox-open-index.yml',
                 'Test/chrome-firefox-open-index.yml',
                 'Test/chrome-open-form.yml',
             ],
             [
                 'Test/chrome-open-index.yml',
+                'Test/firefox-open-index.yml',
                 'Test/chrome-firefox-open-index.yml',
                 'Test/chrome-open-form.yml',
                 'Page/index.yml',
             ]
         );
 
-        $response = $this->makeCreateJobRequest([
+        $this->makeCreateJobRequest([
             'label' => md5('label content'),
             'event_delivery_url' => 'http://event-receiver/events',
-            'maximum_duration_in_seconds' => 600,
+            'maximum_duration_in_seconds' => 1,
             'source' => $serializedSource,
         ]);
-
-        self::assertSame(200, $response->getStatusCode());
     }
 
-    /**
-     * @depends testCreateJob
-     */
     public function testCompilationExecution(): void
     {
         $duration = 0;
@@ -75,16 +57,17 @@ class AppTest extends AbstractImageTest
             [
                 'label' => md5('label content'),
                 'event_delivery_url' => 'http://event-receiver/events',
-                'maximum_duration_in_seconds' => 600,
+                'maximum_duration_in_seconds' => 1,
                 'sources' => [
                     'Test/chrome-open-index.yml',
+                    'Test/firefox-open-index.yml',
                     'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                     'Page/index.yml',
                 ],
-                'application_state' => 'complete',
+                'application_state' => 'timed-out',
                 'compilation_state' => 'complete',
-                'execution_state' => 'complete',
+                'execution_state' => 'cancelled',
                 'event_delivery_state' => 'complete',
                 'tests' => [
                     [
@@ -98,14 +81,24 @@ class AppTest extends AbstractImageTest
                         'position' => 1,
                     ],
                     [
+                        'browser' => 'firefox',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/firefox-open-index.yml',
+                        'step_names' => [
+                            'verify page is open',
+                        ],
+                        'state' => 'cancelled',
+                        'position' => 2,
+                    ],
+                    [
                         'browser' => 'chrome',
                         'url' => 'http://html-fixtures/index.html',
                         'source' => 'Test/chrome-firefox-open-index.yml',
                         'step_names' => [
                             'verify page is open',
                         ],
-                        'state' => 'complete',
-                        'position' => 2,
+                        'state' => 'cancelled',
+                        'position' => 3,
                     ],
                     [
                         'browser' => 'firefox',
@@ -114,8 +107,8 @@ class AppTest extends AbstractImageTest
                         'step_names' => [
                             'verify page is open',
                         ],
-                        'state' => 'complete',
-                        'position' => 3,
+                        'state' => 'cancelled',
+                        'position' => 4,
                     ],
                     [
                         'browser' => 'chrome',
@@ -124,8 +117,8 @@ class AppTest extends AbstractImageTest
                         'step_names' => [
                             'verify page is open',
                         ],
-                        'state' => 'complete',
-                        'position' => 4,
+                        'state' => 'cancelled',
+                        'position' => 5,
                     ],
                 ],
             ],
@@ -137,8 +130,6 @@ class AppTest extends AbstractImageTest
     {
         $jobStatus = $this->fetchJob();
 
-        return CompilationState::COMPLETE->value === $jobStatus['compilation_state']
-            && ExecutionState::COMPLETE->value === $jobStatus['execution_state']
-            && EventDeliveryState::COMPLETE->value === $jobStatus['event_delivery_state'];
+        return ApplicationState::TIMED_OUT->value === $jobStatus['application_state'];
     }
 }
