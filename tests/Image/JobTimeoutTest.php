@@ -44,7 +44,7 @@ class JobTimeoutTest extends TestCase
     public function testInitialStatus(): void
     {
         try {
-            $response = $this->httpClient->get(self::JOB_URL);
+            $response = $this->httpClient->sendRequest(new Request('GET', self::JOB_URL));
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
         }
@@ -87,14 +87,19 @@ class JobTimeoutTest extends TestCase
         $yamlFileCollection = new ArrayCollection($yamlFiles);
         $serializedSource = $this->yamlFileCollectionSerializer->serialize($yamlFileCollection);
 
-        $response = $this->httpClient->post('https://localhost/job', [
-            'form_params' => [
+        $response = $this->httpClient->sendRequest(new Request(
+            'POST',
+            self::JOB_URL,
+            [
+                'content-type' => 'application/x-www-form-urlencoded',
+            ],
+            http_build_query([
                 'label' => md5('label content'),
                 'event_delivery_url' => 'http://event-receiver/events',
                 'maximum_duration_in_seconds' => 1,
                 'source' => $serializedSource,
-            ],
-        ]);
+            ])
+        ));
 
         self::assertSame(200, $response->getStatusCode());
     }
