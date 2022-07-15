@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
@@ -20,6 +21,7 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepEvent;
 use App\Event\TestEvent;
+use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
@@ -407,6 +409,52 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
+                ),
+            ],
+            'test/exception' => [
+                'event' => new TestEvent(
+                    $genericTest,
+                    new Exception(
+                        ExecutionExceptionScope::TEST,
+                        [
+                            'type' => 'exception',
+                            'payload' => [
+                                'step' => null,
+                                'class' => self::class,
+                                'message' => 'test-scope exception message',
+                                'code' => 123,
+                            ],
+                        ]
+                    ),
+                    $testSource,
+                    WorkerEventOutcome::EXCEPTION
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::TEST,
+                    WorkerEventOutcome::EXCEPTION,
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
+                    [
+                        'source' => $testSource,
+                        'document' => [
+                            'type' => 'exception',
+                            'payload' => [
+                                'step' => null,
+                                'class' => self::class,
+                                'message' => 'test-scope exception message',
+                                'code' => 123,
+                            ],
+                        ],
+                        'step_names' => [
+                            'step 1',
+                        ],
+                        'related_references' => [
+                            [
+                                'label' => 'step 1',
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
+                            ],
+                        ],
+                    ]
                 ),
             ],
         ];
