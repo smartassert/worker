@@ -23,6 +23,7 @@ use App\Event\StepEvent;
 use App\Event\TestEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Step;
+use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
@@ -111,6 +112,26 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             'type' => 'step',
             'payload' => [
                 'name' => 'failing step',
+            ],
+        ];
+
+        $exceptionStepDocumentData = [
+            'type' => 'exception',
+            'payload' => [
+                'step' => 'step name',
+                'class' => self::class,
+                'message' => 'step-scope exception message',
+                'code' => 456,
+            ],
+        ];
+
+        $exceptionTestDocumentData = [
+            'type' => 'exception',
+            'payload' => [
+                'step' => null,
+                'class' => self::class,
+                'message' => 'test-scope exception message',
+                'code' => 123,
             ],
         ];
 
@@ -414,18 +435,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             'test/exception' => [
                 'event' => new TestEvent(
                     $genericTest,
-                    new Exception(
-                        ExecutionExceptionScope::TEST,
-                        [
-                            'type' => 'exception',
-                            'payload' => [
-                                'step' => null,
-                                'class' => self::class,
-                                'message' => 'test-scope exception message',
-                                'code' => 123,
-                            ],
-                        ]
-                    ),
+                    new Exception(ExecutionExceptionScope::TEST, $exceptionTestDocumentData),
                     $testSource,
                     WorkerEventOutcome::EXCEPTION
                 ),
@@ -436,15 +446,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     md5(self::JOB_LABEL . $testSource),
                     [
                         'source' => $testSource,
-                        'document' => [
-                            'type' => 'exception',
-                            'payload' => [
-                                'step' => null,
-                                'class' => self::class,
-                                'message' => 'test-scope exception message',
-                                'code' => 123,
-                            ],
-                        ],
+                        'document' => $exceptionTestDocumentData,
                         'step_names' => [
                             'step 1',
                         ],
@@ -454,6 +456,26 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                                 'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
                             ],
                         ],
+                    ]
+                ),
+            ],
+            'step/exception' => [
+                'event' => new StepEvent(
+                    $genericTest,
+                    new StepException('step name', $exceptionStepDocumentData),
+                    $testSource,
+                    'step name',
+                    WorkerEventOutcome::EXCEPTION,
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::STEP,
+                    WorkerEventOutcome::EXCEPTION,
+                    'step name',
+                    md5(self::JOB_LABEL . $testSource . 'step name'),
+                    [
+                        'source' => $testSource,
+                        'document' => $exceptionStepDocumentData,
+                        'name' => 'step name',
                     ]
                 ),
             ],
