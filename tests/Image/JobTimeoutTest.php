@@ -65,10 +65,6 @@ class JobTimeoutTest extends AbstractImageTest
                     'Test/chrome-open-form.yml',
                     'Page/index.yml',
                 ],
-                'application_state' => 'timed-out',
-                'compilation_state' => 'complete',
-                'execution_state' => 'cancelled',
-                'event_delivery_state' => 'complete',
                 'tests' => [
                     [
                         'browser' => 'chrome',
@@ -124,12 +120,21 @@ class JobTimeoutTest extends AbstractImageTest
             ],
             $this->fetchJob()
         );
+        $this->assertApplicationState(
+            [
+                'application' => 'timed-out',
+                'compilation' => 'complete',
+                'execution' => 'cancelled',
+                'event_delivery' => 'complete',
+            ],
+            $this->fetchApplicationState()
+        );
     }
 
     private function waitForApplicationToComplete(): bool
     {
-        $jobStatus = $this->fetchJob();
+        $state = $this->fetchApplicationState();
 
-        return ApplicationState::TIMED_OUT->value === $jobStatus['application_state'];
+        return ApplicationState::TIMED_OUT->value === $state['application'];
     }
 }

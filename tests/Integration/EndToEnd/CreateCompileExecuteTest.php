@@ -84,8 +84,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         array $expectedTestDataCollection,
         ?callable $assertions = null
     ): void {
-        $statusResponse = $this->clientRequestSender->getStatus();
-        $this->jsonResponseAsserter->assertJsonResponse(400, [], $statusResponse);
+        $jobStatusResponse = $this->clientRequestSender->getJobStatus();
+        $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
         $label = $this->jobProperties->getLabel();
         $eventDeliveryUrl = $this->jobProperties->getEventDeliveryUrl();
@@ -100,7 +100,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $timer = new Timer();
         $timer->start();
 
-        $createResponse = $this->clientRequestSender->create($requestPayload);
+        $createResponse = $this->clientRequestSender->createJob($requestPayload);
 
         $duration = $timer->stop();
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());
@@ -108,23 +108,28 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame(200, $createResponse->getStatusCode());
         self::assertSame('application/json', $createResponse->headers->get('content-type'));
 
-        $statusResponse = $this->clientRequestSender->getStatus();
+        $jobStatusResponse = $this->clientRequestSender->getJobStatus();
+        self::assertSame(200, $jobStatusResponse->getStatusCode());
+        self::assertSame('application/json', $jobStatusResponse->headers->get('content-type'));
 
-        self::assertSame(200, $statusResponse->getStatusCode());
-        self::assertSame('application/json', $statusResponse->headers->get('content-type'));
+        $jobStatusData = json_decode((string) $jobStatusResponse->getContent(), true);
+        self::assertIsArray($jobStatusData);
+        self::assertSame($label, $jobStatusData['label']);
+        self::assertSame($eventDeliveryUrl, $jobStatusData['event_delivery_url']);
+        self::assertSame($jobMaximumDurationInSeconds, $jobStatusData['maximum_duration_in_seconds']);
+        self::assertSame($sourcePaths, $jobStatusData['sources']);
 
-        $statusData = json_decode((string) $statusResponse->getContent(), true);
-        self::assertIsArray($statusData);
+        $applicationStateResponse = $this->clientRequestSender->getApplicationState();
+        self::assertSame(200, $applicationStateResponse->getStatusCode());
+        self::assertSame('application/json', $applicationStateResponse->headers->get('content-type'));
 
-        self::assertSame($label, $statusData['label']);
-        self::assertSame($eventDeliveryUrl, $statusData['event_delivery_url']);
-        self::assertSame($jobMaximumDurationInSeconds, $statusData['maximum_duration_in_seconds']);
-        self::assertSame($expectedCompilationEndState->value, $statusData['compilation_state']);
-        self::assertSame($expectedExecutionEndState->value, $statusData['execution_state']);
-        self::assertSame(EventDeliveryState::COMPLETE->value, $statusData['event_delivery_state']);
-        self::assertSame($sourcePaths, $statusData['sources']);
+        $applicationStateData = json_decode((string) $applicationStateResponse->getContent(), true);
+        self::assertIsArray($applicationStateData);
+        self::assertSame($expectedCompilationEndState->value, $applicationStateData['compilation']);
+        self::assertSame($expectedExecutionEndState->value, $applicationStateData['execution']);
+        self::assertSame(EventDeliveryState::COMPLETE->value, $applicationStateData['event_delivery']);
 
-        $testDataCollection = $statusData['tests'];
+        $testDataCollection = $jobStatusData['tests'];
         self::assertIsArray($testDataCollection);
 
         self::assertCount(count($expectedTestDataCollection), $testDataCollection);

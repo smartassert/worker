@@ -6,7 +6,7 @@ namespace App\Tests\Services\Asserter;
 
 use PHPUnit\Framework\TestCase;
 
-class SerializedJobAsserter
+class ApplicationResponseDataAsserter
 {
     /**
      * @param array<mixed> $expected
@@ -20,10 +20,6 @@ class SerializedJobAsserter
         TestCase::assertSame($expected['event_delivery_url'], $actual['event_delivery_url']);
         TestCase::assertSame($expected['maximum_duration_in_seconds'], $actual['maximum_duration_in_seconds']);
         TestCase::assertSame($expected['sources'], $actual['sources']);
-        TestCase::assertSame($expected['application_state'], $actual['application_state']);
-        TestCase::assertSame($expected['compilation_state'], $actual['compilation_state']);
-        TestCase::assertSame($expected['execution_state'], $actual['execution_state']);
-        TestCase::assertSame($expected['event_delivery_state'], $actual['event_delivery_state']);
 
         TestCase::assertIsArray($actual['tests']);
         TestCase::assertIsArray($expected['tests']);
@@ -43,6 +39,20 @@ class SerializedJobAsserter
                 $actualTest
             );
         }
+    }
+
+    /**
+     * @param array<mixed> $expected
+     * @param array<mixed> $actual
+     */
+    public function assertApplicationState(array $expected, array $actual): void
+    {
+        TestCase::assertIsArray($actual);
+
+        TestCase::assertSame($expected['application'], $actual['application']);
+        TestCase::assertSame($expected['compilation'], $actual['compilation']);
+        TestCase::assertSame($expected['execution'], $actual['execution']);
+        TestCase::assertSame($expected['event_delivery'], $actual['event_delivery']);
     }
 
     /**

@@ -131,14 +131,23 @@ class AppTest extends AbstractImageTest
             ],
             $this->fetchJob()
         );
+        $this->assertApplicationState(
+            [
+                'application' => 'complete',
+                'compilation' => 'complete',
+                'execution' => 'complete',
+                'event_delivery' => 'complete',
+            ],
+            $this->fetchApplicationState()
+        );
     }
 
     private function waitForApplicationToComplete(): bool
     {
-        $jobStatus = $this->fetchJob();
+        $state = $this->fetchApplicationState();
 
-        return CompilationState::COMPLETE->value === $jobStatus['compilation_state']
-            && ExecutionState::COMPLETE->value === $jobStatus['execution_state']
-            && EventDeliveryState::COMPLETE->value === $jobStatus['event_delivery_state'];
+        return CompilationState::COMPLETE->value === $state['compilation']
+            && ExecutionState::COMPLETE->value === $state['execution']
+            && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
     }
 }

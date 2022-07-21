@@ -19,16 +19,23 @@ class ClientRequestSender
     /**
      * @param array<mixed> $payload
      */
-    public function create(array $payload): Response
+    public function createJob(array $payload): Response
     {
         $this->client->request('POST', '/job', $payload);
 
         return $this->client->getResponse();
     }
 
-    public function getStatus(): Response
+    public function getJobStatus(): Response
     {
         $this->client->request('GET', '/job');
+
+        return $this->client->getResponse();
+    }
+
+    public function getApplicationState(): Response
+    {
+        $this->client->request('GET', '/application_state');
 
         return $this->client->getResponse();
     }
