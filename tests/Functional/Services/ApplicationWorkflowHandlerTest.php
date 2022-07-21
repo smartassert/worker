@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Job;
+use App\Entity\Source;
+use App\Entity\Test;
 use App\Entity\Test as TestEntity;
+use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\WorkerEventOutcome;
@@ -20,9 +24,13 @@ use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockApplicationProgress;
+use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
+use App\Tests\Model\JobSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
+use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventListenerRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -65,6 +73,16 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 ],
             ],
         ]);
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
+
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        if ($environmentFactory instanceof EnvironmentFactory) {
+            $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+        }
     }
 
     public function testSubscribesToTestPassedEventApplicationNotComplete(): void
