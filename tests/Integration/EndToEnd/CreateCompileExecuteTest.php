@@ -22,7 +22,6 @@ use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
 use App\Tests\Services\IntegrationDeliverEventRequestFactory;
-use App\Tests\Services\IntegrationJobProperties;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
@@ -35,7 +34,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     private CallableInvoker $callableInvoker;
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
-    private IntegrationJobProperties $jobProperties;
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
     private WorkerEventRepository $workerEventRepository;
@@ -56,10 +54,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
         \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
         $this->jsonResponseAsserter = $jsonResponseAsserter;
-
-        $jobProperties = self::getContainer()->get(IntegrationJobProperties::class);
-        \assert($jobProperties instanceof IntegrationJobProperties);
-        $this->jobProperties = $jobProperties;
 
         $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
@@ -88,6 +82,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     public function testCreateCompileExecute(
         array $manifestPaths,
         array $sourcePaths,
+        string $jobLabel,
         string $eventDeliveryUrlPath,
         int $jobMaximumDurationInSeconds,
         CompilationState $expectedCompilationEndState,
@@ -98,11 +93,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
-        $label = $this->jobProperties->getLabel();
         $eventDeliveryUrl = $this->eventDeliveryBaseUrl . $eventDeliveryUrlPath;
 
         $requestPayload = [
-            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_LABEL => $jobLabel,
             CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
@@ -132,7 +126,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
         $jobStatusData = json_decode((string) $jobStatusResponse->getContent(), true);
         self::assertIsArray($jobStatusData);
-        self::assertSame($label, $jobStatusData['label']);
+        self::assertSame($jobLabel, $jobStatusData['label']);
         self::assertSame($eventDeliveryUrl, $jobStatusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $jobStatusData['maximum_duration_in_seconds']);
         self::assertSame($sourcePaths, $jobStatusData['sources']);
@@ -178,6 +172,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
      */
     public function createAddSourcesCompileExecuteDataProvider(): array
     {
+        $jobLabel = md5((string) rand());
+
         return [
             'compilation failed on first test' => [
                 'manifestPaths' => [
@@ -186,6 +182,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'sourcePaths' => [
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
+                'jobLabel' => $jobLabel,
                 'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
@@ -193,10 +190,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'expectedTestDataCollection' => [],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
-                    IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
                     string $eventDeliveryBaseUrl,
+                ) use (
+                    $jobLabel,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -204,11 +202,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             [
                                 'tests' => [
                                     'Test/chrome-open-index-compilation-failure.yml',
@@ -217,7 +216,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index-compilation-failure.yml'
                                         ),
                                     ],
@@ -225,21 +224,23 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                             ]
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/failed',
                             'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                                 'output' => [
@@ -282,6 +283,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-index.yml',
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
+                'jobLabel' => $jobLabel,
                 'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
@@ -298,10 +300,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
-                    IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
                     string $eventDeliveryBaseUrl,
+                ) use (
+                    $jobLabel,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -309,11 +312,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             [
                                 'tests' => [
                                     'Test/chrome-open-index.yml',
@@ -322,12 +326,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'related_references' => [
                                     [
                                         'label' => 'Test/chrome-open-index.yml',
-                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                                        'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                     ],
                                     [
                                         'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index-compilation-failure.yml'
                                         ),
                                     ],
@@ -335,28 +339,30 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                                 'related_references' => [
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index.yml' .
                                             'verify page is open'
                                         )
@@ -365,21 +371,23 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                             ]
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/failed',
                             'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-compilation-failure.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                                 'output' => [
@@ -424,6 +432,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
+                'jobLabel' => $jobLabel,
                 'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
@@ -464,10 +473,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
-                    IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
                     string $eventDeliveryBaseUrl,
+                ) use (
+                    $jobLabel,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -475,11 +485,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             [
                                 'tests' => [
                                     'Test/chrome-open-index.yml',
@@ -489,44 +500,46 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'related_references' => [
                                     [
                                         'label' => 'Test/chrome-open-index.yml',
-                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                                        'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                     ],
                                     [
                                         'label' => 'Test/chrome-firefox-open-index.yml',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'
+                                            $jobLabel . 'Test/chrome-firefox-open-index.yml'
                                         ),
                                     ],
                                     [
                                         'label' => 'Test/chrome-open-form.yml',
-                                        'reference' => md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                                        'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
                                     ],
                                 ],
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                                 'related_references' => [
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index.yml' .
                                             'verify page is open'
                                         )
@@ -535,28 +548,30 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                             ]
                         ),
                         'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                                 'related_references' => [
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-firefox-open-index.yml' .
                                             'verify page is open'
                                         )
@@ -565,28 +580,30 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-form.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                            md5($jobLabel . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                             ]
                         ),
                         'compilation/passed: chrome-open-form' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-form.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                            md5($jobLabel . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                                 'related_references' => [
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-form.yml' .
                                             'verify page is open'
                                         )
@@ -595,27 +612,30 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'job/compiled' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/compiled',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             []
                         ),
                         'execution/started' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'execution/started',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             []
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                                 'document' => [
@@ -635,7 +655,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -644,11 +664,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml' . 'verify page is open'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml' . 'verify page is open'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                                 'document' => [
@@ -675,11 +696,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-open-index.yml',
                                 'document' => [
@@ -699,7 +721,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -708,11 +730,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                                 'document' => [
@@ -732,7 +755,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-firefox-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -741,12 +764,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
                             md5(
-                                $jobProperties->getLabel() .
+                                $jobLabel .
                                 'Test/chrome-firefox-open-index.yml' .
                                 'verify page is open'
                             ),
@@ -770,11 +794,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                                 'document' => [
@@ -794,7 +819,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-firefox-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -803,11 +828,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                                 'document' => [
@@ -827,7 +853,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-firefox-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -836,12 +862,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
                             md5(
-                                $jobProperties->getLabel() .
+                                $jobLabel .
                                 'Test/chrome-firefox-open-index.yml' .
                                 'verify page is open'
                             ),
@@ -865,11 +892,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-firefox-open-index.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-firefox-open-index.yml'),
+                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
                                 'source' => 'Test/chrome-firefox-open-index.yml',
                                 'document' => [
@@ -889,7 +917,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-firefox-open-index.yml' .
                                             'verify page is open'
                                         ),
@@ -898,11 +926,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-open-form.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                            md5($jobLabel . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                                 'document' => [
@@ -922,7 +951,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-form.yml' .
                                             'verify page is open'
                                         ),
@@ -931,11 +960,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml' . 'verify page is open'),
+                            md5($jobLabel . 'Test/chrome-open-form.yml' . 'verify page is open'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                                 'document' => [
@@ -956,11 +986,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-open-form.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-form.yml'),
+                            md5($jobLabel . 'Test/chrome-open-form.yml'),
                             [
                                 'source' => 'Test/chrome-open-form.yml',
                                 'document' => [
@@ -980,7 +1011,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-form.yml' .
                                             'verify page is open'
                                         ),
@@ -989,19 +1020,21 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'execution/completed' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'execution/completed',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             []
                         ),
                         'job/completed' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/completed',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             []
                         ),
                     ]);
@@ -1019,6 +1052,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'sourcePaths' => [
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
+                'jobLabel' => $jobLabel,
                 'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
@@ -1035,10 +1069,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 ],
                 'assertions' => function (
                     HttpLogReader $httpLogReader,
-                    IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
                     string $eventDeliveryBaseUrl,
+                ) use (
+                    $jobLabel,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy(
                         [
@@ -1055,12 +1090,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'step/failed',
                             'fail on intentionally-missing element',
                             md5(
-                                $jobProperties->getLabel() .
+                                $jobLabel .
                                 'Test/chrome-open-index-with-step-failure.yml' .
                                 'fail on intentionally-missing element'
                             ),
@@ -1101,11 +1137,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/failed' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/failed',
                             'Test/chrome-open-index-with-step-failure.yml',
-                            md5($jobProperties->getLabel() . 'Test/chrome-open-index-with-step-failure.yml'),
+                            md5($jobLabel . 'Test/chrome-open-index-with-step-failure.yml'),
                             [
                                 'source' => 'Test/chrome-open-index-with-step-failure.yml',
                                 'document' => [
@@ -1126,7 +1163,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'verify page is open',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index-with-step-failure.yml' .
                                             'verify page is open'
                                         ),
@@ -1134,7 +1171,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                     [
                                         'label' => 'fail on intentionally-missing element',
                                         'reference' => md5(
-                                            $jobProperties->getLabel() .
+                                            $jobLabel .
                                             'Test/chrome-open-index-with-step-failure.yml' .
                                             'fail on intentionally-missing element'
                                         ),
@@ -1143,11 +1180,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'job/failed' => $requestFactory->create(
+                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/failed',
-                            $jobProperties->getLabel(),
-                            md5($jobProperties->getLabel()),
+                            $jobLabel,
+                            md5($jobLabel),
                             []
                         ),
                     ]);
