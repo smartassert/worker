@@ -12,5 +12,4 @@ framework:
             'App\Message\DeliverEventMessage': event_delivery
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
-            'App\Message\JobCompletedCheckMessage': async
             'App\Message\TimeoutCheckMessage': async
