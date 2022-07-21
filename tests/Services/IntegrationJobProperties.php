@@ -8,7 +8,7 @@ class IntegrationJobProperties
 {
     private string $label;
 
-    public function __construct(private string $baseUrl)
+    public function __construct()
     {
         $this->label = md5('label content');
     }
@@ -16,15 +16,5 @@ class IntegrationJobProperties
     public function getLabel(): string
     {
         return $this->label;
-    }
-
-    public function getEventDeliveryUrl(): string
-    {
-        return $this->createEventDeliveryUrlForStatusCode(200);
-    }
-
-    public function createEventDeliveryUrlForStatusCode(int $statusCode): string
-    {
-        return $this->baseUrl . '/status/' . (string) $statusCode;
     }
 }

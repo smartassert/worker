@@ -39,6 +39,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
     private WorkerEventRepository $workerEventRepository;
+    private string $eventDeliveryBaseUrl;
 
     protected function setUp(): void
     {
@@ -71,6 +72,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($workerEventRepository instanceof WorkerEventRepository);
         $this->workerEventRepository = $workerEventRepository;
+
+        $eventDeliveryBaseUrl = self::getContainer()->getParameter('event_delivery_base_url');
+        \assert(is_string($eventDeliveryBaseUrl));
+        $this->eventDeliveryBaseUrl = $eventDeliveryBaseUrl;
     }
 
     /**
@@ -83,6 +88,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     public function testCreateCompileExecute(
         array $manifestPaths,
         array $sourcePaths,
+        string $eventDeliveryUrlPath,
         int $jobMaximumDurationInSeconds,
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
@@ -93,7 +99,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
         $label = $this->jobProperties->getLabel();
-        $eventDeliveryUrl = $this->jobProperties->getEventDeliveryUrl();
+        $eventDeliveryUrl = $this->eventDeliveryBaseUrl . $eventDeliveryUrlPath;
 
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $label,
@@ -180,6 +186,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'sourcePaths' => [
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
+                'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
@@ -189,6 +196,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
+                    string $eventDeliveryBaseUrl,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -196,6 +204,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
                             $jobProperties->getLabel(),
@@ -216,6 +225,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index-compilation-failure.yml',
@@ -225,6 +235,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/failed',
                             'Test/chrome-open-index-compilation-failure.yml',
@@ -271,6 +282,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-open-index.yml',
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
+                'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
@@ -289,6 +301,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
+                    string $eventDeliveryBaseUrl,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -296,6 +309,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
                             $jobProperties->getLabel(),
@@ -321,6 +335,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index.yml',
@@ -330,6 +345,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-index.yml',
@@ -349,6 +365,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index-compilation-failure.yml',
@@ -358,6 +375,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/failed',
                             'Test/chrome-open-index-compilation-failure.yml',
@@ -406,6 +424,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
+                'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::COMPLETE,
@@ -448,6 +467,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
+                    string $eventDeliveryBaseUrl,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
                     \assert($firstEvent instanceof WorkerEvent);
@@ -455,6 +475,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'job/started',
                             $jobProperties->getLabel(),
@@ -484,6 +505,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-index.yml',
@@ -493,6 +515,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-index.yml',
@@ -512,6 +535,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-firefox-open-index.yml',
@@ -521,6 +545,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-firefox-open-index.yml',
@@ -540,6 +565,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/started: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/started',
                             'Test/chrome-open-form.yml',
@@ -549,6 +575,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'compilation/passed: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'compilation/passed',
                             'Test/chrome-open-form.yml',
@@ -568,6 +595,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'job/compiled' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/compiled',
                             $jobProperties->getLabel(),
@@ -575,6 +603,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             []
                         ),
                         'execution/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'execution/started',
                             $jobProperties->getLabel(),
@@ -582,6 +611,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             []
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-open-index.yml',
@@ -614,6 +644,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
@@ -644,6 +675,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-open-index.yml',
@@ -676,6 +708,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-firefox-open-index.yml',
@@ -708,6 +741,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
@@ -736,6 +770,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-firefox-open-index.yml',
@@ -768,6 +803,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-firefox-open-index.yml',
@@ -800,6 +836,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
@@ -828,6 +865,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-firefox-open-index.yml',
@@ -860,6 +898,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/started',
                             'Test/chrome-open-form.yml',
@@ -892,6 +931,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'step/passed',
                             'verify page is open',
@@ -916,6 +956,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/passed',
                             'Test/chrome-open-form.yml',
@@ -948,6 +989,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'execution/completed' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'execution/completed',
                             $jobProperties->getLabel(),
@@ -955,6 +997,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             []
                         ),
                         'job/completed' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/completed',
                             $jobProperties->getLabel(),
@@ -976,6 +1019,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                 'sourcePaths' => [
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
+                'eventDeliveryUrlPath' => '/status/200',
                 'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::CANCELLED,
@@ -994,6 +1038,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                     IntegrationJobProperties $jobProperties,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
+                    string $eventDeliveryBaseUrl,
                 ) {
                     $firstEvent = $workerEventRepository->findOneBy(
                         [
@@ -1010,6 +1055,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             $firstEventId,
                             'step/failed',
                             'fail on intentionally-missing element',
@@ -1055,6 +1101,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'test/failed' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'test/failed',
                             'Test/chrome-open-index-with-step-failure.yml',
@@ -1096,6 +1143,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             ]
                         ),
                         'job/failed' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
                             ++$firstEventId,
                             'job/failed',
                             $jobProperties->getLabel(),

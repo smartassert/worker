@@ -3,6 +3,7 @@ imports:
 
 parameters:
     integration_http_log_path: '%env(HTTP_LOG_PATH)%'
+    event_delivery_base_url: '%env(EVENT_DELIVERY_BASE_URL)%'
 
 services:
     _defaults:
@@ -57,8 +58,6 @@ services:
 
     App\Tests\Services\IntegrationJobProperties:
         public: true
-        arguments:
-            $baseUrl: '%env(CALLBACK_BASE_URL)%'
 
     App\Tests\Services\IntegrationDeliverEventRequestFactory:
         public: true

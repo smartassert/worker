@@ -19,6 +19,7 @@ class IntegrationDeliverEventRequestFactory
      * @param array<mixed>     $payload
      */
     public function create(
+        string $eventDeliveryUrl,
         int $sequenceNumber,
         string $type,
         string $label,
@@ -27,7 +28,7 @@ class IntegrationDeliverEventRequestFactory
     ): RequestInterface {
         return new Request(
             'POST',
-            $this->jobProperties->getEventDeliveryUrl(),
+            $eventDeliveryUrl,
             [
                 'content-type' => 'application/json',
             ],
