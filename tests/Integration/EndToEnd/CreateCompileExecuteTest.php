@@ -84,7 +84,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         array $expectedTestDataCollection,
         ?callable $assertions = null
     ): void {
-        $statusResponse = $this->clientRequestSender->getStatus();
+        $statusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $statusResponse);
 
         $label = $this->jobProperties->getLabel();
@@ -100,7 +100,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $timer = new Timer();
         $timer->start();
 
-        $createResponse = $this->clientRequestSender->create($requestPayload);
+        $createResponse = $this->clientRequestSender->createJob($requestPayload);
 
         $duration = $timer->stop();
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());
@@ -108,7 +108,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame(200, $createResponse->getStatusCode());
         self::assertSame('application/json', $createResponse->headers->get('content-type'));
 
-        $statusResponse = $this->clientRequestSender->getStatus();
+        $statusResponse = $this->clientRequestSender->getJobStatus();
 
         self::assertSame(200, $statusResponse->getStatusCode());
         self::assertSame('application/json', $statusResponse->headers->get('content-type'));

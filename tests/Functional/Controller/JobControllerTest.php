@@ -99,7 +99,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         self::assertFalse($this->jobRepository->has());
 
-        $response = $this->clientRequestSender->create($requestPayload);
+        $response = $this->clientRequestSender->createJob($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
         self::assertFalse($this->jobRepository->has());
@@ -356,7 +356,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     ): void {
         self::assertFalse($this->jobRepository->has());
 
-        $response = $this->clientRequestSender->create($requestDataCreator($this->createJobSourceFactory));
+        $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
 
         $this->jsonResponseAsserter->assertJsonResponse(
             200,
@@ -691,7 +691,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
     public function testStatusNoJob(): void
     {
-        $response = $this->clientRequestSender->getStatus();
+        $response = $this->clientRequestSender->getJobStatus();
 
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $response);
     }
@@ -705,7 +705,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        $response = $this->clientRequestSender->getStatus();
+        $response = $this->clientRequestSender->getJobStatus();
 
         $this->jsonResponseAsserter->assertJsonResponse(200, $expectedResponseData, $response);
     }
