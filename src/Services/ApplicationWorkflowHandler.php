@@ -10,19 +10,16 @@ use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
-use App\Message\JobCompletedCheckMessage;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 class ApplicationWorkflowHandler implements EventSubscriberInterface
 {
     public function __construct(
         private ApplicationProgress $applicationProgress,
         private EventDispatcherInterface $eventDispatcher,
-        private MessageBusInterface $messageBus,
-        private JobRepository $jobRepository,
+        private readonly JobRepository $jobRepository,
     ) {
     }
 
@@ -51,8 +48,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::COMPLETED));
-        } else {
-            $this->messageBus->dispatch(new JobCompletedCheckMessage());
         }
     }
 
