@@ -32,4 +32,11 @@ class ClientRequestSender
 
         return $this->client->getResponse();
     }
+
+    public function getApplicationState(): Response
+    {
+        $this->client->request('GET', '/application_state');
+
+        return $this->client->getResponse();
+    }
 }
