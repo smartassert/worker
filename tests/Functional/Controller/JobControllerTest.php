@@ -89,7 +89,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @!dataProvider createBadRequestMissingValuesDataProvider
+     * @dataProvider createBadRequestMissingValuesDataProvider
      * @dataProvider createBadRequestInvalidSourceDataProvider
      *
      * @param array<mixed> $requestPayload
@@ -430,10 +430,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                     ],
@@ -484,10 +480,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                         'InvalidTest/invalid-yaml.yml',
@@ -549,10 +541,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                         'Test/firefox-open-index.yml',
@@ -744,10 +732,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test2.yml',
                         'Test/test3.yml',
                     ],
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'execution_state' => 'awaiting',
-                    'event_delivery_state' => 'awaiting',
                     'test_paths' => [
                         'Test/test1.yml',
                         'Test/test2.yml',
@@ -806,10 +790,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test2.yml',
                         'Test/test3.yml',
                     ],
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'execution_state' => 'awaiting',
-                    'event_delivery_state' => 'awaiting',
                     'test_paths' => [
                         'Test/test1.yml',
                         'Test/test2.yml',
