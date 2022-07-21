@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
+use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\ExecutionExceptionScope;
@@ -11,19 +12,18 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
-use App\Message\JobCompletedCheckMessage;
-use App\MessageDispatcher\DeliverEventMessageDispatcher;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationWorkflowHandler;
-use App\Services\ExecutionWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\Services\MockApplicationProgress;
+use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
-use App\Tests\Services\Asserter\MessengerAsserter;
-use App\Tests\Services\EventListenerRemover;
+use App\Tests\Model\JobSetup;
+use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\ObjectReflector\ObjectReflector;
@@ -34,7 +34,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     private ApplicationWorkflowHandler $handler;
     private EventDispatcherInterface $eventDispatcher;
-    private MessengerAsserter $messengerAsserter;
 
     protected function setUp(): void
     {
@@ -48,55 +47,15 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($eventDispatcher instanceof EventDispatcherInterface);
         $this->eventDispatcher = $eventDispatcher;
 
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(Job::class);
+        }
 
-        $eventListenerRemover = self::getContainer()->get(EventListenerRemover::class);
-        \assert($eventListenerRemover instanceof EventListenerRemover);
-        $eventListenerRemover->remove([
-            DeliverEventMessageDispatcher::class => [
-                TestEvent::class => ['dispatchForEvent'],
-            ],
-            ExecutionWorkflowHandler::class => [
-                TestEvent::class => [
-                    'dispatchExecutionCompletedEventForTestPassedEvent',
-                    'dispatchNextExecuteTestMessageForTestPassedEvent',
-                ],
-            ],
-        ]);
-    }
-
-    public function testSubscribesToTestPassedEventApplicationNotComplete(): void
-    {
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty(
-            $this->handler,
-            ApplicationWorkflowHandler::class,
-            'eventDispatcher',
-            $eventDispatcher
-        );
-
-        $this->messengerAsserter->assertQueueIsEmpty();
-
-        $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
-
-        $this->eventDispatcher->dispatch(new TestEvent(
-            $testEntity,
-            new TestDocument('test.yml', []),
-            'test.yml',
-            WorkerEventOutcome::PASSED
-        ));
-
-        $this->messengerAsserter->assertQueueCount(1);
-        $this->messengerAsserter->assertMessageAtPositionEquals(
-            0,
-            new JobCompletedCheckMessage()
-        );
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        if ($environmentFactory instanceof EnvironmentFactory) {
+            $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+        }
     }
 
     public function testSubscribesToTestPassedEventApplicationComplete(): void
