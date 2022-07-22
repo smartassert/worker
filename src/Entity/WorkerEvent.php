@@ -112,4 +112,24 @@ class WorkerEvent
     {
         return $this->label;
     }
+
+    /**
+     * @return array{
+     *     sequence_number: int,
+     *     type: string,
+     *     label: non-empty-string,
+     *     reference: string,
+     *     payload: array<mixed>
+     * }
+     */
+    public function toArray(): array
+    {
+        return [
+            'sequence_number' => (int) $this->id,
+            'type' => $this->scope->value . '/' . $this->outcome->value,
+            'label' => $this->label,
+            'reference' => $this->reference,
+            'payload' => $this->payload,
+        ];
+    }
 }
