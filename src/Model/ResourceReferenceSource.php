@@ -7,7 +7,6 @@ namespace App\Model;
 class ResourceReferenceSource
 {
     /**
-     * @param string             $label
      * @param non-empty-string[] $components
      */
     public function __construct(
