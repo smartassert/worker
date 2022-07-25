@@ -103,4 +103,32 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             $this->repository->getTypeCount(WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED)
         );
     }
+
+    public function testFindAllIdsNoEvents(): void
+    {
+        self::assertSame([], $this->repository->findAllIds());
+    }
+
+    public function testFindAllIdsHasEvents(): void
+    {
+        $workerEventSetups = [];
+        $eventCount = 10;
+
+        for ($i = 0; $i <= $eventCount; ++$i) {
+            $workerEventSetups[] = new WorkerEventSetup();
+        }
+
+        $environment = $this->environmentFactory->create(
+            (new EnvironmentSetup())
+                ->withWorkerEventSetups($workerEventSetups)
+        );
+
+        $eventIds = [];
+        foreach ($environment->getWorkerEvents() as $event) {
+            $eventIds[] = (int) $event->getId();
+        }
+
+        self::assertNotEmpty($eventIds);
+        self::assertSame($eventIds, $this->repository->findAllIds());
+    }
 }
