@@ -23,7 +23,7 @@ class TestWorkerEventFactory
             $workerEventSetup->getScope(),
             $workerEventSetup->getOutcome(),
             $workerEventSetup->getLabel(),
-            'non-empty reference',
+            $workerEventSetup->getReference(),
             $workerEventSetup->getPayload()
         ));
 

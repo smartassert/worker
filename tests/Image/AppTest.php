@@ -53,6 +53,21 @@ class AppTest extends AbstractImageTest
         ]);
 
         self::assertSame(200, $response->getStatusCode());
+
+        $responseData = json_decode($response->getBody()->getContents(), true);
+        self::assertIsArray($responseData);
+        self::assertArrayHasKey('event_ids', $responseData);
+        self::assertSame([1], $responseData['event_ids']);
+    }
+
+    public function testGetJobStartedEvent(): void
+    {
+        $response = $this->makeGetEventRequest(1);
+        self::assertSame(200, $response->getStatusCode());
+
+        $responseData = json_decode($response->getBody()->getContents(), true);
+        self::assertIsArray($responseData);
+        self::assertSame('job/started', $responseData['type']);
     }
 
     /**
@@ -131,14 +146,30 @@ class AppTest extends AbstractImageTest
             ],
             $this->fetchJob()
         );
+        $this->assertApplicationState(
+            [
+                'application' => 'complete',
+                'compilation' => 'complete',
+                'execution' => 'complete',
+                'event_delivery' => 'complete',
+            ],
+            $this->fetchApplicationState()
+        );
+
+        $jobData = $this->fetchJob();
+        self::assertArrayHasKey('event_ids', $jobData);
+
+        $eventIds = $jobData['event_ids'];
+        self::assertNotEmpty($eventIds);
+        self::assertNotSame([1], $eventIds);
     }
 
     private function waitForApplicationToComplete(): bool
     {
-        $jobStatus = $this->fetchJob();
+        $state = $this->fetchApplicationState();
 
-        return CompilationState::COMPLETE->value === $jobStatus['compilation_state']
-            && ExecutionState::COMPLETE->value === $jobStatus['execution_state']
-            && EventDeliveryState::COMPLETE->value === $jobStatus['event_delivery_state'];
+        return CompilationState::COMPLETE->value === $state['compilation']
+            && ExecutionState::COMPLETE->value === $state['execution']
+            && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
     }
 }

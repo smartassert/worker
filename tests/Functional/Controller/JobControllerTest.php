@@ -12,6 +12,7 @@ use App\Entity\WorkerEvent;
 use App\Event\JobStartedEvent;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
+use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
@@ -42,6 +43,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
     private CreateJobSourceFactory $createJobSourceFactory;
+    private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
@@ -79,6 +81,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
         $this->createJobSourceFactory = $createJobSourceFactory;
 
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
+
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(WorkerEvent::class);
@@ -89,7 +95,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     }
 
     /**
-     * @!dataProvider createBadRequestMissingValuesDataProvider
+     * @dataProvider createBadRequestMissingValuesDataProvider
      * @dataProvider createBadRequestInvalidSourceDataProvider
      *
      * @param array<mixed> $requestPayload
@@ -99,7 +105,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         self::assertFalse($this->jobRepository->has());
 
-        $response = $this->clientRequestSender->create($requestPayload);
+        $response = $this->clientRequestSender->createJob($requestPayload);
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
         self::assertFalse($this->jobRepository->has());
@@ -356,7 +362,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     ): void {
         self::assertFalse($this->jobRepository->has());
 
-        $response = $this->clientRequestSender->create($requestDataCreator($this->createJobSourceFactory));
+        $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
+
+        $expectedResponseData['event_ids'] = $this->workerEventRepository->findAllIds();
 
         $this->jsonResponseAsserter->assertJsonResponse(
             200,
@@ -430,10 +438,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                     ],
@@ -484,10 +488,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                         'InvalidTest/invalid-yaml.yml',
@@ -549,10 +549,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     'reference' => md5($label),
                     'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'event_delivery_state' => 'running',
-                    'execution_state' => 'awaiting',
                     'sources' => [
                         'Test/chrome-open-index.yml',
                         'Test/firefox-open-index.yml',
@@ -691,7 +687,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
 
     public function testStatusNoJob(): void
     {
-        $response = $this->clientRequestSender->getStatus();
+        $response = $this->clientRequestSender->getJobStatus();
 
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $response);
     }
@@ -705,7 +701,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        $response = $this->clientRequestSender->getStatus();
+        $expectedResponseData['event_ids'] = $this->workerEventRepository->findAllIds();
+
+        $response = $this->clientRequestSender->getJobStatus();
 
         $this->jsonResponseAsserter->assertJsonResponse(200, $expectedResponseData, $response);
     }
@@ -744,10 +742,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test2.yml',
                         'Test/test3.yml',
                     ],
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'execution_state' => 'awaiting',
-                    'event_delivery_state' => 'awaiting',
                     'test_paths' => [
                         'Test/test1.yml',
                         'Test/test2.yml',
@@ -806,10 +800,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'Test/test2.yml',
                         'Test/test3.yml',
                     ],
-                    'application_state' => 'compiling',
-                    'compilation_state' => 'running',
-                    'execution_state' => 'awaiting',
-                    'event_delivery_state' => 'awaiting',
                     'test_paths' => [
                         'Test/test1.yml',
                         'Test/test2.yml',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
-use App\Tests\Services\Asserter\SerializedJobAsserter;
+use App\Tests\Services\Asserter\ApplicationResponseDataAsserter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
@@ -17,17 +17,19 @@ use Symfony\Component\Yaml\Dumper;
 
 abstract class AbstractImageTest extends TestCase
 {
-    private const JOB_URL = 'https://localhost:/job';
+    private const JOB_URL = 'https://localhost/job';
+    private const APPLICATION_STATE_URL = 'https://localhost/application_state';
+    private const EVENT_URL = 'https://localhost/event/%d';
 
     private Client $httpClient;
-    private SerializedJobAsserter $jobAsserter;
+    private ApplicationResponseDataAsserter $responseDataAsserter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->httpClient = new Client(['verify' => false]);
-        $this->jobAsserter = new SerializedJobAsserter();
+        $this->responseDataAsserter = new ApplicationResponseDataAsserter();
     }
 
     protected function makeGetJobRequest(): ResponseInterface
@@ -50,12 +52,35 @@ abstract class AbstractImageTest extends TestCase
         ));
     }
 
+    protected function makeGetApplicationStateRequest(): ResponseInterface
+    {
+        return $this->httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
+    }
+
+    protected function makeGetEventRequest(int $id): ResponseInterface
+    {
+        return $this->httpClient->sendRequest(new Request('GET', sprintf(self::EVENT_URL, $id)));
+    }
+
     /**
      * @return array<mixed>
      */
     protected function fetchJob(): array
     {
         $response = $this->makeGetJobRequest();
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        \assert(is_array($data));
+
+        return $data;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function fetchApplicationState(): array
+    {
+        $response = $this->makeGetApplicationStateRequest();
         $body = $response->getBody()->getContents();
         $data = json_decode($body, true);
         \assert(is_array($data));
@@ -103,6 +128,15 @@ abstract class AbstractImageTest extends TestCase
      */
     protected function assertJob(array $expected, array $actual): void
     {
-        $this->jobAsserter->assertJob($expected, $actual);
+        $this->responseDataAsserter->assertJob($expected, $actual);
+    }
+
+    /**
+     * @param array<mixed> $expected
+     * @param array<mixed> $actual
+     */
+    protected function assertApplicationState(array $expected, array $actual): void
+    {
+        $this->responseDataAsserter->assertApplicationState($expected, $actual);
     }
 }

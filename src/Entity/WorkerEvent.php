@@ -72,44 +72,28 @@ class WorkerEvent
         return $this->state;
     }
 
-    public function hasState(WorkerEventState $state): bool
-    {
-        return $state === $this->state;
-    }
-
     public function setState(WorkerEventState $state): void
     {
         $this->state = $state;
     }
 
-    public function getScope(): WorkerEventScope
-    {
-        return $this->scope;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
-    public function getReference(): string
-    {
-        return $this->reference;
-    }
-
     /**
-     * @return array<mixed>
+     * @return array{
+     *     sequence_number: int,
+     *     type: string,
+     *     label: non-empty-string,
+     *     reference: string,
+     *     payload: array<mixed>
+     * }
      */
-    public function getPayload(): array
+    public function toArray(): array
     {
-        return $this->payload;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
+        return [
+            'sequence_number' => (int) $this->id,
+            'type' => $this->scope->value . '/' . $this->outcome->value,
+            'label' => $this->label,
+            'reference' => $this->reference,
+            'payload' => $this->payload,
+        ];
     }
 }

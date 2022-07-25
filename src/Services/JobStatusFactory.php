@@ -10,18 +10,16 @@ use App\Model\JobStatus;
 use App\Model\ResourceReferenceSource;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
+use App\Repository\WorkerEventRepository;
 
 class JobStatusFactory
 {
     public function __construct(
         private readonly SourceRepository $sourceRepository,
         private readonly TestRepository $testRepository,
-        private readonly CompilationProgress $compilationProgress,
-        private readonly ExecutionProgress $executionProgress,
-        private readonly EventDeliveryProgress $eventDeliveryProgress,
         private readonly ReferenceFactory $referenceFactory,
         private readonly ResourceReferenceFactory $resourceReferenceFactory,
-        private readonly ApplicationProgress $applicationProgress,
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
 
@@ -38,12 +36,9 @@ class JobStatusFactory
             $job,
             $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
-            $this->applicationProgress->get(),
-            $this->compilationProgress->get(),
-            $this->executionProgress->get(),
-            $this->eventDeliveryProgress->get(),
             $this->createSerializedTestCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources)
+            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources),
+            $this->workerEventRepository->findAllIds(),
         );
     }
 
