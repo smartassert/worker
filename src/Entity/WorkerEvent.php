@@ -78,14 +78,6 @@ class WorkerEvent
     }
 
     /**
-     * @return array<mixed>
-     */
-    public function getPayload(): array
-    {
-        return $this->payload;
-    }
-
-    /**
      * @return non-empty-string
      */
     public function getLabel(): string
