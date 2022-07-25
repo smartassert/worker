@@ -25,6 +25,11 @@ class WorkerEventSetup
      */
     private string $label;
 
+    /**
+     * @var non-empty-string
+     */
+    private string $reference;
+
     public function __construct()
     {
         $this->scope = WorkerEventScope::COMPILATION;
@@ -32,6 +37,7 @@ class WorkerEventSetup
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->label = 'non-empty label';
+        $this->reference = 'non-empty reference';
     }
 
     public function getScope(): WorkerEventScope
@@ -50,6 +56,17 @@ class WorkerEventSetup
     public function getPayload(): array
     {
         return $this->payload;
+    }
+
+    /**
+     * @param array<mixed> $payload
+     */
+    public function withPayload(array $payload): self
+    {
+        $new = clone $this;
+        $new->payload = $payload;
+
+        return $new;
     }
 
     public function getState(): WorkerEventState
@@ -96,6 +113,25 @@ class WorkerEventSetup
     {
         $new = clone $this;
         $new->label = $label;
+
+        return $new;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param non-empty-string $reference
+     */
+    public function withReference(string $reference): self
+    {
+        $new = clone $this;
+        $new->reference = $reference;
 
         return $new;
     }
