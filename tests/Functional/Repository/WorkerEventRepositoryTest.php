@@ -59,14 +59,29 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
     public function testGetTypeCount(): void
     {
-        $this->createWorkerEventsWithTypes([
-            [WorkerEventScope::JOB, WorkerEventOutcome::STARTED],
-            [WorkerEventScope::STEP, WorkerEventOutcome::PASSED],
-            [WorkerEventScope::STEP, WorkerEventOutcome::PASSED],
-            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
-            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
-            [WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED],
-        ]);
+        $this->environmentFactory->create(
+            (new EnvironmentSetup())
+                ->withWorkerEventSetups([
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::JOB)
+                        ->withOutcome(WorkerEventOutcome::STARTED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::STEP)
+                        ->withOutcome(WorkerEventOutcome::PASSED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::STEP)
+                        ->withOutcome(WorkerEventOutcome::PASSED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withOutcome(WorkerEventOutcome::PASSED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withOutcome(WorkerEventOutcome::PASSED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withOutcome(WorkerEventOutcome::PASSED),
+                ])
+        );
 
         self::assertSame(
             0,
@@ -87,15 +102,5 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             3,
             $this->repository->getTypeCount(WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED)
         );
-    }
-
-    /**
-     * @param array<array{0: WorkerEventScope, 1: WorkerEventOutcome}> $types
-     */
-    private function createWorkerEventsWithTypes(array $types): void
-    {
-        foreach ($types as $type) {
-            $this->repository->add(new WorkerEvent($type[0], $type[1], 'non-empty label', 'non-empty reference', []));
-        }
     }
 }
