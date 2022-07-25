@@ -77,11 +77,6 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getScope(): WorkerEventScope
-    {
-        return $this->scope;
-    }
-
     public function getOutcome(): WorkerEventOutcome
     {
         return $this->outcome;
