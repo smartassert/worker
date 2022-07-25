@@ -72,11 +72,6 @@ class WorkerEvent
         return $this->state;
     }
 
-    public function hasState(WorkerEventState $state): bool
-    {
-        return $state === $this->state;
-    }
-
     public function setState(WorkerEventState $state): void
     {
         $this->state = $state;
