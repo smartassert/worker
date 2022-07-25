@@ -19,6 +19,7 @@ abstract class AbstractImageTest extends TestCase
 {
     private const JOB_URL = 'https://localhost/job';
     private const APPLICATION_STATE_URL = 'https://localhost/application_state';
+    private const EVENT_URL = 'https://localhost/event/%d';
 
     private Client $httpClient;
     private ApplicationResponseDataAsserter $responseDataAsserter;
@@ -54,6 +55,11 @@ abstract class AbstractImageTest extends TestCase
     protected function makeGetApplicationStateRequest(): ResponseInterface
     {
         return $this->httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
+    }
+
+    protected function makeGetEventRequest(int $id): ResponseInterface
+    {
+        return $this->httpClient->sendRequest(new Request('GET', sprintf(self::EVENT_URL, $id)));
     }
 
     /**
