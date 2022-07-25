@@ -10,6 +10,7 @@ use App\Model\JobStatus;
 use App\Model\ResourceReferenceSource;
 use App\Repository\SourceRepository;
 use App\Repository\TestRepository;
+use App\Repository\WorkerEventRepository;
 
 class JobStatusFactory
 {
@@ -18,6 +19,7 @@ class JobStatusFactory
         private readonly TestRepository $testRepository,
         private readonly ReferenceFactory $referenceFactory,
         private readonly ResourceReferenceFactory $resourceReferenceFactory,
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
 
@@ -35,7 +37,8 @@ class JobStatusFactory
             $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
             $this->createSerializedTestCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources)
+            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources),
+            $this->workerEventRepository->findAllIds(),
         );
     }
 
