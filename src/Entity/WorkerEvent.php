@@ -77,11 +77,6 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getReference(): string
-    {
-        return $this->reference;
-    }
-
     /**
      * @return array<mixed>
      */
