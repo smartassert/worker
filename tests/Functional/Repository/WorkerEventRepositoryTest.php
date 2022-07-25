@@ -7,13 +7,16 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
+use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EnvironmentFactory;
 
 class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 {
     private WorkerEventRepository $repository;
+    private EnvironmentFactory $environmentFactory;
 
     protected function setUp(): void
     {
@@ -27,49 +30,31 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(WorkerEvent::class);
         }
+
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $this->environmentFactory = $environmentFactory;
     }
 
     public function testHasForType(): void
     {
-        $workerEvent0 = new WorkerEvent(
-            WorkerEventScope::COMPILATION,
-            WorkerEventOutcome::FAILED,
-            'non-empty label',
-            'non-empty reference',
-            []
+        $this->environmentFactory->create(
+            (new EnvironmentSetup())
+                ->withWorkerEventSetups([
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withOutcome(WorkerEventOutcome::FAILED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::TEST)
+                        ->withOutcome(WorkerEventOutcome::STARTED),
+                    (new WorkerEventSetup())
+                        ->withScope(WorkerEventScope::JOB)
+                        ->withOutcome(WorkerEventOutcome::TIME_OUT),
+                ])
         );
-        $workerEvent0->setState(WorkerEventState::AWAITING);
-        $this->persistEntity($workerEvent0);
 
-        $workerEvent1 = new WorkerEvent(
-            WorkerEventScope::TEST,
-            WorkerEventOutcome::STARTED,
-            'non-empty label',
-            'non-empty reference',
-            []
-        );
-        $workerEvent1->setState(WorkerEventState::AWAITING);
-        $this->persistEntity($workerEvent1);
-
-        $workerEvent2 = new WorkerEvent(
-            WorkerEventScope::JOB,
-            WorkerEventOutcome::TIME_OUT,
-            'non-empty label',
-            'non-empty reference',
-            []
-        );
-        $workerEvent2->setState(WorkerEventState::COMPLETE);
-        $this->persistEntity($workerEvent2);
-
-        self::assertTrue($this->repository->hasForType(
-            WorkerEventScope::COMPILATION,
-            WorkerEventOutcome::FAILED
-        ));
-
-        self::assertFalse($this->repository->hasForType(
-            WorkerEventScope::STEP,
-            WorkerEventOutcome::PASSED
-        ));
+        self::assertTrue($this->repository->hasForType(WorkerEventScope::COMPILATION, WorkerEventOutcome::FAILED));
+        self::assertFalse($this->repository->hasForType(WorkerEventScope::STEP, WorkerEventOutcome::PASSED));
     }
 
     public function testGetTypeCount(): void

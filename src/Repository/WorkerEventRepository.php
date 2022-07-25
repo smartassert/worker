@@ -46,4 +46,19 @@ class WorkerEventRepository extends ServiceEntityRepository
             'outcome' => $outcome->value,
         ]);
     }
+
+    public function findAllIds(): array
+    {
+        $queryBuilder = $this->createQueryBuilder('WorkerEvent');
+
+        $queryBuilder
+            ->select('WorkerEvent.id')
+            ->orderBy('id', 'ASC');
+
+        $query = $queryBuilder->getQuery();
+
+        $foo = $query->getResult();
+
+        var_dump($foo);
+    }
 }
