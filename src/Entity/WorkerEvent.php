@@ -77,11 +77,6 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
     public function getReference(): string
     {
         return $this->reference;
