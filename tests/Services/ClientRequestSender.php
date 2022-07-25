@@ -39,4 +39,11 @@ class ClientRequestSender
 
         return $this->client->getResponse();
     }
+
+    public function getEvent(int $id): Response
+    {
+        $this->client->request('GET', '/event/' . $id);
+
+        return $this->client->getResponse();
+    }
 }
