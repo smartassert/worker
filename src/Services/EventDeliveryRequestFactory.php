@@ -15,29 +15,19 @@ class EventDeliveryRequestFactory
     public function __construct(
         private readonly RequestFactoryInterface $requestFactory,
         private readonly StreamFactoryInterface $streamFactory,
+        private readonly WorkerEventSerializer $workerEventSerializer,
     ) {
     }
 
     public function create(Job $job, WorkerEvent $workerEvent): RequestInterface
     {
-        $payload = array_merge(
-            [
-                'job' => $job->getLabel(),
-            ],
-            [
-                'sequence_number' => $workerEvent->getId(),
-                'type' => $workerEvent->getScope()->value . '/' . $workerEvent->getOutcome()->value,
-                'label' => $workerEvent->getLabel(),
-                'reference' => $workerEvent->getReference(),
-                'payload' => $workerEvent->getPayload(),
-            ]
-        );
-
         return $this
             ->requestFactory
             ->createRequest('POST', $job->getEventDeliveryUrl())
             ->withHeader('content-type', 'application/json')
-            ->withBody($this->streamFactory->createStream((string) json_encode($payload)))
+            ->withBody($this->streamFactory->createStream((string) json_encode(
+                $this->workerEventSerializer->serialize($job, $workerEvent)
+            )))
         ;
     }
 }
