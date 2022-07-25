@@ -78,14 +78,6 @@ class WorkerEvent
     }
 
     /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    /**
      * @return array{
      *     sequence_number: int,
      *     type: string,
