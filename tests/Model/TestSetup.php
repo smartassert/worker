@@ -43,9 +43,25 @@ class TestSetup
         return $this->browser;
     }
 
+    public function withBrowser(string $browser): self
+    {
+        $new = clone $this;
+        $new->browser = $browser;
+
+        return $new;
+    }
+
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function withUrl(string $url): self
+    {
+        $new = clone $this;
+        $new->url = $url;
+
+        return $new;
     }
 
     /**

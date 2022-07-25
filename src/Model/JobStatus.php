@@ -11,6 +11,7 @@ class JobStatus implements \JsonSerializable
     /**
      * @param string[]     $sourcePaths
      * @param array<mixed> $serializedTests
+     * @param int[]        $eventIds
      */
     public function __construct(
         private readonly Job $job,
@@ -18,6 +19,7 @@ class JobStatus implements \JsonSerializable
         private readonly array $sourcePaths,
         private readonly array $serializedTests,
         private readonly ResourceReferenceCollection $testReferences,
+        private readonly array $eventIds,
     ) {
     }
 
@@ -35,6 +37,7 @@ class JobStatus implements \JsonSerializable
             'sources' => $this->sourcePaths,
             'tests' => $this->serializedTests,
             'references' => $this->testReferences->toArray(),
+            'event_ids' => $this->eventIds,
         ];
     }
 }

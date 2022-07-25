@@ -12,6 +12,7 @@ use App\Entity\WorkerEvent;
 use App\Event\JobStartedEvent;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
+use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
@@ -42,6 +43,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private SourceFileInspector $sourceFileInspector;
     private FixtureReader $fixtureReader;
     private CreateJobSourceFactory $createJobSourceFactory;
+    private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
@@ -78,6 +80,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
         $this->createJobSourceFactory = $createJobSourceFactory;
+
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -357,6 +363,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         self::assertFalse($this->jobRepository->has());
 
         $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
+
+        $expectedResponseData['event_ids'] = $this->workerEventRepository->findAllIds();
 
         $this->jsonResponseAsserter->assertJsonResponse(
             200,
@@ -692,6 +700,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     public function testStatusHasJob(EnvironmentSetup $setup, array $expectedResponseData): void
     {
         $this->environmentFactory->create($setup);
+
+        $expectedResponseData['event_ids'] = $this->workerEventRepository->findAllIds();
 
         $response = $this->clientRequestSender->getJobStatus();
 
