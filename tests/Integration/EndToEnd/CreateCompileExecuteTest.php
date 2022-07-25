@@ -38,6 +38,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     private IntegrationJobProperties $jobProperties;
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
+    private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
@@ -66,6 +67,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         $applicationProgress = self::getContainer()->get(ApplicationProgress::class);
         \assert($applicationProgress instanceof ApplicationProgress);
         $this->applicationProgress = $applicationProgress;
+
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($workerEventRepository instanceof WorkerEventRepository);
+        $this->workerEventRepository = $workerEventRepository;
     }
 
     /**
@@ -108,6 +113,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame(200, $createResponse->getStatusCode());
         self::assertSame('application/json', $createResponse->headers->get('content-type'));
 
+        $createData = json_decode((string) $createResponse->getContent(), true);
+        self::assertIsArray($createData);
+        self::assertArrayHasKey('event_ids', $createData);
+        $createEventIds = $createData['event_ids'];
+        self::assertNotEmpty($createEventIds);
+        self::assertSame($createEventIds, $this->workerEventRepository->findAllIds());
+
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         self::assertSame(200, $jobStatusResponse->getStatusCode());
         self::assertSame('application/json', $jobStatusResponse->headers->get('content-type'));
@@ -118,6 +130,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         self::assertSame($eventDeliveryUrl, $jobStatusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $jobStatusData['maximum_duration_in_seconds']);
         self::assertSame($sourcePaths, $jobStatusData['sources']);
+        self::assertArrayHasKey('event_ids', $jobStatusData);
 
         $applicationStateResponse = $this->clientRequestSender->getApplicationState();
         self::assertSame(200, $applicationStateResponse->getStatusCode());
