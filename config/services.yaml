@@ -124,3 +124,11 @@ services:
             $compilerTargetDirectory: '%compiler_target_directory%'
 
     webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory: ~
+
+    GuzzleHttp\Psr7\HttpFactory: ~
+
+    Psr\Http\Message\RequestFactoryInterface:
+        alias: GuzzleHttp\Psr7\HttpFactory
+
+    Psr\Http\Message\StreamFactoryInterface:
+        alias: GuzzleHttp\Psr7\HttpFactory

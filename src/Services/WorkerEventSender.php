@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Entity\WorkerEvent;
 use App\Exception\JobNotFoundException;
 use App\Exception\NonSuccessfulHttpResponseException;
-use App\HttpMessage\EventDeliveryRequest;
 use App\Repository\JobRepository;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
@@ -17,6 +16,7 @@ class WorkerEventSender
     public function __construct(
         private HttpClientInterface $httpClient,
         private readonly JobRepository $jobRepository,
+        private readonly EventDeliveryRequestFactory $eventDeliveryRequestFactory,
     ) {
     }
 
@@ -27,7 +27,8 @@ class WorkerEventSender
      */
     public function send(WorkerEvent $workerEvent): void
     {
-        $request = new EventDeliveryRequest($workerEvent, $this->jobRepository->get());
+        $request = $this->eventDeliveryRequestFactory->create($this->jobRepository->get(), $workerEvent);
+
         $response = $this->httpClient->sendRequest($request);
 
         if ($response->getStatusCode() >= 300) {
