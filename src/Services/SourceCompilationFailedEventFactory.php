@@ -14,6 +14,18 @@ class SourceCompilationFailedEventFactory
      */
     public function create(string $sourcePath, ErrorOutputInterface $output): SourceCompilationFailedEvent
     {
-        return new SourceCompilationFailedEvent($sourcePath, $output->toArray());
+        $payloadOutput = $output->toArray();
+
+        if (array_key_exists('context', $payloadOutput)) {
+            $context = $payloadOutput['context'];
+
+            if (array_key_exists('test_path', $context)) {
+                $context['test_path'] = $sourcePath;
+            }
+
+            $payloadOutput['context'] = $context;
+        }
+
+        return new SourceCompilationFailedEvent($sourcePath, $payloadOutput);
     }
 }

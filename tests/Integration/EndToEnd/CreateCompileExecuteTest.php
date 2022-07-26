@@ -249,7 +249,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ': test-step-invalid',
                                     'code' => 204,
                                     'context' => [
-                                        'test_path' => '/app/source/Test/chrome-open-index-compilation-failure.yml',
+                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'validation_result' => [
                                             'type' => 'test',
                                             'reason' => 'test-step-invalid',
@@ -396,7 +396,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         ': test-step-invalid',
                                     'code' => 204,
                                     'context' => [
-                                        'test_path' => '/app/source/Test/chrome-open-index-compilation-failure.yml',
+                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'validation_result' => [
                                             'type' => 'test',
                                             'reason' => 'test-step-invalid',
