@@ -34,6 +34,9 @@ class EventController
             return new JsonResponse([], 404);
         }
 
-        return new JsonResponse($this->workerEventSerializer->serialize($job, $event));
+        $serializedEvent = $this->workerEventSerializer->serialize($job, $event);
+        $serializedEvent['state'] = $event->getState()->value;
+
+        return new JsonResponse($serializedEvent);
     }
 }
