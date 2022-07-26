@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Enum\CompilationState;
-use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationProgress;
 use App\Services\Compiler;
+use App\Services\SourceCompilationFailedEventFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -24,7 +24,8 @@ class CompileSourceHandler implements MessageHandlerInterface
     public function __construct(
         private Compiler $compiler,
         private CompilationProgress $compilationProgress,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
+        private readonly SourceCompilationFailedEventFactory $sourceCompilationFailedEventFactory,
     ) {
     }
 
@@ -46,7 +47,7 @@ class CompileSourceHandler implements MessageHandlerInterface
         $output = $this->compiler->compile($sourcePath);
 
         $event = $output instanceof ErrorOutputInterface
-            ? new SourceCompilationFailedEvent($sourcePath, $output)
+            ? $this->sourceCompilationFailedEventFactory->create($sourcePath, $output)
             : new SourceCompilationPassedEvent($sourcePath, $output);
 
         $this->eventDispatcher->dispatch($event);

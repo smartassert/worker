@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
-use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEvent extends AbstractSourceEvent
 {
-    public function __construct(string $source, ErrorOutputInterface $errorOutput)
+    /**
+     * @param array<mixed> $payloadOutput
+     */
+    public function __construct(string $source, array $payloadOutput)
     {
         parent::__construct(
             $source,
             WorkerEventOutcome::FAILED,
             [
-                'output' => $errorOutput->toArray(),
+                'output' => $payloadOutput,
             ]
         );
     }

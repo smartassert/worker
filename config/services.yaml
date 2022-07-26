@@ -132,3 +132,7 @@ services:
 
     Psr\Http\Message\StreamFactoryInterface:
         alias: GuzzleHttp\Psr7\HttpFactory
+
+    App\Services\SourceCompilationFailedEventFactory:
+        arguments:
+            $compilerSourceDirectory: '%compiler_source_directory%'

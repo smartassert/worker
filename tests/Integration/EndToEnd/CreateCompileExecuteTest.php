@@ -245,11 +245,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                                 'output' => [
                                     'message' => 'Invalid test at path ' .
-                                        '"/app/source/Test/chrome-open-index-compilation-failure.yml"' .
+                                        '"Test/chrome-open-index-compilation-failure.yml"' .
                                         ': test-step-invalid',
                                     'code' => 204,
                                     'context' => [
-                                        'test_path' => '/app/source/Test/chrome-open-index-compilation-failure.yml',
+                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'validation_result' => [
                                             'type' => 'test',
                                             'reason' => 'test-step-invalid',
@@ -392,11 +392,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'source' => 'Test/chrome-open-index-compilation-failure.yml',
                                 'output' => [
                                     'message' => 'Invalid test at path ' .
-                                        '"/app/source/Test/chrome-open-index-compilation-failure.yml"' .
+                                        '"Test/chrome-open-index-compilation-failure.yml"' .
                                         ': test-step-invalid',
                                     'code' => 204,
                                     'context' => [
-                                        'test_path' => '/app/source/Test/chrome-open-index-compilation-failure.yml',
+                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
                                         'validation_result' => [
                                             'type' => 'test',
                                             'reason' => 'test-step-invalid',
