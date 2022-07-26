@@ -64,7 +64,7 @@ class EventDeliveryRequestFactoryTest extends AbstractBaseFunctionalTest
         self::assertSame('POST', $request->getMethod());
         self::assertSame($this->job->getEventDeliveryUrl(), (string) $request->getUri());
         self::assertSame('application/json', $request->getHeaderLine('content-type'));
-        self::assertSame($expectedRequestPayload, json_decode($request->getBody()->getContents(), true));
+        self::assertEquals($expectedRequestPayload, json_decode($request->getBody()->getContents(), true));
     }
 
     /**
