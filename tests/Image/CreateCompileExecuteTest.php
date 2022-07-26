@@ -7,28 +7,13 @@ namespace App\Tests\Image;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
-use GuzzleHttp\Exception\ClientException;
 
-class AppTest extends AbstractImageTest
+class CreateCompileExecuteTest extends AbstractImageTest
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
 
-    public function testInitialStatus(): void
-    {
-        try {
-            $response = $this->makeGetJobRequest();
-        } catch (ClientException $exception) {
-            $response = $exception->getResponse();
-        }
-
-        self::assertSame(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testInitialStatus
-     */
     public function testCreateJob(): void
     {
         $serializedSource = $this->createSerializedSource(
@@ -60,6 +45,9 @@ class AppTest extends AbstractImageTest
         self::assertSame([1], $responseData['event_ids']);
     }
 
+    /**
+     * @depends testCreateJob
+     */
     public function testGetJobStartedEvent(): void
     {
         $response = $this->makeGetEventRequest(1);
