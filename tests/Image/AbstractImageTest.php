@@ -21,28 +21,28 @@ abstract class AbstractImageTest extends TestCase
     private const APPLICATION_STATE_URL = 'https://localhost/application_state';
     private const EVENT_URL = 'https://localhost/event/%d';
 
-    private Client $httpClient;
-    private ApplicationResponseDataAsserter $responseDataAsserter;
+    private static Client $httpClient;
+    private static ApplicationResponseDataAsserter $responseDataAsserter;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->httpClient = new Client(['verify' => false]);
-        $this->responseDataAsserter = new ApplicationResponseDataAsserter();
+        self::$httpClient = new Client(['verify' => false]);
+        self::$responseDataAsserter = new ApplicationResponseDataAsserter();
     }
 
     protected function makeGetJobRequest(): ResponseInterface
     {
-        return $this->httpClient->sendRequest(new Request('GET', self::JOB_URL));
+        return self::$httpClient->sendRequest(new Request('GET', self::JOB_URL));
     }
 
     /**
      * @param array<mixed> $parameters
      */
-    protected function makeCreateJobRequest(array $parameters): ResponseInterface
+    protected static function makeCreateJobRequest(array $parameters): ResponseInterface
     {
-        return $this->httpClient->sendRequest(new Request(
+        return self::$httpClient->sendRequest(new Request(
             'POST',
             self::JOB_URL,
             [
@@ -54,12 +54,12 @@ abstract class AbstractImageTest extends TestCase
 
     protected function makeGetApplicationStateRequest(): ResponseInterface
     {
-        return $this->httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
+        return self::$httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
     }
 
     protected function makeGetEventRequest(int $id): ResponseInterface
     {
-        return $this->httpClient->sendRequest(new Request('GET', sprintf(self::EVENT_URL, $id)));
+        return self::$httpClient->sendRequest(new Request('GET', sprintf(self::EVENT_URL, $id)));
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class AbstractImageTest extends TestCase
      * @param string[] $manifestPaths
      * @param string[] $sourcePaths
      */
-    protected function createSerializedSource(array $manifestPaths, array $sourcePaths): string
+    protected static function createSerializedSource(array $manifestPaths, array $sourcePaths): string
     {
         $manifestContent = '';
 
@@ -128,7 +128,7 @@ abstract class AbstractImageTest extends TestCase
      */
     protected function assertJob(array $expected, array $actual): void
     {
-        $this->responseDataAsserter->assertJob($expected, $actual);
+        self::$responseDataAsserter->assertJob($expected, $actual);
     }
 
     /**
@@ -137,6 +137,6 @@ abstract class AbstractImageTest extends TestCase
      */
     protected function assertApplicationState(array $expected, array $actual): void
     {
-        $this->responseDataAsserter->assertApplicationState($expected, $actual);
+        self::$responseDataAsserter->assertApplicationState($expected, $actual);
     }
 }

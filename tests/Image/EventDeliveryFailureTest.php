@@ -9,47 +9,10 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\WorkerEventState;
 
-class EventDeliveryFailureTest extends AbstractImageTest
+class EventDeliveryFailureTest extends AbstractJobTest
 {
-    private const MICROSECONDS_PER_SECOND = 1000000;
-    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
-
-    protected function setUp(): void
+    protected function doMain(): void
     {
-        parent::setUp();
-
-        $serializedSource = $this->createSerializedSource(
-            [
-                'Test/chrome-open-index.yml',
-            ],
-            [
-                'Test/chrome-open-index.yml',
-                'Page/index.yml',
-            ]
-        );
-
-        $this->makeCreateJobRequest([
-            'label' => md5('label content'),
-            'event_delivery_url' => 'http://event-receiver/status/404',
-            'maximum_duration_in_seconds' => 20,
-            'source' => $serializedSource,
-        ]);
-    }
-
-    public function testAllEventsAreMarkedAsFailed(): void
-    {
-        $duration = 0;
-        $durationExceeded = false;
-
-        while (false === $durationExceeded && false === $this->waitForApplicationToComplete()) {
-            usleep(self::WAIT_INTERVAL);
-            $duration += self::WAIT_INTERVAL;
-            $durationExceeded = $duration >= self::WAIT_TIMEOUT;
-        }
-
-        self::assertFalse($durationExceeded);
-
         $jobStatusResponse = $this->makeGetJobRequest();
         self::assertSame(200, $jobStatusResponse->getStatusCode());
         self::assertSame('application/json', $jobStatusResponse->getHeaderLine('content-type'));
@@ -84,12 +47,41 @@ class EventDeliveryFailureTest extends AbstractImageTest
         }
     }
 
-    private function waitForApplicationToComplete(): bool
+    protected static function getManifestPaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+        ];
+    }
+
+    protected static function getSourcePaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+            'Page/index.yml',
+        ];
+    }
+
+    protected static function getCreateJobParameters(): array
+    {
+        return [
+            'label' => md5('label content'),
+            'event_delivery_url' => 'http://event-receiver/status/404',
+            'maximum_duration_in_seconds' => 20,
+        ];
+    }
+
+    protected function isApplicationToComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
         return CompilationState::COMPLETE->value === $state['compilation']
             && ExecutionState::COMPLETE->value === $state['execution']
             && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
+    }
+
+    protected function getWaitThresholdInSeconds(): int
+    {
+        return 60;
     }
 }
