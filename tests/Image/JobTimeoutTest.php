@@ -6,41 +6,13 @@ namespace App\Tests\Image;
 
 use App\Enum\ApplicationState;
 
-class JobTimeoutTest extends AbstractImageTest
+class JobTimeoutTest extends AbstractJobTest
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $serializedSource = $this->createSerializedSource(
-            [
-                'Test/chrome-open-index.yml',
-                'Test/firefox-open-index.yml',
-                'Test/chrome-firefox-open-index.yml',
-                'Test/chrome-open-form.yml',
-            ],
-            [
-                'Test/chrome-open-index.yml',
-                'Test/firefox-open-index.yml',
-                'Test/chrome-firefox-open-index.yml',
-                'Test/chrome-open-form.yml',
-                'Page/index.yml',
-            ]
-        );
-
-        $this->makeCreateJobRequest([
-            'label' => md5('label content'),
-            'event_delivery_url' => 'http://event-receiver/events',
-            'maximum_duration_in_seconds' => 1,
-            'source' => $serializedSource,
-        ]);
-    }
-
-    public function testCompilationExecution(): void
+    public function testJobTimesOut(): void
     {
         $duration = 0;
         $durationExceeded = false;
@@ -56,7 +28,7 @@ class JobTimeoutTest extends AbstractImageTest
         $this->assertJob(
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => 'http://event-receiver/events',
+                'event_delivery_url' => 'http://event-receiver/status/200',
                 'maximum_duration_in_seconds' => 1,
                 'sources' => [
                     'Test/chrome-open-index.yml',
@@ -129,6 +101,36 @@ class JobTimeoutTest extends AbstractImageTest
             ],
             $this->fetchApplicationState()
         );
+    }
+
+    protected static function getManifestPaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+            'Test/firefox-open-index.yml',
+            'Test/chrome-firefox-open-index.yml',
+            'Test/chrome-open-form.yml',
+        ];
+    }
+
+    protected static function getSourcePaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+            'Test/firefox-open-index.yml',
+            'Test/chrome-firefox-open-index.yml',
+            'Test/chrome-open-form.yml',
+            'Page/index.yml',
+        ];
+    }
+
+    protected static function getCreateJobParameters(): array
+    {
+        return [
+            'label' => md5('label content'),
+            'event_delivery_url' => 'http://event-receiver/status/200',
+            'maximum_duration_in_seconds' => 1,
+        ];
     }
 
     private function waitForApplicationToComplete(): bool

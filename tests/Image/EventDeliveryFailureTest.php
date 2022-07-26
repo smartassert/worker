@@ -9,33 +9,11 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\WorkerEventState;
 
-class EventDeliveryFailureTest extends AbstractImageTest
+class EventDeliveryFailureTest extends AbstractJobTest
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $serializedSource = $this->createSerializedSource(
-            [
-                'Test/chrome-open-index.yml',
-            ],
-            [
-                'Test/chrome-open-index.yml',
-                'Page/index.yml',
-            ]
-        );
-
-        $this->makeCreateJobRequest([
-            'label' => md5('label content'),
-            'event_delivery_url' => 'http://event-receiver/status/404',
-            'maximum_duration_in_seconds' => 20,
-            'source' => $serializedSource,
-        ]);
-    }
 
     public function testAllEventsAreMarkedAsFailed(): void
     {
@@ -82,6 +60,30 @@ class EventDeliveryFailureTest extends AbstractImageTest
                 self::assertSame(WorkerEventState::FAILED->value, $eventData['state']);
             }
         }
+    }
+
+    protected static function getManifestPaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+        ];
+    }
+
+    protected static function getSourcePaths(): array
+    {
+        return [
+            'Test/chrome-open-index.yml',
+            'Page/index.yml',
+        ];
+    }
+
+    protected static function getCreateJobParameters(): array
+    {
+        return [
+            'label' => md5('label content'),
+            'event_delivery_url' => 'http://event-receiver/status/404',
+            'maximum_duration_in_seconds' => 20,
+        ];
     }
 
     private function waitForApplicationToComplete(): bool
