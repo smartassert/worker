@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
@@ -20,7 +21,9 @@ use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
 use App\Event\StepEvent;
 use App\Event\TestEvent;
+use App\Model\Document\Exception;
 use App\Model\Document\Step;
+use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
@@ -105,6 +108,26 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             'type' => 'step',
             'payload' => [
                 'name' => 'failing step',
+            ],
+        ];
+
+        $exceptionStepDocumentData = [
+            'type' => 'exception',
+            'payload' => [
+                'step' => 'step name',
+                'class' => self::class,
+                'message' => 'step-scope exception message',
+                'code' => 456,
+            ],
+        ];
+
+        $exceptionTestDocumentData = [
+            'type' => 'exception',
+            'payload' => [
+                'step' => null,
+                'class' => self::class,
+                'message' => 'test-scope exception message',
+                'code' => 123,
             ],
         ];
 
@@ -403,6 +426,53 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     self::JOB_LABEL,
                     md5(self::JOB_LABEL),
                     []
+                ),
+            ],
+            'test/exception' => [
+                'event' => new TestEvent(
+                    $genericTest,
+                    new Exception(ExecutionExceptionScope::TEST, $exceptionTestDocumentData),
+                    $testSource,
+                    WorkerEventOutcome::EXCEPTION
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::TEST,
+                    WorkerEventOutcome::EXCEPTION,
+                    $testSource,
+                    md5(self::JOB_LABEL . $testSource),
+                    [
+                        'source' => $testSource,
+                        'document' => $exceptionTestDocumentData,
+                        'step_names' => [
+                            'step 1',
+                        ],
+                        'related_references' => [
+                            [
+                                'label' => 'step 1',
+                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
+                            ],
+                        ],
+                    ]
+                ),
+            ],
+            'step/exception' => [
+                'event' => new StepEvent(
+                    $genericTest,
+                    new StepException('step name', $exceptionStepDocumentData),
+                    $testSource,
+                    'step name',
+                    WorkerEventOutcome::EXCEPTION,
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::STEP,
+                    WorkerEventOutcome::EXCEPTION,
+                    'step name',
+                    md5(self::JOB_LABEL . $testSource . 'step name'),
+                    [
+                        'source' => $testSource,
+                        'document' => $exceptionStepDocumentData,
+                        'name' => 'step name',
+                    ]
                 ),
             ],
         ];

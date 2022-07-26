@@ -18,14 +18,6 @@ services:
         arguments:
             $transport: '@messenger.transport.async'
 
-    App\Tests\Services\Asserter\TestEntityAsserter:
-        public: true
-
-    App\Tests\Services\EventListenerRemover:
-        public: true
-        arguments:
-            $container: '@test.service_container'
-
     app.tests.services.guzzle.handler.queuing:
         public: true
         class: GuzzleHttp\Handler\MockHandler
