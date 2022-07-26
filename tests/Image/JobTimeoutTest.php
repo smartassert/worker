@@ -8,23 +8,8 @@ use App\Enum\ApplicationState;
 
 class JobTimeoutTest extends AbstractJobTest
 {
-    private const MICROSECONDS_PER_SECOND = 1000000;
-    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
-
-    public function testJobTimesOut(): void
+    protected function doMain(): void
     {
-        $duration = 0;
-        $durationExceeded = false;
-
-        while (false === $durationExceeded && false === $this->waitForApplicationToComplete()) {
-            usleep(self::WAIT_INTERVAL);
-            $duration += self::WAIT_INTERVAL;
-            $durationExceeded = $duration >= self::WAIT_TIMEOUT;
-        }
-
-        self::assertFalse($durationExceeded);
-
         $this->assertJob(
             [
                 'label' => md5('label content'),
@@ -133,10 +118,15 @@ class JobTimeoutTest extends AbstractJobTest
         ];
     }
 
-    private function waitForApplicationToComplete(): bool
+    protected function isApplicationToComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
         return ApplicationState::TIMED_OUT->value === $state['application'];
+    }
+
+    protected function getWaitThresholdInSeconds(): int
+    {
+        return 10;
     }
 }

@@ -11,23 +11,8 @@ use App\Enum\WorkerEventState;
 
 class EventDeliveryFailureTest extends AbstractJobTest
 {
-    private const MICROSECONDS_PER_SECOND = 1000000;
-    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 10;
-
-    public function testAllEventsAreMarkedAsFailed(): void
+    protected function doMain(): void
     {
-        $duration = 0;
-        $durationExceeded = false;
-
-        while (false === $durationExceeded && false === $this->waitForApplicationToComplete()) {
-            usleep(self::WAIT_INTERVAL);
-            $duration += self::WAIT_INTERVAL;
-            $durationExceeded = $duration >= self::WAIT_TIMEOUT;
-        }
-
-        self::assertFalse($durationExceeded);
-
         $jobStatusResponse = $this->makeGetJobRequest();
         self::assertSame(200, $jobStatusResponse->getStatusCode());
         self::assertSame('application/json', $jobStatusResponse->getHeaderLine('content-type'));
@@ -86,12 +71,17 @@ class EventDeliveryFailureTest extends AbstractJobTest
         ];
     }
 
-    private function waitForApplicationToComplete(): bool
+    protected function isApplicationToComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
         return CompilationState::COMPLETE->value === $state['compilation']
             && ExecutionState::COMPLETE->value === $state['execution']
             && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
+    }
+
+    protected function getWaitThresholdInSeconds(): int
+    {
+        return 60;
     }
 }

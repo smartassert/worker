@@ -8,6 +8,9 @@ use Psr\Http\Message\ResponseInterface;
 
 abstract class AbstractJobTest extends AbstractImageTest
 {
+    private const MICROSECONDS_PER_SECOND = 1000000;
+    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
+
     protected static ResponseInterface $createResponse;
 
     public static function setUpBeforeClass(): void
@@ -21,6 +24,27 @@ abstract class AbstractJobTest extends AbstractImageTest
             static::getCreateJobParameters()
         ));
     }
+
+    public function testMain(): void
+    {
+        $duration = 0;
+        $durationExceeded = false;
+        $waitThreshold = $this->getWaitThresholdInSeconds() * self::MICROSECONDS_PER_SECOND;
+
+        while (false === $durationExceeded && false === $this->isApplicationToComplete()) {
+            usleep(self::WAIT_INTERVAL);
+            $duration += self::WAIT_INTERVAL;
+            $durationExceeded = $duration >= $waitThreshold;
+        }
+
+        self::assertFalse($durationExceeded);
+    }
+
+    abstract protected function isApplicationToComplete(): bool;
+
+    abstract protected function getWaitThresholdInSeconds(): int;
+
+    abstract protected function doMain(): void;
 
     /**
      * @return string[]

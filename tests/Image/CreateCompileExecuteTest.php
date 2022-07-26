@@ -10,10 +10,6 @@ use App\Enum\ExecutionState;
 
 class CreateCompileExecuteTest extends AbstractJobTest
 {
-    private const MICROSECONDS_PER_SECOND = 1000000;
-    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-    private const WAIT_TIMEOUT = self::MICROSECONDS_PER_SECOND * 60;
-
     public function testJobIsCreated(): void
     {
         self::assertSame(200, self::$createResponse->getStatusCode());
@@ -34,19 +30,8 @@ class CreateCompileExecuteTest extends AbstractJobTest
         self::assertSame('job/started', $responseData['type']);
     }
 
-    public function testCompilationExecution(): void
+    protected function doMain(): void
     {
-        $duration = 0;
-        $durationExceeded = false;
-
-        while (false === $durationExceeded && false === $this->waitForApplicationToComplete()) {
-            usleep(self::WAIT_INTERVAL);
-            $duration += self::WAIT_INTERVAL;
-            $durationExceeded = $duration >= self::WAIT_TIMEOUT;
-        }
-
-        self::assertFalse($durationExceeded);
-
         $this->assertJob(
             [
                 'label' => md5('label content'),
@@ -153,12 +138,17 @@ class CreateCompileExecuteTest extends AbstractJobTest
         ];
     }
 
-    private function waitForApplicationToComplete(): bool
+    protected function isApplicationToComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
         return CompilationState::COMPLETE->value === $state['compilation']
             && ExecutionState::COMPLETE->value === $state['execution']
             && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
+    }
+
+    protected function getWaitThresholdInSeconds(): int
+    {
+        return 60;
     }
 }
