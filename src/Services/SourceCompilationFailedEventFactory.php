@@ -14,6 +14,6 @@ class SourceCompilationFailedEventFactory
      */
     public function create(string $sourcePath, ErrorOutputInterface $output): SourceCompilationFailedEvent
     {
-        return new SourceCompilationFailedEvent($sourcePath, $output);
+        return new SourceCompilationFailedEvent($sourcePath, $output->toArray());
     }
 }

@@ -34,7 +34,6 @@ use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
 class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
@@ -89,14 +88,6 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
      */
     public function createDataProvider(): array
     {
-        $sourceCompileFailureEventOutput = \Mockery::mock(ErrorOutputInterface::class);
-        $sourceCompileFailureEventOutput
-            ->shouldReceive('toArray')
-            ->andReturn([
-                'compile-failure-key' => 'value',
-            ])
-        ;
-
         $passingStepDocumentData = [
             'type' => 'step',
             'payload' => [
@@ -236,7 +227,12 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent($testSource, $sourceCompileFailureEventOutput),
+                'event' => new SourceCompilationFailedEvent(
+                    $testSource,
+                    [
+                        'compile-failure-key' => 'value',
+                    ]
+                ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::FAILED,
