@@ -123,14 +123,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findNextAwaitingIdIsNullDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindNextAwaitingIdIsNull(array $tests): void
+    public function testFindNextAwaitingIdIsNull(EnvironmentSetup $setup): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertNull($this->repository->findNextAwaitingId());
     }
@@ -142,14 +138,15 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     {
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
             ],
             'running, failed, complete' => [
-                'tests' => $this->createTestsWithStates([
-                    TestState::RUNNING,
-                    TestState::FAILED,
-                    TestState::COMPLETE,
-                ]),
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                    ])
             ],
         ];
     }
