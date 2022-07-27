@@ -74,7 +74,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())->withSource('/app/source/Test/test1.yml')
+                        (new TestSetup())->withSource('Test/test1.yml')
                     ]),
             ],
         ];

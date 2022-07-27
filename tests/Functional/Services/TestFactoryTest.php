@@ -49,14 +49,14 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 'chrome',
                 'http://example.com',
                 'Tests/chrome_test.yml',
-                '/app/tests/GeneratedChromeTest.php',
+                'GeneratedChromeTest.php',
                 ['step 1', 'step 2']
             ),
             'firefox' => new TestManifest(
                 'firefox',
                 'http://example.com',
                 'Tests/firefox_test.yml',
-                '/app/tests/GeneratedFirefoxTest.php',
+                'GeneratedFirefoxTest.php',
                 ['step 1', 'step 2', 'step 3']
             )
         ];
@@ -66,7 +66,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 'chrome',
                 'http://example.com',
                 'Tests/chrome_test.yml',
-                '/app/tests/GeneratedChromeTest.php',
+                'GeneratedChromeTest.php',
                 ['step 1', 'step 2'],
                 1
             ),
@@ -74,7 +74,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
                 'firefox',
                 'http://example.com',
                 'Tests/firefox_test.yml',
-                '/app/tests/GeneratedFirefoxTest.php',
+                'GeneratedFirefoxTest.php',
                 ['step 1', 'step 2', 'step 3'],
                 2
             ),
@@ -139,7 +139,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     public function testCreateFromSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
-            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $collection);
+            $event = new SourceCompilationPassedEvent('Test/test.yml', $collection);
 
             return $this->factory->createFromSourceCompileSuccessEvent($event);
         });
@@ -148,7 +148,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     public function testSubscribesToSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
-            $event = new SourceCompilationPassedEvent('/app/source/Test/test.yml', $collection);
+            $event = new SourceCompilationPassedEvent('Test/test.yml', $collection);
             $this->eventDispatcher->dispatch($event);
 
             $testRepository = self::getContainer()->get(TestRepository::class);

@@ -118,7 +118,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                                 self::assertSame(WorkerEventOutcome::PASSED, $actualEvent->getOutcome());
                                 self::assertSame(
                                     [
-                                        'source' => '/app/source/Test/test.yml',
+                                        'source' => 'Test/test.yml',
                                         'document' => [
                                             'type' => 'step',
                                             'payload' => [
@@ -194,7 +194,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                                 self::assertSame(WorkerEventOutcome::FAILED, $actualEvent->getOutcome());
                                 self::assertSame(
                                     [
-                                        'source' => '/app/source/Test/test.yml',
+                                        'source' => 'Test/test.yml',
                                         'document' => [
                                             'type' => 'step',
                                             'payload' => [
@@ -276,7 +276,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                                 self::assertSame(WorkerEventOutcome::EXCEPTION, $actualEvent->getOutcome());
                                 self::assertSame(
                                     [
-                                        'source' => '/app/source/Test/test.yml',
+                                        'source' => 'Test/test.yml',
                                         'document' => [
                                             'type' => 'exception',
                                             'payload' => [
