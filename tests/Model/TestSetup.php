@@ -34,8 +34,8 @@ class TestSetup
     {
         $this->browser = 'chrome';
         $this->url = 'http://example.com';
-        $this->source = '/app/source/Test/test.yml';
-        $this->target = '/app/tests/GeneratedTest.php';
+        $this->source = 'Test/test.yml';
+        $this->target = 'GeneratedTest.php';
         $this->stepNames = ['step 1'];
         $this->state = TestState::AWAITING;
     }

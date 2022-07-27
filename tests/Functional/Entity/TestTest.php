@@ -27,8 +27,8 @@ class TestTest extends AbstractEntityTest
         $test = new Test(
             'chrome',
             'http://example.com',
-            '/app/source/Test/test.yml',
-            '/app/tests/GeneratedTest.php',
+            'Test/test.yml',
+            'GeneratedTest.php',
             ['step 1'],
             1
         );

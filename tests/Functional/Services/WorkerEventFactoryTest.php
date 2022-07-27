@@ -130,7 +130,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             $testConfigurationBrowser,
             $testConfigurationUrl,
             $testSource,
-            '/app/target/GeneratedTest1234.php',
+            'GeneratedTest1234.php',
             ['step 1'],
             1
         );
