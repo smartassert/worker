@@ -15,6 +15,7 @@ use App\Tests\Services\EnvironmentFactory;
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
     private TestRepository $repository;
+    private EnvironmentFactory $environmentFactory;
 
     protected function setUp(): void
     {
@@ -24,6 +25,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         \assert($repository instanceof TestRepository);
         $this->repository = $repository;
 
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $this->environmentFactory = $environmentFactory;
+
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Test::class);
@@ -32,14 +37,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findMaxPositionDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindMaxPosition(array $tests, ?int $expectedMaxPosition): void
+    public function testFindMaxPosition(EnvironmentSetup $setup, int $expectedMaxPosition): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedMaxPosition, $this->repository->findMaxPosition());
     }
@@ -49,51 +50,72 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findMaxPositionDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'position1' => TestState::AWAITING,
-            'position2' => TestState::AWAITING,
-            'position3' => TestState::AWAITING,
-        ]);
-
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
                 'expectedMaxPosition' => 0,
             ],
             'one test, position 1' => [
-                'tests' => [
-                    $tests['position1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedMaxPosition' => 1,
             ],
             'one test, position 3' => [
-                'tests' => [
-                    $tests['position3'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 2, 3' => [
-                'tests' => [
-                    $tests['position1'],
-                    $tests['position2'],
-                    $tests['position3'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 3, 2, 1' => [
-                'tests' => [
-                    $tests['position3'],
-                    $tests['position2'],
-                    $tests['position1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 3, 2' => [
-                'tests' => [
-                    $tests['position1'],
-                    $tests['position3'],
-                    $tests['position2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
         ];
@@ -101,14 +123,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findNextAwaitingIdIsNullDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindNextAwaitingIdIsNull(array $tests): void
+    public function testFindNextAwaitingIdIsNull(EnvironmentSetup $setup): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertNull($this->repository->findNextAwaitingId());
     }
@@ -120,28 +138,25 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
     {
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
             ],
             'running, failed, complete' => [
-                'tests' => $this->createTestsWithStates([
-                    TestState::RUNNING,
-                    TestState::FAILED,
-                    TestState::COMPLETE,
-                ]),
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                    ])
             ],
         ];
     }
 
     /**
      * @dataProvider findNextAwaitingIdNotNullDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindNextAwaitingIdNotNull(array $tests, int $nextAwaitingIndex): void
+    public function testFindNextAwaitingIdNotNull(EnvironmentSetup $setup, int $nextAwaitingIndex): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         $nextAwaitingId = $this->repository->findNextAwaitingId();
 
@@ -156,48 +171,46 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findNextAwaitingIdNotNullDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'awaiting1' => TestState::AWAITING,
-            'awaiting2' => TestState::AWAITING,
-            'running' => TestState::RUNNING,
-            'failed' => TestState::FAILED,
-            'complete' => TestState::COMPLETE,
-        ]);
-
         return [
             'awaiting1' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                ],
-                'expectedNextAwaitingIndex' => 0,
-            ],
-            'awaiting2' => [
-                'tests' => [
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedNextAwaitingIndex' => 0,
             ],
             'awaiting1, awaiting2' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                    ]),
                 'expectedNextAwaitingIndex' => 0,
             ],
             'awaiting2, awaiting1' => [
-                'tests' => [
-                    $tests['awaiting2'],
-                    $tests['awaiting1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedNextAwaitingIndex' => 1,
             ],
             'running, failed, awaiting1, complete' => [
-                'tests' => [
-                    $tests['running'],
-                    $tests['failed'],
-                    $tests['awaiting1'],
-                    $tests['complete']
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                    ]),
                 'expectedNextAwaitingIndex' => 2,
             ],
         ];
@@ -205,14 +218,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findUnfinishedCountDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindUnfinishedCount(array $tests, int $expectedUnfinishedCount): void
+    public function testFindUnfinishedCount(EnvironmentSetup $setup, int $expectedUnfinishedCount): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedUnfinishedCount, $this->repository->findUnfinishedCount());
     }
@@ -222,47 +231,44 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findUnfinishedCountDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'awaiting1' => TestState::AWAITING,
-            'awaiting2' => TestState::AWAITING,
-            'running' => TestState::RUNNING,
-            'failed' => TestState::FAILED,
-            'complete' => TestState::COMPLETE,
-        ]);
-
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
                 'expectedUnfinishedCount' => 0,
             ],
             'awaiting1' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedUnfinishedCount' => 1,
             ],
             'awaiting1, awaiting2' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'awaiting1, running' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['running'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::RUNNING),
+                    ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'all states' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                    $tests['running'],
-                    $tests['failed'],
-                    $tests['complete'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                        (new TestSetup())->withState(TestState::CANCELLED),
+                    ]),
                 'expectedUnfinishedCount' => 3,
             ],
         ];
@@ -275,10 +281,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function testFindAllSources(EnvironmentSetup $setup, array $expectedSources): void
     {
-        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
-        \assert($environmentFactory instanceof EnvironmentFactory);
-
-        $environmentFactory->create($setup);
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedSources, $this->repository->findAllSources());
     }
@@ -329,39 +332,5 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param TestState[] $states
-     *
-     * @return Test[]
-     */
-    private function createTestsWithStates(array $states): array
-    {
-        $tests = [];
-        $position = 1;
-
-        foreach ($states as $key => $state) {
-            $tests[$key] = $this->createTestWithStateAndPosition($state, $position);
-            ++$position;
-        }
-
-        return $tests;
-    }
-
-    private function createTestWithStateAndPosition(TestState $state, int $position): Test
-    {
-        $test = new Test(
-            'chrome',
-            'http://example.com/complete',
-            '/app/source/test.yml',
-            '/app/target/GeneratedTest1234.php',
-            ['step 1'],
-            $position
-        );
-
-        $test->setState($state);
-
-        return $test;
     }
 }

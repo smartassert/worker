@@ -28,6 +28,8 @@ class TestSetup
 
     private TestState $state;
 
+    private ?int $position = null;
+
     public function __construct()
     {
         $this->browser = 'chrome';
@@ -130,6 +132,19 @@ class TestSetup
     {
         $new = clone $this;
         $new->stepNames = $stepNames;
+
+        return $new;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function withPosition(int $position): self
+    {
+        $new = clone $this;
+        $new->position = $position;
 
         return $new;
     }
