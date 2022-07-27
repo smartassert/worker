@@ -35,16 +35,6 @@ class TestRepository extends ServiceEntityRepository
         return $test;
     }
 
-    /**
-     * @return Test[]
-     */
-    public function findAll(): array
-    {
-        return $this->findBy([], [
-            'position' => 'ASC',
-        ]);
-    }
-
     public function findMaxPosition(): int
     {
         $queryBuilder = $this->createQueryBuilder('Test');

@@ -145,7 +145,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
         $nextAwaitingId = $this->repository->findNextAwaitingId();
 
-        $allTests = $this->findAllTests();
+        $allTests = $this->repository->findAll();
         $expectedTest = $allTests[$nextAwaitingIndex];
 
         self::assertSame($nextAwaitingId, $expectedTest->getId());
@@ -363,25 +363,5 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         $test->setState($state);
 
         return $test;
-    }
-
-    /**
-     * @return Test[]
-     */
-    private function findAllTests(): array
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder
-            ->select('Test')
-            ->from(Test::class, 'Test')
-        ;
-
-        $query = $queryBuilder->getQuery();
-        $results = $query->getResult();
-        self::assertIsArray($results);
-
-        return array_filter($results, function ($item) {
-            return $item instanceof Test;
-        });
     }
 }
