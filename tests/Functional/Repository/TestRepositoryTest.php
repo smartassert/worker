@@ -333,38 +333,4 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
             ],
         ];
     }
-
-    /**
-     * @param TestState[] $states
-     *
-     * @return Test[]
-     */
-    private function createTestsWithStates(array $states): array
-    {
-        $tests = [];
-        $position = 1;
-
-        foreach ($states as $key => $state) {
-            $tests[$key] = $this->createTestWithStateAndPosition($state, $position);
-            ++$position;
-        }
-
-        return $tests;
-    }
-
-    private function createTestWithStateAndPosition(TestState $state, int $position): Test
-    {
-        $test = new Test(
-            'chrome',
-            'http://example.com/complete',
-            '/app/source/test.yml',
-            '/app/target/GeneratedTest1234.php',
-            ['step 1'],
-            $position
-        );
-
-        $test->setState($state);
-
-        return $test;
-    }
 }
