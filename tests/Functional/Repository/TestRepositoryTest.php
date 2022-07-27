@@ -218,14 +218,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findUnfinishedCountDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindUnfinishedCount(array $tests, int $expectedUnfinishedCount): void
+    public function testFindUnfinishedCount(EnvironmentSetup $setup, int $expectedUnfinishedCount): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedUnfinishedCount, $this->repository->findUnfinishedCount());
     }
@@ -235,47 +231,44 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findUnfinishedCountDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'awaiting1' => TestState::AWAITING,
-            'awaiting2' => TestState::AWAITING,
-            'running' => TestState::RUNNING,
-            'failed' => TestState::FAILED,
-            'complete' => TestState::COMPLETE,
-        ]);
-
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
                 'expectedUnfinishedCount' => 0,
             ],
             'awaiting1' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedUnfinishedCount' => 1,
             ],
             'awaiting1, awaiting2' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'awaiting1, running' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['running'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::RUNNING),
+                    ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'all states' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                    $tests['running'],
-                    $tests['failed'],
-                    $tests['complete'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                        (new TestSetup())->withState(TestState::CANCELLED),
+                    ]),
                 'expectedUnfinishedCount' => 3,
             ],
         ];
