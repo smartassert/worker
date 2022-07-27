@@ -410,7 +410,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
      */
     private function assertTestStates(array $expectedStates): void
     {
-        $tests = $this->testRepository->findAll();
+        $tests = $this->testRepository->findBy([], ['position' => 'ASC']);
         $states = [];
 
         foreach ($tests as $test) {
