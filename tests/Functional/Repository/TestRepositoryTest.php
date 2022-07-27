@@ -15,6 +15,7 @@ use App\Tests\Services\EnvironmentFactory;
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
     private TestRepository $repository;
+    private EnvironmentFactory $environmentFactory;
 
     protected function setUp(): void
     {
@@ -24,6 +25,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         \assert($repository instanceof TestRepository);
         $this->repository = $repository;
 
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $this->environmentFactory = $environmentFactory;
+
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Test::class);
@@ -32,14 +37,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findMaxPositionDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindMaxPosition(array $tests, ?int $expectedMaxPosition): void
+    public function testFindMaxPosition(EnvironmentSetup $setup, int $expectedMaxPosition): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedMaxPosition, $this->repository->findMaxPosition());
     }
@@ -49,51 +50,72 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findMaxPositionDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'position1' => TestState::AWAITING,
-            'position2' => TestState::AWAITING,
-            'position3' => TestState::AWAITING,
-        ]);
-
         return [
             'empty' => [
-                'tests' => [],
+                'setup' => new EnvironmentSetup(),
                 'expectedMaxPosition' => 0,
             ],
             'one test, position 1' => [
-                'tests' => [
-                    $tests['position1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedMaxPosition' => 1,
             ],
             'one test, position 3' => [
-                'tests' => [
-                    $tests['position3'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 2, 3' => [
-                'tests' => [
-                    $tests['position1'],
-                    $tests['position2'],
-                    $tests['position3'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 3, 2, 1' => [
-                'tests' => [
-                    $tests['position3'],
-                    $tests['position2'],
-                    $tests['position1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 3, 2' => [
-                'tests' => [
-                    $tests['position1'],
-                    $tests['position3'],
-                    $tests['position2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(3),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                    ]),
                 'expectedMaxPosition' => 3,
             ],
         ];
