@@ -153,14 +153,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
 
     /**
      * @dataProvider findNextAwaitingIdNotNullDataProvider
-     *
-     * @param Test[] $tests
      */
-    public function testFindNextAwaitingIdNotNull(array $tests, int $nextAwaitingIndex): void
+    public function testFindNextAwaitingIdNotNull(EnvironmentSetup $setup, int $nextAwaitingIndex): void
     {
-        foreach ($tests as $test) {
-            $this->persistEntity($test);
-        }
+        $this->environmentFactory->create($setup);
 
         $nextAwaitingId = $this->repository->findNextAwaitingId();
 
@@ -175,48 +171,46 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function findNextAwaitingIdNotNullDataProvider(): array
     {
-        $tests = $this->createTestsWithStates([
-            'awaiting1' => TestState::AWAITING,
-            'awaiting2' => TestState::AWAITING,
-            'running' => TestState::RUNNING,
-            'failed' => TestState::FAILED,
-            'complete' => TestState::COMPLETE,
-        ]);
-
         return [
             'awaiting1' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                ],
-                'expectedNextAwaitingIndex' => 0,
-            ],
-            'awaiting2' => [
-                'tests' => [
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::AWAITING),
+                    ]),
                 'expectedNextAwaitingIndex' => 0,
             ],
             'awaiting1, awaiting2' => [
-                'tests' => [
-                    $tests['awaiting1'],
-                    $tests['awaiting2'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                    ]),
                 'expectedNextAwaitingIndex' => 0,
             ],
             'awaiting2, awaiting1' => [
-                'tests' => [
-                    $tests['awaiting2'],
-                    $tests['awaiting1'],
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withState(TestState::AWAITING)
+                            ->withPosition(1),
+                    ]),
                 'expectedNextAwaitingIndex' => 1,
             ],
             'running, failed, awaiting1, complete' => [
-                'tests' => [
-                    $tests['running'],
-                    $tests['failed'],
-                    $tests['awaiting1'],
-                    $tests['complete']
-                ],
+                'setup' => (new EnvironmentSetup())
+                    ->withTestSetups([
+                        (new TestSetup())->withState(TestState::RUNNING),
+                        (new TestSetup())->withState(TestState::FAILED),
+                        (new TestSetup())->withState(TestState::AWAITING),
+                        (new TestSetup())->withState(TestState::COMPLETE),
+                    ]),
                 'expectedNextAwaitingIndex' => 2,
             ],
         ];
