@@ -281,10 +281,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
      */
     public function testFindAllSources(EnvironmentSetup $setup, array $expectedSources): void
     {
-        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
-        \assert($environmentFactory instanceof EnvironmentFactory);
-
-        $environmentFactory->create($setup);
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expectedSources, $this->repository->findAllSources());
     }
