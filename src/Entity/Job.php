@@ -21,7 +21,7 @@ class Job
      * @var non-empty-string
      */
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $eventDeliveryUrl;
+    public readonly string $eventDeliveryUrl;
 
     #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
@@ -51,14 +51,6 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getEventDeliveryUrl(): string
-    {
-        return $this->eventDeliveryUrl;
     }
 
     public function getMaximumDurationInSeconds(): int

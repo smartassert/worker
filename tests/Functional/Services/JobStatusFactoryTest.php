@@ -222,7 +222,7 @@ class JobStatusFactoryTest extends AbstractBaseFunctionalTest
         self::assertEquals(
             [
                 'label' => $job->label,
-                'event_delivery_url' => $job->getEventDeliveryUrl(),
+                'event_delivery_url' => $job->eventDeliveryUrl,
                 'maximum_duration_in_seconds' => $job->getMaximumDurationInSeconds(),
                 'test_paths' => $job->getTestPaths(),
                 'reference' => md5($job->label),

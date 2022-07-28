@@ -20,6 +20,6 @@ class JobTest extends TestCase
         $job = new Job($label, $eventDeliveryUrl, $maximumDurationInSeconds, ['test.yml']);
 
         self::assertSame($label, $job->label);
-        self::assertSame($eventDeliveryUrl, $job->getEventDeliveryUrl());
+        self::assertSame($eventDeliveryUrl, $job->eventDeliveryUrl);
     }
 }
