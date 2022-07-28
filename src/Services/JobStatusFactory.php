@@ -54,7 +54,7 @@ class JobStatusFactory
         foreach ($tests as $test) {
             if ($test instanceof Test) {
                 $serializedTests[] = [
-                    'browser' => $test->getBrowser(),
+                    'browser' => $test->browser,
                     'url' => $test->getUrl(),
                     'source' => $test->getSource(),
                     'target' => $test->getTarget(),

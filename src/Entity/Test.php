@@ -11,13 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
 {
+    #[ORM\Column(type: 'string', length: 255)]
+    public readonly string $browser;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
     private int $id;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $browser;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $url;
@@ -66,11 +65,6 @@ class Test
         $this->stepNames = $stepNames;
         $this->position = $position;
         $this->state = TestState::AWAITING;
-    }
-
-    public function getBrowser(): string
-    {
-        return $this->browser;
     }
 
     public function getUrl(): string

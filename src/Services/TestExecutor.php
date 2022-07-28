@@ -48,7 +48,7 @@ class TestExecutor
         $this->delegatorClient->request(
             sprintf(
                 './bin/delegator --browser %s %s',
-                $test->getBrowser(),
+                $test->browser,
                 $this->compilerTargetDirectory . '/' . $test->getTarget()
             ),
             $delegatorClientHandler
