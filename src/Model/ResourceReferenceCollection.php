@@ -10,7 +10,7 @@ use Traversable;
 /**
  * @implements \IteratorAggregate<ResourceReference>
  */
-class ResourceReferenceCollection implements \IteratorAggregate
+class ResourceReferenceCollection implements \IteratorAggregate, \Countable
 {
     /**
      * @var ResourceReference[]
@@ -48,5 +48,10 @@ class ResourceReferenceCollection implements \IteratorAggregate
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->resourceReferences);
+    }
+
+    public function count(): int
+    {
+        return count($this->resourceReferences);
     }
 }
