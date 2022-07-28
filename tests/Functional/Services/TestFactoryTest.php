@@ -179,7 +179,7 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
     {
         self::assertSame($expected->browser, $actual->browser);
         self::assertSame($expected->url, $actual->url);
-        self::assertSame($expected->getSource(), $actual->getSource());
+        self::assertSame($expected->source, $actual->source);
         self::assertSame($expected->getTarget(), $actual->getTarget());
         self::assertSame($expected->getState(), $actual->getState());
         self::assertSame($expected->getStepNames(), $actual->getStepNames());

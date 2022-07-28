@@ -55,7 +55,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
         }
 
         $testDocument = $this->createTestDocumentFromTestEntity($test);
-        $path = $test->getSource();
+        $path = $test->source;
 
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED));
 
@@ -72,10 +72,10 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument
     {
-        return new TestDocument($testEntity->getSource(), [
+        return new TestDocument($testEntity->source, [
             'type' => 'test',
             'payload' => [
-                'path' => $testEntity->getSource(),
+                'path' => $testEntity->source,
                 'config' => [
                     'browser' => $testEntity->browser,
                     'url' => $testEntity->url,

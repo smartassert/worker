@@ -56,7 +56,7 @@ class JobStatusFactory
                 $serializedTests[] = [
                     'browser' => $test->browser,
                     'url' => $test->url,
-                    'source' => $test->getSource(),
+                    'source' => $test->source,
                     'target' => $test->getTarget(),
                     'step_names' => $test->getStepNames(),
                     'state' => $test->getState()->value,
