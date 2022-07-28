@@ -28,7 +28,7 @@ class TimeoutCheckHandler
         $job = $this->jobRepository->get();
 
         $duration = time() - $job->getStartDateTime()->getTimestamp();
-        if ($duration >= $job->getMaximumDurationInSeconds()) {
+        if ($duration >= $job->maximumDurationInSeconds) {
             $this->eventDispatcher->dispatch(new JobTimeoutEvent(
                 $job->label,
                 $job->maximumDurationInSeconds
