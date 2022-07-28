@@ -16,16 +16,16 @@ class ResourceReference
     #[ORM\Column(type: Types::TEXT)]
     public readonly string $label;
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
     /**
      * @var non-empty-string
      */
     #[ORM\Column(length: 255)]
-    private string $reference;
+    public readonly string $reference;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     /**
      * @param non-empty-string $label
@@ -40,14 +40,6 @@ class ResourceReference
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getReference(): string
-    {
-        return $this->reference;
     }
 
     /**

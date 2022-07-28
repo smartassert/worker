@@ -128,7 +128,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             \assert($actualRelatedReference instanceof ResourceReference);
 
             self::assertSame($expectedRelatedReference->label, $actualRelatedReference->label);
-            self::assertSame($expectedRelatedReference->getReference(), $actualRelatedReference->getReference());
+            self::assertSame($expectedRelatedReference->reference, $actualRelatedReference->reference);
 
             ++$expectedRelatedReferenceIndex;
         }
