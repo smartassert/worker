@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ResourceReference;
+use App\Entity\ResourceReference;
 use App\Model\ResourceReferenceCollection;
 use App\Model\ResourceReferenceSource;
+use App\Repository\ResourceReferenceRepository;
 
 class ResourceReferenceFactory
 {
     public function __construct(
         private readonly ReferenceFactory $referenceFactory,
+        private readonly ResourceReferenceRepository $repository,
     ) {
     }
 
@@ -23,10 +25,17 @@ class ResourceReferenceFactory
     {
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
-            $testReferences[] = new ResourceReference(
-                $referenceSource->label,
-                $this->referenceFactory->create($jobLabel, $referenceSource->components)
-            );
+            $reference = $this->referenceFactory->create($jobLabel, $referenceSource->components);
+            $resourceReference = $this->repository->findOneBy([
+                'label' => $referenceSource->label,
+                'reference' => $reference,
+            ]);
+
+            if (null === $resourceReference) {
+                $resourceReference = $this->repository->add(new ResourceReference($referenceSource->label, $reference));
+            }
+
+            $testReferences[] = $resourceReference;
         }
 
         return new ResourceReferenceCollection($testReferences);

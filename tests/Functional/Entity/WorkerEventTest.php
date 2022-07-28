@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Entity;
 
+use App\Entity\ResourceReference;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Model\ResourceReferenceCollection;
 use App\Tests\Services\EntityRemover;
 
 class WorkerEventTest extends AbstractEntityTest
@@ -21,22 +23,49 @@ class WorkerEventTest extends AbstractEntityTest
         }
     }
 
-    public function testEntityMapping(): void
+    /**
+     * @dataProvider entityMappingDataProvider
+     */
+    public function testEntityMapping(WorkerEvent $event): void
     {
         $repository = $this->entityManager->getRepository(WorkerEvent::class);
         self::assertCount(0, $repository->findAll());
 
-        $workerEvent = new WorkerEvent(
-            WorkerEventScope::COMPILATION,
-            WorkerEventOutcome::FAILED,
-            'non-empty label',
-            'non-empty reference',
-            []
-        );
-
-        $this->entityManager->persist($workerEvent);
+        $this->entityManager->persist($event);
         $this->entityManager->flush();
 
         self::assertCount(1, $repository->findAll());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function entityMappingDataProvider(): array
+    {
+        return [
+            'without related references' => [
+                'event' => new WorkerEvent(
+                    WorkerEventScope::COMPILATION,
+                    WorkerEventOutcome::FAILED,
+                    'non-empty label',
+                    'non-empty reference',
+                    []
+                ),
+            ],
+            'with related references' => [
+                'event' => new WorkerEvent(
+                    WorkerEventScope::COMPILATION,
+                    WorkerEventOutcome::FAILED,
+                    'non-empty label',
+                    'non-empty reference',
+                    [],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('label 1', 'reference 1'),
+                        new ResourceReference('label 2', 'reference 2'),
+                        new ResourceReference('label 3', 'reference 3'),
+                    ]),
+                ),
+            ],
+        ];
     }
 }

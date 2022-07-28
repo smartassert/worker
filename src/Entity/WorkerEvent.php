@@ -7,7 +7,10 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Model\ResourceReferenceCollection;
 use App\Repository\WorkerEventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
@@ -43,6 +46,12 @@ class WorkerEvent
     private array $payload;
 
     /**
+     * @var Collection<int, ResourceReference>
+     */
+    #[ORM\ManyToMany(targetEntity: ResourceReference::class, cascade: ['persist'])]
+    private Collection $relatedReferences;
+
+    /**
      * @param non-empty-string $label
      * @param non-empty-string $reference
      * @param array<mixed>     $payload
@@ -52,7 +61,8 @@ class WorkerEvent
         WorkerEventOutcome $outcome,
         string $label,
         string $reference,
-        array $payload
+        array $payload,
+        ?ResourceReferenceCollection $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
@@ -60,6 +70,13 @@ class WorkerEvent
         $this->label = $label;
         $this->reference = $reference;
         $this->payload = $payload;
+        $this->relatedReferences = new ArrayCollection();
+
+        if ($relatedReferences instanceof ResourceReferenceCollection) {
+            foreach ($relatedReferences as $relatedReference) {
+                $this->relatedReferences->add($relatedReference);
+            }
+        }
     }
 
     public function getId(): ?int
@@ -83,17 +100,32 @@ class WorkerEvent
      *     type: string,
      *     label: non-empty-string,
      *     reference: string,
-     *     payload: array<mixed>
+     *     payload: array<mixed>,
+     *     related_references?: array<int, array{label: string, reference: string}>
      * }
      */
     public function toArray(): array
     {
+        $payload = $this->payload;
+
+        if (!$this->relatedReferences->isEmpty()) {
+            $serializedRelatedReferences = [];
+
+            foreach ($this->relatedReferences as $relatedReference) {
+                if ($relatedReference instanceof ResourceReference) {
+                    $serializedRelatedReferences[] = $relatedReference->toArray();
+                }
+            }
+
+            $payload['related_references'] = $serializedRelatedReferences;
+        }
+
         return [
             'sequence_number' => (int) $this->id,
             'type' => $this->scope->value . '/' . $this->outcome->value,
             'label' => $this->label,
             'reference' => $this->reference,
-            'payload' => $this->payload,
+            'payload' => $payload,
         ];
     }
 }
