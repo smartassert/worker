@@ -31,7 +31,7 @@ class TimeoutCheckHandler
         if ($duration >= $job->getMaximumDurationInSeconds()) {
             $this->eventDispatcher->dispatch(new JobTimeoutEvent(
                 $job->label,
-                $job->getMaximumDurationInSeconds()
+                $job->maximumDurationInSeconds
             ));
         } else {
             $this->timeoutCheckMessageDispatcher->dispatch();

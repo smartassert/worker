@@ -381,7 +381,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $job = $this->jobRepository->get();
         self::assertSame($responseData['label'], $job->label);
         self::assertSame($responseData['event_delivery_url'], $job->eventDeliveryUrl);
-        self::assertSame($responseData['maximum_duration_in_seconds'], $job->getMaximumDurationInSeconds());
+        self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 

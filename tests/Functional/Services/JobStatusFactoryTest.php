@@ -223,7 +223,7 @@ class JobStatusFactoryTest extends AbstractBaseFunctionalTest
             [
                 'label' => $job->label,
                 'event_delivery_url' => $job->eventDeliveryUrl,
-                'maximum_duration_in_seconds' => $job->getMaximumDurationInSeconds(),
+                'maximum_duration_in_seconds' => $job->maximumDurationInSeconds,
                 'test_paths' => $job->getTestPaths(),
                 'reference' => md5($job->label),
                 'sources' => [],
