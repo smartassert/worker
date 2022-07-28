@@ -33,7 +33,7 @@ class Job
      * @var array<int, non-empty-string>
      */
     #[ORM\Column(type: 'simple_array')]
-    private array $testPaths;
+    public readonly array $testPaths;
 
     /**
      * @param non-empty-string             $label
@@ -51,14 +51,6 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    /**
-     * @return non-empty-string[]
-     */
-    public function getTestPaths(): array
-    {
-        return $this->testPaths;
     }
 
     public function getStartDateTime(): \DateTimeImmutable

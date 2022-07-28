@@ -28,7 +28,7 @@ class JobStatusFactory
         $tests = $this->testRepository->findAll();
 
         $testPathReferenceSources = [];
-        foreach ($job->getTestPaths() as $testPath) {
+        foreach ($job->testPaths as $testPath) {
             $testPathReferenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
         }
 
