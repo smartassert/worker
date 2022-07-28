@@ -16,7 +16,7 @@ class Source
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private int $id;
 
     /**
      * @var Source::TYPE_*
@@ -34,20 +34,5 @@ class Source
     {
         $this->type = $type;
         $this->path = $path;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
     }
 }
