@@ -21,13 +21,13 @@ class WorkerEventFactory
         $payload = $event->getPayload();
         $relatedReferenceSources = $event->getRelatedReferenceSources();
 
+        $resourceReferenceCollection = null;
+
         if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
             $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
                 $job->getLabel(),
                 $relatedReferenceSources
             );
-
-            $payload['related_references'] = $resourceReferenceCollection->toArray();
         }
 
         return new WorkerEvent(
@@ -35,7 +35,8 @@ class WorkerEventFactory
             $event->getOutcome(),
             $event->getLabel(),
             $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
-            $payload
+            $payload,
+            $resourceReferenceCollection
         );
     }
 }

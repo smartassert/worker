@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
+use App\Entity\ResourceReference;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\ExecutionExceptionScope;
@@ -25,6 +26,7 @@ use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
+use App\Model\ResourceReferenceCollection;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -33,8 +35,10 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
+use webignition\ObjectReflector\ObjectReflector;
 
 class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -78,9 +82,56 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
      */
     public function testCreate(EventInterface $event, WorkerEvent $expected): void
     {
-        $workerEvent = $this->workerEventFactory->create($this->job, $event);
+        $actual = $this->workerEventFactory->create($this->job, $event);
 
-        self::assertEquals($expected, $workerEvent);
+        self::assertSame($expected->getState(), $actual->getState());
+        self::assertSame(
+            ObjectReflector::getProperty($expected, 'scope'),
+            ObjectReflector::getProperty($actual, 'scope')
+        );
+        self::assertSame(
+            ObjectReflector::getProperty($expected, 'outcome'),
+            ObjectReflector::getProperty($actual, 'outcome')
+        );
+        self::assertSame(
+            ObjectReflector::getProperty($expected, 'label'),
+            ObjectReflector::getProperty($actual, 'label')
+        );
+        self::assertSame(
+            ObjectReflector::getProperty($expected, 'reference'),
+            ObjectReflector::getProperty($actual, 'reference')
+        );
+        self::assertSame(
+            ObjectReflector::getProperty($expected, 'payload'),
+            ObjectReflector::getProperty($actual, 'payload')
+        );
+
+        $expectedRelatedReferences = ObjectReflector::getProperty($expected, 'relatedReferences');
+        self::assertInstanceOf(Collection::class, $expectedRelatedReferences);
+
+        $actualRelatedReferences = ObjectReflector::getProperty($actual, 'relatedReferences');
+        self::assertInstanceOf(Collection::class, $actualRelatedReferences);
+
+        self::assertCount($expectedRelatedReferences->count(), $actualRelatedReferences);
+
+        $actualRelatedReferencesAsArray = [];
+        foreach ($actualRelatedReferences as $actualRelatedReference) {
+            $actualRelatedReferencesAsArray[] = $actualRelatedReference;
+        }
+
+        $expectedRelatedReferenceIndex = 0;
+
+        foreach ($expectedRelatedReferences as $expectedRelatedReference) {
+            \assert($expectedRelatedReference instanceof ResourceReference);
+
+            $actualRelatedReference = $actualRelatedReferencesAsArray[$expectedRelatedReferenceIndex];
+            \assert($actualRelatedReference instanceof ResourceReference);
+
+            self::assertSame($expectedRelatedReference->getLabel(), $actualRelatedReference->getLabel());
+            self::assertSame($expectedRelatedReference->getReference(), $actualRelatedReference->getReference());
+
+            ++$expectedRelatedReferenceIndex;
+        }
     }
 
     /**
@@ -176,17 +227,11 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'Test/test1.yaml',
                             'Test/test2.yaml',
                         ],
-                        'related_references' => [
-                            [
-                                'label' => 'Test/test1.yaml',
-                                'reference' => md5(self::JOB_LABEL . 'Test/test1.yaml'),
-                            ],
-                            [
-                                'label' => 'Test/test2.yaml',
-                                'reference' => md5(self::JOB_LABEL . 'Test/test2.yaml'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
+                        new ResourceReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
+                    ])
                 ),
             ],
             SourceCompilationStartedEvent::class => [
@@ -213,17 +258,11 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     md5(self::JOB_LABEL . $testSource),
                     [
                         'source' => $testSource,
-                        'related_references' => [
-                            [
-                                'label' => 'step one',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step one'),
-                            ],
-                            [
-                                'label' => 'step two',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step two'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
+                        new ResourceReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
+                    ]),
                 ),
             ],
             SourceCompilationFailedEvent::class => [
@@ -279,13 +318,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'step_names' => [
                             'step 1',
                         ],
-                        'related_references' => [
-                            [
-                                'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ])
                 ),
             ],
             'step/passed' => [
@@ -346,13 +382,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'step_names' => [
                             'step 1',
                         ],
-                        'related_references' => [
-                            [
-                                'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ])
                 ),
             ],
             'test/failed' => [
@@ -373,13 +406,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'step_names' => [
                             'step 1',
                         ],
-                        'related_references' => [
-                            [
-                                'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ])
                 ),
             ],
             JobTimeoutEvent::class => [
@@ -442,13 +472,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'step_names' => [
                             'step 1',
                         ],
-                        'related_references' => [
-                            [
-                                'label' => 'step 1',
-                                'reference' => md5(self::JOB_LABEL . $testSource . 'step 1'),
-                            ],
-                        ],
-                    ]
+                    ],
+                    new ResourceReferenceCollection([
+                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ])
                 ),
             ],
             'step/exception' => [

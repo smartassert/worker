@@ -8,6 +8,7 @@ use App\Entity\ResourceReference;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Model\ResourceReferenceCollection;
 use App\Tests\Services\EntityRemover;
 
 class WorkerEventTest extends AbstractEntityTest
@@ -58,11 +59,11 @@ class WorkerEventTest extends AbstractEntityTest
                     'non-empty label',
                     'non-empty reference',
                     [],
-                    [
+                    new ResourceReferenceCollection([
                         new ResourceReference('label 1', 'reference 1'),
                         new ResourceReference('label 2', 'reference 2'),
                         new ResourceReference('label 3', 'reference 3'),
-                    ],
+                    ]),
                 ),
             ],
         ];

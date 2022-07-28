@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Model\ResourceReferenceCollection;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -51,10 +52,9 @@ class WorkerEvent
     private Collection $relatedReferences;
 
     /**
-     * @param non-empty-string         $label
-     * @param non-empty-string         $reference
-     * @param array<mixed>             $payload
-     * @param null|ResourceReference[] $relatedReferences
+     * @param non-empty-string $label
+     * @param non-empty-string $reference
+     * @param array<mixed>     $payload
      */
     public function __construct(
         WorkerEventScope $scope,
@@ -62,7 +62,7 @@ class WorkerEvent
         string $label,
         string $reference,
         array $payload,
-        ?array $relatedReferences = null,
+        ?ResourceReferenceCollection $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
@@ -72,11 +72,9 @@ class WorkerEvent
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();
 
-        if (is_array($relatedReferences)) {
+        if ($relatedReferences instanceof ResourceReferenceCollection) {
             foreach ($relatedReferences as $relatedReference) {
-                if ($relatedReference instanceof ResourceReference) {
-                    $this->relatedReferences->add($relatedReference);
-                }
+                $this->relatedReferences->add($relatedReference);
             }
         }
     }
@@ -108,13 +106,7 @@ class WorkerEvent
      */
     public function toArray(): array
     {
-        $data = [
-            'sequence_number' => (int) $this->id,
-            'type' => $this->scope->value . '/' . $this->outcome->value,
-            'label' => $this->label,
-            'reference' => $this->reference,
-            'payload' => $this->payload,
-        ];
+        $payload = $this->payload;
 
         if (!$this->relatedReferences->isEmpty()) {
             $serializedRelatedReferences = [];
@@ -125,9 +117,15 @@ class WorkerEvent
                 }
             }
 
-            $data['related_references'] = $serializedRelatedReferences;
+            $payload['related_references'] = $serializedRelatedReferences;
         }
 
-        return $data;
+        return [
+            'sequence_number' => (int) $this->id,
+            'type' => $this->scope->value . '/' . $this->outcome->value,
+            'label' => $this->label,
+            'reference' => $this->reference,
+            'payload' => $payload,
+        ];
     }
 }
