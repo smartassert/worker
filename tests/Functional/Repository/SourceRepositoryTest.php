@@ -58,8 +58,8 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'test-only sources, type=test' => [
                 'sources' => [
-                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test1.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test2.yml'),
                 ],
                 'type' => Source::TYPE_TEST,
                 'expectedPaths' => [
@@ -69,15 +69,15 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'test-only sources, type=resource' => [
                 'sources' => [
-                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test1.yml'),
                 ],
                 'type' => Source::TYPE_RESOURCE,
                 'expectedPaths' => [],
             ],
             'resource-only sources, type=resource' => [
                 'sources' => [
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page2.yml'),
                 ],
                 'type' => Source::TYPE_RESOURCE,
                 'expectedPaths' => [
@@ -87,17 +87,17 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'resource-only sources, type=test' => [
                 'sources' => [
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page1.yml'),
                 ],
                 'type' => Source::TYPE_TEST,
                 'expectedPaths' => [],
             ],
             'mixed-type sources, type=null' => [
                 'sources' => [
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test1.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test2.yml'),
                 ],
                 'type' => null,
                 'expectedPaths' => [
@@ -109,10 +109,10 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'mixed-type sources, type=test' => [
                 'sources' => [
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test1.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test2.yml'),
                 ],
                 'type' => Source::TYPE_TEST,
                 'expectedPaths' => [
@@ -122,10 +122,10 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTest
             ],
             'mixed-type sources, type=resource' => [
                 'sources' => [
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page1.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test1.yml'),
-                    Source::create(Source::TYPE_RESOURCE, 'Page/page2.yml'),
-                    Source::create(Source::TYPE_TEST, 'Test/test2.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page1.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test1.yml'),
+                    new Source(Source::TYPE_RESOURCE, 'Page/page2.yml'),
+                    new Source(Source::TYPE_TEST, 'Test/test2.yml'),
                 ],
                 'type' => Source::TYPE_RESOURCE,
                 'expectedPaths' => [

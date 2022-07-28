@@ -24,7 +24,7 @@ class SourceTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(Source::class);
         self::assertCount(0, $repository->findAll());
 
-        $source = Source::create(Source::TYPE_TEST, 'Test/test.yml');
+        $source = new Source(Source::TYPE_TEST, 'Test/test.yml');
 
         $this->entityManager->persist($source);
         $this->entityManager->flush();

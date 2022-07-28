@@ -30,13 +30,10 @@ class Source
     /**
      * @param Source::TYPE_* $type
      */
-    public static function create(string $type, string $path): self
+    public function __construct(string $type, string $path)
     {
-        $source = new Source();
-        $source->type = $type;
-        $source->path = $path;
-
-        return $source;
+        $this->type = $type;
+        $this->path = $path;
     }
 
     public function getId(): ?int
