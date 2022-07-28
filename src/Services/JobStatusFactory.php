@@ -55,7 +55,7 @@ class JobStatusFactory
             if ($test instanceof Test) {
                 $serializedTests[] = [
                     'browser' => $test->browser,
-                    'url' => $test->getUrl(),
+                    'url' => $test->url,
                     'source' => $test->getSource(),
                     'target' => $test->getTarget(),
                     'step_names' => $test->getStepNames(),

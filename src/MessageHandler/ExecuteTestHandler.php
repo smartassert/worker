@@ -75,7 +75,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
                 'path' => $testEntity->getSource(),
                 'config' => [
                     'browser' => $testEntity->browser,
-                    'url' => $testEntity->getUrl(),
+                    'url' => $testEntity->url,
                 ],
             ],
         ]);

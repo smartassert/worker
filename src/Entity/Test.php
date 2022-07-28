@@ -13,13 +13,13 @@ class Test
 {
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $browser;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    public readonly string $url;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
     private int $id;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $url;
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
@@ -65,11 +65,6 @@ class Test
         $this->stepNames = $stepNames;
         $this->position = $position;
         $this->state = TestState::AWAITING;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
     }
 
     public function getState(): TestState
