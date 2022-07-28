@@ -27,7 +27,7 @@ class Job
     public readonly int $maximumDurationInSeconds;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $startDateTime;
+    public readonly \DateTimeImmutable $startDateTime;
 
     /**
      * @var array<int, non-empty-string>
@@ -51,10 +51,5 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    public function getStartDateTime(): \DateTimeImmutable
-    {
-        return $this->startDateTime;
     }
 }
