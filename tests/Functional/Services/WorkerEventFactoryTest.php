@@ -127,8 +127,15 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             $actualRelatedReference = $actualRelatedReferencesAsArray[$expectedRelatedReferenceIndex];
             \assert($actualRelatedReference instanceof ResourceReference);
 
-            self::assertSame($expectedRelatedReference->label, $actualRelatedReference->label);
-            self::assertSame($expectedRelatedReference->reference, $actualRelatedReference->reference);
+            self::assertSame(
+                ObjectReflector::getProperty($expectedRelatedReference, 'label'),
+                ObjectReflector::getProperty($actualRelatedReference, 'label')
+            );
+
+            self::assertSame(
+                ObjectReflector::getProperty($expectedRelatedReference, 'reference'),
+                ObjectReflector::getProperty($actualRelatedReference, 'reference')
+            );
 
             ++$expectedRelatedReferenceIndex;
         }

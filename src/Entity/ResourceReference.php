@@ -14,13 +14,13 @@ class ResourceReference
      * @var non-empty-string
      */
     #[ORM\Column(type: Types::TEXT)]
-    public readonly string $label;
+    private readonly string $label;
 
     /**
      * @var non-empty-string
      */
     #[ORM\Column(length: 255)]
-    public readonly string $reference;
+    private readonly string $reference;
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
