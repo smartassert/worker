@@ -22,10 +22,10 @@ class Source
      * @var Source::TYPE_*
      */
     #[ORM\Column(type: 'string', length: 255)]
-    private string $type;
+    private readonly string $type;
 
     #[ORM\Column(type: 'text')]
-    private string $path;
+    private readonly string $path;
 
     /**
      * @param Source::TYPE_* $type
