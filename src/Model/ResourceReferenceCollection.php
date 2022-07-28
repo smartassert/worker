@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\ResourceReference;
+use Traversable;
 
-class ResourceReferenceCollection
+/**
+ * @implements \IteratorAggregate<ResourceReference>
+ */
+class ResourceReferenceCollection implements \IteratorAggregate
 {
     /**
      * @var ResourceReference[]
@@ -36,5 +40,13 @@ class ResourceReferenceCollection
         }
 
         return $data;
+    }
+
+    /**
+     * @return Traversable<ResourceReference>
+     */
+    public function getIterator(): Traversable
+    {
+        return new \ArrayIterator($this->resourceReferences);
     }
 }
