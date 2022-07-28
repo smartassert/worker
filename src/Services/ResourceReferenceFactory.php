@@ -25,20 +25,14 @@ class ResourceReferenceFactory
     {
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
-            $resourceReference = new ResourceReference(
-                $referenceSource->label,
-                $this->referenceFactory->create($jobLabel, $referenceSource->components)
-            );
-
-            $existingResourceReference = $this->repository->findOneBy([
-                'label' => $resourceReference->getLabel(),
-                'reference' => $resourceReference->getReference(),
+            $reference = $this->referenceFactory->create($jobLabel, $referenceSource->components);
+            $resourceReference = $this->repository->findOneBy([
+                'label' => $referenceSource->label,
+                'reference' => $reference,
             ]);
 
-            if ($existingResourceReference instanceof ResourceReference) {
-                $resourceReference = $existingResourceReference;
-            } else {
-                $this->repository->add($resourceReference);
+            if (null === $resourceReference) {
+                $resourceReference = $this->repository->add(new ResourceReference($referenceSource->label, $reference));
             }
 
             $testReferences[] = $resourceReference;
