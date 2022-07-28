@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\Job;
+use App\Entity\Source;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Tests\Model\Environment;
@@ -39,7 +40,9 @@ class EnvironmentFactory
 
         $sources = [];
         foreach ($setup->getSourceSetups() as $sourceSetup) {
-            $sources[] = $this->sourceRepository->create($sourceSetup->getType(), $sourceSetup->getPath());
+            $sources[] = $this->sourceRepository->add(
+                Source::create($sourceSetup->getType(), $sourceSetup->getPath())
+            );
         }
 
         $tests = [];

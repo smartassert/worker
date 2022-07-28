@@ -21,13 +21,8 @@ class SourceRepository extends ServiceEntityRepository
         parent::__construct($registry, Source::class);
     }
 
-    /**
-     * @param Source::TYPE_* $type
-     */
-    public function create(string $type, string $path): Source
+    public function add(Source $source): Source
     {
-        $source = Source::create($type, $path);
-
         $this->_em->persist($source);
         $this->_em->flush();
 
