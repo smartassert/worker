@@ -26,14 +26,14 @@ class MockJobRepository
         return $this->jobStore;
     }
 
-    public function withGetCall(Job|JobNotFoundException $outcome): self
+    public function withGetCall(Job|JobNotFoundException|MockInterface $outcome): self
     {
         $expectation = $this->jobStore->shouldReceive('get');
 
-        if ($outcome instanceof Job) {
-            $expectation->andReturn($outcome);
-        } else {
+        if ($outcome instanceof \Exception) {
             $expectation->andThrow($outcome);
+        } else {
+            $expectation->andReturn($outcome);
         }
 
         return $this;

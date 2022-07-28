@@ -26,8 +26,8 @@ class Job
     #[ORM\Column(type: 'integer')]
     private int $maximumDurationInSeconds;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $startDateTime = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $startDateTime;
 
     /**
      * @var array<int, non-empty-string>
@@ -50,6 +50,7 @@ class Job
         $this->eventDeliveryUrl = $eventDeliveryUrl;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
+        $this->startDateTime = new \DateTimeImmutable();
     }
 
     /**
@@ -81,24 +82,8 @@ class Job
         return $this->testPaths;
     }
 
-    public function hasStarted(): bool
+    public function getStartDateTime(): \DateTimeImmutable
     {
-        return $this->startDateTime instanceof \DateTimeInterface;
-    }
-
-    public function hasReachedMaximumDuration(): bool
-    {
-        if ($this->startDateTime instanceof \DateTimeInterface) {
-            $duration = time() - $this->startDateTime->getTimestamp();
-
-            return $duration >= $this->maximumDurationInSeconds;
-        }
-
-        return false;
-    }
-
-    public function setStartDateTime(): void
-    {
-        $this->startDateTime = new \DateTimeImmutable();
+        return $this->startDateTime;
     }
 }

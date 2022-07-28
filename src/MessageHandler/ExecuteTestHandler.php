@@ -11,10 +11,8 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
-use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
-use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
@@ -27,7 +25,6 @@ use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 class ExecuteTestHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private readonly JobRepository $jobRepository,
         private TestExecutor $testExecutor,
         private EventDispatcherInterface $eventDispatcher,
         private TestStateMutator $testStateMutator,
@@ -37,7 +34,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws JobNotFoundException
      * @throws ClientCreationException
      * @throws SocketErrorException
      * @throws InvalidDocumentException
@@ -45,8 +41,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
-        $job = $this->jobRepository->get();
-
         if ($this->executionProgress->is(...ExecutionState::getFinishedStates())) {
             return;
         }
@@ -58,11 +52,6 @@ class ExecuteTestHandler implements MessageHandlerInterface
 
         if (false === $test->hasState(TestState::AWAITING)) {
             return;
-        }
-
-        if (false === $job->hasStarted()) {
-            $job->setStartDateTime();
-            $this->jobRepository->add($job);
         }
 
         $testDocument = $this->createTestDocumentFromTestEntity($test);
