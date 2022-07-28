@@ -32,6 +32,7 @@ use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SmartAssert\YamlFile\Collection\Deserializer;
+use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
 {
@@ -385,18 +386,23 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 
         foreach ($this->sourceRepository->findAll() as $source) {
-            $expectedSourceData = $expectedStoredSources[$source->getPath()];
+            $sourcePath = ObjectReflector::getProperty($source, 'path');
+            self::assertIsString($sourcePath);
+
+            $expectedSourceData = $expectedStoredSources[$sourcePath];
             self::assertIsArray($expectedSourceData);
 
             self::assertArrayHasKey('type', $expectedSourceData);
-            self::assertSame($expectedSourceData['type'], $source->getType());
+
+            $sourceType = ObjectReflector::getProperty($source, 'type');
+            self::assertSame($expectedSourceData['type'], $sourceType);
 
             self::assertArrayHasKey('contentFixture', $expectedSourceData);
 
-            self::assertTrue($this->sourceFileInspector->has($source->getPath()));
+            self::assertTrue($this->sourceFileInspector->has($sourcePath));
             self::assertSame(
                 trim($this->fixtureReader->read($expectedSourceData['contentFixture'])),
-                trim($this->sourceFileInspector->read($source->getPath()))
+                trim($this->sourceFileInspector->read($sourcePath))
             );
         }
     }
