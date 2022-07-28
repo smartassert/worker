@@ -102,7 +102,8 @@ class WorkerEvent
      *     type: string,
      *     label: non-empty-string,
      *     reference: string,
-     *     payload: array<mixed>
+     *     payload: array<mixed>,
+     *     related_references?: array<int, array{label: string, reference: string}>
      * }
      */
     public function toArray(): array
