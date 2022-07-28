@@ -49,7 +49,7 @@ class TestExecutor
             sprintf(
                 './bin/delegator --browser %s %s',
                 $test->browser,
-                $this->compilerTargetDirectory . '/' . $test->getTarget()
+                $this->compilerTargetDirectory . '/' . $test->target
             ),
             $delegatorClientHandler
         );

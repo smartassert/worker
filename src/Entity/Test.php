@@ -23,6 +23,12 @@ class Test
     #[ORM\Column(type: 'text')]
     public readonly string $source;
 
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'text')]
+    public readonly string $target;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -30,12 +36,6 @@ class Test
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'text')]
-    private string $target;
 
     /**
      * @var non-empty-string[]
@@ -78,14 +78,6 @@ class Test
         $this->state = $state;
 
         return $this;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getTarget(): string
-    {
-        return $this->target;
     }
 
     /**
