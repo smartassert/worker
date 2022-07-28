@@ -34,10 +34,10 @@ class JobStatusFactory
 
         return new JobStatus(
             $job,
-            $this->referenceFactory->create($job->getLabel()),
+            $this->referenceFactory->create($job->label),
             $this->sourceRepository->findAllPaths(),
             $this->createSerializedTestCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources),
+            $this->resourceReferenceFactory->createCollection($job->label, $testPathReferenceSources),
             $this->workerEventRepository->findAllIds(),
         );
     }

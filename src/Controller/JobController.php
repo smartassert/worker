@@ -101,7 +101,7 @@ class JobController
         ));
 
         $eventDispatcher->dispatch(new JobStartedEvent(
-            $job->getLabel(),
+            $job->label,
             $sourceRepository->findAllPaths(Source::TYPE_TEST)
         ));
 

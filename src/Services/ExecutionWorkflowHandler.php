@@ -85,7 +85,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         if (WorkerEventOutcome::COMPILED === $event->getOutcome()) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new ExecutionEvent($job->getLabel(), WorkerEventOutcome::STARTED));
+            $this->eventDispatcher->dispatch(new ExecutionEvent($job->label, WorkerEventOutcome::STARTED));
         }
     }
 
@@ -106,7 +106,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new ExecutionEvent($job->getLabel(), WorkerEventOutcome::COMPLETED));
+            $this->eventDispatcher->dispatch(new ExecutionEvent($job->label, WorkerEventOutcome::COMPLETED));
         }
     }
 }

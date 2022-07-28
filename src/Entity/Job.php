@@ -15,7 +15,7 @@ class Job
      */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 32)]
-    private string $label;
+    public readonly string $label;
 
     /**
      * @var non-empty-string
@@ -51,14 +51,6 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
     }
 
     /**
