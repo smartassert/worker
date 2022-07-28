@@ -47,7 +47,7 @@ class WorkerEvent
     /**
      * @var Collection<int, ResourceReference>
      */
-    #[ORM\OneToMany(mappedBy: 'workerEvent', targetEntity: ResourceReference::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: ResourceReference::class, cascade: ['persist'])]
     private Collection $relatedReferences;
 
     /**
