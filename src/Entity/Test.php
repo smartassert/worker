@@ -29,6 +29,12 @@ class Test
     #[ORM\Column(type: 'text')]
     public readonly string $target;
 
+    /**
+     * @var non-empty-string[]
+     */
+    #[ORM\Column(type: 'simple_array')]
+    public readonly array $stepNames;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -36,12 +42,6 @@ class Test
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
-
-    /**
-     * @var non-empty-string[]
-     */
-    #[ORM\Column(type: 'simple_array')]
-    private array $stepNames = [];
 
     #[ORM\Column(type: 'integer', nullable: false, unique: true)]
     private int $position;
@@ -78,14 +78,6 @@ class Test
         $this->state = $state;
 
         return $this;
-    }
-
-    /**
-     * @return non-empty-string[]
-     */
-    public function getStepNames(): array
-    {
-        return $this->stepNames;
     }
 
     public function getPosition(): int
