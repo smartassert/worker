@@ -15,9 +15,15 @@ class ResourceReference
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(type: Types::TEXT)]
     private string $label;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(length: 255)]
     private string $reference;
 
@@ -34,6 +40,22 @@ class ResourceReference
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
     }
 
     /**
