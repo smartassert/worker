@@ -25,7 +25,7 @@ class ResourceReference
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private int $id;
 
     /**
      * @param non-empty-string $label
@@ -35,11 +35,6 @@ class ResourceReference
     {
         $this->label = $label;
         $this->reference = $reference;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**
