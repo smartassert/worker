@@ -57,7 +57,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
         $test = $event->getTest();
 
-        if ($test->hasState(TestState::COMPLETE)) {
+        if (TestState::COMPLETE === $test->getState()) {
             $this->dispatchNextExecuteTestMessage();
         }
     }

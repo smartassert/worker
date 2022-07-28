@@ -54,9 +54,8 @@ class ExecuteTestHandlerTest extends TestCase
     {
         $testInWrongState = \Mockery::mock(Test::class);
         $testInWrongState
-            ->shouldReceive('hasState')
-            ->with(TestState::AWAITING)
-            ->andReturn(false)
+            ->shouldReceive('getState')
+            ->andReturn(TestState::COMPLETE)
         ;
 
         return [

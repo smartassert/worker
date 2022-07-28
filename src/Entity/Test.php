@@ -72,11 +72,6 @@ class Test
         return $this->state;
     }
 
-    public function hasState(TestState $state): bool
-    {
-        return $state === $this->state;
-    }
-
     public function setState(TestState $state): self
     {
         $this->state = $state;
