@@ -14,7 +14,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $browser;
@@ -68,7 +68,7 @@ class Test
         $this->state = TestState::AWAITING;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

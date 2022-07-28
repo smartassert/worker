@@ -148,7 +148,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
             $this->messengerAsserter->assertMessageAtPositionEquals(
                 0,
-                new ExecuteTestMessage((int) $expectedNextTest->getId())
+                new ExecuteTestMessage($expectedNextTest->getId())
             );
         }
     }
@@ -235,7 +235,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->messengerAsserter->assertMessageAtPositionEquals(
             0,
-            new ExecuteTestMessage((int) $expectedNextTest->getId())
+            new ExecuteTestMessage($expectedNextTest->getId())
         );
     }
 }
