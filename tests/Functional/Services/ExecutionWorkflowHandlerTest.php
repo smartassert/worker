@@ -20,6 +20,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use webignition\ObjectReflector\ObjectReflector;
 
 class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -146,10 +147,10 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
             self::assertInstanceOf(Test::class, $expectedNextTest);
 
-            $this->messengerAsserter->assertMessageAtPositionEquals(
-                0,
-                new ExecuteTestMessage($expectedNextTest->getId())
-            );
+            $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
+            self::assertIsInt($expectedNextTestId);
+
+            $this->messengerAsserter->assertMessageAtPositionEquals(0, new ExecuteTestMessage($expectedNextTestId));
         }
     }
 
@@ -233,9 +234,9 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
         self::assertInstanceOf(Test::class, $expectedNextTest);
 
-        $this->messengerAsserter->assertMessageAtPositionEquals(
-            0,
-            new ExecuteTestMessage($expectedNextTest->getId())
-        );
+        $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
+        self::assertIsInt($expectedNextTestId);
+
+        $this->messengerAsserter->assertMessageAtPositionEquals(0, new ExecuteTestMessage($expectedNextTestId));
     }
 }

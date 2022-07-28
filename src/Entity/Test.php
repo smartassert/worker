@@ -68,11 +68,6 @@ class Test
         $this->state = TestState::AWAITING;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     public function getBrowser(): string
     {
         return $this->browser;

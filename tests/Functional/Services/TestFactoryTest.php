@@ -14,6 +14,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
+use webignition\ObjectReflector\ObjectReflector;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -187,8 +188,9 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     private function assertCreatedTest(Test $test, ?Test $expectedTest): void
     {
-        self::assertIsInt($test->getId());
-        self::assertGreaterThan(0, $test->getId());
+        $testId = ObjectReflector::getProperty($test, 'id');
+        self::assertIsInt($testId);
+        self::assertGreaterThan(0, $testId);
         self::assertInstanceOf(Test::class, $expectedTest);
 
         $this->assertTestEquals($expectedTest, $test);
