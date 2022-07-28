@@ -10,16 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'resource_reference_unique', columns: ['label', 'reference'])]
 class ResourceReference
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
     /**
      * @var non-empty-string
      */
     #[ORM\Column(type: Types::TEXT)]
-    private string $label;
+    public readonly string $label;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     /**
      * @var non-empty-string
@@ -40,14 +40,6 @@ class ResourceReference
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
     }
 
     /**
