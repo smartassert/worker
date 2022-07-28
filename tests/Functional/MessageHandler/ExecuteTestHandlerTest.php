@@ -73,7 +73,6 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         $job = $jobRepository->get();
         self::assertInstanceOf(Job::class, $job);
-        self::assertFalse($job->hasStarted());
 
         $executionProgress = self::getContainer()->get(ExecutionProgress::class);
         \assert($executionProgress instanceof ExecutionProgress);
@@ -121,8 +120,6 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         ($this->handler)($executeTestMessage);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-
-        self::assertTrue($job->hasStarted());
 
         self::assertSame(ExecutionState::COMPLETE, $executionProgress->get());
         self::assertSame(TestState::COMPLETE, $test->getState());

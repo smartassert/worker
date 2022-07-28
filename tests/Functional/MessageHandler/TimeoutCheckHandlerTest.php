@@ -137,12 +137,11 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ['test.yml']
         );
 
-        ObjectReflector::setProperty(
-            $job,
-            Job::class,
-            'startDateTime',
-            new \DateTimeImmutable('-' . $jobMaximumDuration . ' second')
-        );
+        $job = \Mockery::mock($job);
+        $job
+            ->shouldReceive('getStartDateTime')
+            ->andReturn(new \DateTimeImmutable('-' . $jobMaximumDuration . ' second'))
+        ;
 
         $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
