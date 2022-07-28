@@ -130,4 +130,15 @@ class WorkerEvent
     {
         return $this->payload;
     }
+
+    public function getRelatedReferences(): ResourceReferenceCollection
+    {
+        $references = [];
+
+        foreach ($this->relatedReferences as $reference) {
+            $references[] = $reference;
+        }
+
+        return new ResourceReferenceCollection($references);
+    }
 }
