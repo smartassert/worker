@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Model\ResourceReference;
+use App\Entity\ResourceReference;
 use App\Model\ResourceReferenceCollection;
 use App\Model\ResourceReferenceSource;
 
