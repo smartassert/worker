@@ -36,6 +36,9 @@ class WorkerEvent
     #[ORM\Column(type: 'text')]
     private string $label;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
 
@@ -94,38 +97,37 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    /**
-     * @return array{
-     *     sequence_number: int,
-     *     type: string,
-     *     label: non-empty-string,
-     *     reference: string,
-     *     payload: array<mixed>,
-     *     related_references?: array<int, array{label: string, reference: string}>
-     * }
-     */
-    public function toArray(): array
+    public function getScope(): WorkerEventScope
     {
-        $payload = $this->payload;
+        return $this->scope;
+    }
 
-        if (!$this->relatedReferences->isEmpty()) {
-            $serializedRelatedReferences = [];
+    public function getOutcome(): WorkerEventOutcome
+    {
+        return $this->outcome;
+    }
 
-            foreach ($this->relatedReferences as $relatedReference) {
-                if ($relatedReference instanceof ResourceReference) {
-                    $serializedRelatedReferences[] = $relatedReference->toArray();
-                }
-            }
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
 
-            $payload['related_references'] = $serializedRelatedReferences;
-        }
+    /**
+     * @return non-empty-string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
 
-        return [
-            'sequence_number' => (int) $this->id,
-            'type' => $this->scope->value . '/' . $this->outcome->value,
-            'label' => $this->label,
-            'reference' => $this->reference,
-            'payload' => $payload,
-        ];
+    /**
+     * @return array<mixed>
+     */
+    public function getPayload(): array
+    {
+        return $this->payload;
     }
 }
