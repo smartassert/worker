@@ -53,7 +53,7 @@ services:
 
   postgres:
     env_file: .env
-    image: postgres:12.5
+    image: postgres:12.5-alpine
     container_name: postgres
     command: postgres -c 'max_connections=400'
     ports:
