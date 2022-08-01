@@ -37,7 +37,7 @@ class WorkerEvent
     private readonly string $label;
 
     #[ORM\Column(type: 'string', length: 32)]
-    private string $reference;
+    private readonly string $reference;
 
     /**
      * @var array<mixed>
