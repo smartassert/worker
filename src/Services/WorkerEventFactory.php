@@ -25,7 +25,7 @@ class WorkerEventFactory
 
         if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
             $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
-                $job->getLabel(),
+                $job->label,
                 $relatedReferenceSources
             );
         }
@@ -34,7 +34,7 @@ class WorkerEventFactory
             $event->getScope(),
             $event->getOutcome(),
             $event->getLabel(),
-            $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents()),
+            $this->referenceFactory->create($job->label, $event->getReferenceComponents()),
             $payload,
             $resourceReferenceCollection
         );

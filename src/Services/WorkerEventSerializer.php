@@ -16,7 +16,7 @@ class WorkerEventSerializer
     {
         return array_merge(
             [
-                'job' => $job->getLabel(),
+                'job' => $job->label,
             ],
             $workerEvent->toArray()
         );

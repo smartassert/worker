@@ -25,25 +25,25 @@ class WorkerEvent
     private WorkerEventState $state;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
-    private WorkerEventScope $scope;
+    private readonly WorkerEventScope $scope;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
-    private WorkerEventOutcome $outcome;
+    private readonly WorkerEventOutcome $outcome;
 
     /**
      * @var non-empty-string
      */
     #[ORM\Column(type: 'text')]
-    private string $label;
+    private readonly string $label;
 
     #[ORM\Column(type: 'string', length: 32)]
-    private string $reference;
+    private readonly string $reference;
 
     /**
      * @var array<mixed>
      */
     #[ORM\Column(type: 'json')]
-    private array $payload;
+    private readonly array $payload;
 
     /**
      * @var Collection<int, ResourceReference>

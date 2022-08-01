@@ -28,16 +28,16 @@ class JobStatusFactory
         $tests = $this->testRepository->findAll();
 
         $testPathReferenceSources = [];
-        foreach ($job->getTestPaths() as $testPath) {
+        foreach ($job->testPaths as $testPath) {
             $testPathReferenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
         }
 
         return new JobStatus(
             $job,
-            $this->referenceFactory->create($job->getLabel()),
+            $this->referenceFactory->create($job->label),
             $this->sourceRepository->findAllPaths(),
             $this->createSerializedTestCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources),
+            $this->resourceReferenceFactory->createCollection($job->label, $testPathReferenceSources),
             $this->workerEventRepository->findAllIds(),
         );
     }
@@ -54,13 +54,13 @@ class JobStatusFactory
         foreach ($tests as $test) {
             if ($test instanceof Test) {
                 $serializedTests[] = [
-                    'browser' => $test->getBrowser(),
-                    'url' => $test->getUrl(),
-                    'source' => $test->getSource(),
-                    'target' => $test->getTarget(),
-                    'step_names' => $test->getStepNames(),
+                    'browser' => $test->browser,
+                    'url' => $test->url,
+                    'source' => $test->source,
+                    'target' => $test->target,
+                    'step_names' => $test->stepNames,
                     'state' => $test->getState()->value,
-                    'position' => $test->getPosition(),
+                    'position' => $test->position,
                 ];
             }
         }

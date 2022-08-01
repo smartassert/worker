@@ -50,12 +50,12 @@ class ExecuteTestHandler implements MessageHandlerInterface
             return;
         }
 
-        if (false === $test->hasState(TestState::AWAITING)) {
+        if (TestState::AWAITING !== $test->getState()) {
             return;
         }
 
         $testDocument = $this->createTestDocumentFromTestEntity($test);
-        $path = $test->getSource();
+        $path = $test->source;
 
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED));
 
@@ -63,19 +63,22 @@ class ExecuteTestHandler implements MessageHandlerInterface
         $this->testExecutor->execute($test);
         $this->testStateMutator->setCompleteIfRunning($test);
 
-        $eventOutcome = $test->hasState(TestState::COMPLETE) ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
+        $eventOutcome = TestState::COMPLETE === $test->getState()
+            ? WorkerEventOutcome::PASSED
+            : WorkerEventOutcome::FAILED;
+
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome));
     }
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument
     {
-        return new TestDocument($testEntity->getSource(), [
+        return new TestDocument($testEntity->source, [
             'type' => 'test',
             'payload' => [
-                'path' => $testEntity->getSource(),
+                'path' => $testEntity->source,
                 'config' => [
-                    'browser' => $testEntity->getBrowser(),
-                    'url' => $testEntity->getUrl(),
+                    'browser' => $testEntity->browser,
+                    'url' => $testEntity->url,
                 ],
             ],
         ]);

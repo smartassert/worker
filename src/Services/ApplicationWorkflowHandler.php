@@ -47,7 +47,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
         if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::COMPLETED));
+            $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::COMPLETED));
         }
     }
 
@@ -64,6 +64,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         }
 
         $job = $this->jobRepository->get();
-        $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::FAILED));
+        $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::FAILED));
     }
 }

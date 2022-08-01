@@ -11,6 +11,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTest
 {
@@ -163,7 +164,10 @@ class TestRepositoryTest extends AbstractEntityRepositoryTest
         $allTests = $this->repository->findAll();
         $expectedTest = $allTests[$nextAwaitingIndex];
 
-        self::assertSame($nextAwaitingId, $expectedTest->getId());
+        $expectedTestId = ObjectReflector::getProperty($expectedTest, 'id');
+        self::assertIsInt($expectedTestId);
+
+        self::assertSame($nextAwaitingId, $expectedTestId);
     }
 
     /**

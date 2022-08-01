@@ -28,7 +28,7 @@ class TestEvent extends AbstractEvent implements EventInterface
             [
                 'source' => $path,
                 'document' => $document->getData(),
-                'step_names' => $testEntity->getStepNames(),
+                'step_names' => $testEntity->stepNames,
             ],
             [
                 $path,
@@ -48,7 +48,7 @@ class TestEvent extends AbstractEvent implements EventInterface
     private function createRelatedReferenceSources(TestEntity $testEntity): array
     {
         $referenceSources = [];
-        foreach ($testEntity->getStepNames() as $stepName) {
+        foreach ($testEntity->stepNames as $stepName) {
             $referenceSources[] = new ResourceReferenceSource($stepName, [$this->path, $stepName]);
         }
 

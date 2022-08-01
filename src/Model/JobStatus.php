@@ -29,10 +29,10 @@ class JobStatus implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'label' => $this->job->getLabel(),
-            'event_delivery_url' => $this->job->getEventDeliveryUrl(),
-            'maximum_duration_in_seconds' => $this->job->getMaximumDurationInSeconds(),
-            'test_paths' => $this->job->getTestPaths(),
+            'label' => $this->job->label,
+            'event_delivery_url' => $this->job->eventDeliveryUrl,
+            'maximum_duration_in_seconds' => $this->job->maximumDurationInSeconds,
+            'test_paths' => $this->job->testPaths,
             'reference' => $this->reference,
             'sources' => $this->sourcePaths,
             'tests' => $this->serializedTests,

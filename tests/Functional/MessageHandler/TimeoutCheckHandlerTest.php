@@ -62,7 +62,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         try {
             ($this->handler)($message);
             self::fail(JobNotFoundException::class . ' not thrown');
-        } catch (JobNotFoundException $exception) {
+        } catch (JobNotFoundException) {
             $this->messengerAsserter->assertQueueCount(0);
         }
     }
@@ -130,18 +130,16 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
+        $jobLabel = md5((string) rand());
+
         $job = new Job(
-            md5((string) rand()),
+            $jobLabel,
             'https://example.com/events',
             $jobMaximumDuration,
             ['test.yml']
         );
 
-        $job = \Mockery::mock($job);
-        $job
-            ->shouldReceive('getStartDateTime')
-            ->andReturn(new \DateTimeImmutable('-' . $jobMaximumDuration . ' second'))
-        ;
+        $job = $this->createJobWithMutatedStartDateTime($job);
 
         $jobRepository = (new MockJobRepository())
             ->withGetCall($job)
@@ -157,5 +155,26 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
         $this->messengerAsserter->assertQueueCount(0);
+    }
+
+    private function createJobWithMutatedStartDateTime(Job $job): Job
+    {
+        $reflectionClass = new \ReflectionClass($job);
+        $reflectionJob = $reflectionClass->newInstanceWithoutConstructor();
+        \assert($reflectionJob instanceof Job);
+
+        $startDateTimeProperty = $reflectionClass->getProperty('startDateTime');
+        $startDateTimeProperty->setValue(
+            $reflectionJob,
+            new \DateTimeImmutable('-' . $job->maximumDurationInSeconds . ' second')
+        );
+
+        $maximumDurationInSecondsProperty = $reflectionClass->getProperty('maximumDurationInSeconds');
+        $maximumDurationInSecondsProperty->setValue($reflectionJob, $job->maximumDurationInSeconds);
+
+        $labelProperty = $reflectionClass->getProperty('label');
+        $labelProperty->setValue($reflectionJob, $job->label);
+
+        return $reflectionJob;
     }
 }

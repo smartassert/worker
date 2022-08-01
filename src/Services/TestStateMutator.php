@@ -47,7 +47,7 @@ class TestStateMutator implements EventSubscriberInterface
 
     public function setCompleteIfRunning(Test $test): void
     {
-        if ($test->hasState(TestState::RUNNING)) {
+        if (TestState::RUNNING === $test->getState()) {
             $this->set($test, TestState::COMPLETE);
         }
     }

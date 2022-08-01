@@ -14,6 +14,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
+use webignition\ObjectReflector\ObjectReflector;
 
 class TestFactoryTest extends AbstractBaseFunctionalTest
 {
@@ -176,19 +177,20 @@ class TestFactoryTest extends AbstractBaseFunctionalTest
 
     private function assertTestEquals(Test $expected, Test $actual): void
     {
-        self::assertSame($expected->getBrowser(), $actual->getBrowser());
-        self::assertSame($expected->getUrl(), $actual->getUrl());
-        self::assertSame($expected->getSource(), $actual->getSource());
-        self::assertSame($expected->getTarget(), $actual->getTarget());
+        self::assertSame($expected->browser, $actual->browser);
+        self::assertSame($expected->url, $actual->url);
+        self::assertSame($expected->source, $actual->source);
+        self::assertSame($expected->target, $actual->target);
         self::assertSame($expected->getState(), $actual->getState());
-        self::assertSame($expected->getStepNames(), $actual->getStepNames());
-        self::assertSame($expected->getPosition(), $actual->getPosition());
+        self::assertSame($expected->stepNames, $actual->stepNames);
+        self::assertSame($expected->position, $actual->position);
     }
 
     private function assertCreatedTest(Test $test, ?Test $expectedTest): void
     {
-        self::assertIsInt($test->getId());
-        self::assertGreaterThan(0, $test->getId());
+        $testId = ObjectReflector::getProperty($test, 'id');
+        self::assertIsInt($testId);
+        self::assertGreaterThan(0, $testId);
         self::assertInstanceOf(Test::class, $expectedTest);
 
         $this->assertTestEquals($expectedTest, $test);

@@ -61,7 +61,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
     {
         if ($this->compilationProgress->is(CompilationState::COMPLETE)) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new JobEvent($job->getLabel(), WorkerEventOutcome::COMPILED));
+            $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::COMPILED));
         }
     }
 }

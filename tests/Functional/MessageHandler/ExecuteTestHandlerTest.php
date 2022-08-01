@@ -116,7 +116,10 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
 
         ObjectReflector::setProperty($this->handler, ExecuteTestHandler::class, 'eventDispatcher', $eventDispatcher);
 
-        $executeTestMessage = new ExecuteTestMessage((int) $test->getId());
+        $testId = ObjectReflector::getProperty($test, 'id');
+        self::assertIsInt($testId);
+
+        $executeTestMessage = new ExecuteTestMessage($testId);
         ($this->handler)($executeTestMessage);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');

@@ -15,25 +15,25 @@ class Job
      */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 32)]
-    private string $label;
+    public readonly string $label;
 
     /**
      * @var non-empty-string
      */
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private string $eventDeliveryUrl;
+    public readonly string $eventDeliveryUrl;
 
     #[ORM\Column(type: 'integer')]
-    private int $maximumDurationInSeconds;
+    public readonly int $maximumDurationInSeconds;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $startDateTime;
+    public readonly \DateTimeImmutable $startDateTime;
 
     /**
      * @var array<int, non-empty-string>
      */
     #[ORM\Column(type: 'simple_array')]
-    private array $testPaths;
+    public readonly array $testPaths;
 
     /**
      * @param non-empty-string             $label
@@ -51,39 +51,5 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getEventDeliveryUrl(): string
-    {
-        return $this->eventDeliveryUrl;
-    }
-
-    public function getMaximumDurationInSeconds(): int
-    {
-        return $this->maximumDurationInSeconds;
-    }
-
-    /**
-     * @return non-empty-string[]
-     */
-    public function getTestPaths(): array
-    {
-        return $this->testPaths;
-    }
-
-    public function getStartDateTime(): \DateTimeImmutable
-    {
-        return $this->startDateTime;
     }
 }
