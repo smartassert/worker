@@ -30,7 +30,7 @@ class ResourceReferenceCollection implements \IteratorAggregate
     }
 
     /**
-     * @return array<int, array{label: string, reference: string}>
+     * @return array<int, array{label: non-empty-string, reference: non-empty-string}>
      */
     public function toArray(): array
     {

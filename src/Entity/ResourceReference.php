@@ -38,7 +38,7 @@ class ResourceReference
     }
 
     /**
-     * @return array{label: string, reference: string}
+     * @return array{label: non-empty-string, reference: non-empty-string}
      */
     public function toArray(): array
     {
