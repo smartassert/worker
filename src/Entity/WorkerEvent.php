@@ -34,7 +34,7 @@ class WorkerEvent
      * @var non-empty-string
      */
     #[ORM\Column(type: 'text')]
-    private string $label;
+    private readonly string $label;
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $reference;
