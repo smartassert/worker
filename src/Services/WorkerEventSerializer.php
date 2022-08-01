@@ -11,34 +11,35 @@ class WorkerEventSerializer
 {
     /**
      * @return array{
-     *     job: non-empty-string,
-     *     sequence_number: int,
-     *     type: non-empty-string,
-     *     label: non-empty-string,
-     *     reference: non-empty-string,
-     *     payload: array<mixed>,
-     *     related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>
+     *     header: array{
+     *       job: non-empty-string,
+     *       sequence_number: int,
+     *       type: non-empty-string,
+     *       label: non-empty-string,
+     *       reference: non-empty-string,
+     *       related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>
+     *     },
+     *     body: array<mixed>
      * }
      */
-    public function serialize(Job $job, WorkerEvent $workerEvent): array
+    public function serialize(Job $job, WorkerEvent $event): array
     {
-        $payload = $workerEvent->payload;
-
-        $data = [
+        $header = [
             'job' => $job->label,
-            'sequence_number' => (int) $workerEvent->getId(),
-            'type' => $workerEvent->scope->value . '/' . $workerEvent->outcome->value,
-            'label' => $workerEvent->label,
-            'reference' => $workerEvent->reference,
+            'sequence_number' => (int) $event->getId(),
+            'type' => $event->scope->value . '/' . $event->outcome->value,
+            'label' => $event->label,
+            'reference' => $event->reference,
         ];
 
-        $relatedReferences = $workerEvent->getRelatedReferences();
+        $relatedReferences = $event->getRelatedReferences();
         if (0 !== count($relatedReferences)) {
-            $payload['related_references'] = $relatedReferences->toArray();
+            $header['related_references'] = $relatedReferences->toArray();
         }
 
-        $data['payload'] = $payload;
-
-        return $data;
+        return [
+            'header' => $header,
+            'body' => $event->payload,
+        ];
     }
 }
