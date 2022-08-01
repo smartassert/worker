@@ -60,7 +60,7 @@ class JobStatusFactory
                     'target' => $test->target,
                     'step_names' => $test->stepNames,
                     'state' => $test->getState()->value,
-                    'position' => $test->getPosition(),
+                    'position' => $test->position,
                 ];
             }
         }

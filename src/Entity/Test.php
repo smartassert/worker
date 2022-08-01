@@ -35,6 +35,9 @@ class Test
     #[ORM\Column(type: 'simple_array')]
     public readonly array $stepNames;
 
+    #[ORM\Column(type: 'integer', nullable: false, unique: true)]
+    public readonly int $position;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -42,9 +45,6 @@ class Test
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
     private TestState $state;
-
-    #[ORM\Column(type: 'integer', nullable: false, unique: true)]
-    private int $position;
 
     /**
      * @param non-empty-string   $source
@@ -78,10 +78,5 @@ class Test
         $this->state = $state;
 
         return $this;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
     }
 }
