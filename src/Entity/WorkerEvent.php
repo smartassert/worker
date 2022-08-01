@@ -28,7 +28,7 @@ class WorkerEvent
     private readonly WorkerEventScope $scope;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
-    private WorkerEventOutcome $outcome;
+    private readonly WorkerEventOutcome $outcome;
 
     /**
      * @var non-empty-string
