@@ -25,7 +25,7 @@ class WorkerEvent
     private WorkerEventState $state;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
-    private WorkerEventScope $scope;
+    private readonly WorkerEventScope $scope;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
     private WorkerEventOutcome $outcome;
