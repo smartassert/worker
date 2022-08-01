@@ -22,14 +22,14 @@ class WorkerEventSerializer
      */
     public function serialize(Job $job, WorkerEvent $workerEvent): array
     {
-        $payload = $workerEvent->getPayload();
+        $payload = $workerEvent->payload;
 
         $data = [
             'job' => $job->label,
             'sequence_number' => (int) $workerEvent->getId(),
-            'type' => $workerEvent->getScope()->value . '/' . $workerEvent->getOutcome()->value,
-            'label' => $workerEvent->getLabel(),
-            'reference' => $workerEvent->getReference(),
+            'type' => $workerEvent->scope->value . '/' . $workerEvent->outcome->value,
+            'label' => $workerEvent->label,
+            'reference' => $workerEvent->reference,
         ];
 
         $relatedReferences = $workerEvent->getRelatedReferences();

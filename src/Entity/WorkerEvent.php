@@ -16,6 +16,29 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
 {
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
+    public readonly WorkerEventScope $scope;
+
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
+    public readonly WorkerEventOutcome $outcome;
+
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'text')]
+    public readonly string $label;
+
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'string', length: 32)]
+    public readonly string $reference;
+
+    /**
+     * @var array<mixed>
+     */
+    #[ORM\Column(type: 'json')]
+    public readonly array $payload;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -23,30 +46,6 @@ class WorkerEvent
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
-
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
-    private readonly WorkerEventScope $scope;
-
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
-    private readonly WorkerEventOutcome $outcome;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'text')]
-    private readonly string $label;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'string', length: 32)]
-    private readonly string $reference;
-
-    /**
-     * @var array<mixed>
-     */
-    #[ORM\Column(type: 'json')]
-    private readonly array $payload;
 
     /**
      * @var Collection<int, ResourceReference>
@@ -95,40 +94,6 @@ class WorkerEvent
     public function setState(WorkerEventState $state): void
     {
         $this->state = $state;
-    }
-
-    public function getScope(): WorkerEventScope
-    {
-        return $this->scope;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getReference(): string
-    {
-        return $this->reference;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function getPayload(): array
-    {
-        return $this->payload;
     }
 
     public function getRelatedReferences(): ResourceReferenceCollection
