@@ -43,7 +43,7 @@ class WorkerEvent
      * @var array<mixed>
      */
     #[ORM\Column(type: 'json')]
-    private array $payload;
+    private readonly array $payload;
 
     /**
      * @var Collection<int, ResourceReference>
