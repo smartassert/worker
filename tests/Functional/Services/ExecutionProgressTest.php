@@ -128,8 +128,8 @@ class ExecutionProgressTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->executionProgress->is(...$expectedIsStates));
-        self::assertFalse($this->executionProgress->is(...$expectedIsNotStates));
+        self::assertTrue($this->executionProgress->is($expectedIsStates));
+        self::assertFalse($this->executionProgress->is($expectedIsNotStates));
     }
 
     /**

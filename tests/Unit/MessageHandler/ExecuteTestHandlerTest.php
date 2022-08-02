@@ -61,7 +61,7 @@ class ExecuteTestHandlerTest extends TestCase
         return [
             'execution state not awaiting, not running' => [
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(true, ...ExecutionState::getFinishedStates())
+                    ->withIsCall(true, ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -70,7 +70,7 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'no test' => [
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(false, ...ExecutionState::getFinishedStates())
+                    ->withIsCall(false, ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
@@ -79,7 +79,7 @@ class ExecuteTestHandlerTest extends TestCase
             ],
             'test in wrong state' => [
                 'executionProgress' => (new MockExecutionProgress())
-                    ->withIsCall(false, ...ExecutionState::getFinishedStates())
+                    ->withIsCall(false, ExecutionState::getFinishedStates())
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1),
                 'testRepository' => (new MockTestRepository())
