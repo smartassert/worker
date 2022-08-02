@@ -13,3 +13,4 @@ framework:
 
         routing:
             'App\Message\JobCompletedCheckMessage': memory
+            'App\Message\TimeoutCheckMessage': memory
