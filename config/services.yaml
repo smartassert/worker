@@ -151,9 +151,6 @@ services:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
 
-    App\Message\JobCompletedCheckMessage: ~
-    App\Message\TimeoutCheckMessage: ~
-
     App\Services\ApplicationWorkflowHandler:
         arguments:
             $timeoutCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_timeout_check'
