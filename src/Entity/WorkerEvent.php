@@ -16,6 +16,29 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
 {
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
+    public readonly WorkerEventScope $scope;
+
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
+    public readonly WorkerEventOutcome $outcome;
+
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'text')]
+    public readonly string $label;
+
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(type: 'string', length: 32)]
+    public readonly string $reference;
+
+    /**
+     * @var array<mixed>
+     */
+    #[ORM\Column(type: 'json')]
+    public readonly array $payload;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -23,27 +46,6 @@ class WorkerEvent
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
-
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
-    private readonly WorkerEventScope $scope;
-
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
-    private readonly WorkerEventOutcome $outcome;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'text')]
-    private readonly string $label;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private readonly string $reference;
-
-    /**
-     * @var array<mixed>
-     */
-    #[ORM\Column(type: 'json')]
-    private readonly array $payload;
 
     /**
      * @var Collection<int, ResourceReference>
@@ -94,38 +96,14 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    /**
-     * @return array{
-     *     sequence_number: int,
-     *     type: string,
-     *     label: non-empty-string,
-     *     reference: string,
-     *     payload: array<mixed>,
-     *     related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>
-     * }
-     */
-    public function toArray(): array
+    public function getRelatedReferences(): ResourceReferenceCollection
     {
-        $payload = $this->payload;
+        $references = [];
 
-        if (!$this->relatedReferences->isEmpty()) {
-            $serializedRelatedReferences = [];
-
-            foreach ($this->relatedReferences as $relatedReference) {
-                if ($relatedReference instanceof ResourceReference) {
-                    $serializedRelatedReferences[] = $relatedReference->toArray();
-                }
-            }
-
-            $payload['related_references'] = $serializedRelatedReferences;
+        foreach ($this->relatedReferences as $reference) {
+            $references[] = $reference;
         }
 
-        return [
-            'sequence_number' => (int) $this->id,
-            'type' => $this->scope->value . '/' . $this->outcome->value,
-            'label' => $this->label,
-            'reference' => $this->reference,
-            'payload' => $payload,
-        ];
+        return new ResourceReferenceCollection($references);
     }
 }

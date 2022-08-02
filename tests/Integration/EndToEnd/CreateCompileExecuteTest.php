@@ -202,68 +202,80 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            $firstEventId,
-                            'job/started',
-                            $jobLabel,
-                            md5($jobLabel),
                             [
-                                'tests' => [
-                                    'Test/chrome-open-index-compilation-failure.yml',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-compilation-failure.yml'
-                                        ),
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => $firstEventId,
+                                    'type' => 'job/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index-compilation-failure.yml'
+                                            ),
+                                        ],
                                     ],
                                 ],
-                            ]
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index-compilation-failure.yml',
+                                    ],
+                                ],
+                            ],
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
-                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-                            ]
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                ],
+                            ],
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/failed',
-                            'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
-                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-                                'output' => [
-                                    'message' => 'Invalid test at path ' .
-                                        '"Test/chrome-open-index-compilation-failure.yml"' .
-                                        ': test-step-invalid',
-                                    'code' => 204,
-                                    'context' => [
-                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'validation_result' => [
-                                            'type' => 'test',
-                                            'reason' => 'test-step-invalid',
-                                            'context' => [
-                                                'step-name' => 'verify page is open',
-                                            ],
-                                            'previous' => [
-                                                'type' => 'step',
-                                                'reason' => 'step-no-assertions',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/failed',
+                                    'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'output' => [
+                                        'message' => 'Invalid test at path ' .
+                                            '"Test/chrome-open-index-compilation-failure.yml"' .
+                                            ': test-step-invalid',
+                                        'code' => 204,
+                                        'context' => [
+                                            'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'validation_result' => [
+                                                'type' => 'test',
+                                                'reason' => 'test-step-invalid',
+                                                'context' => [
+                                                    'step-name' => 'verify page is open',
+                                                ],
+                                                'previous' => [
+                                                    'type' => 'step',
+                                                    'reason' => 'step-no-assertions',
+                                                ],
                                             ],
                                         ],
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                     ]);
 
@@ -312,105 +324,124 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            $firstEventId,
-                            'job/started',
-                            $jobLabel,
-                            md5($jobLabel),
                             [
-                                'tests' => [
-                                    'Test/chrome-open-index.yml',
-                                    'Test/chrome-open-index-compilation-failure.yml',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'Test/chrome-open-index.yml',
-                                        'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => $firstEventId,
+                                    'type' => 'job/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'Test/chrome-open-index.yml',
+                                            'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                        ],
+                                        [
+                                            'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'reference' => md5(
+                                                $jobLabel . 'Test/chrome-open-index-compilation-failure.yml'
+                                            ),
+                                        ],
                                     ],
-                                    [
-                                        'label' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-compilation-failure.yml'
-                                        ),
+                                ],
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index.yml',
+                                        'Test/chrome-open-index-compilation-failure.yml',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'compilation/started: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-open-index.yml',
-                            ]
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                            ],
                         ),
                         'compilation/passed: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/passed',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-open-index.yml',
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index.yml' .
-                                            'verify page is open'
-                                        )
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/passed',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index.yml' .
+                                                'verify page is open'
+                                            )
+                                        ],
                                     ],
                                 ],
-                            ]
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                            ],
                         ),
                         'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
-                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-                            ]
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                ],
+                            ],
                         ),
                         'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/failed',
-                            'Test/chrome-open-index-compilation-failure.yml',
-                            md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                             [
-                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-                                'output' => [
-                                    'message' => 'Invalid test at path ' .
-                                        '"Test/chrome-open-index-compilation-failure.yml"' .
-                                        ': test-step-invalid',
-                                    'code' => 204,
-                                    'context' => [
-                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'validation_result' => [
-                                            'type' => 'test',
-                                            'reason' => 'test-step-invalid',
-                                            'context' => [
-                                                'step-name' => 'verify page is open',
-                                            ],
-                                            'previous' => [
-                                                'type' => 'step',
-                                                'reason' => 'step-no-assertions',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/failed',
+                                    'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'output' => [
+                                        'message' => 'Invalid test at path ' .
+                                            '"Test/chrome-open-index-compilation-failure.yml"' .
+                                            ': test-step-invalid',
+                                        'code' => 204,
+                                        'context' => [
+                                            'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'validation_result' => [
+                                                'type' => 'test',
+                                                'reason' => 'test-step-invalid',
+                                                'context' => [
+                                                    'step-name' => 'verify page is open',
+                                                ],
+                                                'previous' => [
+                                                    'type' => 'step',
+                                                    'reason' => 'step-no-assertions',
+                                                ],
                                             ],
                                         ],
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                     ]);
 
@@ -485,557 +516,649 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            $firstEventId,
-                            'job/started',
-                            $jobLabel,
-                            md5($jobLabel),
                             [
-                                'tests' => [
-                                    'Test/chrome-open-index.yml',
-                                    'Test/chrome-firefox-open-index.yml',
-                                    'Test/chrome-open-form.yml',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'Test/chrome-open-index.yml',
-                                        'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
-                                    ],
-                                    [
-                                        'label' => 'Test/chrome-firefox-open-index.yml',
-                                        'reference' => md5(
-                                            $jobLabel . 'Test/chrome-firefox-open-index.yml'
-                                        ),
-                                    ],
-                                    [
-                                        'label' => 'Test/chrome-open-form.yml',
-                                        'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'compilation/started: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
-                            [
-                                'source' => 'Test/chrome-open-index.yml',
-                            ]
-                        ),
-                        'compilation/passed: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/passed',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
-                            [
-                                'source' => 'Test/chrome-open-index.yml',
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index.yml' .
-                                            'verify page is open'
-                                        )
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
-                            [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                            ]
-                        ),
-                        'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/passed',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
-                            [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-firefox-open-index.yml' .
-                                            'verify page is open'
-                                        )
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'compilation/started: chrome-open-form' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/started',
-                            'Test/chrome-open-form.yml',
-                            md5($jobLabel . 'Test/chrome-open-form.yml'),
-                            [
-                                'source' => 'Test/chrome-open-form.yml',
-                            ]
-                        ),
-                        'compilation/passed: chrome-open-form' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'compilation/passed',
-                            'Test/chrome-open-form.yml',
-                            md5($jobLabel . 'Test/chrome-open-form.yml'),
-                            [
-                                'source' => 'Test/chrome-open-form.yml',
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-form.yml' .
-                                            'verify page is open'
-                                        )
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'job/compiled' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'job/compiled',
-                            $jobLabel,
-                            md5($jobLabel),
-                            []
-                        ),
-                        'execution/started' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'execution/started',
-                            $jobLabel,
-                            md5($jobLabel),
-                            []
-                        ),
-                        'test/started: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/started',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
-                            [
-                                'source' => 'Test/chrome-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => $firstEventId,
+                                    'type' => 'job/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'Test/chrome-open-index.yml',
+                                            'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                        ],
+                                        [
+                                            'label' => 'Test/chrome-firefox-open-index.yml',
+                                            'reference' => md5(
+                                                $jobLabel . 'Test/chrome-firefox-open-index.yml'
+                                            ),
+                                        ],
+                                        [
+                                            'label' => 'Test/chrome-open-form.yml',
+                                            'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index.yml',
+                                        'Test/chrome-firefox-open-index.yml',
+                                        'Test/chrome-open-form.yml',
                                     ],
                                 ],
-                            ]
+                            ],
+                        ),
+                        'compilation/started: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                            ],
+                        ),
+                        'compilation/passed: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/passed',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index.yml' .
+                                                'verify page is open'
+                                            )
+                                        ],
+                                    ],
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                            ],
+                        ),
+                        'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                ],
+                            ],
+                        ),
+                        'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/passed',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-firefox-open-index.yml' .
+                                                'verify page is open'
+                                            )
+                                        ],
+                                    ],
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                ],
+                            ],
+                        ),
+                        'compilation/started: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/started',
+                                    'label' => 'Test/chrome-open-form.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                ],
+                            ],
+                        ),
+                        'compilation/passed: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'compilation/passed',
+                                    'label' => 'Test/chrome-open-form.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-form.yml' .
+                                                'verify page is open'
+                                            )
+                                        ],
+                                    ],
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                ],
+                            ],
+                        ),
+                        'job/compiled' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/compiled',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [],
+                            ],
+                        ),
+                        'execution/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'execution/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [],
+                            ],
+                        ),
+                        'test/started: chrome-open-index' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/started',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index.yml' .
+                                                'verify page is open'
+                                            ),
+                                        ],
+                                    ],
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                            ],
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'step/passed',
-                            'verify page is open',
-                            md5($jobLabel . 'Test/chrome-open-index.yml' . 'verify page is open'),
                             [
-                                'source' => 'Test/chrome-open-index.yml',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                                'transformations' => [
-                                                    [
-                                                        'type' => 'resolution',
-                                                        'source' => '$page.url is $index.url'
-                                                    ]
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'step/passed',
+                                    'label' => 'verify page is open',
+                                    'reference' => md5(
+                                        $jobLabel . 'Test/chrome-open-index.yml' . 'verify page is open'
+                                    ),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                    'transformations' => [
+                                                        [
+                                                            'type' => 'resolution',
+                                                            'source' => '$page.url is $index.url'
+                                                        ]
+                                                    ],
                                                 ],
                                             ],
                                         ],
                                     ],
+                                    'name' => 'verify page is open',
                                 ],
-                                'name' => 'verify page is open',
-                            ]
+                            ],
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/passed',
-                            'Test/chrome-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/passed',
+                                    'label' => 'Test/chrome-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/started',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-firefox-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/started',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-firefox-open-index.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-firefox-open-index.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'step/passed',
-                            'verify page is open',
-                            md5(
-                                $jobLabel .
-                                'Test/chrome-firefox-open-index.yml' .
-                                'verify page is open'
-                            ),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'step/passed',
+                                    'label' => 'verify page is open',
+                                    'reference' => md5(
+                                        $jobLabel . 'Test/chrome-firefox-open-index.yml' . 'verify page is open'
+                                    ),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
                                             ],
                                         ],
                                     ],
+                                    'name' => 'verify page is open',
                                 ],
-                                'name' => 'verify page is open',
-                            ]
+                            ],
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/passed',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-firefox-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/passed',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-firefox-open-index.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-firefox-open-index.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/started',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-firefox-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'firefox',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/started',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-firefox-open-index.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-firefox-open-index.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'firefox',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'step/passed',
-                            'verify page is open',
-                            md5(
-                                $jobLabel .
-                                'Test/chrome-firefox-open-index.yml' .
-                                'verify page is open'
-                            ),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'step/passed',
+                                    'label' => 'verify page is open',
+                                    'reference' => md5(
+                                        $jobLabel . 'Test/chrome-firefox-open-index.yml' . 'verify page is open'
+                                    ),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
                                             ],
                                         ],
                                     ],
+                                    'name' => 'verify page is open',
                                 ],
-                                'name' => 'verify page is open',
-                            ]
+                            ],
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/passed',
-                            'Test/chrome-firefox-open-index.yml',
-                            md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                             [
-                                'source' => 'Test/chrome-firefox-open-index.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-firefox-open-index.yml',
-                                        'config' => [
-                                            'browser' => 'firefox',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/passed',
+                                    'label' => 'Test/chrome-firefox-open-index.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-firefox-open-index.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-firefox-open-index.yml' .
-                                            'verify page is open'
-                                        ),
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'test/started: chrome-open-form' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/started',
-                            'Test/chrome-open-form.yml',
-                            md5($jobLabel . 'Test/chrome-open-form.yml'),
-                            [
-                                'source' => 'Test/chrome-open-form.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-open-form.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-form.yml' .
-                                            'verify page is open'
-                                        ),
-                                    ],
-                                ],
-                            ]
-                        ),
-                        'step/passed: chrome-open-form: open' => $requestFactory->create(
-                            $jobLabel,
-                            $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'step/passed',
-                            'verify page is open',
-                            md5($jobLabel . 'Test/chrome-open-form.yml' . 'verify page is open'),
-                            [
-                                'source' => 'Test/chrome-open-form.yml',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/form.html"',
-                                                'status' => 'passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'firefox',
+                                                'url' => 'http://html-fixtures/index.html',
                                             ],
                                         ],
                                     ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
                                 ],
-                                'name' => 'verify page is open',
-                            ]
+                            ],
                         ),
-                        'test/passed: chrome-open-form' => $requestFactory->create(
-                            $jobLabel,
+                        'test/started: chrome-open-form' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/passed',
-                            'Test/chrome-open-form.yml',
-                            md5($jobLabel . 'Test/chrome-open-form.yml'),
                             [
-                                'source' => 'Test/chrome-open-form.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-open-form.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/started',
+                                    'label' => 'Test/chrome-open-form.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-form.yml' .
+                                                'verify page is open'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-form.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-form.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/form.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
                                     ],
                                 ],
-                            ]
+                            ],
+                        ),
+                        'step/passed: chrome-open-form: open' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'step/passed',
+                                    'label' => 'verify page is open',
+                                    'reference' => md5(
+                                        $jobLabel . 'Test/chrome-open-form.yml' . 'verify page is open'
+                                    ),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/form.html"',
+                                                    'status' => 'passed',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                            ],
+                        ),
+                        'test/passed: chrome-open-form' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/passed',
+                                    'label' => 'Test/chrome-open-form.yml',
+                                    'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-form.yml' .
+                                                'verify page is open'
+                                            ),
+                                        ],
+                                    ],
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-form.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/form.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                            ],
                         ),
                         'execution/completed' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'execution/completed',
-                            $jobLabel,
-                            md5($jobLabel),
-                            []
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'execution/completed',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [],
+                            ],
                         ),
                         'job/completed' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'job/completed',
-                            $jobLabel,
-                            md5($jobLabel),
-                            []
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/completed',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [],
+                            ],
                         ),
                     ]);
 
@@ -1090,40 +1213,44 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            $firstEventId,
-                            'step/failed',
-                            'fail on intentionally-missing element',
-                            md5(
-                                $jobLabel .
-                                'Test/chrome-open-index-with-step-failure.yml' .
-                                'fail on intentionally-missing element'
-                            ),
                             [
-                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'fail on intentionally-missing element',
-                                        'status' => 'failed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$".non-existent" exists',
-                                                'status' => 'failed',
-                                                'summary' => [
-                                                    'operator' => 'exists',
-                                                    'source' => [
-                                                        'type' => 'node',
-                                                        'body' => [
-                                                            'type' => 'element',
-                                                            'identifier' => [
-                                                                'source' => '$".non-existent"',
-                                                                'properties' => [
-                                                                    'type' => 'css',
-                                                                    'locator' => '.non-existent',
-                                                                    'position' => 1,
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => $firstEventId,
+                                    'type' => 'step/failed',
+                                    'label' => 'fail on intentionally-missing element',
+                                    'reference' => md5(
+                                        $jobLabel .
+                                        'Test/chrome-open-index-with-step-failure.yml' .
+                                        'fail on intentionally-missing element'
+                                    ),
+                                ],
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'fail on intentionally-missing element',
+                                            'status' => 'failed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$".non-existent" exists',
+                                                    'status' => 'failed',
+                                                    'summary' => [
+                                                        'operator' => 'exists',
+                                                        'source' => [
+                                                            'type' => 'node',
+                                                            'body' => [
+                                                                'type' => 'element',
+                                                                'identifier' => [
+                                                                    'source' => '$".non-existent"',
+                                                                    'properties' => [
+                                                                        'type' => 'css',
+                                                                        'locator' => '.non-existent',
+                                                                        'position' => 1,
+                                                                    ],
                                                                 ],
                                                             ],
                                                         ],
@@ -1132,61 +1259,72 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             ],
                                         ],
                                     ],
+                                    'name' => 'fail on intentionally-missing element',
                                 ],
-                                'name' => 'fail on intentionally-missing element',
-                            ]
+                            ],
                         ),
                         'test/failed' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'test/failed',
-                            'Test/chrome-open-index-with-step-failure.yml',
-                            md5($jobLabel . 'Test/chrome-open-index-with-step-failure.yml'),
                             [
-                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => 'Test/chrome-open-index-with-step-failure.yml',
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'test/failed',
+                                    'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'reference' => md5(
+                                        $jobLabel .
+                                        'Test/chrome-open-index-with-step-failure.yml'
+                                    ),
+                                    'related_references' => [
+                                        [
+                                            'label' => 'verify page is open',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index-with-step-failure.yml' .
+                                                'verify page is open'
+                                            ),
+                                        ],
+                                        [
+                                            'label' => 'fail on intentionally-missing element',
+                                            'reference' => md5(
+                                                $jobLabel .
+                                                'Test/chrome-open-index-with-step-failure.yml' .
+                                                'fail on intentionally-missing element'
+                                            ),
                                         ],
                                     ],
                                 ],
-                                'step_names' => [
-                                    'verify page is open',
-                                    'fail on intentionally-missing element',
-                                ],
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-with-step-failure.yml' .
-                                            'verify page is open'
-                                        ),
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
                                     ],
-                                    [
-                                        'label' => 'fail on intentionally-missing element',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-with-step-failure.yml' .
-                                            'fail on intentionally-missing element'
-                                        ),
+                                    'step_names' => [
+                                        'verify page is open',
+                                        'fail on intentionally-missing element',
                                     ],
                                 ],
-                            ]
+                            ],
                         ),
                         'job/failed' => $requestFactory->create(
-                            $jobLabel,
                             $eventDeliveryBaseUrl . '/status/200',
-                            ++$firstEventId,
-                            'job/failed',
-                            $jobLabel,
-                            md5($jobLabel),
-                            []
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/failed',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [],
+                            ],
                         ),
                     ]);
 
