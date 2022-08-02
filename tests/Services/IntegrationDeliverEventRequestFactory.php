@@ -10,32 +10,17 @@ use Psr\Http\Message\RequestInterface;
 class IntegrationDeliverEventRequestFactory
 {
     /**
-     * @param non-empty-string $reference
-     * @param array<mixed>     $payload
+     * @param array<mixed> $payload
      */
-    public function create(
-        string $jobLabel,
-        string $eventDeliveryUrl,
-        int $sequenceNumber,
-        string $type,
-        string $label,
-        string $reference,
-        array $payload
-    ): RequestInterface {
+    public function create(string $eventDeliveryUrl, array $payload): RequestInterface
+    {
         return new Request(
             'POST',
             $eventDeliveryUrl,
             [
                 'content-type' => 'application/json',
             ],
-            (string) json_encode([
-                'job' => $jobLabel,
-                'sequence_number' => $sequenceNumber,
-                'type' => $type,
-                'label' => $label,
-                'reference' => $reference,
-                'payload' => $payload,
-            ])
+            (string) json_encode($payload)
         );
     }
 }
