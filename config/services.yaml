@@ -99,6 +99,18 @@ services:
             $message: '@App\Message\JobCompletedCheckMessage'
             $checkPeriodInMilliseconds: '%job_completed_check_period_ms%'
 
+    app.message_dispatcher.delayed.job_completed_check:
+        class: App\MessageDispatcher\DelayedMessageDispatcher
+        arguments:
+            $message: '@App\Message\JobCompletedCheckMessage'
+            $delayInMilliseconds: '%job_completed_check_period_ms%'
+
+    app.message_dispatcher.delayed.job_timeout_check:
+        class: App\MessageDispatcher\DelayedMessageDispatcher
+        arguments:
+            $message: '@App\Message\TimeoutCheckMessage'
+            $delayInMilliseconds: '%job_timeout_check_period_ms%'
+
     app.messenger.retry_strategy.deliver_event.multiplier:
         class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
         arguments:
