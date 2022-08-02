@@ -4,30 +4,16 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
+class TimeoutCheckMessageDispatcher
 {
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private int $checkPeriodInMilliseconds,
+        private readonly MessageBusInterface $messageBus,
+        private readonly int $checkPeriodInMilliseconds,
     ) {
-    }
-
-    /**
-     * @return array<string, array<int, array<int, int|string>>>
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            JobStartedEvent::class => [
-                ['dispatch', -100],
-            ],
-        ];
     }
 
     public function dispatch(): void

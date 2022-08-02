@@ -8,8 +8,10 @@ use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
+use App\Event\JobStartedEvent;
 use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
+use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,6 +22,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         private ApplicationProgress $applicationProgress,
         private EventDispatcherInterface $eventDispatcher,
         private readonly JobRepository $jobRepository,
+        private readonly TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
     ) {
     }
 
@@ -29,6 +32,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            JobStartedEvent::class => [
+                ['dispatchTimeoutCheckMessage', -100],
+            ],
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
                 ['dispatchJobFailedEventForTestFailureEvent', -100],
@@ -65,5 +71,10 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
         $job = $this->jobRepository->get();
         $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::FAILED));
+    }
+
+    public function dispatchTimeoutCheckMessage(): void
+    {
+        $this->timeoutCheckMessageDispatcher->dispatch();
     }
 }
