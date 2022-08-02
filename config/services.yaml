@@ -73,14 +73,6 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
-#    App\Services\WorkerEventFactory\EventHandler\:
-#        resource: '../src/Services/WorkerEventFactory/EventHandler/'
-#        tags: ['app.worker_event_factory.event_handler']
-#
-#    App\MessageDispatcher\DeliverEventMessageDispatcher:
-#        arguments:
-#            $handlers: !tagged_iterator app.worker_event_factory.event_handler
-
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
 
