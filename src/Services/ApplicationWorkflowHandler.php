@@ -45,6 +45,11 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
+        var_dump('ApplicationWorkflowHandler Handling test/passed event');
+        var_dump([
+            'application state' => $this->applicationProgress->get()->value,
+        ]);
+
         if ($this->applicationProgress->is(ApplicationState::COMPLETE)) {
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::COMPLETED));
