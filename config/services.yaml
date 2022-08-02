@@ -86,14 +86,6 @@ services:
 
     Symfony\Component\Yaml\Dumper: ~
 
-    App\MessageHandler\TimeoutCheckHandler:
-        tags: [messenger.message_handler]
-
-    App\MessageDispatcher\TimeoutCheckMessageDispatcher:
-        arguments:
-            $message: '@App\Message\TimeoutCheckMessage'
-            $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
-
     app.message_dispatcher.delayed.job_completed_check:
         class: App\MessageDispatcher\DelayedMessageDispatcher
         arguments:
@@ -109,6 +101,10 @@ services:
     App\EventDispatcher\JobCompleteEventDispatcher:
         arguments:
             $jobCompletedCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_completed_check'
+
+    App\MessageHandler\TimeoutCheckHandler:
+        arguments:
+            $timeoutCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_timeout_check'
 
     app.messenger.retry_strategy.deliver_event.multiplier:
         class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
@@ -157,3 +153,7 @@ services:
 
     App\Message\JobCompletedCheckMessage: ~
     App\Message\TimeoutCheckMessage: ~
+
+    App\Services\ApplicationWorkflowHandler:
+        arguments:
+            $timeoutCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_timeout_check'
