@@ -12,6 +12,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
 use App\Event\TestEvent;
+use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ApplicationWorkflowHandler;
@@ -22,6 +23,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Model\JobSetup;
+use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -60,28 +62,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     public function testSubscribesToTestPassedEventApplicationComplete(): void
     {
-        $eventExpectationCount = 0;
-
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(function (EventInterface $event) use (&$eventExpectationCount) {
-                    self::assertInstanceOf(JobEvent::class, $event);
-                    self::assertSame(WorkerEventOutcome::COMPLETED->value, $event->getOutcome()->value);
-                    ++$eventExpectationCount;
-
-                    return true;
-                }),
-            ]))
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty(
-            $this->handler,
-            ApplicationWorkflowHandler::class,
-            'eventDispatcher',
-            $eventDispatcher
-        );
-
         $applicationProgress = (new MockApplicationProgress())
             ->withIsCall(true, [ApplicationState::COMPLETE])
             ->getMock()
@@ -102,7 +82,11 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             WorkerEventOutcome::PASSED
         ));
 
-        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
+        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
+        \assert($messengerAsserter instanceof MessengerAsserter);
+
+        $messengerAsserter->assertQueueCount(2);
+        $messengerAsserter->assertMessageAtPositionEquals(1, new JobCompletedCheckMessage());
     }
 
     /**
