@@ -11,6 +11,7 @@ use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
+use App\MessageDispatcher\JobCompletedCheckMessageDispatcher;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -23,6 +24,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         private EventDispatcherInterface $eventDispatcher,
         private readonly JobRepository $jobRepository,
         private readonly TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
+        private readonly JobCompletedCheckMessageDispatcher $jobCompletedCheckMessageDispatcher,
     ) {
     }
 
@@ -54,6 +56,8 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         if ($this->applicationProgress->is([ApplicationState::COMPLETE])) {
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::COMPLETED));
+        } else {
+            $this->jobCompletedCheckMessageDispatcher->dispatch();
         }
     }
 
