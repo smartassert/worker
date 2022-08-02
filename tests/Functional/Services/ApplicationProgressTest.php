@@ -206,8 +206,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<ApplicationState::*> $expectedIsStates
-     * @param array<ApplicationState::*> $expectedIsNotStates
+     * @param ApplicationState[] $expectedIsStates
+     * @param ApplicationState[] $expectedIsNotStates
      */
     public function testIs(
         EnvironmentSetup $setup,
@@ -216,8 +216,8 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
     ): void {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->applicationProgress->is(...$expectedIsStates));
-        self::assertFalse($this->applicationProgress->is(...$expectedIsNotStates));
+        self::assertTrue($this->applicationProgress->is($expectedIsStates));
+        self::assertFalse($this->applicationProgress->is($expectedIsNotStates));
     }
 
     /**

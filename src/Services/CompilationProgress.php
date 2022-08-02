@@ -41,9 +41,9 @@ class CompilationProgress
     }
 
     /**
-     * @param array<CompilationState> ...$states
+     * @param CompilationState[] $states
      */
-    public function is(...$states): bool
+    public function is(array $states): bool
     {
         return in_array($this->get(), $states);
     }

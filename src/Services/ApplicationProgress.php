@@ -39,7 +39,7 @@ class ApplicationProgress
             return ApplicationState::TIMED_OUT;
         }
 
-        if (false === $this->compilationProgress->is(...CompilationState::getFinishedStates())) {
+        if (false === $this->compilationProgress->is(CompilationState::getFinishedStates())) {
             return ApplicationState::COMPILING;
         }
 
@@ -47,11 +47,11 @@ class ApplicationProgress
             return ApplicationState::COMPLETE;
         }
 
-        if (false === $this->executionProgress->is(...ExecutionState::getFinishedStates())) {
+        if (false === $this->executionProgress->is(ExecutionState::getFinishedStates())) {
             return ApplicationState::EXECUTING;
         }
 
-        if ($this->eventDeliveryProgress->is(EventDeliveryState::AWAITING, EventDeliveryState::RUNNING)) {
+        if ($this->eventDeliveryProgress->is([EventDeliveryState::AWAITING, EventDeliveryState::RUNNING])) {
             return ApplicationState::COMPLETING_EVENT_DELIVERY;
         }
 
@@ -59,9 +59,9 @@ class ApplicationProgress
     }
 
     /**
-     * @param array<ApplicationState> ...$states
+     * @param ApplicationState[] $states
      */
-    public function is(...$states): bool
+    public function is(array $states): bool
     {
         return in_array($this->get(), $states);
     }

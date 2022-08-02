@@ -83,7 +83,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $applicationProgress = (new MockApplicationProgress())
-            ->withIsCall(true, ApplicationState::COMPLETE)
+            ->withIsCall(true, [ApplicationState::COMPLETE])
             ->getMock()
         ;
 

@@ -118,8 +118,8 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider isDataProvider
      *
-     * @param array<CompilationState::*> $expectedIsStates
-     * @param array<CompilationState::*> $expectedIsNotStates
+     * @param CompilationState[] $expectedIsStates
+     * @param CompilationState[] $expectedIsNotStates
      */
     public function testIs(
         EnvironmentSetup $setup,
@@ -128,8 +128,8 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
     ): void {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->compilationProgress->is(...$expectedIsStates));
-        self::assertFalse($this->compilationProgress->is(...$expectedIsNotStates));
+        self::assertTrue($this->compilationProgress->is($expectedIsStates));
+        self::assertFalse($this->compilationProgress->is($expectedIsNotStates));
     }
 
     /**

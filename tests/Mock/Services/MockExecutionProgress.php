@@ -25,7 +25,7 @@ class MockExecutionProgress
     /**
      * @param ExecutionState[] $states
      */
-    public function withIsCall(bool $is, ...$states): self
+    public function withIsCall(bool $is, array $states): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
@@ -33,7 +33,7 @@ class MockExecutionProgress
 
         $this->mock
             ->shouldReceive('is')
-            ->with(...$states)
+            ->with($states)
             ->andReturn($is)
         ;
 

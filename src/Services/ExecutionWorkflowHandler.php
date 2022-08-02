@@ -98,7 +98,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $executionStateComplete = $this->executionProgress->is(ExecutionState::COMPLETE);
+        $executionStateComplete = $this->executionProgress->is([ExecutionState::COMPLETE]);
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             WorkerEventScope::EXECUTION,
             WorkerEventOutcome::COMPLETED

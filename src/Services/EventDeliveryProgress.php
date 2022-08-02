@@ -33,9 +33,9 @@ class EventDeliveryProgress
     }
 
     /**
-     * @param array<EventDeliveryState> ...$states
+     * @param EventDeliveryState[] $states
      */
-    public function is(...$states): bool
+    public function is(array $states): bool
     {
         return in_array($this->get(), $states);
     }

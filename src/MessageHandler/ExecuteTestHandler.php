@@ -41,7 +41,7 @@ class ExecuteTestHandler implements MessageHandlerInterface
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
-        if ($this->executionProgress->is(...ExecutionState::getFinishedStates())) {
+        if ($this->executionProgress->is(ExecutionState::getFinishedStates())) {
             return;
         }
 

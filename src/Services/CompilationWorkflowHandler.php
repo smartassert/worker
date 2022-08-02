@@ -45,7 +45,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchNextCompileSourceMessage(): void
     {
-        if (false === $this->compilationProgress->is(...CompilationState::getFinishedStates())) {
+        if (false === $this->compilationProgress->is(CompilationState::getFinishedStates())) {
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();
 
             if (is_string($sourcePath)) {
@@ -59,7 +59,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchCompilationCompletedEvent(): void
     {
-        if ($this->compilationProgress->is(CompilationState::COMPLETE)) {
+        if ($this->compilationProgress->is([CompilationState::COMPLETE])) {
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::COMPILED));
         }

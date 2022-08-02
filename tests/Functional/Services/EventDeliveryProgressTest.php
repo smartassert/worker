@@ -112,8 +112,8 @@ class EventDeliveryProgressTest extends AbstractBaseFunctionalTest
             $this->createWorkerEventEntity($state);
         }
 
-        self::assertTrue($this->eventDeliveryProgress->is(...$expectedIsStates));
-        self::assertFalse($this->eventDeliveryProgress->is(...$expectedIsNotStates));
+        self::assertTrue($this->eventDeliveryProgress->is($expectedIsStates));
+        self::assertFalse($this->eventDeliveryProgress->is($expectedIsNotStates));
     }
 
     /**

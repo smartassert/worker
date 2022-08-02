@@ -37,7 +37,7 @@ class CompileSourceHandler implements MessageHandlerInterface
      */
     public function __invoke(CompileSourceMessage $message): void
     {
-        if (false === $this->compilationProgress->is(CompilationState::RUNNING)) {
+        if (false === $this->compilationProgress->is([CompilationState::RUNNING])) {
             return;
         }
 
