@@ -13,3 +13,4 @@ framework:
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
+            'App\Message\JobCompletedCheckMessage': async
