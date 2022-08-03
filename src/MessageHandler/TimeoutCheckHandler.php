@@ -7,7 +7,7 @@ namespace App\MessageHandler;
 use App\Event\JobTimeoutEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
-use App\MessageDispatcher\DelayedMessageDispatcher;
+use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -16,7 +16,7 @@ class TimeoutCheckHandler implements MessageHandlerInterface
 {
     public function __construct(
         private JobRepository $jobRepository,
-        private DelayedMessageDispatcher $timeoutCheckMessageDispatcher,
+        private readonly TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
         private EventDispatcherInterface $eventDispatcher
     ) {
     }
