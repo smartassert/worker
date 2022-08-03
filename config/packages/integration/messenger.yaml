@@ -7,3 +7,10 @@ framework:
                     service: App\Messenger\DeliverEventMessageRetryStrategy
             async:
                 dsn: 'sync://'
+
+            memory:
+                dsn: 'in-memory://'
+
+        routing:
+            'App\Message\JobCompletedCheckMessage': memory
+            'App\Message\TimeoutCheckMessage': memory
