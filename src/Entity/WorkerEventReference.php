@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ResourceReferenceRepository;
+use App\Repository\WorkerEventReferenceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ResourceReferenceRepository::class)]
+#[ORM\Entity(repositoryClass: WorkerEventReferenceRepository::class)]
 #[ORM\UniqueConstraint(name: 'resource_reference_unique', columns: ['label', 'reference'])]
-class ResourceReference
+class WorkerEventReference
 {
     /**
      * @var non-empty-string

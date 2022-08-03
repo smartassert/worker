@@ -11,7 +11,7 @@ use App\Event\EventInterface;
 class WorkerEventFactory
 {
     public function __construct(
-        private readonly ResourceReferenceFactory $resourceReferenceFactory,
+        private readonly WorkerEventReferenceFactory $resourceReferenceFactory,
         private readonly ReferenceFactory $referenceFactory,
     ) {
     }

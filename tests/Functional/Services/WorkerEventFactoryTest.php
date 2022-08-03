@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
-use App\Entity\ResourceReference;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
@@ -26,7 +26,7 @@ use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
-use App\Model\ResourceReferenceCollection;
+use App\Model\WorkerEventReferenceCollection;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -122,10 +122,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
         $expectedRelatedReferenceIndex = 0;
 
         foreach ($expectedRelatedReferences as $expectedRelatedReference) {
-            \assert($expectedRelatedReference instanceof ResourceReference);
+            \assert($expectedRelatedReference instanceof WorkerEventReference);
 
             $actualRelatedReference = $actualRelatedReferencesAsArray[$expectedRelatedReferenceIndex];
-            \assert($actualRelatedReference instanceof ResourceReference);
+            \assert($actualRelatedReference instanceof WorkerEventReference);
 
             self::assertSame(
                 ObjectReflector::getProperty($expectedRelatedReference, 'label'),
@@ -235,9 +235,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'Test/test2.yaml',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
-                        new ResourceReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
+                        new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
                     ])
                 ),
             ],
@@ -266,9 +266,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'source' => $testSource,
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
-                        new ResourceReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
+                        new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
                     ]),
                 ),
             ],
@@ -326,8 +326,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
             ],
@@ -390,8 +390,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
             ],
@@ -414,8 +414,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
             ],
@@ -480,8 +480,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
             ],

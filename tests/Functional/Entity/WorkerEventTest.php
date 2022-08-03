@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Entity;
 
-use App\Entity\ResourceReference;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Model\ResourceReferenceCollection;
+use App\Model\WorkerEventReferenceCollection;
 use App\Tests\Services\EntityRemover;
 
 class WorkerEventTest extends AbstractEntityTest
@@ -59,10 +59,10 @@ class WorkerEventTest extends AbstractEntityTest
                     'non-empty label',
                     'non-empty reference',
                     [],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('label 1', 'reference 1'),
-                        new ResourceReference('label 2', 'reference 2'),
-                        new ResourceReference('label 3', 'reference 3'),
+                    new WorkerEventReferenceCollection([
+                        new WorkerEventReference('label 1', 'reference 1'),
+                        new WorkerEventReference('label 2', 'reference 2'),
+                        new WorkerEventReference('label 3', 'reference 3'),
                     ]),
                 ),
             ],

@@ -7,7 +7,7 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Model\ResourceReferenceCollection;
+use App\Model\WorkerEventReferenceCollection;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -48,9 +48,9 @@ class WorkerEvent
     private WorkerEventState $state;
 
     /**
-     * @var Collection<int, ResourceReference>
+     * @var Collection<int, WorkerEventReference>
      */
-    #[ORM\ManyToMany(targetEntity: ResourceReference::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
     private Collection $relatedReferences;
 
     /**
@@ -64,7 +64,7 @@ class WorkerEvent
         string $label,
         string $reference,
         array $payload,
-        ?ResourceReferenceCollection $relatedReferences = null,
+        ?WorkerEventReferenceCollection $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
@@ -74,7 +74,7 @@ class WorkerEvent
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();
 
-        if ($relatedReferences instanceof ResourceReferenceCollection) {
+        if ($relatedReferences instanceof WorkerEventReferenceCollection) {
             foreach ($relatedReferences as $relatedReference) {
                 $this->relatedReferences->add($relatedReference);
             }
@@ -96,7 +96,7 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getRelatedReferences(): ResourceReferenceCollection
+    public function getRelatedReferences(): WorkerEventReferenceCollection
     {
         $references = [];
 
@@ -104,6 +104,6 @@ class WorkerEvent
             $references[] = $reference;
         }
 
-        return new ResourceReferenceCollection($references);
+        return new WorkerEventReferenceCollection($references);
     }
 }

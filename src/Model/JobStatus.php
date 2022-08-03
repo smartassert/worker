@@ -18,7 +18,7 @@ class JobStatus implements \JsonSerializable
         private readonly string $reference,
         private readonly array $sourcePaths,
         private readonly array $serializedTests,
-        private readonly ResourceReferenceCollection $testReferences,
+        private readonly WorkerEventReferenceCollection $testReferences,
         private readonly array $eventIds,
     ) {
     }

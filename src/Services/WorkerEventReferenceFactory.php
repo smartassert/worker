@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\ResourceReference;
-use App\Model\ResourceReferenceCollection;
+use App\Entity\WorkerEventReference;
 use App\Model\ResourceReferenceSource;
-use App\Repository\ResourceReferenceRepository;
+use App\Model\WorkerEventReferenceCollection;
+use App\Repository\WorkerEventReferenceRepository;
 
-class ResourceReferenceFactory
+class WorkerEventReferenceFactory
 {
     public function __construct(
         private readonly ReferenceFactory $referenceFactory,
-        private readonly ResourceReferenceRepository $repository,
+        private readonly WorkerEventReferenceRepository $repository,
     ) {
     }
 
@@ -21,7 +21,7 @@ class ResourceReferenceFactory
      * @param non-empty-string          $jobLabel
      * @param ResourceReferenceSource[] $referenceSources
      */
-    public function createCollection(string $jobLabel, array $referenceSources): ResourceReferenceCollection
+    public function createCollection(string $jobLabel, array $referenceSources): WorkerEventReferenceCollection
     {
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
@@ -32,12 +32,14 @@ class ResourceReferenceFactory
             ]);
 
             if (null === $resourceReference) {
-                $resourceReference = $this->repository->add(new ResourceReference($referenceSource->label, $reference));
+                $resourceReference = $this->repository->add(
+                    new WorkerEventReference($referenceSource->label, $reference)
+                );
             }
 
             $testReferences[] = $resourceReference;
         }
 
-        return new ResourceReferenceCollection($testReferences);
+        return new WorkerEventReferenceCollection($testReferences);
     }
 }
