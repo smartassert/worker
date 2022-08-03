@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
+use App\Message\TimeoutCheckMessage;
+use App\Messenger\MessageFactory;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class DelayedMessageDispatcher
+class TimeoutCheckMessageDispatcher
 {
     public function __construct(
+        private readonly MessageFactory $messageFactory,
         private readonly MessageBusInterface $messageBus,
-        private readonly int $delayInMilliseconds,
-        private readonly object $message,
     ) {
     }
 
     public function dispatch(): void
     {
         $this->messageBus->dispatch(
-            clone $this->message,
-            [
-                new DelayStamp($this->delayInMilliseconds),
-            ]
+            $this->messageFactory->createDelayedEnvelope(new TimeoutCheckMessage())
         );
     }
 }
