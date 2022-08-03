@@ -58,13 +58,3 @@ services:
 
     App\Tests\Services\IntegrationDeliverEventRequestFactory:
         public: true
-
-    App\MessageHandler\TimeoutCheckHandler:
-        tags: ~
-
-    app.tests.services.integration.null_message_handler.timeout_check:
-        class: App\Tests\Services\Messenger\NullMessageHandler
-        tags:
-            -
-                name: messenger.message_handler
-                handles: App\Message\TimeoutCheckMessage

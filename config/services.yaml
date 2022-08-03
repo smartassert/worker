@@ -73,29 +73,30 @@ services:
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
 
-#    App\Services\WorkerEventFactory\EventHandler\:
-#        resource: '../src/Services/WorkerEventFactory/EventHandler/'
-#        tags: ['app.worker_event_factory.event_handler']
-#
-#    App\MessageDispatcher\DeliverEventMessageDispatcher:
-#        arguments:
-#            $handlers: !tagged_iterator app.worker_event_factory.event_handler
-
     webignition\YamlDocumentGenerator\YamlGenerator:
         class: webignition\YamlDocumentGenerator\YamlGenerator
 
     Symfony\Component\Yaml\Dumper: ~
 
+    app.message_dispatcher.delayed.job_completed_check:
+        class: App\MessageDispatcher\DelayedMessageDispatcher
+        arguments:
+            $message: '@App\Message\JobCompletedCheckMessage'
+            $delayInMilliseconds: '%job_completed_check_period_ms%'
+
+    app.message_dispatcher.delayed.job_timeout_check:
+        class: App\MessageDispatcher\DelayedMessageDispatcher
+        arguments:
+            $message: '@App\Message\TimeoutCheckMessage'
+            $delayInMilliseconds: '%job_timeout_check_period_ms%'
+
+    App\EventDispatcher\JobCompleteEventDispatcher:
+        arguments:
+            $jobCompletedCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_completed_check'
+
     App\MessageHandler\TimeoutCheckHandler:
-        tags: [messenger.message_handler]
-
-    App\MessageDispatcher\TimeoutCheckMessageDispatcher:
         arguments:
-            $checkPeriodInMilliseconds: '%job_timeout_check_period_ms%'
-
-    App\MessageDispatcher\JobCompletedCheckMessageDispatcher:
-        arguments:
-            $checkPeriodInMilliseconds: '%job_completed_check_period_ms%'
+            $timeoutCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_timeout_check'
 
     app.messenger.retry_strategy.deliver_event.multiplier:
         class: Symfony\Component\Messenger\Retry\MultiplierRetryStrategy
@@ -141,3 +142,7 @@ services:
     App\Services\SourceCompilationFailedEventFactory:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
+
+    App\Services\ApplicationWorkflowHandler:
+        arguments:
+            $timeoutCheckMessageDispatcher: '@app.message_dispatcher.delayed.job_timeout_check'

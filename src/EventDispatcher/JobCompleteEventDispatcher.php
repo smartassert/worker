@@ -8,7 +8,7 @@ use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\JobEvent;
 use App\Exception\JobNotFoundException;
-use App\MessageDispatcher\JobCompletedCheckMessageDispatcher;
+use App\MessageDispatcher\DelayedMessageDispatcher;
 use App\Repository\JobRepository;
 use App\Services\ApplicationProgress;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -19,7 +19,7 @@ class JobCompleteEventDispatcher
         private readonly ApplicationProgress $applicationProgress,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly JobRepository $jobRepository,
-        private readonly JobCompletedCheckMessageDispatcher $jobCompletedCheckMessageDispatcher,
+        private readonly DelayedMessageDispatcher $jobCompletedCheckMessageDispatcher,
     ) {
     }
 
