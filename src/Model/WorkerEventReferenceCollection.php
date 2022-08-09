@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Entity\ResourceReference;
+use App\Entity\WorkerEventReference;
 use Traversable;
 
 /**
- * @implements \IteratorAggregate<ResourceReference>
+ * @implements \IteratorAggregate<WorkerEventReference>
  */
-class ResourceReferenceCollection implements \IteratorAggregate, \Countable
+class WorkerEventReferenceCollection implements \IteratorAggregate, \Countable
 {
     /**
-     * @var ResourceReference[]
+     * @var WorkerEventReference[]
      */
     private array $resourceReferences = [];
 
     /**
-     * @param ResourceReference[] $testReferences
+     * @param WorkerEventReference[] $testReferences
      */
     public function __construct(array $testReferences)
     {
         foreach ($testReferences as $testReference) {
-            if ($testReference instanceof ResourceReference) {
+            if ($testReference instanceof WorkerEventReference) {
                 $this->resourceReferences[] = $testReference;
             }
         }
@@ -43,7 +43,7 @@ class ResourceReferenceCollection implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return Traversable<ResourceReference>
+     * @return Traversable<WorkerEventReference>
      */
     public function getIterator(): Traversable
     {

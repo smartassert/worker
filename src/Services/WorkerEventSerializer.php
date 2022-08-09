@@ -24,13 +24,14 @@ class WorkerEventSerializer
      */
     public function serialize(Job $job, WorkerEvent $event): array
     {
-        $header = [
-            'job' => $job->label,
-            'sequence_number' => (int) $event->getId(),
-            'type' => $event->scope->value . '/' . $event->outcome->value,
-            'label' => $event->label,
-            'reference' => $event->reference,
-        ];
+        $header = array_merge(
+            [
+                'job' => $job->label,
+                'sequence_number' => (int) $event->getId(),
+                'type' => $event->scope->value . '/' . $event->outcome->value,
+            ],
+            $event->reference->toArray()
+        );
 
         $relatedReferences = $event->getRelatedReferences();
         if (0 !== count($relatedReferences)) {

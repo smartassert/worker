@@ -18,7 +18,7 @@ class JobStatusFactory
         private readonly SourceRepository $sourceRepository,
         private readonly TestRepository $testRepository,
         private readonly ReferenceFactory $referenceFactory,
-        private readonly ResourceReferenceFactory $resourceReferenceFactory,
+        private readonly WorkerEventReferenceFactory $resourceReferenceFactory,
         private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
