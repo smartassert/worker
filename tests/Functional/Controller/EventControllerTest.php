@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Controller;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
@@ -75,6 +76,7 @@ class EventControllerTest extends AbstractBaseFunctionalTest
             'key2' => 'value2',
         ];
         $eventReference = md5((string) rand());
+        $eventReferenceEntity = new WorkerEventReference($eventLabel, $eventReference);
 
         $environment = $this->environmentFactory->create(
             (new EnvironmentSetup())
@@ -83,9 +85,8 @@ class EventControllerTest extends AbstractBaseFunctionalTest
                 )
                 ->withWorkerEventSetups([
                     (new WorkerEventSetup())
-                        ->withLabel($eventLabel)
                         ->withPayload($eventPayload)
-                        ->withReference($eventReference)
+                        ->withReference($eventReferenceEntity)
                         ->withScope(WorkerEventScope::JOB)
                         ->withOutcome(WorkerEventOutcome::COMPLETED)
                 ])

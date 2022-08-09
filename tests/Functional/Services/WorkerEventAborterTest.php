@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
-use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Model\WorkerEventSetup;
+use App\Tests\Services\TestWorkerEventFactory;
 
 class WorkerEventAborterTest extends AbstractBaseFunctionalTest
 {
     private WorkerEventAborter $aborter;
     private WorkerEventRepository $workerEventRepository;
-    private WorkerEventStateMutator $stateMutator;
 
     protected function setUp(): void
     {
@@ -34,22 +35,21 @@ class WorkerEventAborterTest extends AbstractBaseFunctionalTest
         $repository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($repository instanceof WorkerEventRepository);
         $this->workerEventRepository = $repository;
-
-        $stateMutator = self::getContainer()->get(WorkerEventStateMutator::class);
-        \assert($stateMutator instanceof WorkerEventStateMutator);
-        $this->stateMutator = $stateMutator;
     }
 
     public function testAbort(): void
     {
-        $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
-            WorkerEventScope::JOB,
-            WorkerEventOutcome::COMPLETED,
-            'non-empty label',
-            'non-empty reference',
-            []
-        ));
-        $this->stateMutator->setQueued($workerEvent);
+        $testWorkerEventFactory = self::getContainer()->get(TestWorkerEventFactory::class);
+        \assert($testWorkerEventFactory instanceof TestWorkerEventFactory);
+
+        $workerEvent = $testWorkerEventFactory->create(
+            (new WorkerEventSetup())
+                ->withScope(WorkerEventScope::JOB)
+                ->withOutcome(WorkerEventOutcome::COMPLETED)
+                ->withReference(new WorkerEventReference('non-empty label', 'non-empty reference'))
+                ->withState(WorkerEventState::QUEUED)
+                ->withPayload([])
+        );
 
         $id = $workerEvent->getId();
 

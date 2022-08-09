@@ -23,22 +23,15 @@ class WorkerEvent
     public readonly WorkerEventOutcome $outcome;
 
     /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'text')]
-    public readonly string $label;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'string', length: 32)]
-    public readonly string $reference;
-
-    /**
      * @var array<mixed>
      */
     #[ORM\Column(type: 'json')]
     public readonly array $payload;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    public readonly WorkerEventReference $reference;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
@@ -54,22 +47,18 @@ class WorkerEvent
     private Collection $relatedReferences;
 
     /**
-     * @param non-empty-string $label
-     * @param non-empty-string $reference
-     * @param array<mixed>     $payload
+     * @param array<mixed> $payload
      */
     public function __construct(
         WorkerEventScope $scope,
         WorkerEventOutcome $outcome,
-        string $label,
-        string $reference,
+        WorkerEventReference $reference,
         array $payload,
         ?WorkerEventReferenceCollection $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
         $this->outcome = $outcome;
-        $this->label = $label;
         $this->reference = $reference;
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();

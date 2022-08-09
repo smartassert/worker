@@ -6,6 +6,7 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
@@ -133,8 +134,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
                     new WorkerEvent(
                         WorkerEventScope::JOB,
                         WorkerEventOutcome::STARTED,
-                        'non-empty label',
-                        md5('reference source'),
+                        new WorkerEventReference('non-empty label', md5('reference source')),
                         []
                     ),
                     new Response(400)

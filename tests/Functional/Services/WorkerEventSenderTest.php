@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Exception\NonSuccessfulHttpResponseException;
@@ -50,8 +51,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            'non-empty label',
-            'non-empty reference',
+            new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
         $this->mockHandler->append(new Response(200));
@@ -73,8 +73,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            'non-empty label',
-            'non-empty reference',
+            new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
         $this->mockHandler->append($response);
@@ -109,8 +108,7 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTest
         $workerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            'non-empty label',
-            'non-empty reference',
+            new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
         $this->mockHandler->append($exception);

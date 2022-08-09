@@ -20,6 +20,7 @@ class WorkerEventTest extends AbstractEntityTest
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(WorkerEvent::class);
+            $entityRemover->removeForEntity(WorkerEventReference::class);
         }
     }
 
@@ -31,7 +32,9 @@ class WorkerEventTest extends AbstractEntityTest
         $repository = $this->entityManager->getRepository(WorkerEvent::class);
         self::assertCount(0, $repository->findAll());
 
+        $this->entityManager->persist($event->reference);
         $this->entityManager->persist($event);
+
         $this->entityManager->flush();
 
         self::assertCount(1, $repository->findAll());
@@ -47,8 +50,7 @@ class WorkerEventTest extends AbstractEntityTest
                 'event' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::FAILED,
-                    'non-empty label',
-                    'non-empty reference',
+                    new WorkerEventReference('non-empty label', 'non-empty reference'),
                     []
                 ),
             ],
@@ -56,8 +58,7 @@ class WorkerEventTest extends AbstractEntityTest
                 'event' => new WorkerEvent(
                     WorkerEventScope::COMPILATION,
                     WorkerEventOutcome::FAILED,
-                    'non-empty label',
-                    'non-empty reference',
+                    new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
                     new WorkerEventReferenceCollection([
                         new WorkerEventReference('label 1', 'reference 1'),

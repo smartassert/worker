@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Model;
 
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
@@ -20,15 +21,7 @@ class WorkerEventSetup
 
     private WorkerEventState $state;
 
-    /**
-     * @var non-empty-string
-     */
-    private string $label;
-
-    /**
-     * @var non-empty-string
-     */
-    private string $reference;
+    private WorkerEventReference $reference;
 
     public function __construct()
     {
@@ -36,8 +29,7 @@ class WorkerEventSetup
         $this->outcome = WorkerEventOutcome::PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
-        $this->label = 'non-empty label';
-        $this->reference = 'non-empty reference';
+        $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');
     }
 
     public function getScope(): WorkerEventScope
@@ -98,37 +90,12 @@ class WorkerEventSetup
         return $new;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    /**
-     * @param non-empty-string $label
-     */
-    public function withLabel(string $label): self
-    {
-        $new = clone $this;
-        $new->label = $label;
-
-        return $new;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getReference(): string
+    public function getReference(): WorkerEventReference
     {
         return $this->reference;
     }
 
-    /**
-     * @param non-empty-string $reference
-     */
-    public function withReference(string $reference): self
+    public function withReference(WorkerEventReference $reference): self
     {
         $new = clone $this;
         $new->reference = $reference;

@@ -11,7 +11,7 @@ use App\Event\EventInterface;
 class WorkerEventFactory
 {
     public function __construct(
-        private readonly WorkerEventReferenceFactory $resourceReferenceFactory,
+        private readonly WorkerEventReferenceFactory $workerEventReferenceFactory,
         private readonly ReferenceFactory $referenceFactory,
     ) {
     }
@@ -24,17 +24,21 @@ class WorkerEventFactory
         $resourceReferenceCollection = null;
 
         if (!array_key_exists('related_references', $payload) && [] !== $relatedReferenceSources) {
-            $resourceReferenceCollection = $this->resourceReferenceFactory->createCollection(
+            $resourceReferenceCollection = $this->workerEventReferenceFactory->createCollection(
                 $job->label,
                 $relatedReferenceSources
             );
         }
 
+        $reference = $this->workerEventReferenceFactory->create(
+            $event->getLabel(),
+            $this->referenceFactory->create($job->label, $event->getReferenceComponents())
+        );
+
         return new WorkerEvent(
             $event->getScope(),
             $event->getOutcome(),
-            $event->getLabel(),
-            $this->referenceFactory->create($job->label, $event->getReferenceComponents()),
+            $reference,
             $payload,
             $resourceReferenceCollection
         );

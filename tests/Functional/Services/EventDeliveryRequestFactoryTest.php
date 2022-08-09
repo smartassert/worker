@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Services\EventDeliveryRequestFactory;
@@ -75,8 +76,7 @@ class EventDeliveryRequestFactoryTest extends AbstractBaseFunctionalTest
         $jobStartedWorkerEvent = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
-            self::JOB_LABEL,
-            'job/started reference',
+            new WorkerEventReference(self::JOB_LABEL, 'job/started reference'),
             [
                 'tests' => ['test1.yml', 'test2.yml'],
             ]

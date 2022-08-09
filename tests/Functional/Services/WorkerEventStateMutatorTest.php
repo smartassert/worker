@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\Services\EntityRemover;
 use Doctrine\ORM\EntityManagerInterface;
 
 class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
@@ -28,6 +30,12 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        if ($entityRemover instanceof EntityRemover) {
+            $entityRemover->removeForEntity(WorkerEvent::class);
+            $entityRemover->removeForEntity(WorkerEventReference::class);
+        }
     }
 
     /**
@@ -222,6 +230,7 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
     ): void {
         $workerEvent->setState($initialState);
 
+        $this->entityManager->persist($workerEvent->reference);
         $this->entityManager->persist($workerEvent);
         $this->entityManager->flush();
 
@@ -247,8 +256,7 @@ class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
         return new WorkerEvent(
             WorkerEventScope::COMPILATION,
             WorkerEventOutcome::FAILED,
-            'non-empty label',
-            'non-empty reference',
+            new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
     }

@@ -18,6 +18,26 @@ class WorkerEventReferenceFactory
     }
 
     /**
+     * @param non-empty-string $label
+     * @param non-empty-string $reference
+     */
+    public function create(string $label, string $reference): WorkerEventReference
+    {
+        $workerEventReference = $this->repository->findOneBy([
+            'label' => $label,
+            'reference' => $reference,
+        ]);
+
+        if (null === $workerEventReference) {
+            $workerEventReference = $this->repository->add(
+                new WorkerEventReference($label, $reference)
+            );
+        }
+
+        return $workerEventReference;
+    }
+
+    /**
      * @param non-empty-string          $jobLabel
      * @param ResourceReferenceSource[] $referenceSources
      */
@@ -26,18 +46,7 @@ class WorkerEventReferenceFactory
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
             $reference = $this->referenceFactory->create($jobLabel, $referenceSource->components);
-            $resourceReference = $this->repository->findOneBy([
-                'label' => $referenceSource->label,
-                'reference' => $reference,
-            ]);
-
-            if (null === $resourceReference) {
-                $resourceReference = $this->repository->add(
-                    new WorkerEventReference($referenceSource->label, $reference)
-                );
-            }
-
-            $testReferences[] = $resourceReference;
+            $testReferences[] = $this->create($referenceSource->label, $reference);
         }
 
         return new WorkerEventReferenceCollection($testReferences);
