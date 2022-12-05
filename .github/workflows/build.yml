@@ -16,18 +16,17 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.version.outputs.value }}
+      version: ${{ env.service_version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set image tag name
-        id: version
+      - name: Set env.service_version
         env:
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          [[ -n "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || echo "::set-output name=value::master"
+          [[ -n "$RELEASE_TAG_NAME" ]] && echo "service_version=$RELEASE_TAG_NAME" >> "$GITHUB_ENV" || echo "service_version=master" >> "$GITHUB_ENV"
 
   verify-setup:
     name: Verify setup
