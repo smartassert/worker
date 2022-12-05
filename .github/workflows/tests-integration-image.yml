@@ -11,7 +11,7 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     outputs:
-      test_names: ${{ steps.test_names.outputs.value }}
+      test_names: ${{ env.test_names }}
 
     steps:
       - name: Checkout
@@ -24,7 +24,7 @@ jobs:
           TEST_NAMES_LACKING_EXTENSION="${TEST_NAMES//.php/}"          
           TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$TEST_NAMES_LACKING_EXTENSION")
 
-          echo "::set-output name=value::$TEST_NAMES_AS_JSON_ARRAY"
+          echo "test_names=$TEST_NAMES_AS_JSON_ARRAY" >> "$GITHUB_ENV"
 
   integration-app:
     name: Integration Image - ${{ matrix.test_name }}

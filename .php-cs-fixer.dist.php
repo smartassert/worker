@@ -43,6 +43,10 @@ return (new PhpCsFixer\Config())
                 'yield_from',
             ],
         ],
+        'global_namespace_import' => [
+            'import_classes' => false,
+        ],
+        'no_useless_concat_operator' => false,
     ])
     ->setFinder($finder)
 ;

@@ -24,3 +24,7 @@ parameters:
     -
       message: '#Method .+ throws checked exception#'
       path: tests
+
+    -
+      message: '#Method .+ throws checked exception BadMethodCallException#'
+      path: src
