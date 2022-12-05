@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.version }}
 
       - name: Checkout bash-read-env-file
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: smartassert/bash-read-env-file
           path: ./vendor/smartassert/bash-read-env-file
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Checkout bash-ga-ci-tools
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: smartassert/bash-ga-ci-tools
           path: ./vendor/smartassert/bash-ga-ci-tools

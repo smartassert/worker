@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set env.service_version
         env:
@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout bash-ga-ci-tools
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: smartassert/bash-ga-ci-tools
           path: ./vendor/smartassert/bash-ga-ci-tools
@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Trigger deploy workflow
         env:
