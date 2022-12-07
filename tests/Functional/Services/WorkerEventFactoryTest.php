@@ -424,10 +424,12 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
-                    WorkerEventOutcome::TIME_OUT,
+                    WorkerEventOutcome::ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'maximum_duration_in_seconds' => 10,
+                        'end_state' => 'timed-out',
+                        'success' => false,
                     ]
                 ),
             ],
