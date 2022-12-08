@@ -12,14 +12,15 @@ use App\Services\CompilationProgress;
 use App\Services\Compiler;
 use App\Services\SourceCompilationFailedEventFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Yaml\Exception\ParseException;
 use webignition\BasilCompilerModels\Exception\InvalidTestManifestException;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
-class CompileSourceHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class CompileSourceHandler
 {
     public function __construct(
         private Compiler $compiler,

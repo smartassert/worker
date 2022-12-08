@@ -10,9 +10,10 @@ use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class TimeoutCheckHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class TimeoutCheckHandler
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
