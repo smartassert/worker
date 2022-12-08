@@ -55,6 +55,7 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
+        $this->endState = null;
     }
 
     public function setEndState(JobEndedState $state): void
