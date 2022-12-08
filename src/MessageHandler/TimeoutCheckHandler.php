@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class TimeoutCheckHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private JobRepository $jobRepository,
+        private readonly JobRepository $jobRepository,
         private readonly TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
         private EventDispatcherInterface $eventDispatcher
     ) {

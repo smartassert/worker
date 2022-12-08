@@ -10,9 +10,9 @@ use App\Event\JobTimeoutEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
+use App\Repository\JobRepository;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Mock\Repository\MockJobRepository;
 use App\Tests\Model\ExpectedDispatchedEvent;
 use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Services\Asserter\MessengerAsserter;
@@ -69,11 +69,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
     public function testInvokeJobMaximumDurationNotReached(): void
     {
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-
         $job = new Job(
             md5((string) rand()),
             'https://example.com/events',
@@ -81,13 +76,15 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ['test.yml']
         );
 
-        $jobRepository = (new MockJobRepository())
-            ->withGetCall($job)
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $jobRepository->add($job);
+
+        $eventDispatcher = (new MockEventDispatcher())
+            ->withoutDispatchCall()
             ->getMock()
         ;
-
         ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobRepository', $jobRepository);
 
         $message = new TimeoutCheckMessage();
 
@@ -105,6 +102,19 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
     public function testInvokeJobMaximumDurationReached(): void
     {
         $jobMaximumDuration = 123;
+
+        $job = $this->createJobWithMutatedStartDateTime(
+            new Job(
+                md5((string) rand()),
+                'https://example.com/events',
+                $jobMaximumDuration,
+                ['test.yml']
+            )
+        );
+
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $jobRepository->add($job);
 
         $eventExpectationCount = 0;
 
@@ -130,24 +140,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ->getMock()
         ;
 
-        $jobLabel = md5((string) rand());
-
-        $job = new Job(
-            $jobLabel,
-            'https://example.com/events',
-            $jobMaximumDuration,
-            ['test.yml']
-        );
-
-        $job = $this->createJobWithMutatedStartDateTime($job);
-
-        $jobRepository = (new MockJobRepository())
-            ->withGetCall($job)
-            ->getMock()
-        ;
-
         ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'jobRepository', $jobRepository);
 
         $message = new TimeoutCheckMessage();
 
@@ -174,6 +167,12 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         $labelProperty = $reflectionClass->getProperty('label');
         $labelProperty->setValue($reflectionJob, $job->label);
+
+        $eventDeliveryUrlProperty = $reflectionClass->getProperty('eventDeliveryUrl');
+        $eventDeliveryUrlProperty->setValue($reflectionJob, $job->eventDeliveryUrl);
+
+        $testPathsProperty = $reflectionClass->getProperty('testPaths');
+        $testPathsProperty->setValue($reflectionJob, $job->testPaths);
 
         return $reflectionJob;
     }
