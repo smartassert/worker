@@ -9,6 +9,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
+use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
@@ -38,6 +39,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             ],
             JobTimeoutEvent::class => [
                 ['setJobEndStateOnJobTimeoutEvent', 100],
+            ],
+            SourceCompilationFailedEvent::class => [
+                ['setJobEndStateOnSourceCompilationFailedEvent', 100],
             ],
         ];
     }
@@ -91,6 +95,14 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         }
 
         $this->setJobEndState(JobEndedState::FAILED_TEST);
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function setJobEndStateOnSourceCompilationFailedEvent(SourceCompilationFailedEvent $event): void
+    {
+        $this->setJobEndState(JobEndedState::FAILED_COMPILATION);
     }
 
     /**
