@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum JobEndedState: string
+enum JobEndState: string
 {
     case COMPLETE = 'complete';
     case TIMED_OUT = 'timed-out';
