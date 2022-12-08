@@ -94,7 +94,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $this->setJobEndState(JobEndState::FAILED_TEST);
+        $this->setJobEndState(JobEndState::FAILED_TEST_FAILURE);
     }
 
     /**

@@ -131,7 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-        self::assertSame(JobEndState::FAILED_TEST, $this->job->endState);
+        self::assertSame(JobEndState::FAILED_TEST_FAILURE, $this->job->endState);
     }
 
     /**
