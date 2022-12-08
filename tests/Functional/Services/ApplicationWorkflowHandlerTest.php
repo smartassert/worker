@@ -12,6 +12,8 @@ use App\Enum\JobEndedState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
+use App\Event\JobTimeoutEvent;
+use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Exception;
@@ -38,6 +40,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     private ApplicationWorkflowHandler $handler;
     private EventDispatcherInterface $eventDispatcher;
+    private Job $job;
 
     protected function setUp(): void
     {
@@ -52,14 +55,19 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher = $eventDispatcher;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
-        if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(Job::class);
-        }
+        assert($entityRemover instanceof EntityRemover);
+        $entityRemover->removeForEntity(Job::class);
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
-        if ($environmentFactory instanceof EnvironmentFactory) {
-            $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
-        }
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+
+        $job = $jobRepository->get();
+        \assert($job instanceof Job);
+        $this->job = $job;
     }
 
     public function testSubscribesToTestPassedEventApplicationComplete(): void
@@ -90,11 +98,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $messengerAsserter->assertQueueCount(2);
         $messengerAsserter->assertMessageAtPositionEquals(1, new JobCompletedCheckMessage());
 
-        $jobRepository = self::getContainer()->get(JobRepository::class);
-        \assert($jobRepository instanceof JobRepository);
-
-        $job = $jobRepository->get();
-        self::assertNull($job->endState);
+        self::assertNull($this->job->endState);
     }
 
     /**
@@ -127,12 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-
-        $jobRepository = self::getContainer()->get(JobRepository::class);
-        \assert($jobRepository instanceof JobRepository);
-
-        $job = $jobRepository->get();
-        self::assertSame(JobEndedState::FAILED_TEST, $job->endState);
+        self::assertSame(JobEndedState::FAILED_TEST, $this->job->endState);
     }
 
     /**
@@ -160,5 +159,19 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                 ),
             ],
         ];
+    }
+
+    public function testSubscribesToJobTimeoutEvent(): void
+    {
+        $this->eventDispatcher->dispatch(new JobTimeoutEvent($this->job->label, 1000));
+
+        self::assertSame(JobEndedState::TIMED_OUT, $this->job->endState);
+    }
+
+    public function testSubscribesToSourceCompilationFailedEvent(): void
+    {
+        $this->eventDispatcher->dispatch(new SourceCompilationFailedEvent('test.yml', []));
+
+        self::assertSame(JobEndedState::FAILED_COMPILATION, $this->job->endState);
     }
 }
