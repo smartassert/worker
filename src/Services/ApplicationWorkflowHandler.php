@@ -34,6 +34,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
                 ['dispatchJobFailedEventForTestFailureEvent', -100],
+                ['setJobEndStateOnTestFailureEvent', 100],
             ],
             JobTimeoutEvent::class => [
                 ['setJobEndStateOnJobTimeoutEvent', 100],
@@ -74,8 +75,31 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
      */
     public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEvent $event): void
     {
+        $this->setJobEndState(JobEndedState::TIMED_OUT);
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function setJobEndStateOnTestFailureEvent(TestEvent $event): void
+    {
+        if (
+            WorkerEventScope::TEST !== $event->getScope()
+            || !in_array($event->getOutcome(), [WorkerEventOutcome::FAILED, WorkerEventOutcome::EXCEPTION])
+        ) {
+            return;
+        }
+
+        $this->setJobEndState(JobEndedState::FAILED_TEST);
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    private function setJobEndState(JobEndedState $state): void
+    {
         $job = $this->jobRepository->get();
-        $job->setEndState(JobEndedState::TIMED_OUT);
+        $job->setEndState($state);
         $this->jobRepository->add($job);
     }
 }

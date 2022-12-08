@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\ExecutionExceptionScope;
+use App\Enum\JobEndedState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
@@ -15,6 +16,7 @@ use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
+use App\Repository\JobRepository;
 use App\Services\ApplicationWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
@@ -87,6 +89,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $messengerAsserter->assertQueueCount(2);
         $messengerAsserter->assertMessageAtPositionEquals(1, new JobCompletedCheckMessage());
+
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+
+        $job = $jobRepository->get();
+        self::assertNull($job->endState);
     }
 
     /**
@@ -119,6 +127,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
+
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+
+        $job = $jobRepository->get();
+        self::assertSame(JobEndedState::FAILED_TEST, $job->endState);
     }
 
     /**
