@@ -35,7 +35,8 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
                 ['dispatchJobFailedEventForTestFailureEvent', -100],
-                ['setJobEndStateOnTestFailureEvent', 100],
+                ['setJobEndStateOnTestFailedEvent', 100],
+                ['setJobEndStateOnTestExceptionEvent', 100],
             ],
             JobTimeoutEvent::class => [
                 ['setJobEndStateOnJobTimeoutEvent', 100],
@@ -85,16 +86,13 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnTestFailureEvent(TestEvent $event): void
+    public function setJobEndStateOnTestFailedEvent(TestEvent $event): void
     {
-        if (
-            WorkerEventScope::TEST !== $event->getScope()
-            || !in_array($event->getOutcome(), [WorkerEventOutcome::FAILED, WorkerEventOutcome::EXCEPTION])
-        ) {
-            return;
-        }
-
-        $this->setJobEndState(JobEndState::FAILED_TEST_FAILURE);
+        $this->setJobEndStateOnTestEventWithOutcome(
+            $event,
+            WorkerEventOutcome::FAILED,
+            JobEndState::FAILED_TEST_FAILURE
+        );
     }
 
     /**
@@ -103,6 +101,35 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public function setJobEndStateOnSourceCompilationFailedEvent(SourceCompilationFailedEvent $event): void
     {
         $this->setJobEndState(JobEndState::FAILED_COMPILATION);
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function setJobEndStateOnTestExceptionEvent(TestEvent $event): void
+    {
+        $this->setJobEndStateOnTestEventWithOutcome(
+            $event,
+            WorkerEventOutcome::EXCEPTION,
+            JobEndState::FAILED_TEST_EXCEPTION
+        );
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    private function setJobEndStateOnTestEventWithOutcome(
+        TestEvent $event,
+        WorkerEventOutcome $outcome,
+        JobEndState $state
+    ): void {
+        if (
+            !(WorkerEventScope::TEST === $event->getScope() && $outcome === $event->getOutcome())
+        ) {
+            return;
+        }
+
+        $this->setJobEndState($state);
     }
 
     /**

@@ -104,7 +104,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider subscribesToTestFailureEventDataProvider
      */
-    public function testSubscribesToTestFailedEvent(TestEvent $event): void
+    public function testSubscribesToTestFailureEvent(TestEvent $event, JobEndState $expectedJobEndState): void
     {
         $eventExpectationCount = 0;
 
@@ -131,7 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-        self::assertSame(JobEndState::FAILED_TEST_FAILURE, $this->job->endState);
+        self::assertSame($expectedJobEndState, $this->job->endState);
     }
 
     /**
@@ -149,14 +149,16 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     'test.yml',
                     WorkerEventOutcome::FAILED
                 ),
+                'expectedJobEndState' => JobEndState::FAILED_TEST_FAILURE,
             ],
             'test/exception' => [
                 'event' => new TestEvent(
                     $testEntity,
                     new Exception(ExecutionExceptionScope::TEST, []),
                     'test.yml',
-                    WorkerEventOutcome::FAILED
+                    WorkerEventOutcome::EXCEPTION
                 ),
+                'expectedJobEndState' => JobEndState::FAILED_TEST_EXCEPTION,
             ],
         ];
     }
