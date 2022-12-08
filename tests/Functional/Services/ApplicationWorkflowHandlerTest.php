@@ -8,12 +8,9 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\ExecutionExceptionScope;
-use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
-use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Exception;
@@ -104,7 +101,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider subscribesToTestFailureEventDataProvider
      */
-    public function testSubscribesToTestFailureEvent(TestEvent $event, JobEndState $expectedJobEndState): void
+    public function testSubscribesToTestFailureEvent(TestEvent $event): void
     {
         $eventExpectationCount = 0;
 
@@ -131,7 +128,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-        self::assertSame($expectedJobEndState, $this->job->endState);
     }
 
     /**
@@ -149,7 +145,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     'test.yml',
                     WorkerEventOutcome::FAILED
                 ),
-                'expectedJobEndState' => JobEndState::FAILED_TEST_FAILURE,
             ],
             'test/exception' => [
                 'event' => new TestEvent(
@@ -158,22 +153,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
                     'test.yml',
                     WorkerEventOutcome::EXCEPTION
                 ),
-                'expectedJobEndState' => JobEndState::FAILED_TEST_EXCEPTION,
             ],
         ];
-    }
-
-    public function testSubscribesToJobTimeoutEvent(): void
-    {
-        $this->eventDispatcher->dispatch(new JobTimeoutEvent($this->job->label, 1000));
-
-        self::assertSame(JobEndState::TIMED_OUT, $this->job->endState);
-    }
-
-    public function testSubscribesToSourceCompilationFailedEvent(): void
-    {
-        $this->eventDispatcher->dispatch(new SourceCompilationFailedEvent('test.yml', []));
-
-        self::assertSame(JobEndState::FAILED_COMPILATION, $this->job->endState);
     }
 }
