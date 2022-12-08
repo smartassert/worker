@@ -18,11 +18,12 @@ use App\Services\ExecutionProgress;
 use App\Services\TestExecutor;
 use App\Services\TestStateMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
-class ExecuteTestHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class ExecuteTestHandler
 {
     public function __construct(
         private TestExecutor $testExecutor,

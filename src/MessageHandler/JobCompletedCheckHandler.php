@@ -7,9 +7,10 @@ namespace App\MessageHandler;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
 use App\Message\JobCompletedCheckMessage;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class JobCompletedCheckHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class JobCompletedCheckHandler
 {
     public function __construct(
         private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,

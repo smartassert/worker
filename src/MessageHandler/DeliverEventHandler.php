@@ -12,9 +12,10 @@ use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Services\WorkerEventStateMutator;
 use Psr\Http\Client\ClientExceptionInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class DeliverEventHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DeliverEventHandler
 {
     public function __construct(
         private WorkerEventRepository $repository,
