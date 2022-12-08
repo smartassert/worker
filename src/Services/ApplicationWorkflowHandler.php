@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\JobEndedState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
+use App\Event\JobTimeoutEvent;
 use App\Event\TestEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
@@ -32,6 +34,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
                 ['dispatchJobFailedEventForTestFailureEvent', -100],
+            ],
+            JobTimeoutEvent::class => [
+                ['setJobEndStateOnJobTimeoutEvent', 100],
             ],
         ];
     }
@@ -62,5 +67,15 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
         $job = $this->jobRepository->get();
         $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::FAILED));
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEvent $event): void
+    {
+        $job = $this->jobRepository->get();
+        $job->setEndState(JobEndedState::TIMED_OUT);
+        $this->jobRepository->add($job);
     }
 }
