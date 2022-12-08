@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Enum\JobEndedState;
+use App\Enum\JobEndState;
 use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,8 +36,8 @@ class Job
     #[ORM\Column(type: 'simple_array')]
     public readonly array $testPaths;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndedState::class)]
-    public ?JobEndedState $endState;
+    #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
+    public ?JobEndState $endState;
 
     /**
      * @param non-empty-string             $label
@@ -58,7 +58,7 @@ class Job
         $this->endState = null;
     }
 
-    public function setEndState(JobEndedState $state): void
+    public function setEndState(JobEndState $state): void
     {
         $this->endState = $state;
     }

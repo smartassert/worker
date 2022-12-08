@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\ExecutionExceptionScope;
-use App\Enum\JobEndedState;
+use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\JobEvent;
@@ -131,7 +131,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->eventDispatcher->dispatch($event);
 
         self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-        self::assertSame(JobEndedState::FAILED_TEST, $this->job->endState);
+        self::assertSame(JobEndState::FAILED_TEST, $this->job->endState);
     }
 
     /**
@@ -165,13 +165,13 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     {
         $this->eventDispatcher->dispatch(new JobTimeoutEvent($this->job->label, 1000));
 
-        self::assertSame(JobEndedState::TIMED_OUT, $this->job->endState);
+        self::assertSame(JobEndState::TIMED_OUT, $this->job->endState);
     }
 
     public function testSubscribesToSourceCompilationFailedEvent(): void
     {
         $this->eventDispatcher->dispatch(new SourceCompilationFailedEvent('test.yml', []));
 
-        self::assertSame(JobEndedState::FAILED_COMPILATION, $this->job->endState);
+        self::assertSame(JobEndState::FAILED_COMPILATION, $this->job->endState);
     }
 }

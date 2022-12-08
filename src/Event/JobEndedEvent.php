@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Enum\JobEndedState;
+use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 
 class JobEndedEvent extends JobEvent implements EventInterface
 {
     public function __construct(
         string $label,
-        JobEndedState $jobEndedState,
+        JobEndState $jobEndedState,
         bool $success
     ) {
         parent::__construct(

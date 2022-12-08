@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enum\JobEndedState;
+use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobEvent;
@@ -79,7 +79,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
      */
     public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEvent $event): void
     {
-        $this->setJobEndState(JobEndedState::TIMED_OUT);
+        $this->setJobEndState(JobEndState::TIMED_OUT);
     }
 
     /**
@@ -94,7 +94,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $this->setJobEndState(JobEndedState::FAILED_TEST);
+        $this->setJobEndState(JobEndState::FAILED_TEST);
     }
 
     /**
@@ -102,13 +102,13 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
      */
     public function setJobEndStateOnSourceCompilationFailedEvent(SourceCompilationFailedEvent $event): void
     {
-        $this->setJobEndState(JobEndedState::FAILED_COMPILATION);
+        $this->setJobEndState(JobEndState::FAILED_COMPILATION);
     }
 
     /**
      * @throws JobNotFoundException
      */
-    private function setJobEndState(JobEndedState $state): void
+    private function setJobEndState(JobEndState $state): void
     {
         $job = $this->jobRepository->get();
         $job->setEndState($state);
