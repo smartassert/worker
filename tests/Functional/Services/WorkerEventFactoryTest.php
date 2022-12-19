@@ -16,7 +16,6 @@ use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
 use App\Event\JobEndedEvent;
-use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -422,24 +421,6 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'maximum_duration_in_seconds' => 10,
                     ]
-                ),
-            ],
-            'job/completed' => [
-                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
-                'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::COMPLETED,
-                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
-                    []
-                ),
-            ],
-            'job/failed' => [
-                'event' => new JobEvent(self::JOB_LABEL, WorkerEventOutcome::FAILED),
-                'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::FAILED,
-                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
-                    []
                 ),
             ],
             'execution/completed' => [

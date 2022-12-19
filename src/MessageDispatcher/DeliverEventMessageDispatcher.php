@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Enum\WorkerEventOutcome;
 use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
 use App\Event\JobEndedEvent;
-use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
@@ -55,9 +53,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['dispatchForEvent', 200],
             ],
-            JobEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
             ExecutionEvent::class => [
                 ['dispatchForEvent', 0],
             ],
@@ -81,10 +76,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
      */
     public function dispatchForEvent(EventInterface $event): ?Envelope
     {
-        if ($event instanceof JobEvent && WorkerEventOutcome::COMPLETED === $event->getOutcome()) {
-            return null;
-        }
-
         $job = $this->jobRepository->get();
 
         $workerEvent = $this->workerEventFactory->create($job, $event);

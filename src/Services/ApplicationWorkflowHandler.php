@@ -40,9 +40,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
