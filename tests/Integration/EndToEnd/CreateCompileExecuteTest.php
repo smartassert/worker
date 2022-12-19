@@ -702,19 +702,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'job/compiled' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . '/status/200',
-                            [
-                                'header' => [
-                                    'job' => $jobLabel,
-                                    'sequence_number' => ++$firstEventId,
-                                    'type' => 'job/compiled',
-                                    'label' => $jobLabel,
-                                    'reference' => md5($jobLabel),
-                                ],
-                                'body' => [],
-                            ],
-                        ),
                         'execution/started' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [

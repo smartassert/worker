@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
+use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -55,7 +56,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     {
         $this->environmentFactory->create($setup);
 
-        $this->handler->dispatchNextCompileSourceMessage();
+        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
         $this->messengerAsserter->assertQueueIsEmpty();
     }
@@ -89,7 +90,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     ): void {
         $this->environmentFactory->create($setup);
 
-        $this->handler->dispatchNextCompileSourceMessage();
+        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
         $this->messengerAsserter->assertQueueCount(1);
         $this->messengerAsserter->assertMessageAtPositionEquals(0, $expectedQueuedMessage);
