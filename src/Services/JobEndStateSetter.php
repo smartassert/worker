@@ -7,18 +7,21 @@ namespace App\Services;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Event\JobEndStateChangeEvent;
 use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class JobEndStateSetter implements EventSubscriberInterface
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -119,5 +122,7 @@ class JobEndStateSetter implements EventSubscriberInterface
         $job = $this->jobRepository->get();
         $job->setEndState($state);
         $this->jobRepository->add($job);
+
+        $this->eventDispatcher->dispatch(new JobEndStateChangeEvent());
     }
 }
