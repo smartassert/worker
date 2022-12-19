@@ -9,11 +9,13 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\ExecutionExceptionScope;
+use App\Enum\JobEndState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\EventInterface;
 use App\Event\ExecutionEvent;
+use App\Event\JobEndedEvent;
 use App\Event\JobEvent;
 use App\Event\JobStartedEvent;
 use App\Event\JobTimeoutEvent;
@@ -497,6 +499,86 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'source' => $testSource,
                         'document' => $exceptionStepDocumentData,
                         'name' => 'step name',
+                    ]
+                ),
+            ],
+            'job/ended, complete' => [
+                'event' => new JobEndedEvent(
+                    self::JOB_LABEL,
+                    JobEndState::COMPLETE,
+                    true
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB,
+                    WorkerEventOutcome::ENDED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    [
+                        'end_state' => JobEndState::COMPLETE->value,
+                        'success' => true,
+                    ]
+                ),
+            ],
+            'job/ended, timed out' => [
+                'event' => new JobEndedEvent(
+                    self::JOB_LABEL,
+                    JobEndState::TIMED_OUT,
+                    false
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB,
+                    WorkerEventOutcome::ENDED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    [
+                        'end_state' => JobEndState::TIMED_OUT->value,
+                        'success' => false,
+                    ]
+                ),
+            ],
+            'job/ended, failed compilation' => [
+                'event' => new JobEndedEvent(
+                    self::JOB_LABEL,
+                    JobEndState::FAILED_COMPILATION,
+                    false
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB,
+                    WorkerEventOutcome::ENDED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    [
+                        'end_state' => JobEndState::FAILED_COMPILATION->value,
+                        'success' => false,
+                    ]
+                ),
+            ],
+            'job/ended, test failure' => [
+                'event' => new JobEndedEvent(
+                    self::JOB_LABEL,
+                    JobEndState::FAILED_TEST_FAILURE,
+                    false
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB,
+                    WorkerEventOutcome::ENDED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    [
+                        'end_state' => JobEndState::FAILED_TEST_FAILURE->value,
+                        'success' => false,
+                    ]
+                ),
+            ],
+            'job/ended, test exception' => [
+                'event' => new JobEndedEvent(
+                    self::JOB_LABEL,
+                    JobEndState::FAILED_TEST_EXCEPTION,
+                    false
+                ),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB,
+                    WorkerEventOutcome::ENDED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    [
+                        'end_state' => JobEndState::FAILED_TEST_EXCEPTION->value,
+                        'success' => false,
                     ]
                 ),
             ],
