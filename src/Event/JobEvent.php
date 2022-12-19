@@ -8,7 +8,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\ResourceReferenceSource;
 
-class JobEvent extends AbstractEvent implements EventInterface
+abstract class JobEvent extends AbstractEvent implements EventInterface
 {
     /**
      * @param non-empty-string          $label

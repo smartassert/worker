@@ -7,8 +7,8 @@ namespace App\Services;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
-use App\Event\JobEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
@@ -41,7 +41,7 @@ class JobEndStateSetter implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['setJobEndStateOnSourceCompilationFailedEvent', 100],
             ],
-            JobEvent::class => [
+            JobCompletedEvent::class => [
                 ['setJobEndStateOnJobCompletedEvent', 100],
             ],
         ];
@@ -50,11 +50,9 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnJobCompletedEvent(JobEvent $event): void
+    public function setJobEndStateOnJobCompletedEvent(JobCompletedEvent $event): void
     {
-        if (WorkerEventOutcome::COMPLETED === $event->getOutcome()) {
-            $this->setJobEndState(JobEndState::COMPLETE);
-        }
+        $this->setJobEndState(JobEndState::COMPLETE);
     }
 
     /**

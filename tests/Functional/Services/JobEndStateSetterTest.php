@@ -9,7 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\JobEvent;
+use App\Event\JobCompletedEvent;
 use App\Event\JobTimeoutEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\TestEvent;
@@ -99,8 +99,8 @@ class JobEndStateSetterTest extends AbstractBaseFunctionalTest
                 'event' => new SourceCompilationFailedEvent('test.yml', []),
                 'expectedJobEndState' => JobEndState::FAILED_COMPILATION,
             ],
-            'foo' => [
-                'event' => new JobEvent('job label', WorkerEventOutcome::COMPLETED),
+            'job/completed' => [
+                'event' => new JobCompletedEvent(),
                 'expectedJobEndState' => JobEndState::COMPLETE,
             ],
         ];
