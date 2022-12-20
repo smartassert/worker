@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Event\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEventFactory

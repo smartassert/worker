@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Event\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;

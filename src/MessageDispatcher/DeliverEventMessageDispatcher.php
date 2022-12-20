@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\EmittableEventInterface;
-use App\Event\ExecutionEmittableEvent;
-use App\Event\JobEndedEmittableEvent;
-use App\Event\JobStartedEmittableEvent;
-use App\Event\JobTimeoutEmittableEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepEmittableEvent;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
@@ -41,7 +41,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            JobStartedEmittableEvent::class => [
+            JobStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             SourceCompilationStartedEvent::class => [
@@ -53,19 +53,19 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             SourceCompilationFailedEvent::class => [
                 ['dispatchForEvent', 200],
             ],
-            ExecutionEmittableEvent::class => [
+            ExecutionEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobTimeoutEmittableEvent::class => [
+            JobTimeoutEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            TestEmittableEvent::class => [
+            TestEvent::class => [
                 ['dispatchForEvent', 100],
             ],
-            StepEmittableEvent::class => [
+            StepEvent::class => [
                 ['dispatchForEvent', 100],
             ],
-            JobEndedEmittableEvent::class => [
+            JobEndedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];

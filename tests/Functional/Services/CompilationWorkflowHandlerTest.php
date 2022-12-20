@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
-use App\Event\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationWorkflowHandler;
 use App\Tests\AbstractBaseFunctionalTest;

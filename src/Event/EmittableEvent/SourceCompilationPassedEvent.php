@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
-class SourceCompilationPassedEvent extends AbstractSourceEmittableEvent
+class SourceCompilationPassedEvent extends AbstractSourceEvent
 {
     /**
      * @param non-empty-string $source

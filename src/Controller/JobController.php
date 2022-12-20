@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Job;
 use App\Entity\Source;
-use App\Event\JobStartedEmittableEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
 use App\Exception\InvalidManifestException;
 use App\Exception\JobNotFoundException;
 use App\Exception\MissingManifestException;
@@ -100,7 +100,7 @@ class JobController
             $yamlSourceCollection->getManifest()->testPaths
         ));
 
-        $eventDispatcher->dispatch(new JobStartedEmittableEvent(
+        $eventDispatcher->dispatch(new JobStartedEvent(
             $job->label,
             $sourceRepository->findAllPaths(Source::TYPE_TEST)
         ));

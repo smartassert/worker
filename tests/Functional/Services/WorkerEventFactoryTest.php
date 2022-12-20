@@ -13,16 +13,16 @@ use App\Enum\JobEndState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\EmittableEventInterface;
-use App\Event\ExecutionEmittableEvent;
-use App\Event\JobEndedEmittableEvent;
-use App\Event\JobStartedEmittableEvent;
-use App\Event\JobTimeoutEmittableEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepEmittableEvent;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
@@ -223,8 +223,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
         ]);
 
         return [
-            JobStartedEmittableEvent::class => [
-                'event' => new JobStartedEmittableEvent(
+            JobStartedEvent::class => [
+                'event' => new JobStartedEvent(
                     self::JOB_LABEL,
                     [
                         'Test/test1.yaml',
@@ -296,7 +296,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'execution/started' => [
-                'event' => new ExecutionEmittableEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
+                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::STARTED,
@@ -305,7 +305,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/started' => [
-                'event' => new TestEmittableEvent(
+                'event' => new TestEvent(
                     $genericTest,
                     $testDocument,
                     $testSource,
@@ -328,7 +328,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'step/passed' => [
-                'event' => new StepEmittableEvent(
+                'event' => new StepEvent(
                     $genericTest->setState(TestState::RUNNING),
                     new Step('passing step', $passingStepDocumentData),
                     $testSource,
@@ -350,7 +350,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'step/failed' => [
-                'event' => new StepEmittableEvent(
+                'event' => new StepEvent(
                     $genericTest->setState(TestState::FAILED),
                     new Step('failing step', $failingStepDocumentData),
                     $testSource,
@@ -372,7 +372,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/passed' => [
-                'event' => new TestEmittableEvent(
+                'event' => new TestEvent(
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument,
                     $testSource,
@@ -395,7 +395,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/failed' => [
-                'event' => new TestEmittableEvent(
+                'event' => new TestEvent(
                     $genericTest->setState(TestState::FAILED),
                     $testDocument,
                     $testSource,
@@ -417,8 +417,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ])
                 ),
             ],
-            JobTimeoutEmittableEvent::class => [
-                'event' => new JobTimeoutEmittableEvent(self::JOB_LABEL, 10),
+            JobTimeoutEvent::class => [
+                'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::TIME_OUT,
@@ -429,7 +429,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'execution/completed' => [
-                'event' => new ExecutionEmittableEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
+                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::EXECUTION,
                     WorkerEventOutcome::COMPLETED,
@@ -438,7 +438,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/exception' => [
-                'event' => new TestEmittableEvent(
+                'event' => new TestEvent(
                     $genericTest,
                     new Exception(ExecutionExceptionScope::TEST, $exceptionTestDocumentData),
                     $testSource,
@@ -461,7 +461,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'step/exception' => [
-                'event' => new StepEmittableEvent(
+                'event' => new StepEvent(
                     $genericTest,
                     new StepException('step name', $exceptionStepDocumentData),
                     $testSource,
@@ -480,7 +480,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/ended, complete' => [
-                'event' => new JobEndedEmittableEvent(
+                'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::COMPLETE,
                     true
@@ -496,7 +496,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/ended, timed out' => [
-                'event' => new JobEndedEmittableEvent(
+                'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::TIMED_OUT,
                     false
@@ -512,7 +512,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/ended, failed compilation' => [
-                'event' => new JobEndedEmittableEvent(
+                'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_COMPILATION,
                     false
@@ -528,7 +528,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/ended, test failure' => [
-                'event' => new JobEndedEmittableEvent(
+                'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_TEST_FAILURE,
                     false
@@ -544,7 +544,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'job/ended, test exception' => [
-                'event' => new JobEndedEmittableEvent(
+                'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_TEST_EXCEPTION,
                     false

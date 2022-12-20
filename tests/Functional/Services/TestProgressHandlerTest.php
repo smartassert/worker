@@ -10,8 +10,8 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\StepEmittableEvent;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Services\TestProgressHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockEventDispatcher;
@@ -111,7 +111,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                 ): ExpectedDispatchedEventCollection {
                     return new ExpectedDispatchedEventCollection([
                         new ExpectedDispatchedEvent(
-                            function (StepEmittableEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                            function (StepEvent $actualEvent) use ($test, &$eventExpectationCount) {
                                 self::assertSame($test, $actualEvent->getTest());
 
                                 self::assertSame(WorkerEventScope::STEP, $actualEvent->getScope());
@@ -187,7 +187,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                 ): ExpectedDispatchedEventCollection {
                     return new ExpectedDispatchedEventCollection([
                         new ExpectedDispatchedEvent(
-                            function (StepEmittableEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                            function (StepEvent $actualEvent) use ($test, &$eventExpectationCount) {
                                 self::assertSame($test, $actualEvent->getTest());
 
                                 self::assertSame(WorkerEventScope::STEP, $actualEvent->getScope());
@@ -269,7 +269,7 @@ class TestProgressHandlerTest extends AbstractBaseFunctionalTest
                 ): ExpectedDispatchedEventCollection {
                     return new ExpectedDispatchedEventCollection([
                         new ExpectedDispatchedEvent(
-                            function (TestEmittableEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                            function (TestEvent $actualEvent) use ($test, &$eventExpectationCount) {
                                 self::assertSame($test, $actualEvent->getTest());
 
                                 self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());

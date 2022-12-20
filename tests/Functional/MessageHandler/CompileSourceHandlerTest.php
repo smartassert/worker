@@ -7,10 +7,10 @@ namespace App\Tests\Functional\MessageHandler;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\WorkerEvent;
-use App\Event\AbstractSourceEmittableEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\AbstractSourceEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -136,7 +136,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
                         ++$eventExpectationCount;
 
@@ -153,7 +153,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     ) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
                         self::assertSame($testManifestCollection, $actualEvent->getTestManifestCollection());
                         ++$eventExpectationCount;
@@ -221,7 +221,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
                         );
                         ++$eventExpectationCount;
 

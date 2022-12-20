@@ -7,9 +7,9 @@ namespace App\Services;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\JobEndedEmittableEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobEndStateChangeEvent;
-use App\Event\TestEmittableEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
@@ -31,7 +31,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestEmittableEvent::class => [
+            TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
             ],
             JobEndStateChangeEvent::class => [
@@ -40,7 +40,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchJobCompletedEventForTestPassedEvent(TestEmittableEvent $event): void
+    public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
@@ -60,7 +60,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $jobEndedEvent = new JobEndedEmittableEvent(
+        $jobEndedEvent = new JobEndedEvent(
             $job->label,
             $job->endState,
             JobEndState::COMPLETE === $job->endState,

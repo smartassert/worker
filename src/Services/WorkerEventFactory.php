@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\EmittableEventInterface;
+use App\Event\EmittableEvent\EmittableEventInterface;
 
 class WorkerEventFactory
 {

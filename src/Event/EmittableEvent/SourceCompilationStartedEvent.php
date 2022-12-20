@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 
-class SourceCompilationStartedEvent extends AbstractSourceEmittableEvent
+class SourceCompilationStartedEvent extends AbstractSourceEvent
 {
     public function __construct(string $source)
     {

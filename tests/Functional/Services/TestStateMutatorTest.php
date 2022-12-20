@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\StepEmittableEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Step;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -96,7 +96,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $documentData,
             $expectedState,
-            function (StepEmittableEvent $event) {
+            function (StepEvent $event) {
                 $this->mutator->setFailedFromStepFailedEvent($event);
             }
         );
@@ -112,7 +112,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
             $documentData,
             $expectedState,
-            function (StepEmittableEvent $event) {
+            function (StepEvent $event) {
                 $this->eventDispatcher->dispatch($event);
             }
         );
@@ -144,7 +144,7 @@ class TestStateMutatorTest extends AbstractBaseFunctionalTest
     ): void {
         self::assertSame(TestState::AWAITING, $this->test->getState());
 
-        $event = new StepEmittableEvent(
+        $event = new StepEvent(
             $this->test,
             new Step('step name', $documentData),
             'test.yml',

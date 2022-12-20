@@ -10,7 +10,7 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
@@ -92,7 +92,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (TestEmittableEvent $actualEvent) use (&$eventExpectationCount) {
+                    function (TestEvent $actualEvent) use (&$eventExpectationCount) {
                         self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());
                         self::assertSame(WorkerEventOutcome::STARTED, $actualEvent->getOutcome());
                         ++$eventExpectationCount;
@@ -101,7 +101,7 @@ class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
                     },
                 ),
                 new ExpectedDispatchedEvent(
-                    function (TestEmittableEvent $actualEvent) use ($test, &$eventExpectationCount) {
+                    function (TestEvent $actualEvent) use ($test, &$eventExpectationCount) {
                         self::assertSame(WorkerEventScope::TEST, $actualEvent->getScope());
                         self::assertSame(WorkerEventOutcome::PASSED, $actualEvent->getOutcome());
                         self::assertSame($test, $actualEvent->getTest());

@@ -8,7 +8,7 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\StepEmittableEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,13 +25,13 @@ class TestStateMutator implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            StepEmittableEvent::class => [
+            StepEvent::class => [
                 ['setFailedFromStepFailedEvent', 50],
             ],
         ];
     }
 
-    public function setFailedFromStepFailedEvent(StepEmittableEvent $event): void
+    public function setFailedFromStepFailedEvent(StepEvent $event): void
     {
         if (!(WorkerEventScope::STEP === $event->getScope() && WorkerEventOutcome::FAILED === $event->getOutcome())) {
             return;

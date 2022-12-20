@@ -9,7 +9,7 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ExecutionWorkflowHandler;
@@ -132,7 +132,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $this->messengerAsserter->assertQueueIsEmpty();
 
         $test = $tests[$eventTestIndex];
-        $event = new TestEmittableEvent(
+        $event = new TestEvent(
             $test,
             new TestDocument('test.yml', []),
             'test.yml',

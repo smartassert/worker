@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\JobStartedEmittableEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
 use App\Messenger\MessageFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,7 +24,7 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            JobStartedEmittableEvent::class => [
+            JobStartedEvent::class => [
                 ['dispatch', -100],
             ],
         ];

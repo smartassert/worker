@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 
-class ExecutionEmittableEvent extends AbstractEmittableEvent implements EmittableEventInterface
+class ExecutionEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string $label

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\Document\Document;
 
-class StepEmittableEvent extends AbstractEmittableEvent implements EmittableEventInterface
+class StepEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string $path

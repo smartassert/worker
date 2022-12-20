@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Entity\Test as TestEntity;
 use App\Enum\WorkerEventOutcome;
@@ -10,7 +10,7 @@ use App\Enum\WorkerEventScope;
 use App\Model\Document\Document;
 use App\Model\ResourceReferenceSource;
 
-class TestEmittableEvent extends AbstractEmittableEvent implements EmittableEventInterface
+class TestEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string $path

@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\TestEmittableEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
@@ -75,7 +75,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         );
 
         $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
-        $this->eventDispatcher->dispatch(new TestEmittableEvent(
+        $this->eventDispatcher->dispatch(new TestEvent(
             $testEntity,
             new TestDocument('test.yml', []),
             'test.yml',

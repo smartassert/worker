@@ -8,9 +8,9 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\EmittableEventInterface;
-use App\Event\JobTimeoutEmittableEvent;
-use App\Event\StepEmittableEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -28,10 +28,10 @@ class TestCanceller implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            StepEmittableEvent::class => [
+            StepEvent::class => [
                 ['cancelAwaitingFromTestFailureEvent', 0],
             ],
-            JobTimeoutEmittableEvent::class => [
+            JobTimeoutEvent::class => [
                 ['cancelUnfinished', 0],
             ],
         ];
