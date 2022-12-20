@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\StepEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Step;
 use App\Services\TestStateMutator;
 use App\Tests\AbstractBaseFunctionalTest;

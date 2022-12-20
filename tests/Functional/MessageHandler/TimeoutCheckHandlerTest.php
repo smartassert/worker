@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
-use App\Event\EventInterface;
-use App\Event\JobTimeoutEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
@@ -79,6 +79,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
         $jobRepository->add($job);
+        self::assertNull($job->endState);
 
         $eventDispatcher = (new MockEventDispatcher())
             ->withoutDispatchCall()
@@ -115,13 +116,14 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
         $jobRepository->add($job);
+        self::assertNull($job->endState);
 
         $eventExpectationCount = 0;
 
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (EventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
+                    function (EmittableEventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
                         self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
 
                         if ($actualEvent instanceof JobTimeoutEvent) {
@@ -173,6 +175,9 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         $testPathsProperty = $reflectionClass->getProperty('testPaths');
         $testPathsProperty->setValue($reflectionJob, $job->testPaths);
+
+        $endStateProperty = $reflectionClass->getProperty('endState');
+        $endStateProperty->setValue($reflectionJob, null);
 
         return $reflectionJob;
     }

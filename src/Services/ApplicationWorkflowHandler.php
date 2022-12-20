@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\JobEvent;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\TestEvent;
+use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
@@ -31,14 +33,13 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         return [
             TestEvent::class => [
                 ['dispatchJobCompletedEventForTestPassedEvent', -100],
-                ['dispatchJobFailedEventForTestFailureEvent', -100],
+            ],
+            JobEndStateChangeEvent::class => [
+                ['dispatchJobEndedEventForJobEndStateChangeEvent', -100],
             ],
         ];
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
@@ -51,16 +52,20 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function dispatchJobFailedEventForTestFailureEvent(TestEvent $event): void
+    public function dispatchJobEndedEventForJobEndStateChangeEvent(JobEndStateChangeEvent $event): void
     {
-        if (
-            WorkerEventScope::TEST !== $event->getScope()
-            || !in_array($event->getOutcome(), [WorkerEventOutcome::FAILED, WorkerEventOutcome::EXCEPTION])
-        ) {
+        $job = $this->jobRepository->get();
+
+        if (null === $job->endState) {
             return;
         }
 
-        $job = $this->jobRepository->get();
-        $this->eventDispatcher->dispatch(new JobEvent($job->label, WorkerEventOutcome::FAILED));
+        $jobEndedEvent = new JobEndedEvent(
+            $job->label,
+            $job->endState,
+            JobEndState::COMPLETE === $job->endState,
+        );
+
+        $this->eventDispatcher->dispatch($jobEndedEvent);
     }
 }

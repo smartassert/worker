@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
 
-class JobStartedEvent extends JobEvent implements EventInterface
+class JobStartedEvent extends AbstractJobEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string[] $testPaths

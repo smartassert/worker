@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\EventInterface;
-use App\Event\ExecutionEvent;
-use App\Event\JobEvent;
-use App\Event\JobStartedEvent;
-use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepEvent;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
@@ -51,10 +51,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 500],
             ],
             SourceCompilationFailedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            JobEvent::class => [
-                ['dispatchForEvent', 0],
+                ['dispatchForEvent', 200],
             ],
             ExecutionEvent::class => [
                 ['dispatchForEvent', 0],
@@ -63,9 +60,12 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 0],
             ],
             TestEvent::class => [
-                ['dispatchForEvent', 0],
+                ['dispatchForEvent', 100],
             ],
             StepEvent::class => [
+                ['dispatchForEvent', 100],
+            ],
+            JobEndedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];
@@ -74,7 +74,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function dispatchForEvent(EventInterface $event): ?Envelope
+    public function dispatchForEvent(EmittableEventInterface $event): ?Envelope
     {
         $job = $this->jobRepository->get();
 

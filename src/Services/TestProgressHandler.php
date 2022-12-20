@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
-use App\Event\StepEvent;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\JobEndState;
 use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +36,9 @@ class Job
     #[ORM\Column(type: 'simple_array')]
     public readonly array $testPaths;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
+    public ?JobEndState $endState;
+
     /**
      * @param non-empty-string             $label
      * @param non-empty-string             $eventDeliveryUrl
@@ -51,5 +55,11 @@ class Job
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
+        $this->endState = null;
+    }
+
+    public function setEndState(JobEndState $state): void
+    {
+        $this->endState = $state;
     }
 }

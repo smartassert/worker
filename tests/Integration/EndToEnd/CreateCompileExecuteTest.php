@@ -277,6 +277,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
+                        'job/ended' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/ended',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [
+                                    'end_state' => 'failed/compilation',
+                                    'success' => false,
+                                ],
+                            ],
+                        ),
                     ]);
 
                     $transactions = $httpLogReader->getTransactions();
@@ -440,6 +456,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                             ],
                                         ],
                                     ],
+                                ],
+                            ],
+                        ),
+                        'job/ended' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/ended',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel),
+                                ],
+                                'body' => [
+                                    'end_state' => 'failed/compilation',
+                                    'success' => false,
                                 ],
                             ],
                         ),
@@ -668,19 +700,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'source' => 'Test/chrome-open-form.yml',
                                 ],
-                            ],
-                        ),
-                        'job/compiled' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . '/status/200',
-                            [
-                                'header' => [
-                                    'job' => $jobLabel,
-                                    'sequence_number' => ++$firstEventId,
-                                    'type' => 'job/compiled',
-                                    'label' => $jobLabel,
-                                    'reference' => md5($jobLabel),
-                                ],
-                                'body' => [],
                             ],
                         ),
                         'execution/started' => $requestFactory->create(
@@ -1147,17 +1166,20 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [],
                             ],
                         ),
-                        'job/completed' => $requestFactory->create(
+                        'job/ended' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'job/completed',
+                                    'type' => 'job/ended',
                                     'label' => $jobLabel,
                                     'reference' => md5($jobLabel),
                                 ],
-                                'body' => [],
+                                'body' => [
+                                    'end_state' => 'complete',
+                                    'success' => true,
+                                ],
                             ],
                         ),
                     ]);
@@ -1313,17 +1335,20 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'job/failed' => $requestFactory->create(
+                        'job/ended' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'job/failed',
+                                    'type' => 'job/ended',
                                     'label' => $jobLabel,
                                     'reference' => md5($jobLabel),
                                 ],
-                                'body' => [],
+                                'body' => [
+                                    'end_state' => 'failed/test/failure',
+                                    'success' => false,
+                                ],
                             ],
                         ),
                     ]);

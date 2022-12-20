@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Event\JobTimeoutEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;

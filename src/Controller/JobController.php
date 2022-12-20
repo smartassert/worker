@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Job;
 use App\Entity\Source;
-use App\Event\JobStartedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
 use App\Exception\InvalidManifestException;
 use App\Exception\JobNotFoundException;
 use App\Exception\MissingManifestException;
