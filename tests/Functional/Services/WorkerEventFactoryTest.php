@@ -13,16 +13,16 @@ use App\Enum\JobEndState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\EventInterface;
-use App\Event\ExecutionEvent;
-use App\Event\JobEndedEvent;
-use App\Event\JobStartedEvent;
-use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepEvent;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
@@ -83,7 +83,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreate(EventInterface $event, WorkerEvent $expected): void
+    public function testCreate(EmittableEventInterface $event, WorkerEvent $expected): void
     {
         $actual = $this->workerEventFactory->create($this->job, $event);
 
@@ -305,7 +305,12 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 ),
             ],
             'test/started' => [
-                'event' => new TestEvent($genericTest, $testDocument, $testSource, WorkerEventOutcome::STARTED),
+                'event' => new TestEvent(
+                    $genericTest,
+                    $testDocument,
+                    $testSource,
+                    WorkerEventOutcome::STARTED
+                ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,

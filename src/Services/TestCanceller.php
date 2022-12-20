@@ -8,9 +8,9 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\EventInterface;
-use App\Event\JobTimeoutEvent;
-use App\Event\StepEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -37,7 +37,7 @@ class TestCanceller implements EventSubscriberInterface
         ];
     }
 
-    public function cancelAwaitingFromTestFailureEvent(EventInterface $event): void
+    public function cancelAwaitingFromTestFailureEvent(EmittableEventInterface $event): void
     {
         if (
             WorkerEventScope::STEP !== $event->getScope()

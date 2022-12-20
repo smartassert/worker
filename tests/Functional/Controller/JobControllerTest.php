@@ -9,7 +9,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Event\JobStartedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;

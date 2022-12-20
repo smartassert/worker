@@ -8,7 +8,7 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\StepEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

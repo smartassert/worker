@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\EventInterface;
-use App\Event\ExecutionEvent;
-use App\Event\JobEndedEvent;
-use App\Event\JobStartedEvent;
-use App\Event\JobTimeoutEvent;
-use App\Event\SourceCompilationFailedEvent;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
-use App\Event\StepEvent;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobEndedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\JobTimeoutEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
@@ -74,7 +74,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function dispatchForEvent(EventInterface $event): ?Envelope
+    public function dispatchForEvent(EmittableEventInterface $event): ?Envelope
     {
         $job = $this->jobRepository->get();
 

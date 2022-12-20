@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\CompilationState;
+use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\JobStartedEvent;
-use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\ResourceReferenceSource;
 
-interface EventInterface
+interface EmittableEventInterface
 {
     /**
      * @return array<mixed>

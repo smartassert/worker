@@ -10,7 +10,7 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;

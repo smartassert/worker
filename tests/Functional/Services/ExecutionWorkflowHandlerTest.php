@@ -9,7 +9,7 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ExecutionWorkflowHandler;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Enum\CompilationState;
-use App\Event\SourceCompilationPassedEvent;
-use App\Event\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationProgress;
 use App\Services\Compiler;

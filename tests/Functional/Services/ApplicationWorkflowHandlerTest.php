@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ApplicationState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\TestEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;

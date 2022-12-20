@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\EmittableEvent;
 
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 
-class JobEndedEvent extends JobEvent implements EventInterface
+class JobEndedEvent extends AbstractJobEvent implements EmittableEventInterface
 {
     public function __construct(
         string $label,
