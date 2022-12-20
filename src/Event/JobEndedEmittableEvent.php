@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 
-class JobEndedEvent extends JobEvent implements EventInterface
+class JobEndedEmittableEvent extends JobEmittableEvent implements EmittableEventInterface
 {
     public function __construct(
         string $label,

@@ -8,9 +8,9 @@ use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\ExecutionEvent;
+use App\Event\ExecutionEmittableEvent;
 use App\Event\JobCompiledEvent;
-use App\Event\TestEvent;
+use App\Event\TestEmittableEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
@@ -38,7 +38,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestEvent::class => [
+            TestEmittableEvent::class => [
                 ['dispatchNextExecuteTestMessageForTestPassedEvent', -100],
                 ['dispatchExecutionCompletedEventForTestPassedEvent', -90],
             ],
@@ -49,7 +49,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
+    public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEmittableEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
@@ -81,7 +81,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobCompiledEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new ExecutionEvent(
+        $this->eventDispatcher->dispatch(new ExecutionEmittableEvent(
             $this->jobRepository->get()->label,
             WorkerEventOutcome::STARTED
         ));
@@ -90,7 +90,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
+    public function dispatchExecutionCompletedEventForTestPassedEvent(TestEmittableEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
             return;
@@ -104,7 +104,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new ExecutionEvent($job->label, WorkerEventOutcome::COMPLETED));
+            $this->eventDispatcher->dispatch(new ExecutionEmittableEvent($job->label, WorkerEventOutcome::COMPLETED));
         }
     }
 }

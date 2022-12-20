@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Event\JobTimeoutEvent;
+use App\Event\JobTimeoutEmittableEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
@@ -31,7 +31,7 @@ class TimeoutCheckHandler
 
         $duration = time() - $job->startDateTime->getTimestamp();
         if ($duration >= $job->maximumDurationInSeconds) {
-            $this->eventDispatcher->dispatch(new JobTimeoutEvent(
+            $this->eventDispatcher->dispatch(new JobTimeoutEmittableEvent(
                 $job->label,
                 $job->maximumDurationInSeconds
             ));

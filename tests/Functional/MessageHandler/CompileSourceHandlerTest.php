@@ -7,7 +7,7 @@ namespace App\Tests\Functional\MessageHandler;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\WorkerEvent;
-use App\Event\AbstractSourceEvent;
+use App\Event\AbstractSourceEmittableEvent;
 use App\Event\SourceCompilationFailedEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Event\SourceCompilationStartedEvent;
@@ -136,7 +136,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
                         );
                         ++$eventExpectationCount;
 
@@ -153,7 +153,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     ) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
                         );
                         self::assertSame($testManifestCollection, $actualEvent->getTestManifestCollection());
                         ++$eventExpectationCount;
@@ -221,7 +221,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                     function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
                         self::assertSame(
                             $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
+                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEmittableEvent::class)
                         );
                         ++$eventExpectationCount;
 

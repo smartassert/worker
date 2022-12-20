@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
-use App\Event\EventInterface;
-use App\Event\JobTimeoutEvent;
+use App\Event\EmittableEventInterface;
+use App\Event\JobTimeoutEmittableEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
@@ -123,10 +123,10 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $eventDispatcher = (new MockEventDispatcher())
             ->withDispatchCalls(new ExpectedDispatchedEventCollection([
                 new ExpectedDispatchedEvent(
-                    function (EventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
-                        self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
+                    function (EmittableEventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
+                        self::assertInstanceOf(JobTimeoutEmittableEvent::class, $actualEvent);
 
-                        if ($actualEvent instanceof JobTimeoutEvent) {
+                        if ($actualEvent instanceof JobTimeoutEmittableEvent) {
                             $payload = $actualEvent->getPayload();
                             self::assertIsArray($payload);
                             self::assertArrayHasKey('maximum_duration_in_seconds', $payload);

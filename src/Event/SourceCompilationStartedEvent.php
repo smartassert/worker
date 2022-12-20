@@ -6,7 +6,7 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 
-class SourceCompilationStartedEvent extends AbstractSourceEvent
+class SourceCompilationStartedEvent extends AbstractSourceEmittableEvent
 {
     public function __construct(string $source)
     {

@@ -10,9 +10,9 @@ use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Event\JobCompletedEvent;
-use App\Event\JobTimeoutEvent;
+use App\Event\JobTimeoutEmittableEvent;
 use App\Event\SourceCompilationFailedEvent;
-use App\Event\TestEvent;
+use App\Event\TestEmittableEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
@@ -74,7 +74,7 @@ class JobEndStateSetterTest extends AbstractBaseFunctionalTest
 
         return [
             'test/failed' => [
-                'event' => new TestEvent(
+                'event' => new TestEmittableEvent(
                     $testEntity,
                     new TestDocument('test.yml', []),
                     'test.yml',
@@ -83,7 +83,7 @@ class JobEndStateSetterTest extends AbstractBaseFunctionalTest
                 'expectedJobEndState' => JobEndState::FAILED_TEST_FAILURE,
             ],
             'test/exception' => [
-                'event' => new TestEvent(
+                'event' => new TestEmittableEvent(
                     $testEntity,
                     new Exception(ExecutionExceptionScope::TEST, []),
                     'test.yml',
@@ -92,7 +92,7 @@ class JobEndStateSetterTest extends AbstractBaseFunctionalTest
                 'expectedJobEndState' => JobEndState::FAILED_TEST_EXCEPTION,
             ],
             'job/timeout' => [
-                'event' => new JobTimeoutEvent('job label', 1000),
+                'event' => new JobTimeoutEmittableEvent('job label', 1000),
                 'expectedJobEndState' => JobEndState::TIMED_OUT,
             ],
             'compilation/failed' => [

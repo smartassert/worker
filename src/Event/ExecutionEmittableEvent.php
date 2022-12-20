@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 
-class ExecutionEvent extends AbstractEvent implements EventInterface
+class ExecutionEmittableEvent extends AbstractEmittableEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string $label

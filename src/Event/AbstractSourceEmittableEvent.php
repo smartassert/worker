@@ -8,7 +8,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\ResourceReferenceSource;
 
-abstract class AbstractSourceEvent extends AbstractEvent implements EventInterface
+abstract class AbstractSourceEmittableEvent extends AbstractEmittableEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string          $source

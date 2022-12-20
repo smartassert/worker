@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Enum\CompilationState;
 use App\Event\JobCompiledEvent;
-use App\Event\JobStartedEvent;
+use App\Event\JobStartedEmittableEvent;
 use App\Event\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -33,13 +33,13 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchNextCompileSourceMessage', 50],
                 ['dispatchCompilationCompletedEvent', 60],
             ],
-            JobStartedEvent::class => [
+            JobStartedEmittableEvent::class => [
                 ['dispatchNextCompileSourceMessage', -50],
             ],
         ];
     }
 
-    public function dispatchNextCompileSourceMessage(JobStartedEvent|SourceCompilationPassedEvent $event): void
+    public function dispatchNextCompileSourceMessage(JobStartedEmittableEvent|SourceCompilationPassedEvent $event): void
     {
         if (false === $this->compilationProgress->is(CompilationState::getFinishedStates())) {
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();

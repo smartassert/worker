@@ -9,9 +9,9 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
-use App\Event\JobTimeoutEvent;
+use App\Event\JobTimeoutEmittableEvent;
 use App\Event\SourceCompilationFailedEvent;
-use App\Event\TestEvent;
+use App\Event\TestEmittableEvent;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -31,11 +31,11 @@ class JobEndStateSetter implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TestEvent::class => [
+            TestEmittableEvent::class => [
                 ['setJobEndStateOnTestFailedEvent', 100],
                 ['setJobEndStateOnTestExceptionEvent', 100],
             ],
-            JobTimeoutEvent::class => [
+            JobTimeoutEmittableEvent::class => [
                 ['setJobEndStateOnJobTimeoutEvent', 100],
             ],
             SourceCompilationFailedEvent::class => [
@@ -58,7 +58,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEvent $event): void
+    public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEmittableEvent $event): void
     {
         $this->setJobEndState(JobEndState::TIMED_OUT);
     }
@@ -66,7 +66,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnTestFailedEvent(TestEvent $event): void
+    public function setJobEndStateOnTestFailedEvent(TestEmittableEvent $event): void
     {
         $this->setJobEndStateOnTestEventWithOutcome(
             $event,
@@ -86,7 +86,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnTestExceptionEvent(TestEvent $event): void
+    public function setJobEndStateOnTestExceptionEvent(TestEmittableEvent $event): void
     {
         $this->setJobEndStateOnTestEventWithOutcome(
             $event,
@@ -99,7 +99,7 @@ class JobEndStateSetter implements EventSubscriberInterface
      * @throws JobNotFoundException
      */
     private function setJobEndStateOnTestEventWithOutcome(
-        TestEvent $event,
+        TestEmittableEvent $event,
         WorkerEventOutcome $outcome,
         JobEndState $state
     ): void {

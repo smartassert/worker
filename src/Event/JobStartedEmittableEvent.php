@@ -7,7 +7,7 @@ namespace App\Event;
 use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
 
-class JobStartedEvent extends JobEvent implements EventInterface
+class JobStartedEmittableEvent extends JobEmittableEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string[] $testPaths

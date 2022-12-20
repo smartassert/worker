@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
-use App\Event\StepEvent;
-use App\Event\TestEvent;
+use App\Event\StepEmittableEvent;
+use App\Event\TestEmittableEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
@@ -39,7 +39,7 @@ class TestProgressHandler
         if ('step' === $document->getType()) {
             $step = $this->stepFactory->create($documentData);
             $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
-            $event = new StepEvent(
+            $event = new StepEmittableEvent(
                 $test,
                 $step,
                 $test->source,
@@ -54,7 +54,7 @@ class TestProgressHandler
             $exception = $this->exceptionFactory->create($documentData);
 
             if ($exception instanceof StepException) {
-                $event = new StepEvent(
+                $event = new StepEmittableEvent(
                     $test,
                     $exception,
                     $test->source,
@@ -62,7 +62,7 @@ class TestProgressHandler
                     WorkerEventOutcome::EXCEPTION
                 );
             } else {
-                $event = new TestEvent($test, $exception, $test->source, WorkerEventOutcome::EXCEPTION);
+                $event = new TestEmittableEvent($test, $exception, $test->source, WorkerEventOutcome::EXCEPTION);
             }
 
             $this->eventDispatcher->dispatch($event);

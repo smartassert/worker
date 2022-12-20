@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\EventInterface;
+use App\Event\EmittableEventInterface;
 
 class WorkerEventFactory
 {
@@ -16,7 +16,7 @@ class WorkerEventFactory
     ) {
     }
 
-    public function create(Job $job, EventInterface $event): WorkerEvent
+    public function create(Job $job, EmittableEventInterface $event): WorkerEvent
     {
         $payload = $event->getPayload();
         $relatedReferenceSources = $event->getRelatedReferenceSources();

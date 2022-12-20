@@ -6,7 +6,7 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 
-class JobTimeoutEvent extends JobEvent implements EventInterface
+class JobTimeoutEmittableEvent extends JobEmittableEvent implements EmittableEventInterface
 {
     public function __construct(
         string $label,

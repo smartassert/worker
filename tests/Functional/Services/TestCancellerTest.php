@@ -7,8 +7,8 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\JobTimeoutEvent;
-use App\Event\StepEvent;
+use App\Event\JobTimeoutEmittableEvent;
+use App\Event\StepEmittableEvent;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
@@ -205,7 +205,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
             $eventDocument,
             $eventOutcome,
             $states,
-            function (StepEvent $event) {
+            function (StepEmittableEvent $event) {
                 $this->testCanceller->cancelAwaitingFromTestFailureEvent($event);
             },
             $expectedStates
@@ -228,7 +228,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
             $eventDocument,
             $eventOutcome,
             $states,
-            function (StepEvent $event) {
+            function (StepEmittableEvent $event) {
                 $this->eventDispatcher->dispatch($event);
             },
             $expectedStates
@@ -310,7 +310,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $test = $tests[0];
         self::assertInstanceOf(Test::class, $test);
 
-        $event = new JobTimeoutEvent('job label', 10);
+        $event = new JobTimeoutEmittableEvent('job label', 10);
         $this->eventDispatcher->dispatch($event);
 
         $this->assertTestStates($expectedStates);
@@ -378,7 +378,7 @@ class TestCancellerTest extends AbstractBaseFunctionalTest
         $test = $tests[0];
         self::assertInstanceOf(Test::class, $test);
 
-        $execute(new StepEvent(
+        $execute(new StepEmittableEvent(
             $test,
             $eventDocument,
             'test.yml',

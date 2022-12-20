@@ -9,7 +9,7 @@ use App\Enum\WorkerEventScope;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class AbstractEvent extends Event implements EventInterface
+class AbstractEmittableEvent extends Event implements EmittableEventInterface
 {
     /**
      * @param non-empty-string          $label

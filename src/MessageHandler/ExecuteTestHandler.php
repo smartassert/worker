@@ -8,7 +8,7 @@ use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Event\TestEvent;
+use App\Event\TestEmittableEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Message\ExecuteTestMessage;
@@ -58,7 +58,9 @@ class ExecuteTestHandler
         $testDocument = $this->createTestDocumentFromTestEntity($test);
         $path = $test->source;
 
-        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED));
+        $this->eventDispatcher->dispatch(
+            new TestEmittableEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED)
+        );
 
         $this->testStateMutator->setRunning($test);
         $this->testExecutor->execute($test);
@@ -68,7 +70,7 @@ class ExecuteTestHandler
             ? WorkerEventOutcome::PASSED
             : WorkerEventOutcome::FAILED;
 
-        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome));
+        $this->eventDispatcher->dispatch(new TestEmittableEvent($test, $testDocument, $path, $eventOutcome));
     }
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument

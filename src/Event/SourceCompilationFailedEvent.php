@@ -6,7 +6,7 @@ namespace App\Event;
 
 use App\Enum\WorkerEventOutcome;
 
-class SourceCompilationFailedEvent extends AbstractSourceEvent
+class SourceCompilationFailedEvent extends AbstractSourceEmittableEvent
 {
     /**
      * @param array<mixed> $payloadOutput

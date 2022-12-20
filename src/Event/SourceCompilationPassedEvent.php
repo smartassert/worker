@@ -8,7 +8,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Model\ResourceReferenceSource;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
-class SourceCompilationPassedEvent extends AbstractSourceEvent
+class SourceCompilationPassedEvent extends AbstractSourceEmittableEvent
 {
     /**
      * @param non-empty-string $source
