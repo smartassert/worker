@@ -57,7 +57,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 0],
             ],
             JobTimeoutEvent::class => [
-                ['dispatchForEvent', 0],
+                ['dispatchForEvent', 200],
             ],
             TestEvent::class => [
                 ['dispatchForEvent', 100],
