@@ -290,6 +290,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/compilation',
                                     'success' => false,
+                                    'event_count' => 4,
                                 ],
                             ],
                         ),
@@ -472,6 +473,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/compilation',
                                     'success' => false,
+                                    'event_count' => 6,
                                 ],
                             ],
                         ),
@@ -1179,6 +1181,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'complete',
                                     'success' => true,
+                                    'event_count' => 22,
                                 ],
                             ],
                         ),
@@ -1348,6 +1351,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/test/failure',
                                     'success' => false,
+                                    'event_count' => 9,
                                 ],
                             ],
                         ),

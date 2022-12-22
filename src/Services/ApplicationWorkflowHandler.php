@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
-use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,8 +17,8 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
-        private readonly JobRepository $jobRepository,
         private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
+        private readonly JobEndedEventFactory $jobEndedEventFactory,
     ) {
     }
 
@@ -54,17 +51,10 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchJobEndedEventForJobEndStateChangeEvent(JobEndStateChangeEvent $event): void
     {
-        $job = $this->jobRepository->get();
-
-        if (null === $job->endState) {
+        $jobEndedEvent = $this->jobEndedEventFactory->create();
+        if (null === $jobEndedEvent) {
             return;
         }
-
-        $jobEndedEvent = new JobEndedEvent(
-            $job->label,
-            $job->endState,
-            JobEndState::COMPLETE === $job->endState,
-        );
 
         $this->eventDispatcher->dispatch($jobEndedEvent);
     }

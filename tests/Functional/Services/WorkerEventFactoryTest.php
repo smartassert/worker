@@ -483,7 +483,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::COMPLETE,
-                    true
+                    true,
+                    1
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
@@ -492,6 +493,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'end_state' => JobEndState::COMPLETE->value,
                         'success' => true,
+                        'event_count' => 1,
                     ]
                 ),
             ],
@@ -499,7 +501,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::TIMED_OUT,
-                    false
+                    false,
+                    2
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
@@ -508,6 +511,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'end_state' => JobEndState::TIMED_OUT->value,
                         'success' => false,
+                        'event_count' => 2,
                     ]
                 ),
             ],
@@ -515,7 +519,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_COMPILATION,
-                    false
+                    false,
+                    3
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
@@ -524,6 +529,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'end_state' => JobEndState::FAILED_COMPILATION->value,
                         'success' => false,
+                        'event_count' => 3,
                     ]
                 ),
             ],
@@ -531,7 +537,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_TEST_FAILURE,
-                    false
+                    false,
+                    4,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
@@ -540,6 +547,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'end_state' => JobEndState::FAILED_TEST_FAILURE->value,
                         'success' => false,
+                        'event_count' => 4,
                     ]
                 ),
             ],
@@ -547,7 +555,8 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                 'event' => new JobEndedEvent(
                     self::JOB_LABEL,
                     JobEndState::FAILED_TEST_EXCEPTION,
-                    false
+                    false,
+                    5
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
@@ -556,6 +565,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     [
                         'end_state' => JobEndState::FAILED_TEST_EXCEPTION->value,
                         'success' => false,
+                        'event_count' => 5,
                     ]
                 ),
             ],

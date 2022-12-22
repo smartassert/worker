@@ -12,7 +12,8 @@ class JobEndedEvent extends AbstractJobEvent implements EmittableEventInterface
     public function __construct(
         string $label,
         JobEndState $jobEndedState,
-        bool $success
+        bool $success,
+        int $eventCount,
     ) {
         parent::__construct(
             $label,
@@ -20,6 +21,7 @@ class JobEndedEvent extends AbstractJobEvent implements EmittableEventInterface
             [
                 'end_state' => $jobEndedState->value,
                 'success' => $success,
+                'event_count' => $eventCount,
             ],
             [],
             []
