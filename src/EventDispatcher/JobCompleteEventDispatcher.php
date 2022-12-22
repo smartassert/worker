@@ -26,7 +26,11 @@ class JobCompleteEventDispatcher
     {
         if ($this->applicationProgress->is([ApplicationState::COMPLETE])) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
-        } else {
+
+            return;
+        }
+
+        if (!$this->applicationProgress->is([ApplicationState::TIMED_OUT])) {
             $this->messageBus->dispatch(
                 $this->messageFactory->createDelayedEnvelope(new JobCompletedCheckMessage())
             );
