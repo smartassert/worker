@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Job;
 use App\Entity\Test as TestEntity;
+use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\JobCompletedCheckMessage;
@@ -38,6 +39,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         assert($entityRemover instanceof EntityRemover);
         $entityRemover->removeForEntity(Job::class);
+        $entityRemover->removeForEntity(WorkerEvent::class);
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
