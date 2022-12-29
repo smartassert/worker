@@ -42,7 +42,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
             (new EnvironmentSetup())
                 ->withWorkerEventSetups([
                     (new WorkerEventSetup())
-                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::FAILED),
                     (new WorkerEventSetup())
                         ->withScope(WorkerEventScope::TEST)
@@ -53,7 +53,10 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
                 ])
         );
 
-        self::assertTrue($this->repository->hasForType(WorkerEventScope::COMPILATION, WorkerEventOutcome::FAILED));
+        self::assertTrue($this->repository->hasForType(
+            WorkerEventScope::SOURCE_COMPILATION,
+            WorkerEventOutcome::FAILED
+        ));
         self::assertFalse($this->repository->hasForType(WorkerEventScope::STEP, WorkerEventOutcome::PASSED));
     }
 
@@ -72,13 +75,13 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
                         ->withScope(WorkerEventScope::STEP)
                         ->withOutcome(WorkerEventOutcome::PASSED),
                     (new WorkerEventSetup())
-                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
                     (new WorkerEventSetup())
-                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
                     (new WorkerEventSetup())
-                        ->withScope(WorkerEventScope::COMPILATION)
+                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
                 ])
         );
@@ -100,7 +103,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
 
         self::assertSame(
             3,
-            $this->repository->getTypeCount(WorkerEventScope::COMPILATION, WorkerEventOutcome::PASSED)
+            $this->repository->getTypeCount(WorkerEventScope::SOURCE_COMPILATION, WorkerEventOutcome::PASSED)
         );
     }
 

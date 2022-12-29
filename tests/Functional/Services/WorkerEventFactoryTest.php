@@ -250,7 +250,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
@@ -264,7 +264,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     $sourceCompilationPassedManifestCollection
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
@@ -284,7 +284,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ]
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [

@@ -22,7 +22,7 @@ class CompilationProgress
     public function get(): CompilationState
     {
         $compilationFailedCount = $this->workerEventRepository->getTypeCount(
-            WorkerEventScope::COMPILATION,
+            WorkerEventScope::SOURCE_COMPILATION,
             WorkerEventOutcome::FAILED
         );
 

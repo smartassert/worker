@@ -7,7 +7,7 @@ namespace App\Enum;
 enum WorkerEventScope: string
 {
     case JOB = 'job';
-    case COMPILATION = 'source-compilation';
+    case SOURCE_COMPILATION = 'source-compilation';
     case EXECUTION = 'job/execution';
     case TEST = 'test';
     case STEP = 'step';
