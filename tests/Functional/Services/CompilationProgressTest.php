@@ -94,7 +94,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withScope(WorkerEventScope::COMPILATION)
+                            ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedState' => CompilationState::FAILED,
@@ -193,7 +193,7 @@ class CompilationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withScope(WorkerEventScope::COMPILATION)
+                            ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedIsStates' => [

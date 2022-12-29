@@ -17,7 +17,7 @@ class CreateCompileExecuteTest extends AbstractJobTest
         $responseData = json_decode(self::$createResponse->getBody()->getContents(), true);
         self::assertIsArray($responseData);
         self::assertArrayHasKey('event_ids', $responseData);
-        self::assertSame([1], $responseData['event_ids']);
+        self::assertSame([1, 2], $responseData['event_ids']);
     }
 
     public function testGetJobStartedEvent(): void

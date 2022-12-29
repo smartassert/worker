@@ -25,7 +25,7 @@ abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEve
     ) {
         parent::__construct(
             $source,
-            WorkerEventScope::COMPILATION,
+            WorkerEventScope::SOURCE_COMPILATION,
             $outcome,
             array_merge(['source' => $source], $payload),
             array_merge([$source], $referenceComponents),

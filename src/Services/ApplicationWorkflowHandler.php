@@ -6,6 +6,8 @@ namespace App\Services;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Event\EmittableEvent\JobCompilationStartedEvent;
+use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
@@ -34,6 +36,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             JobEndStateChangeEvent::class => [
                 ['dispatchJobEndedEventForJobEndStateChangeEvent', -100],
             ],
+            JobStartedEvent::class => [
+                ['dispatchJobCompilationStartedEventForJobStartedEvent', 0],
+            ],
         ];
     }
 
@@ -57,5 +62,10 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         }
 
         $this->eventDispatcher->dispatch($jobEndedEvent);
+    }
+
+    public function dispatchJobCompilationStartedEventForJobStartedEvent(JobStartedEvent $event): void
+    {
+        $this->eventDispatcher->dispatch(new JobCompilationStartedEvent($event->getLabel()));
     }
 }

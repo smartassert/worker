@@ -48,7 +48,7 @@ class WorkerEventTest extends AbstractEntityTest
         return [
             'without related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     []
@@ -56,7 +56,7 @@ class WorkerEventTest extends AbstractEntityTest
             ],
             'with related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],

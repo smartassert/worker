@@ -15,6 +15,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
@@ -250,7 +251,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
@@ -264,7 +265,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     $sourceCompilationPassedManifestCollection
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
@@ -284,7 +285,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                     ]
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::COMPILATION,
+                    WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
@@ -567,6 +568,15 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
                         'success' => false,
                         'event_count' => 5,
                     ]
+                ),
+            ],
+            'job/compilation/started' => [
+                'event' => new JobCompilationStartedEvent(self::JOB_LABEL),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::JOB_COMPILATION,
+                    WorkerEventOutcome::STARTED,
+                    new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
+                    []
                 ),
             ],
         ];

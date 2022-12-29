@@ -6,6 +6,7 @@ namespace App\MessageDispatcher;
 
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
@@ -66,6 +67,9 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 100],
             ],
             JobEndedEvent::class => [
+                ['dispatchForEvent', 0],
+            ],
+            JobCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];

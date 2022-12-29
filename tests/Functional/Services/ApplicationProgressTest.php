@@ -195,7 +195,7 @@ class ApplicationProgressTest extends AbstractBaseFunctionalTest
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withScope(WorkerEventScope::COMPILATION)
+                            ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedState' => ApplicationState::COMPLETE,
