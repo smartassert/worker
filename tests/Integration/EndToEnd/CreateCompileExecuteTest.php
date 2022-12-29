@@ -227,6 +227,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
+                        'job/compilation/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/compilation/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel)
+                                ],
+                                'body' => [],
+                            ],
+                        ),
                         'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
@@ -290,7 +303,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/compilation',
                                     'success' => false,
-                                    'event_count' => 4,
+                                    'event_count' => 5,
                                 ],
                             ],
                         ),
@@ -368,6 +381,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         'Test/chrome-open-index-compilation-failure.yml',
                                     ],
                                 ],
+                            ],
+                        ),
+                        'job/compilation/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/compilation/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel)
+                                ],
+                                'body' => [],
                             ],
                         ),
                         'source-compilation/started: chrome-open-index' => $requestFactory->create(
@@ -473,7 +499,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/compilation',
                                     'success' => false,
-                                    'event_count' => 6,
+                                    'event_count' => 7,
                                 ],
                             ],
                         ),
@@ -582,6 +608,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                         'Test/chrome-open-form.yml',
                                     ],
                                 ],
+                            ],
+                        ),
+                        'job/compilation/started' => $requestFactory->create(
+                            $eventDeliveryBaseUrl . '/status/200',
+                            [
+                                'header' => [
+                                    'job' => $jobLabel,
+                                    'sequence_number' => ++$firstEventId,
+                                    'type' => 'job/compilation/started',
+                                    'label' => $jobLabel,
+                                    'reference' => md5($jobLabel)
+                                ],
+                                'body' => [],
                             ],
                         ),
                         'source-compilation/started: chrome-open-index' => $requestFactory->create(
@@ -1181,7 +1220,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'complete',
                                     'success' => true,
-                                    'event_count' => 22,
+                                    'event_count' => 23,
                                 ],
                             ],
                         ),
@@ -1351,7 +1390,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 'body' => [
                                     'end_state' => 'failed/test/failure',
                                     'success' => false,
-                                    'event_count' => 9,
+                                    'event_count' => 10,
                                 ],
                             ],
                         ),
