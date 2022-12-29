@@ -95,7 +95,7 @@ class JobEndStateSetterTest extends AbstractBaseFunctionalTest
                 'event' => new JobTimeoutEvent('job label', 1000),
                 'expectedJobEndState' => JobEndState::TIMED_OUT,
             ],
-            'compilation/failed' => [
+            'source-compilation/failed' => [
                 'event' => new SourceCompilationFailedEvent('test.yml', []),
                 'expectedJobEndState' => JobEndState::FAILED_COMPILATION,
             ],

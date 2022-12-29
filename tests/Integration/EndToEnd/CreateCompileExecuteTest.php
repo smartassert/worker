@@ -227,13 +227,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                        'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                                 ],
@@ -242,13 +242,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                        'source-compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/failed',
+                                    'type' => 'source-compilation/failed',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                                 ],
@@ -370,13 +370,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-open-index' => $requestFactory->create(
+                        'source-compilation/started: chrome-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                 ],
@@ -385,13 +385,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/passed: chrome-open-index' => $requestFactory->create(
+                        'source-compilation/passed: chrome-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/passed',
+                                    'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                     'related_references' => [
@@ -410,13 +410,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
+                        'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                                 ],
@@ -425,13 +425,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
+                        'source-compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/failed',
+                                    'type' => 'source-compilation/failed',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
                                 ],
@@ -584,13 +584,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-open-index' => $requestFactory->create(
+                        'source-compilation/started: chrome-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                 ],
@@ -599,13 +599,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/passed: chrome-open-index' => $requestFactory->create(
+                        'source-compilation/passed: chrome-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/passed',
+                                    'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-index.yml'),
                                     'related_references' => [
@@ -624,13 +624,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-firefox-open-index' => $requestFactory->create(
+                        'source-compilation/started: chrome-firefox-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                                 ],
@@ -639,13 +639,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
+                        'source-compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/passed',
+                                    'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-firefox-open-index.yml'),
                                     'related_references' => [
@@ -664,13 +664,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/started: chrome-open-form' => $requestFactory->create(
+                        'source-compilation/started: chrome-open-form' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/started',
+                                    'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-form.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
                                 ],
@@ -679,13 +679,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                                 ],
                             ],
                         ),
-                        'compilation/passed: chrome-open-form' => $requestFactory->create(
+                        'source-compilation/passed: chrome-open-form' => $requestFactory->create(
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
                                     'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
-                                    'type' => 'compilation/passed',
+                                    'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-form.yml',
                                     'reference' => md5($jobLabel . 'Test/chrome-open-form.yml'),
                                     'related_references' => [
