@@ -6,12 +6,15 @@ namespace App\Services;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Event\EmittableEvent\JobCompilationEndedEvent;
 use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\TestEvent;
+use App\Event\JobCompiledEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
+use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,6 +24,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         private EventDispatcherInterface $eventDispatcher,
         private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
         private readonly JobEndedEventFactory $jobEndedEventFactory,
+        private readonly JobRepository $jobRepository,
     ) {
     }
 
@@ -38,6 +42,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             ],
             JobStartedEvent::class => [
                 ['dispatchJobCompilationStartedEventForJobStartedEvent', 0],
+            ],
+            JobCompiledEvent::class => [
+                ['dispatchJobCompilationEndedEventForJobCompiledEvent', 0]
             ],
         ];
     }
@@ -67,5 +74,15 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     public function dispatchJobCompilationStartedEventForJobStartedEvent(JobStartedEvent $event): void
     {
         $this->eventDispatcher->dispatch(new JobCompilationStartedEvent($event->getLabel()));
+    }
+
+    /**
+     * @throws JobNotFoundException
+     */
+    public function dispatchJobCompilationEndedEventForJobCompiledEvent(JobCompiledEvent $event): void
+    {
+        $job = $this->jobRepository->get();
+
+        $this->eventDispatcher->dispatch(new JobCompilationEndedEvent($job->label));
     }
 }
