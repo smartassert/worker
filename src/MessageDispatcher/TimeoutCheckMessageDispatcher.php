@@ -6,15 +6,16 @@ namespace App\MessageDispatcher;
 
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
-use App\Messenger\MessageFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly MessageFactory $messageFactory,
         private readonly MessageBusInterface $messageBus,
+        private readonly int $dispatchDelay,
     ) {
     }
 
@@ -33,7 +34,7 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
     public function dispatch(): void
     {
         $this->messageBus->dispatch(
-            $this->messageFactory->createDelayedEnvelope(new TimeoutCheckMessage())
+            new Envelope(new TimeoutCheckMessage(), [new DelayStamp($this->dispatchDelay)])
         );
     }
 }

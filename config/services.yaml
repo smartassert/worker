@@ -123,8 +123,10 @@ services:
         arguments:
             $compilerSourceDirectory: '%compiler_source_directory%'
 
-    App\Messenger\MessageFactory:
+    App\MessageDispatcher\TimeoutCheckMessageDispatcher:
         arguments:
-            $classNameToDelayMap:
-                App\Message\JobCompletedCheckMessage: '%job_completed_check_period_ms%'
-                App\Message\TimeoutCheckMessage: '%job_timeout_check_period_ms%'
+            $dispatchDelay: '%job_timeout_check_period_ms%'
+
+    App\EventDispatcher\JobCompleteEventDispatcher:
+        arguments:
+            $dispatchDelay: '%job_completed_check_period_ms%'
