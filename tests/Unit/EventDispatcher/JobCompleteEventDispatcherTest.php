@@ -8,13 +8,13 @@ use App\Enum\ApplicationState;
 use App\Event\JobCompletedEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Message\JobCompletedCheckMessage;
-use App\Messenger\MessageFactory;
 use App\Services\ApplicationProgress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JobCompleteEventDispatcherTest extends TestCase
@@ -43,8 +43,8 @@ class JobCompleteEventDispatcherTest extends TestCase
         $dispatcher = new JobCompleteEventDispatcher(
             $applicationProgress,
             $eventDispatcher,
-            \Mockery::mock(MessageFactory::class),
             \Mockery::mock(MessageBusInterface::class),
+            100
         );
 
         $dispatcher->dispatch();
@@ -75,30 +75,29 @@ class JobCompleteEventDispatcherTest extends TestCase
             })
         ;
 
-        $envelope = new Envelope(new JobCompletedCheckMessage());
+        $dispatchDelay = rand(0, 1000);
+        $expectedDelayStamp = new DelayStamp($dispatchDelay);
 
-        $messageFactory = \Mockery::mock(MessageFactory::class);
-        $messageFactory
-            ->shouldReceive('createDelayedEnvelope')
-            ->andReturn($envelope)
-        ;
+        $expectedEnvelope = new Envelope(new JobCompletedCheckMessage(), [$expectedDelayStamp]);
 
         $messageBus = \Mockery::mock(MessageBusInterface::class);
         $messageBus
             ->shouldReceive('dispatch')
-            ->with($envelope)
-            ->andReturn($envelope)
+            ->withArgs(function (Envelope $envelope) use ($expectedEnvelope) {
+                self::assertEquals($expectedEnvelope, $envelope);
+
+                return true;
+            })
+            ->andReturn($expectedEnvelope)
         ;
 
         $dispatcher = new JobCompleteEventDispatcher(
             $applicationProgress,
             $eventDispatcher,
-            $messageFactory,
             $messageBus,
+            $dispatchDelay
         );
 
         $dispatcher->dispatch();
-
-        self::expectNotToPerformAssertions();
     }
 }
