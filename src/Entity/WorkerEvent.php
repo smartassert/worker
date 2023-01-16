@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
-class WorkerEvent
+class WorkerEvent implements \JsonSerializable
 {
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
     public readonly WorkerEventScope $scope;
@@ -85,14 +85,41 @@ class WorkerEvent
         $this->state = $state;
     }
 
-    public function getRelatedReferences(): WorkerEventReferenceCollection
+    /**
+     * @return array{
+     *     header: array{
+     *       sequence_number: int,
+     *       type: non-empty-string,
+     *       label: non-empty-string,
+     *       reference: non-empty-string,
+     *       related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>
+     *     },
+     *     body: array<mixed>
+     * }
+     */
+    public function jsonSerialize(): array
     {
-        $references = [];
+        $header = array_merge(
+            [
+                'sequence_number' => (int) $this->getId(),
+                'type' => $this->scope->value . '/' . $this->outcome->value,
+            ],
+            $this->reference->toArray()
+        );
 
+        $references = [];
         foreach ($this->relatedReferences as $reference) {
             $references[] = $reference;
         }
+        $relatedReferences = new WorkerEventReferenceCollection($references);
 
-        return new WorkerEventReferenceCollection($references);
+        if (0 !== count($references)) {
+            $header['related_references'] = $relatedReferences->toArray();
+        }
+
+        return [
+            'header' => $header,
+            'body' => $this->payload,
+        ];
     }
 }

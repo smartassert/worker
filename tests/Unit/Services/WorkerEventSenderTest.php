@@ -12,7 +12,6 @@ use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use App\Services\EventDeliveryRequestFactory;
 use App\Services\WorkerEventSender;
-use App\Services\WorkerEventSerializer;
 use GuzzleHttp\Psr7\HttpFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,7 @@ class WorkerEventSenderTest extends TestCase
         ;
 
         $httpFactory = new HttpFactory();
-        $requestFactory = new EventDeliveryRequestFactory($httpFactory, $httpFactory, new WorkerEventSerializer());
+        $requestFactory = new EventDeliveryRequestFactory($httpFactory, $httpFactory);
 
         $sender = new WorkerEventSender($httpClient, $jobRepository, $requestFactory);
 
