@@ -11,7 +11,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
-use App\Tests\Model\JobSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
@@ -47,21 +46,8 @@ class EventControllerTest extends AbstractBaseFunctionalTest
         }
     }
 
-    public function testGetNoJob(): void
-    {
-        $response = $this->clientRequestSender->getEvent(123);
-
-        $this->jsonResponseAsserter->assertJsonResponse(400, [], $response);
-    }
-
     public function testGetEventNotFound(): void
     {
-        $this->environmentFactory->create(
-            (new EnvironmentSetup())->withJobSetup(
-                new JobSetup()
-            )
-        );
-
         $response = $this->clientRequestSender->getEvent(123);
 
         $this->jsonResponseAsserter->assertJsonResponse(404, [], $response);
@@ -79,9 +65,6 @@ class EventControllerTest extends AbstractBaseFunctionalTest
 
         $environment = $this->environmentFactory->create(
             (new EnvironmentSetup())
-                ->withJobSetup(
-                    new JobSetup()
-                )
                 ->withWorkerEventSetups([
                     (new WorkerEventSetup())
                         ->withPayload($eventPayload)
@@ -90,9 +73,6 @@ class EventControllerTest extends AbstractBaseFunctionalTest
                         ->withOutcome(WorkerEventOutcome::COMPLETED)
                 ])
         );
-
-        $job = $environment->getJob();
-        \assert($job instanceof Job);
 
         $event = $environment->getWorkerEvents()[0];
 
