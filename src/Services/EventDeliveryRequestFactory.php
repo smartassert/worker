@@ -15,7 +15,6 @@ class EventDeliveryRequestFactory
     public function __construct(
         private readonly RequestFactoryInterface $requestFactory,
         private readonly StreamFactoryInterface $streamFactory,
-        private readonly WorkerEventSerializer $workerEventSerializer,
     ) {
     }
 
@@ -25,9 +24,7 @@ class EventDeliveryRequestFactory
             ->requestFactory
             ->createRequest('POST', $job->eventDeliveryUrl)
             ->withHeader('content-type', 'application/json')
-            ->withBody($this->streamFactory->createStream((string) json_encode(
-                $this->workerEventSerializer->serialize($workerEvent)
-            )))
+            ->withBody($this->streamFactory->createStream((string) json_encode($workerEvent)))
         ;
     }
 }

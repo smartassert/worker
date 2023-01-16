@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Services\WorkerEventSerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,7 +15,6 @@ class EventController
     public function __construct(
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventRepository $workerEventRepository,
-        private readonly WorkerEventSerializer $workerEventSerializer,
     ) {
     }
 
@@ -34,8 +32,6 @@ class EventController
             return new JsonResponse([], 404);
         }
 
-        $serializedEvent = $this->workerEventSerializer->serialize($event);
-
-        return new JsonResponse($serializedEvent);
+        return new JsonResponse($event);
     }
 }
