@@ -205,7 +205,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => $firstEventId,
                                     'type' => 'job/started',
                                     'label' => $jobLabel,
@@ -231,7 +230,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/compilation/started',
                                     'label' => $jobLabel,
@@ -244,7 +242,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
@@ -259,7 +256,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/failed',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
@@ -294,7 +290,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/ended',
                                     'label' => $jobLabel,
@@ -357,7 +352,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => $firstEventId,
                                     'type' => 'job/started',
                                     'label' => $jobLabel,
@@ -387,7 +381,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/compilation/started',
                                     'label' => $jobLabel,
@@ -400,7 +393,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -415,7 +407,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -440,7 +431,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
@@ -455,7 +445,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/failed',
                                     'label' => 'Test/chrome-open-index-compilation-failure.yml',
@@ -490,7 +479,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/ended',
                                     'label' => $jobLabel,
@@ -579,7 +567,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => $firstEventId,
                                     'type' => 'job/started',
                                     'label' => $jobLabel,
@@ -614,7 +601,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/compilation/started',
                                     'label' => $jobLabel,
@@ -627,7 +613,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -642,7 +627,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -667,7 +651,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -682,7 +665,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -707,7 +689,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/started',
                                     'label' => 'Test/chrome-open-form.yml',
@@ -722,7 +703,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'source-compilation/passed',
                                     'label' => 'Test/chrome-open-form.yml',
@@ -747,7 +727,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/compilation/ended',
                                     'label' => $jobLabel,
@@ -760,7 +739,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/execution/started',
                                     'label' => $jobLabel,
@@ -773,7 +751,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/started',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -811,7 +788,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'step/passed',
                                     'label' => 'verify page is open',
@@ -849,7 +825,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/passed',
                                     'label' => 'Test/chrome-open-index.yml',
@@ -887,7 +862,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/started',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -925,7 +899,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'step/passed',
                                     'label' => 'verify page is open',
@@ -957,7 +930,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/passed',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -995,7 +967,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/started',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -1033,7 +1004,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'step/passed',
                                     'label' => 'verify page is open',
@@ -1065,7 +1035,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/passed',
                                     'label' => 'Test/chrome-firefox-open-index.yml',
@@ -1103,7 +1072,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/started',
                                     'label' => 'Test/chrome-open-form.yml',
@@ -1141,7 +1109,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'step/passed',
                                     'label' => 'verify page is open',
@@ -1173,7 +1140,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/passed',
                                     'label' => 'Test/chrome-open-form.yml',
@@ -1211,7 +1177,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/execution/completed',
                                     'label' => $jobLabel,
@@ -1224,7 +1189,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/ended',
                                     'label' => $jobLabel,
@@ -1293,7 +1257,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => $firstEventId,
                                     'type' => 'step/failed',
                                     'label' => 'fail on intentionally-missing element',
@@ -1344,7 +1307,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'test/failed',
                                     'label' => 'Test/chrome-open-index-with-step-failure.yml',
@@ -1394,7 +1356,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
                             $eventDeliveryBaseUrl . '/status/200',
                             [
                                 'header' => [
-                                    'job' => $jobLabel,
                                     'sequence_number' => ++$firstEventId,
                                     'type' => 'job/ended',
                                     'label' => $jobLabel,
