@@ -85,17 +85,6 @@ class WorkerEvent implements \JsonSerializable
         $this->state = $state;
     }
 
-    public function getRelatedReferences(): WorkerEventReferenceCollection
-    {
-        $references = [];
-
-        foreach ($this->relatedReferences as $reference) {
-            $references[] = $reference;
-        }
-
-        return new WorkerEventReferenceCollection($references);
-    }
-
     /**
      * @return array{
      *     header: array{
@@ -118,8 +107,13 @@ class WorkerEvent implements \JsonSerializable
             $this->reference->toArray()
         );
 
-        $relatedReferences = $this->getRelatedReferences();
-        if (0 !== count($relatedReferences)) {
+        $references = [];
+        foreach ($this->relatedReferences as $reference) {
+            $references[] = $reference;
+        }
+        $relatedReferences = new WorkerEventReferenceCollection($references);
+
+        if (0 !== count($references)) {
             $header['related_references'] = $relatedReferences->toArray();
         }
 
