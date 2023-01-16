@@ -9,7 +9,6 @@ use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Enum\WorkerEventState;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -106,7 +105,6 @@ class EventControllerTest extends AbstractBaseFunctionalTest
                     'label' => $eventLabel,
                     'reference' => $eventReference,
                     'sequence_number' => $event->getId(),
-                    'state' => WorkerEventState::AWAITING->value,
                     'type' => 'job/completed',
                 ],
                 'body' => $eventPayload,
