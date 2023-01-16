@@ -26,7 +26,7 @@ class EventDeliveryRequestFactory
             ->createRequest('POST', $job->eventDeliveryUrl)
             ->withHeader('content-type', 'application/json')
             ->withBody($this->streamFactory->createStream((string) json_encode(
-                $this->workerEventSerializer->serialize($job, $workerEvent)
+                $this->workerEventSerializer->serialize($workerEvent)
             )))
         ;
     }

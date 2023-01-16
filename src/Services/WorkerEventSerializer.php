@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entity\Job;
 use App\Entity\WorkerEvent;
 
 class WorkerEventSerializer
@@ -12,7 +11,6 @@ class WorkerEventSerializer
     /**
      * @return array{
      *     header: array{
-     *       job: non-empty-string,
      *       sequence_number: int,
      *       type: non-empty-string,
      *       label: non-empty-string,
@@ -22,11 +20,10 @@ class WorkerEventSerializer
      *     body: array<mixed>
      * }
      */
-    public function serialize(Job $job, WorkerEvent $event): array
+    public function serialize(WorkerEvent $event): array
     {
         $header = array_merge(
             [
-                'job' => $job->label,
                 'sequence_number' => (int) $event->getId(),
                 'type' => $event->scope->value . '/' . $event->outcome->value,
             ],

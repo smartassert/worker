@@ -103,7 +103,6 @@ class EventControllerTest extends AbstractBaseFunctionalTest
             200,
             [
                 'header' => [
-                    'job' => $job->label,
                     'label' => $eventLabel,
                     'reference' => $eventReference,
                     'sequence_number' => $event->getId(),
