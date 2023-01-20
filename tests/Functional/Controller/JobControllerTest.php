@@ -597,8 +597,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider jobReadyEventContainsManifestPathsDataProvider
      *
-     * @param string[] $manifestPaths
-     * @param string[] $sourcePaths
+     * @param non-empty-string[] $manifestPaths
+     * @param string[]           $sourcePaths
      */
     public function testJobReadyEventContainsManifestPaths(array $manifestPaths, array $sourcePaths): void
     {

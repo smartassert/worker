@@ -75,7 +75,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param string[]                 $manifestPaths
+     * @param non-empty-string[]       $manifestPaths
      * @param string[]                 $sourcePaths
      * @param array<int, array<mixed>> $expectedTestDataCollection
      */
