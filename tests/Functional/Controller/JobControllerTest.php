@@ -31,6 +31,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use webignition\ObjectReflector\ObjectReflector;
 
@@ -323,7 +324,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'source/manifest/missing',
+                    'error_state' => 'source/manifest/empty',
                 ],
             ],
             'invalid source: source file not present' => [
@@ -634,6 +635,9 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $jobStatusFactory = self::getContainer()->get(JobStatusFactory::class);
         \assert($jobStatusFactory instanceof JobStatusFactory);
 
+        $jobSourceDeserializer = self::getContainer()->get(JobSourceDeserializer::class);
+        \assert($jobSourceDeserializer instanceof JobSourceDeserializer);
+
         $request = new CreateJobRequest(
             md5((string) rand()),
             md5((string) rand()),
@@ -649,7 +653,8 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             $yamlFileCollectionDeserializer,
             $sourceRepository,
             $jobStatusFactory,
-            $request
+            $request,
+            $jobSourceDeserializer,
         );
     }
 

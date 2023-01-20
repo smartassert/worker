@@ -41,7 +41,7 @@ class ErrorResponseFactory
         return null;
     }
 
-    public function createFromInvalidManifestException(InvalidManifestException $exception): JsonResponse
+    public function createFromInvalidManifestException(InvalidManifestException|\SmartAssert\WorkerJobSource\Exception\InvalidManifestException $exception): JsonResponse
     {
         if (InvalidManifestException::CODE_EMPTY === $exception->getCode()) {
             return new ErrorResponse('source/manifest/empty');

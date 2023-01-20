@@ -6,9 +6,8 @@ namespace App\Services;
 
 use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
-use App\Model\YamlSourceCollection;
 use App\Repository\SourceRepository;
-use SmartAssert\YamlFile\YamlFile;
+use SmartAssert\WorkerJobSource\Model\JobSource;
 
 class SourceFactory
 {
@@ -21,22 +20,18 @@ class SourceFactory
     /**
      * @throws MissingTestSourceException
      */
-    public function createFromYamlSourceCollection(YamlSourceCollection $sourceCollection): void
+    public function createFromJobSource(JobSource $jobSource): void
     {
-        $manifest = $sourceCollection->getManifest();
-        $manifestTestPaths = $manifest->testPaths;
+        $manifestTestPaths = $jobSource->manifest->testPaths;
         $sourcePaths = [];
 
-        $sources = $sourceCollection->getYamlFiles();
-
-        /** @var YamlFile $source */
-        foreach ($sources->getYamlFiles() as $source) {
+        foreach ($jobSource->sources->getYamlFiles() as $source) {
             $sourcePath = (string) $source->name;
             $sourcePaths[] = $sourcePath;
 
             $sourceType = Source::TYPE_RESOURCE;
 
-            if ($manifest->isTestPath($sourcePath)) {
+            if ($jobSource->manifest->contains($sourcePath)) {
                 $sourceType = Source::TYPE_TEST;
             }
 

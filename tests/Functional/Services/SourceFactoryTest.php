@@ -72,7 +72,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         string $expectedMissingTestSourcePath
     ): void {
         try {
-            $this->factory->createFromYamlSourceCollection($collection);
+            $this->factory->createFromJobSource($collection);
             self::fail(MissingTestSourceException::class . ' not thrown');
         } catch (MissingTestSourceException $e) {
             self::assertSame($expectedMissingTestSourcePath, $e->getPath());
@@ -118,7 +118,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
         callable $collectionCreator,
         array $expectedSourcePaths,
     ): void {
-        $this->factory->createFromYamlSourceCollection($collectionCreator($this->fixtureReader));
+        $this->factory->createFromJobSource($collectionCreator($this->fixtureReader));
 
         foreach ($expectedSourcePaths as $expectedSourcePath) {
             self::assertTrue($this->sourceFileInspector->has($expectedSourcePath));

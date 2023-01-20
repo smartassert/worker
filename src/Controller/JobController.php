@@ -7,9 +7,7 @@ namespace App\Controller;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Event\EmittableEvent\JobStartedEvent;
-use App\Exception\InvalidManifestException;
 use App\Exception\JobNotFoundException;
-use App\Exception\MissingManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
@@ -18,9 +16,8 @@ use App\Response\ErrorResponse;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
-use App\Services\YamlSourceCollectionFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use SmartAssert\YamlFile\Collection\Deserializer;
+use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,14 +36,13 @@ class JobController
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(
-        YamlSourceCollectionFactory $yamlSourceCollectionFactory,
         SourceFactory $sourceFactory,
         EventDispatcherInterface $eventDispatcher,
         ErrorResponseFactory $errorResponseFactory,
-        Deserializer $yamlFileCollectionDeserializer,
         SourceRepository $sourceRepository,
         JobStatusFactory $jobStatusFactory,
         CreateJobRequest $request,
+        JobSourceDeserializer $jobSourceDeserializer,
     ): JsonResponse {
         if ($this->jobRepository->has()) {
             return new ErrorResponse('job/already_exists');
@@ -69,26 +65,20 @@ class JobController
         }
 
         try {
-            $provider = $yamlFileCollectionDeserializer->deserialize($request->source);
-        } catch (DeserializeException $exception) {
-            $response = $errorResponseFactory->createFromYamlFileCollectionDeserializeException($exception);
+            $jobSource = $jobSourceDeserializer->deserialize($request->source);
+        } catch (\SmartAssert\WorkerJobSource\Exception\InvalidManifestException $e) {
+            return $errorResponseFactory->createFromInvalidManifestException($e);
+        } catch (DeserializeException $e) {
+            $response = $errorResponseFactory->createFromYamlFileCollectionDeserializeException($e);
             if ($response instanceof JsonResponse) {
                 return $response;
             }
 
-            throw $exception;
+            throw $e;
         }
 
         try {
-            $yamlSourceCollection = $yamlSourceCollectionFactory->create($provider);
-        } catch (InvalidManifestException $exception) {
-            return $errorResponseFactory->createFromInvalidManifestException($exception);
-        } catch (MissingManifestException) {
-            return new ErrorResponse('source/manifest/missing');
-        }
-
-        try {
-            $sourceFactory->createFromYamlSourceCollection($yamlSourceCollection);
+            $sourceFactory->createFromJobSource($jobSource);
         } catch (MissingTestSourceException $exception) {
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
@@ -97,7 +87,7 @@ class JobController
             $request->label,
             $request->eventDeliveryUrl,
             $request->maximumDurationInSeconds,
-            $yamlSourceCollection->getManifest()->testPaths
+            $jobSource->manifest->testPaths
         ));
 
         $eventDispatcher->dispatch(new JobStartedEvent(
