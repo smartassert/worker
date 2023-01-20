@@ -17,6 +17,7 @@ use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use SmartAssert\WorkerJobSource\Exception\InvalidManifestException;
 use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,8 +42,8 @@ class JobController
         ErrorResponseFactory $errorResponseFactory,
         SourceRepository $sourceRepository,
         JobStatusFactory $jobStatusFactory,
-        CreateJobRequest $request,
         JobSourceDeserializer $jobSourceDeserializer,
+        CreateJobRequest $request,
     ): JsonResponse {
         if ($this->jobRepository->has()) {
             return new ErrorResponse('job/already_exists');
@@ -66,7 +67,7 @@ class JobController
 
         try {
             $jobSource = $jobSourceDeserializer->deserialize($request->source);
-        } catch (\SmartAssert\WorkerJobSource\Exception\InvalidManifestException $e) {
+        } catch (InvalidManifestException $e) {
             return $errorResponseFactory->createFromInvalidManifestException($e);
         } catch (DeserializeException $e) {
             $response = $errorResponseFactory->createFromYamlFileCollectionDeserializeException($e);

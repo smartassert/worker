@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Exception\InvalidManifestException;
 use App\Exception\MissingTestSourceException;
 use App\Response\ErrorResponse;
+use SmartAssert\WorkerJobSource\Exception\InvalidManifestException;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
@@ -41,7 +41,7 @@ class ErrorResponseFactory
         return null;
     }
 
-    public function createFromInvalidManifestException(InvalidManifestException|\SmartAssert\WorkerJobSource\Exception\InvalidManifestException $exception): JsonResponse
+    public function createFromInvalidManifestException(InvalidManifestException $exception): JsonResponse
     {
         if (InvalidManifestException::CODE_EMPTY === $exception->getCode()) {
             return new ErrorResponse('source/manifest/empty');

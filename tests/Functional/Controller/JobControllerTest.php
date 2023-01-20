@@ -17,7 +17,6 @@ use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
-use App\Services\YamlSourceCollectionFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -32,7 +31,6 @@ use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SmartAssert\WorkerJobSource\JobSourceDeserializer;
-use SmartAssert\YamlFile\Collection\Deserializer;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
@@ -605,9 +603,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     {
         $controller = new JobController($this->jobRepository);
 
-        $yamlSourceCollectionFactory = self::getContainer()->get(YamlSourceCollectionFactory::class);
-        \assert($yamlSourceCollectionFactory instanceof YamlSourceCollectionFactory);
-
         $sourceFactory = self::getContainer()->get(SourceFactory::class);
         \assert($sourceFactory instanceof SourceFactory);
 
@@ -626,9 +621,6 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             })
         ;
 
-        $yamlFileCollectionDeserializer = self::getContainer()->get(Deserializer::class);
-        \assert($yamlFileCollectionDeserializer instanceof Deserializer);
-
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
 
@@ -646,15 +638,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         );
 
         $controller->create(
-            $yamlSourceCollectionFactory,
             $sourceFactory,
             $eventDispatcher,
             \Mockery::mock(ErrorResponseFactory::class),
-            $yamlFileCollectionDeserializer,
             $sourceRepository,
             $jobStatusFactory,
-            $request,
             $jobSourceDeserializer,
+            $request,
         );
     }
 

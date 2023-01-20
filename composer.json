@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/smartassert/worker-job-source"
-        }
-    ],
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -18,7 +12,8 @@
         "doctrine/orm": "^2.10",
         "guzzlehttp/guzzle": "^7.4",
         "psr/http-factory": "^1.0",
-        "smartassert/yaml-file": "^4.5",
+        "smartassert/worker-job-source": "^0.1.0",
+        "smartassert/yaml-file": "^4.0",
         "symfony/console": "6.2.*",
         "symfony/doctrine-messenger": "6.2.*",
         "symfony/dotenv": "6.2.*",
@@ -48,8 +43,7 @@
         "symfony/maker-bundle": "^1.40",
         "symfony/phpunit-bridge": "6.2.*",
         "webignition/http-history-container": "^2.5",
-        "webignition/object-reflector": "^1.0",
-        "smartassert/worker-job-source": "dev-github-4"
+        "webignition/object-reflector": "^1.0"
     },
     "config": {
         "optimize-autoloader": true,
