@@ -17,7 +17,6 @@ use App\Request\CreateJobRequest;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
-use App\Services\YamlSourceCollectionFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -31,7 +30,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use SmartAssert\YamlFile\Collection\Deserializer;
+use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
@@ -323,7 +322,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                     EOT
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'source/manifest/missing',
+                    'error_state' => 'source/manifest/empty',
                 ],
             ],
             'invalid source: source file not present' => [
@@ -597,15 +596,12 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     /**
      * @dataProvider jobReadyEventContainsManifestPathsDataProvider
      *
-     * @param string[] $manifestPaths
-     * @param string[] $sourcePaths
+     * @param non-empty-string[] $manifestPaths
+     * @param string[]           $sourcePaths
      */
     public function testJobReadyEventContainsManifestPaths(array $manifestPaths, array $sourcePaths): void
     {
         $controller = new JobController($this->jobRepository);
-
-        $yamlSourceCollectionFactory = self::getContainer()->get(YamlSourceCollectionFactory::class);
-        \assert($yamlSourceCollectionFactory instanceof YamlSourceCollectionFactory);
 
         $sourceFactory = self::getContainer()->get(SourceFactory::class);
         \assert($sourceFactory instanceof SourceFactory);
@@ -625,14 +621,14 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             })
         ;
 
-        $yamlFileCollectionDeserializer = self::getContainer()->get(Deserializer::class);
-        \assert($yamlFileCollectionDeserializer instanceof Deserializer);
-
         $sourceRepository = self::getContainer()->get(SourceRepository::class);
         \assert($sourceRepository instanceof SourceRepository);
 
         $jobStatusFactory = self::getContainer()->get(JobStatusFactory::class);
         \assert($jobStatusFactory instanceof JobStatusFactory);
+
+        $jobSourceDeserializer = self::getContainer()->get(JobSourceDeserializer::class);
+        \assert($jobSourceDeserializer instanceof JobSourceDeserializer);
 
         $request = new CreateJobRequest(
             md5((string) rand()),
@@ -642,14 +638,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         );
 
         $controller->create(
-            $yamlSourceCollectionFactory,
             $sourceFactory,
             $eventDispatcher,
             \Mockery::mock(ErrorResponseFactory::class),
-            $yamlFileCollectionDeserializer,
             $sourceRepository,
             $jobStatusFactory,
-            $request
+            $jobSourceDeserializer,
+            $request,
         );
     }
 

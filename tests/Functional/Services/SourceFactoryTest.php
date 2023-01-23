@@ -6,8 +6,6 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
-use App\Model\Manifest;
-use App\Model\YamlSourceCollection;
 use App\Repository\SourceRepository;
 use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
@@ -15,6 +13,8 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use SmartAssert\WorkerJobSource\Model\JobSource;
+use SmartAssert\WorkerJobSource\Model\Manifest;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\YamlFile;
 
@@ -68,11 +68,11 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
      * @dataProvider createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider
      */
     public function testCreateFromYamlSourceCollectionThrowsMissingTestSourceException(
-        YamlSourceCollection $collection,
+        JobSource $jobSource,
         string $expectedMissingTestSourcePath
     ): void {
         try {
-            $this->factory->createFromYamlSourceCollection($collection);
+            $this->factory->createFromJobSource($jobSource);
             self::fail(MissingTestSourceException::class . ' not thrown');
         } catch (MissingTestSourceException $e) {
             self::assertSame($expectedMissingTestSourcePath, $e->getPath());
@@ -86,7 +86,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     {
         return [
             'single source in manifest, no sources' => [
-                'collection' => new YamlSourceCollection(
+                'jobSource' => new JobSource(
                     new Manifest([
                         'test1.yaml',
                     ]),
@@ -95,7 +95,7 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                 'expectedMissingTestSourcePath' => 'test1.yaml',
             ],
             'two sources in manifest, second not present' => [
-                'collection' => new YamlSourceCollection(
+                'jobSource' => new JobSource(
                     new Manifest([
                         'test1.yaml',
                         'test2.yaml',
@@ -115,10 +115,10 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
      * @param string[] $expectedSourcePaths
      */
     public function testCreateFromYamlSourceCollectionSuccess(
-        callable $collectionCreator,
+        callable $jobSourceCreator,
         array $expectedSourcePaths,
     ): void {
-        $this->factory->createFromYamlSourceCollection($collectionCreator($this->fixtureReader));
+        $this->factory->createFromJobSource($jobSourceCreator($this->fixtureReader));
 
         foreach ($expectedSourcePaths as $expectedSourcePath) {
             self::assertTrue($this->sourceFileInspector->has($expectedSourcePath));
@@ -138,8 +138,8 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
     {
         return [
             'single test in manifest, single test source' => [
-                'collectionCreator' => function (FixtureReader $fixtureReader) {
-                    return new YamlSourceCollection(
+                'jobSourceCreator' => function (FixtureReader $fixtureReader) {
+                    return new JobSource(
                         new Manifest([
                             'Test/chrome-open-index.yml',
                         ]),
@@ -156,8 +156,8 @@ class SourceFactoryTest extends AbstractBaseFunctionalTest
                 ],
             ],
             'two tests in manifest, three test sources' => [
-                'collectionCreator' => function (FixtureReader $fixtureReader) {
-                    return new YamlSourceCollection(
+                'jobSourceCreator' => function (FixtureReader $fixtureReader) {
+                    return new JobSource(
                         new Manifest([
                             'Test/chrome-open-index.yml',
                             'Test/firefox-open-index.yml',

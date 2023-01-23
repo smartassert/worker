@@ -49,3 +49,7 @@ services:
 
     App\Tests\Services\EntityRemover:
         public: true
+
+    App\Tests\Services\YamlProviderFactory: ~
+    SmartAssert\WorkerJobSource\Factory\YamlFileFactory: ~
+    SmartAssert\WorkerJobSource\JobSourceSerializer: ~

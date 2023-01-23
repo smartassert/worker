@@ -38,9 +38,6 @@ services:
         class: GuzzleHttp\Client
         factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
 
-    App\Services\YamlSourceCollectionFactory:
-        public: true
-
     App\Tests\Services\SourceFileInspector:
         public: true
         arguments:

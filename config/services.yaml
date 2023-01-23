@@ -130,3 +130,6 @@ services:
     App\EventDispatcher\JobCompleteEventDispatcher:
         arguments:
             $dispatchDelay: '%job_completed_check_period_ms%'
+
+    SmartAssert\WorkerJobSource\Factory\JobSourceFactory: ~
+    SmartAssert\WorkerJobSource\JobSourceDeserializer: ~
