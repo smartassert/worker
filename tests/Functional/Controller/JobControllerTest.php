@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
-use App\Controller\JobController;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
@@ -14,9 +13,6 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
-use App\Services\ErrorResponseFactory;
-use App\Services\JobStatusFactory;
-use App\Services\SourceFactory;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -27,10 +23,9 @@ use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
@@ -44,6 +39,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private FixtureReader $fixtureReader;
     private CreateJobSourceFactory $createJobSourceFactory;
     private WorkerEventRepository $workerEventRepository;
+    private EventRecorder $eventRecorder;
 
     protected function setUp(): void
     {
@@ -92,6 +88,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             $entityRemover->removeForEntity(Test::class);
             $entityRemover->removeForEntity(Job::class);
         }
+
+        $eventRecorder = self::getContainer()->get(EventRecorder::class);
+        \assert($eventRecorder instanceof EventRecorder);
+        $this->eventRecorder = $eventRecorder;
     }
 
     /**
@@ -109,6 +109,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
         self::assertFalse($this->jobRepository->has());
+        self::assertNull($this->eventRecorder->getLatest());
     }
 
     /**
@@ -359,6 +360,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         callable $requestDataCreator,
         array $expectedResponseData,
         array $expectedStoredSources,
+        JobStartedEvent $expectedJobStartedEvent,
     ): void {
         self::assertFalse($this->jobRepository->has());
 
@@ -404,6 +406,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                 trim($this->sourceFileInspector->read($sourcePath))
             );
         }
+
+        $jobStartedEvent = $this->eventRecorder->getLatest();
+        self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
+        self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
     }
 
     /**
@@ -463,6 +469,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'contentFixture' => 'Test/chrome-open-index.yml',
                     ],
                 ],
+                'expectedJobStartedEvent' => new JobStartedEvent($label, ['Test/chrome-open-index.yml']),
             ],
             'single source file, test only with intentionally invalid yaml' => [
                 'requestDataCreator' => function (
@@ -523,6 +530,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'contentFixture' => 'InvalidTest/invalid-yaml.yml',
                     ],
                 ],
+                'expectedJobStartedEvent' => new JobStartedEvent(
+                    $label,
+                    [
+                        'Test/chrome-open-index.yml',
+                        'InvalidTest/invalid-yaml.yml',
+                    ]
+                ),
             ],
             'multiple source files' => [
                 'requestDataCreator' => function (
@@ -589,99 +603,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
                         'contentFixture' => 'Page/index.yml',
                     ],
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider jobReadyEventContainsManifestPathsDataProvider
-     *
-     * @param non-empty-string[] $manifestPaths
-     * @param string[]           $sourcePaths
-     */
-    public function testJobReadyEventContainsManifestPaths(array $manifestPaths, array $sourcePaths): void
-    {
-        $controller = new JobController($this->jobRepository);
-
-        $sourceFactory = self::getContainer()->get(SourceFactory::class);
-        \assert($sourceFactory instanceof SourceFactory);
-
-        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
-        \assert($eventDispatcher instanceof EventDispatcherInterface);
-
-        $eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);
-        $eventDispatcher
-            ->shouldReceive('dispatch')
-            ->withArgs(function (JobStartedEvent $event) use ($manifestPaths) {
-                $eventPayload = $event->getPayload();
-                self::assertArrayHasKey('tests', $eventPayload);
-                self::assertSame($manifestPaths, $eventPayload['tests']);
-
-                return true;
-            })
-        ;
-
-        $sourceRepository = self::getContainer()->get(SourceRepository::class);
-        \assert($sourceRepository instanceof SourceRepository);
-
-        $jobStatusFactory = self::getContainer()->get(JobStatusFactory::class);
-        \assert($jobStatusFactory instanceof JobStatusFactory);
-
-        $jobSourceDeserializer = self::getContainer()->get(JobSourceDeserializer::class);
-        \assert($jobSourceDeserializer instanceof JobSourceDeserializer);
-
-        $request = new CreateJobRequest(
-            md5((string) rand()),
-            md5((string) rand()),
-            rand(1, 1000),
-            $this->createJobSourceFactory->create($manifestPaths, $sourcePaths)
-        );
-
-        $controller->create(
-            $sourceFactory,
-            $eventDispatcher,
-            \Mockery::mock(ErrorResponseFactory::class),
-            $sourceRepository,
-            $jobStatusFactory,
-            $jobSourceDeserializer,
-            $request,
-        );
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jobReadyEventContainsManifestPathsDataProvider(): array
-    {
-        return [
-            'single source file, test only' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml'
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml'
-                ],
-            ],
-            'single source file, test only with intentionally invalid yaml' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'InvalidTest/invalid-yaml.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml',
-                    'InvalidTest/invalid-yaml.yml',
-                ],
-            ],
-            'multiple source files' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/firefox-open-index.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/firefox-open-index.yml',
-                    'Page/index.yml',
-                ],
+                'expectedJobStartedEvent' => new JobStartedEvent(
+                    $label,
+                    [
+                        'Test/chrome-open-index.yml',
+                        'Test/firefox-open-index.yml',
+                    ]
+                ),
             ],
         ];
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use App\Event\EmittableEvent\JobStartedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -19,7 +20,11 @@ class EventRecorder implements EventSubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        return [];
+        return [
+            JobStartedEvent::class => [
+                ['addEvent', 1000],
+            ],
+        ];
     }
 
     public function addEvent(Event $event): void
