@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
-use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Repository\JobRepository;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Mock\MockEventDispatcher;
-use App\Tests\Model\ExpectedDispatchedEvent;
-use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
+use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use webignition\ObjectReflector\ObjectReflector;
 
 class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -27,6 +23,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
     private TimeoutCheckHandler $handler;
     private MessengerAsserter $messengerAsserter;
+    private EventRecorder $eventRecorder;
 
     protected function setUp(): void
     {
@@ -44,18 +41,15 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
         }
+
+        $eventRecorder = self::getContainer()->get(EventRecorder::class);
+        \assert($eventRecorder instanceof EventRecorder);
+        $this->eventRecorder = $eventRecorder;
     }
 
     public function testInvokeNoJob(): void
     {
         $this->messengerAsserter->assertQueueCount(0);
-
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
 
         $message = new TimeoutCheckMessage();
 
@@ -65,6 +59,8 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         } catch (JobNotFoundException) {
             $this->messengerAsserter->assertQueueCount(0);
         }
+
+        self::assertSame(0, $this->eventRecorder->count());
     }
 
     public function testInvokeJobMaximumDurationNotReached(): void
@@ -81,15 +77,11 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $jobRepository->add($job);
         self::assertNull($job->endState);
 
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-
         $message = new TimeoutCheckMessage();
 
         ($this->handler)($message);
+
+        self::assertSame(0, $this->eventRecorder->count());
 
         $this->messengerAsserter->assertQueueCount(1);
         $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
@@ -118,38 +110,19 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $jobRepository->add($job);
         self::assertNull($job->endState);
 
-        $eventExpectationCount = 0;
-
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(
-                    function (EmittableEventInterface $actualEvent) use ($jobMaximumDuration, &$eventExpectationCount) {
-                        self::assertInstanceOf(JobTimeoutEvent::class, $actualEvent);
-
-                        if ($actualEvent instanceof JobTimeoutEvent) {
-                            $payload = $actualEvent->getPayload();
-                            self::assertIsArray($payload);
-                            self::assertArrayHasKey('maximum_duration_in_seconds', $payload);
-                            self::assertSame($jobMaximumDuration, $payload['maximum_duration_in_seconds']);
-                        }
-
-                        ++$eventExpectationCount;
-
-                        return true;
-                    },
-                ),
-            ]))
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty($this->handler, TimeoutCheckHandler::class, 'eventDispatcher', $eventDispatcher);
-
         $message = new TimeoutCheckMessage();
 
         ($this->handler)($message);
 
-        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-        $this->messengerAsserter->assertQueueCount(0);
+        self::assertSame(1, $this->eventRecorder->count());
+
+        $jobTimeoutEvent = $this->eventRecorder->get(0);
+        self::assertInstanceOf(JobTimeoutEvent::class, $jobTimeoutEvent);
+
+        $payload = $jobTimeoutEvent->getPayload();
+        self::assertIsArray($payload);
+        self::assertArrayHasKey('maximum_duration_in_seconds', $payload);
+        self::assertSame($jobMaximumDuration, $payload['maximum_duration_in_seconds']);
     }
 
     private function createJobWithMutatedStartDateTime(Job $job): Job
