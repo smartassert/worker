@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Message\CompileSourceMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\Event;
 
 class EventRecorder implements EventSubscriberInterface
 {
     /**
-     * @var Event[]
+     * @var object[]
      */
     private array $events = [];
 
@@ -24,18 +27,36 @@ class EventRecorder implements EventSubscriberInterface
             JobStartedEvent::class => [
                 ['addEvent', 1000],
             ],
+            CompileSourceMessage::class => [
+                ['addEvent', 1000],
+            ],
+            SourceCompilationStartedEvent::class => [
+                ['addEvent', 1000],
+            ],
+            SourceCompilationPassedEvent::class => [
+                ['addEvent', 1000],
+            ],
+            SourceCompilationFailedEvent::class => [
+                ['addEvent', 1000],
+            ],
         ];
     }
 
-    public function addEvent(Event $event): void
+    public function addEvent(object $event): void
     {
         $this->events[] = $event;
     }
 
-    public function getLatest(): ?Event
+    public function count(): int
     {
-        $latest = $this->events[0] ?? null;
+        return count($this->events);
+    }
 
-        return $latest instanceof Event ? $latest : null;
+    /**
+     * @param 0|positive-int $index
+     */
+    public function get(int $index): ?object
+    {
+        return $this->events[$index] ?? null;
     }
 }

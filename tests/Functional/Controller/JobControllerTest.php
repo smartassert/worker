@@ -109,7 +109,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $this->jsonResponseAsserter->assertJsonResponse(400, $expectedResponseData, $response);
 
         self::assertFalse($this->jobRepository->has());
-        self::assertNull($this->eventRecorder->getLatest());
+        self::assertSame(0, $this->eventRecorder->count());
     }
 
     /**
@@ -407,7 +407,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
             );
         }
 
-        $jobStartedEvent = $this->eventRecorder->getLatest();
+        $jobStartedEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
         self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
     }
