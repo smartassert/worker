@@ -127,7 +127,7 @@
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml build)"
         ],
         "integration-start": [
-            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d event-receiver html-fixtures compiler chrome-runner firefox-runner delegator postgres caddy)"
+            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d event-receiver html-fixtures compiler chrome-runner firefox-runner delegator postgres caddy results-service results-http)"
         ],
         "image-start": [
             "docker-compose -f ./tests/build/docker-compose.yml stop app-web",
@@ -138,6 +138,10 @@
         "image-chown-app-source": [
             "docker-compose -f ./tests/build/docker-compose.yml exec -T app-web chown -R www-data:www-data /app/source"
         ],
+        "results-setup": [
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:database:create --if-not-exists",
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+        ],
         "integration-status": "docker-compose -f ./tests/build/docker-compose.yml ps",
         "integration-teardown": [
             "@functional-teardown"
@@ -146,7 +150,8 @@
             "@integration-build",
             "@integration-start",
             "sleep 2",
-            "@db-setup"
+            "@db-setup",
+            "@results-setup"
         ],
         "test-image": [
             "@image-start",
