@@ -71,8 +71,8 @@ services:
     links:
       - app-web:app-web
     volumes:
-      - ./caddy/index.php:/app/public/index.php
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./http-config/caddy/index.php:/app/public/index.php
+      - ./http-config/caddy/Caddyfile:/etc/caddy/Caddyfile
 
   app-web:
     build:
