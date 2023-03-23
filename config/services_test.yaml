@@ -42,3 +42,6 @@ services:
         public: true
         arguments:
             $path: '%compiler_source_directory%'
+
+    App\Tests\Services\EventSubscriber\EventRecorder:
+        public: true
