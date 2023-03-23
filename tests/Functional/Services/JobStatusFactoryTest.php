@@ -105,7 +105,7 @@ class JobStatusFactoryTest extends AbstractBaseFunctionalTest
                     'event_ids' => [],
                 ],
             ],
-            'has sources, has tests' => [
+            'has sources, has tests created not in sequential position order' => [
                 'environmentSetup' => (new EnvironmentSetup())
                     ->withJobSetup(
                         (new JobSetup())
@@ -127,19 +127,29 @@ class JobStatusFactoryTest extends AbstractBaseFunctionalTest
                     ])
                     ->withTestSetups([
                         (new TestSetup())
-                            ->withSource('Test/has-sources-has-tests1.yml')
-                            ->withBrowser('chrome')
-                            ->withUrl('http://example.com/test-foo')
-                            ->withStepNames(['foo-step-one', 'foo-step-2'])
-                            ->withTarget('GeneratedChromeTest.php')
-                            ->withState(TestState::COMPLETE),
-                        (new TestSetup())
                             ->withSource('Test/has-sources-has-tests2.yml')
                             ->withBrowser('firefox')
                             ->withUrl('http://example.com/test-bar')
                             ->withStepNames(['bar-step-3', 'bar-step-4'])
                             ->withTarget('GeneratedFirefoxTest.php')
-                            ->withState(TestState::RUNNING),
+                            ->withState(TestState::RUNNING)
+                            ->withPosition(2),
+                        (new TestSetup())
+                            ->withSource('Test/has-sources-has-tests1.yml')
+                            ->withBrowser('chrome')
+                            ->withUrl('http://example.com/test-foo')
+                            ->withStepNames(['foo-step-one', 'foo-step-2'])
+                            ->withTarget('GeneratedChromeTest.php')
+                            ->withState(TestState::COMPLETE)
+                            ->withPosition(1),
+                        (new TestSetup())
+                            ->withSource('Test/has-sources-has-tests3.yml')
+                            ->withBrowser('firefox')
+                            ->withUrl('http://example.com/test-bar')
+                            ->withStepNames(['bar-step-3', 'bar-step-4'])
+                            ->withTarget('GeneratedFirefoxTest.php')
+                            ->withState(TestState::RUNNING)
+                            ->withPosition(3),
                     ]),
                 'expectedSerializedJobStatus' => [
                     'label' => 'has sources, has tests label',
@@ -179,6 +189,18 @@ class JobStatusFactoryTest extends AbstractBaseFunctionalTest
                             ],
                             'state' => 'running',
                             'position' => 2,
+                        ],
+                        [
+                            'browser' => 'firefox',
+                            'url' => 'http://example.com/test-bar',
+                            'source' => 'Test/has-sources-has-tests3.yml',
+                            'target' => 'GeneratedFirefoxTest.php',
+                            'step_names' => [
+                                'bar-step-3',
+                                'bar-step-4',
+                            ],
+                            'state' => 'running',
+                            'position' => 3,
                         ],
                     ],
                     'references' => [

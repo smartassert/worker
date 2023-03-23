@@ -25,7 +25,7 @@ class JobStatusFactory
 
     public function create(Job $job): JobStatus
     {
-        $tests = $this->testRepository->findAll();
+        $tests = $this->testRepository->findBy([], ['position' => 'ASC']);
 
         $testPathReferenceSources = [];
         foreach ($job->testPaths as $testPath) {
