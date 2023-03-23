@@ -8,6 +8,7 @@ use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\TestEvent;
 use App\Message\CompileSourceMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -37,6 +38,9 @@ class EventRecorder implements EventSubscriberInterface
                 ['addEvent', 1000],
             ],
             SourceCompilationFailedEvent::class => [
+                ['addEvent', 1000],
+            ],
+            TestEvent::class => [
                 ['addEvent', 1000],
             ],
         ];
