@@ -17,9 +17,9 @@ use Symfony\Component\Yaml\Dumper;
 
 abstract class AbstractImageTestCase extends TestCase
 {
-    private const JOB_URL = 'https://localhost/job';
-    private const APPLICATION_STATE_URL = 'https://localhost/application_state';
-    private const EVENT_URL = 'https://localhost/event/%d';
+    private const JOB_URL = 'http://localhost:8000/job';
+    private const APPLICATION_STATE_URL = 'http://localhost:8000/application_state';
+    private const EVENT_URL = 'http://localhost:8000/event/%d';
 
     private static Client $httpClient;
     private static ApplicationResponseDataAsserter $responseDataAsserter;
