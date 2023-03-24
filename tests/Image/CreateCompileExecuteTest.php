@@ -7,36 +7,57 @@ namespace App\Tests\Image;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
+use Psr\Http\Message\ResponseInterface;
 
-class CreateCompileExecuteTest extends AbstractJobTest
+class CreateCompileExecuteTest extends AbstractImageTest
 {
-    public function testJobIsCreated(): void
-    {
-        self::assertSame(200, self::$createResponse->getStatusCode());
+    private const MICROSECONDS_PER_SECOND = 1000000;
+    private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
 
-        $responseData = json_decode(self::$createResponse->getBody()->getContents(), true);
-        self::assertIsArray($responseData);
-        self::assertArrayHasKey('event_ids', $responseData);
-        self::assertSame([1, 2], $responseData['event_ids']);
+    protected static ResponseInterface $createResponse;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$createResponse = self::makeCreateJobRequest(array_merge(
+            [
+                'source' => self::createSerializedSource(
+                    [
+                        'Test/chrome-open-index.yml',
+                        'Test/chrome-firefox-open-index.yml',
+                        'Test/chrome-open-form.yml',
+                    ],
+                    [
+                        'Test/chrome-open-index.yml',
+                        'Test/chrome-firefox-open-index.yml',
+                        'Test/chrome-open-form.yml',
+                        'Page/index.yml',
+                    ]
+                ),
+            ],
+            [
+                'label' => md5('label content'),
+                'event_delivery_url' => 'http://event-receiver/status/200',
+                'maximum_duration_in_seconds' => 600,
+            ]
+        ));
     }
 
-    public function testGetJobStartedEvent(): void
+    public function testMain(): void
     {
-        $response = $this->makeGetEventRequest(1);
-        self::assertSame(200, $response->getStatusCode());
+        $duration = 0;
+        $durationExceeded = false;
+        $waitThreshold = 60 * self::MICROSECONDS_PER_SECOND;
 
-        $responseData = json_decode($response->getBody()->getContents(), true);
-        self::assertIsArray($responseData);
-        self::assertArrayHasKey('header', $responseData);
+        while (false === $durationExceeded && false === $this->isApplicationToComplete()) {
+            usleep(self::WAIT_INTERVAL);
+            $duration += self::WAIT_INTERVAL;
+            $durationExceeded = $duration >= $waitThreshold;
+        }
 
-        $headerData = $responseData['header'];
-        self::assertIsArray($headerData);
-        self::assertArrayHasKey('type', $headerData);
-        self::assertSame('job/started', $headerData['type']);
-    }
+        self::assertFalse($durationExceeded);
 
-    protected function doMain(): void
-    {
         $this->assertJob(
             [
                 'label' => md5('label content'),
@@ -115,45 +136,37 @@ class CreateCompileExecuteTest extends AbstractJobTest
         self::assertNotSame([1], $eventIds);
     }
 
-    protected static function getManifestPaths(): array
+    public function testJobIsCreated(): void
     {
-        return [
-            'Test/chrome-open-index.yml',
-            'Test/chrome-firefox-open-index.yml',
-            'Test/chrome-open-form.yml',
-        ];
+        self::assertSame(200, self::$createResponse->getStatusCode());
+
+        $responseData = json_decode(self::$createResponse->getBody()->getContents(), true);
+        self::assertIsArray($responseData);
+        self::assertArrayHasKey('event_ids', $responseData);
+        self::assertSame([1, 2], $responseData['event_ids']);
     }
 
-    protected static function getSourcePaths(): array
+    public function testGetJobStartedEvent(): void
     {
-        return [
-            'Test/chrome-open-index.yml',
-            'Test/chrome-firefox-open-index.yml',
-            'Test/chrome-open-form.yml',
-            'Page/index.yml',
-        ];
+        $response = $this->makeGetEventRequest(1);
+        self::assertSame(200, $response->getStatusCode());
+
+        $responseData = json_decode($response->getBody()->getContents(), true);
+        self::assertIsArray($responseData);
+        self::assertArrayHasKey('header', $responseData);
+
+        $headerData = $responseData['header'];
+        self::assertIsArray($headerData);
+        self::assertArrayHasKey('type', $headerData);
+        self::assertSame('job/started', $headerData['type']);
     }
 
-    protected static function getCreateJobParameters(): array
-    {
-        return [
-            'label' => md5('label content'),
-            'event_delivery_url' => 'http://event-receiver/status/200',
-            'maximum_duration_in_seconds' => 600,
-        ];
-    }
-
-    protected function isApplicationToComplete(): bool
+    private function isApplicationToComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
         return CompilationState::COMPLETE->value === $state['compilation']
             && ExecutionState::COMPLETE->value === $state['execution']
             && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
-    }
-
-    protected function getWaitThresholdInSeconds(): int
-    {
-        return 60;
     }
 }
