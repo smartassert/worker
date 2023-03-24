@@ -9,6 +9,7 @@ use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
+use App\Message\TimeoutCheckMessage;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
@@ -26,6 +27,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends AbstractBaseFunctionalTest
@@ -40,6 +42,7 @@ class JobControllerTest extends AbstractBaseFunctionalTest
     private CreateJobSourceFactory $createJobSourceFactory;
     private WorkerEventRepository $workerEventRepository;
     private EventRecorder $eventRecorder;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -92,6 +95,10 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $eventRecorder = self::getContainer()->get(EventRecorder::class);
         \assert($eventRecorder instanceof EventRecorder);
         $this->eventRecorder = $eventRecorder;
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     /**
@@ -410,6 +417,13 @@ class JobControllerTest extends AbstractBaseFunctionalTest
         $jobStartedEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
         self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
+
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+        self::assertEquals(
+            new TimeoutCheckMessage(),
+            $transportQueue[count($transportQueue) - 1]->getMessage()
+        );
     }
 
     /**
