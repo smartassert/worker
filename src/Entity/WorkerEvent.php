@@ -87,24 +87,24 @@ class WorkerEvent implements \JsonSerializable
 
     /**
      * @return array{
-     *     header: array{
-     *       sequence_number: int,
-     *       type: non-empty-string,
-     *       label: non-empty-string,
-     *       reference: non-empty-string,
-     *       related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>
-     *     },
+     *     sequence_number: int,
+     *     type: non-empty-string,
+     *     label: non-empty-string,
+     *     reference: non-empty-string,
+     *     related_references?: array<int, array{label: non-empty-string, reference: non-empty-string}>,
      *     body: array<mixed>
      * }
      */
     public function jsonSerialize(): array
     {
-        $header = array_merge(
+        $data = array_merge(
             [
                 'sequence_number' => (int) $this->getId(),
                 'type' => $this->scope->value . '/' . $this->outcome->value,
+
+                'body' => $this->payload,
             ],
-            $this->reference->toArray()
+            $this->reference->toArray(),
         );
 
         $references = [];
@@ -114,12 +114,9 @@ class WorkerEvent implements \JsonSerializable
         $relatedReferences = new WorkerEventReferenceCollection($references);
 
         if (0 !== count($references)) {
-            $header['related_references'] = $relatedReferences->toArray();
+            $data['related_references'] = $relatedReferences->toArray();
         }
 
-        return [
-            'header' => $header,
-            'body' => $this->payload,
-        ];
+        return $data;
     }
 }

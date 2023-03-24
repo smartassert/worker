@@ -153,12 +153,8 @@ class CreateCompileExecuteTest extends AbstractImageTest
 
         $responseData = json_decode($response->getBody()->getContents(), true);
         self::assertIsArray($responseData);
-        self::assertArrayHasKey('header', $responseData);
-
-        $headerData = $responseData['header'];
-        self::assertIsArray($headerData);
-        self::assertArrayHasKey('type', $headerData);
-        self::assertSame('job/started', $headerData['type']);
+        self::assertArrayHasKey('type', $responseData);
+        self::assertSame('job/started', $responseData['type']);
     }
 
     private function isApplicationToComplete(): bool
