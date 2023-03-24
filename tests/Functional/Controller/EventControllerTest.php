@@ -81,12 +81,10 @@ class EventControllerTest extends AbstractBaseFunctionalTest
         $this->jsonResponseAsserter->assertJsonResponse(
             200,
             [
-                'header' => [
-                    'label' => $eventLabel,
-                    'reference' => $eventReference,
-                    'sequence_number' => $event->getId(),
-                    'type' => 'job/completed',
-                ],
+                'label' => $eventLabel,
+                'reference' => $eventReference,
+                'sequence_number' => $event->getId(),
+                'type' => 'job/completed',
                 'body' => $eventPayload,
             ],
             $response

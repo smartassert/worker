@@ -88,12 +88,10 @@ class EventDeliveryRequestFactoryTest extends AbstractBaseFunctionalTest
             'job/started' => [
                 'event' => $jobStartedWorkerEvent,
                 'expectedRequestPayload' => [
-                    'header' => [
-                        'sequence_number' => 3,
-                        'type' => 'job/started',
-                        'label' => 'job label',
-                        'reference' => 'job/started reference',
-                    ],
+                    'sequence_number' => 3,
+                    'type' => 'job/started',
+                    'label' => 'job label',
+                    'reference' => 'job/started reference',
                     'body' => [
                         'tests' => ['test1.yml', 'test2.yml'],
                     ]
