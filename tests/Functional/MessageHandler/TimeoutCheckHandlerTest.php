@@ -11,19 +11,20 @@ use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Repository\JobRepository;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 {
     use MockeryPHPUnitIntegration;
 
     private TimeoutCheckHandler $handler;
-    private MessengerAsserter $messengerAsserter;
     private EventRecorder $eventRecorder;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -33,10 +34,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         \assert($timeoutCheckHandler instanceof TimeoutCheckHandler);
         $this->handler = $timeoutCheckHandler;
 
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
-
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
@@ -45,11 +42,15 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $eventRecorder = self::getContainer()->get(EventRecorder::class);
         \assert($eventRecorder instanceof EventRecorder);
         $this->eventRecorder = $eventRecorder;
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     public function testInvokeNoJob(): void
     {
-        $this->messengerAsserter->assertQueueCount(0);
+        self::assertCount(0, $this->messengerTransport->get());
 
         $message = new TimeoutCheckMessage();
 
@@ -57,7 +58,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ($this->handler)($message);
             self::fail(JobNotFoundException::class . ' not thrown');
         } catch (JobNotFoundException) {
-            $this->messengerAsserter->assertQueueCount(0);
+            self::assertCount(0, $this->messengerTransport->get());
         }
 
         self::assertSame(0, $this->eventRecorder->count());
@@ -83,13 +84,19 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertSame(0, $this->eventRecorder->count());
 
-        $this->messengerAsserter->assertQueueCount(1);
-        $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
-        $this->messengerAsserter->assertEnvelopeContainsStamp(
-            $this->messengerAsserter->getEnvelopeAtPosition(0),
-            new DelayStamp(30000),
-            0
-        );
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+        self::assertCount(1, $transportQueue);
+
+        $envelope = $transportQueue[0];
+        self::assertInstanceOf(Envelope::class, $envelope);
+        self::assertEquals(new TimeoutCheckMessage(), $envelope->getMessage());
+
+        $delayStamps = $envelope->all(DelayStamp::class);
+        self::assertCount(1, $delayStamps);
+
+        $delayStamp = $delayStamps[0];
+        self::assertEquals(new DelayStamp(30000), $delayStamp);
     }
 
     public function testInvokeJobMaximumDurationReached(): void

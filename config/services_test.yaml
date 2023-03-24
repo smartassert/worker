@@ -13,11 +13,6 @@ services:
     App\Tests\Services\TestTestMutator:
         public: true
 
-    App\Tests\Services\Asserter\MessengerAsserter:
-        public: true
-        arguments:
-            $transport: '@messenger.transport.async'
-
     app.tests.services.guzzle.handler.queuing:
         public: true
         class: GuzzleHttp\Handler\MockHandler
