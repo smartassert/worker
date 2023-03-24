@@ -10,7 +10,7 @@ use App\Enum\WorkerEventScope;
 use App\Model\Document\Document;
 use App\Model\ResourceReferenceSource;
 
-class TestEvent extends AbstractEvent implements EmittableEventInterface
+class TestEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface
 {
     /**
      * @param non-empty-string $path

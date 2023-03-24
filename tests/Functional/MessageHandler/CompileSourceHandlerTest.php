@@ -6,8 +6,8 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\Source;
+use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Event\EmittableEvent\AbstractSourceEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
@@ -15,18 +15,15 @@ use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Mock\MockErrorOutput;
-use App\Tests\Mock\MockEventDispatcher;
 use App\Tests\Mock\MockTestManifest;
 use App\Tests\Mock\Services\MockCompiler;
 use App\Tests\Model\EnvironmentSetup;
-use App\Tests\Model\ExpectedDispatchedEvent;
-use App\Tests\Model\ExpectedDispatchedEventCollection;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
@@ -36,6 +33,7 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
     private CompileSourceHandler $handler;
     private EnvironmentFactory $environmentFactory;
+    private EventRecorder $eventRecorder;
 
     protected function setUp(): void
     {
@@ -53,21 +51,21 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Source::class);
+            $entityRemover->removeForEntity(Test::class);
             $entityRemover->removeForEntity(WorkerEvent::class);
         }
+
+        $eventRecorder = self::getContainer()->get(EventRecorder::class);
+        \assert($eventRecorder instanceof EventRecorder);
+        $this->eventRecorder = $eventRecorder;
     }
 
     public function testInvokeNoJob(): void
     {
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty($this->handler, CompileSourceHandler::class, 'eventDispatcher', $eventDispatcher);
-
         $handler = $this->handler;
         $handler(\Mockery::mock(CompileSourceMessage::class));
+
+        self::assertSame(0, $this->eventRecorder->count());
     }
 
     public function testInvokeJobInWrongState(): void
@@ -77,15 +75,10 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
                 ->withJobSetup(new JobSetup()),
         );
 
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withoutDispatchCall()
-            ->getMock()
-        ;
-
-        ObjectReflector::setProperty($this->handler, CompileSourceHandler::class, 'eventDispatcher', $eventDispatcher);
-
         $handler = $this->handler;
         $handler(\Mockery::mock(CompileSourceMessage::class));
+
+        self::assertSame(0, $this->eventRecorder->count());
     }
 
     public function testInvokeCompileSuccess(): void
@@ -106,10 +99,18 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
 
         $testManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
-                ->withGetStepNamesCall([])
+                ->withGetStepNamesCall(['step one', 'step two'])
+                ->withGetBrowserCall('chrome')
+                ->withGetUrlCall('https://example.com')
+                ->withGetSourceCall($sourcePath)
+                ->withGetTargetCall('Target.php')
                 ->getMock(),
             (new MockTestManifest())
-                ->withGetStepNamesCall([])
+                ->withGetStepNamesCall(['step one', 'step two'])
+                ->withGetBrowserCall('chrome')
+                ->withGetUrlCall('https://example.com')
+                ->withGetSourceCall($sourcePath)
+                ->withGetTargetCall('Target.php')
                 ->getMock(),
         ]);
 
@@ -128,48 +129,14 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             $compiler
         );
 
-        $eventExpectationCount = 0;
-
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(
-                    function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
-                        self::assertSame(
-                            $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
-                        );
-                        ++$eventExpectationCount;
-
-                        return true;
-                    },
-                ),
-                new ExpectedDispatchedEvent(
-                    function (
-                        SourceCompilationPassedEvent $actualEvent
-                    ) use (
-                        $sourcePath,
-                        $testManifestCollection,
-                        &$eventExpectationCount
-                    ) {
-                        self::assertSame(
-                            $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
-                        );
-                        self::assertSame($testManifestCollection, $actualEvent->getTestManifestCollection());
-                        ++$eventExpectationCount;
-
-                        return true;
-                    },
-                ),
-            ]))
-            ->getMock()
-        ;
-
-        $this->setCompileSourceHandlerEventDispatcher($eventDispatcher);
-
         ($this->handler)($compileSourceMessage);
 
-        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
+        self::assertSame(2, $this->eventRecorder->count());
+        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
+        self::assertEquals(
+            new SourceCompilationPassedEvent($sourcePath, $testManifestCollection),
+            $this->eventRecorder->get(1)
+        );
     }
 
     public function testInvokeCompileFailure(): void
@@ -213,54 +180,17 @@ class CompileSourceHandlerTest extends AbstractBaseFunctionalTest
             $compiler
         );
 
-        $eventExpectationCount = 0;
-
-        $eventDispatcher = (new MockEventDispatcher())
-            ->withDispatchCalls(new ExpectedDispatchedEventCollection([
-                new ExpectedDispatchedEvent(
-                    function (SourceCompilationStartedEvent $actualEvent) use ($sourcePath, &$eventExpectationCount) {
-                        self::assertSame(
-                            $sourcePath,
-                            ObjectReflector::getProperty($actualEvent, 'source', AbstractSourceEvent::class)
-                        );
-                        ++$eventExpectationCount;
-
-                        return true;
-                    },
-                ),
-                new ExpectedDispatchedEvent(
-                    function (
-                        SourceCompilationFailedEvent $actualEvent
-                    ) use (
-                        $sourcePath,
-                        $errorOutputData,
-                        &$eventExpectationCount
-                    ) {
-                        $payload = $actualEvent->getPayload();
-                        self::assertArrayHasKey('source', $payload);
-                        self::assertSame($sourcePath, $payload['source']);
-
-                        self::assertArrayHasKey('output', $payload);
-                        self::assertSame($errorOutputData, $payload['output']);
-                        ++$eventExpectationCount;
-
-                        return true;
-                    },
-                ),
-            ]))
-            ->getMock()
-        ;
-
-        $this->setCompileSourceHandlerEventDispatcher($eventDispatcher);
-
         $handler = $this->handler;
         $handler($compileSourceMessage);
 
-        self::assertGreaterThan(0, $eventExpectationCount, 'Mock event dispatcher expectations did not run');
-    }
+        self::assertSame(2, $this->eventRecorder->count());
+        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
 
-    private function setCompileSourceHandlerEventDispatcher(EventDispatcherInterface $eventDispatcher): void
-    {
-        ObjectReflector::setProperty($this->handler, CompileSourceHandler::class, 'eventDispatcher', $eventDispatcher);
+        $foo = $this->eventRecorder->get(1);
+        self::assertInstanceOf(SourceCompilationFailedEvent::class, $foo);
+        self::assertEquals(
+            new SourceCompilationFailedEvent($sourcePath, $errorOutputData),
+            $this->eventRecorder->get(1)
+        );
     }
 }
