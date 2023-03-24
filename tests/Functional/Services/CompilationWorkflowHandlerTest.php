@@ -15,15 +15,14 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
     private CompilationWorkflowHandler $handler;
-    private MessengerAsserter $messengerAsserter;
     private EnvironmentFactory $environmentFactory;
     private TransportInterface $messengerTransport;
 
@@ -34,10 +33,6 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $compilationWorkflowHandler = self::getContainer()->get(CompilationWorkflowHandler::class);
         \assert($compilationWorkflowHandler instanceof CompilationWorkflowHandler);
         $this->handler = $compilationWorkflowHandler;
-
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
@@ -98,8 +93,13 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
-        self::assertCount(1, $this->messengerTransport->get());
-        $this->messengerAsserter->assertMessageAtPositionEquals(0, $expectedQueuedMessage);
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+        self::assertCount(1, $transportQueue);
+
+        $envelope = $transportQueue[0];
+        self::assertInstanceOf(Envelope::class, $envelope);
+        self::assertEquals($expectedQueuedMessage, $envelope->getMessage());
     }
 
     /**

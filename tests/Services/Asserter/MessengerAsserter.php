@@ -35,12 +35,4 @@ class MessengerAsserter
 
         return $envelope;
     }
-
-    public function assertMessageAtPositionEquals(int $index, object $expectedMessage): void
-    {
-        TestCase::assertEquals(
-            $expectedMessage,
-            $this->getEnvelopeAtPosition($index)->getMessage()
-        );
-    }
 }

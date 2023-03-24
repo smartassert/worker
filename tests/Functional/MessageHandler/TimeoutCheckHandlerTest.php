@@ -11,7 +11,6 @@ use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Repository\JobRepository;
 use App\Tests\AbstractBaseFunctionalTest;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -24,7 +23,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private TimeoutCheckHandler $handler;
-    private MessengerAsserter $messengerAsserter;
     private EventRecorder $eventRecorder;
     private TransportInterface $messengerTransport;
 
@@ -35,10 +33,6 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $timeoutCheckHandler = self::getContainer()->get(TimeoutCheckHandler::class);
         \assert($timeoutCheckHandler instanceof TimeoutCheckHandler);
         $this->handler = $timeoutCheckHandler;
-
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -90,14 +84,13 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertSame(0, $this->eventRecorder->count());
 
-        self::assertCount(1, $this->messengerTransport->get());
-        $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
-
         $transportQueue = $this->messengerTransport->get();
         self::assertIsArray($transportQueue);
+        self::assertCount(1, $transportQueue);
 
         $envelope = $transportQueue[0];
         self::assertInstanceOf(Envelope::class, $envelope);
+        self::assertEquals(new TimeoutCheckMessage(), $envelope->getMessage());
 
         $delayStamps = $envelope->all(DelayStamp::class);
         self::assertCount(1, $delayStamps);

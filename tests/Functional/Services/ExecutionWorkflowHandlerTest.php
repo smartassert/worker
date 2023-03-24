@@ -17,16 +17,15 @@ use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
 class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
     private ExecutionWorkflowHandler $handler;
-    private MessengerAsserter $messengerAsserter;
     private EnvironmentFactory $environmentFactory;
     private TransportInterface $messengerTransport;
 
@@ -37,10 +36,6 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $executionWorkflowHandler = self::getContainer()->get(ExecutionWorkflowHandler::class);
         \assert($executionWorkflowHandler instanceof ExecutionWorkflowHandler);
         $this->handler = $executionWorkflowHandler;
-
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
-        $this->messengerAsserter = $messengerAsserter;
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
@@ -156,7 +151,13 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
             self::assertIsInt($expectedNextTestId);
 
-            $this->messengerAsserter->assertMessageAtPositionEquals(0, new ExecuteTestMessage($expectedNextTestId));
+            $transportQueue = $this->messengerTransport->get();
+            self::assertIsArray($transportQueue);
+            self::assertCount(1, $transportQueue);
+
+            $envelope = $transportQueue[0];
+            self::assertInstanceOf(Envelope::class, $envelope);
+            self::assertEquals(new ExecuteTestMessage($expectedNextTestId), $envelope->getMessage());
         }
     }
 
@@ -235,14 +236,18 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $execute();
 
-        self::assertCount(1, $this->messengerTransport->get());
-
         $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
         self::assertInstanceOf(Test::class, $expectedNextTest);
 
         $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
         self::assertIsInt($expectedNextTestId);
 
-        $this->messengerAsserter->assertMessageAtPositionEquals(0, new ExecuteTestMessage($expectedNextTestId));
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+        self::assertCount(1, $transportQueue);
+
+        $envelope = $transportQueue[0];
+        self::assertInstanceOf(Envelope::class, $envelope);
+        self::assertEquals(new ExecuteTestMessage($expectedNextTestId), $envelope->getMessage());
     }
 }

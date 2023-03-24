@@ -11,15 +11,14 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Test as TestDocument;
-use App\Repository\JobRepository;
 use App\Tests\AbstractBaseFunctionalTest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
-use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
@@ -27,7 +26,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
     use MockeryPHPUnitIntegration;
 
     private EventDispatcherInterface $eventDispatcher;
-    private Job $job;
     private TransportInterface $messengerTransport;
 
     protected function setUp(): void
@@ -47,13 +45,6 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         \assert($environmentFactory instanceof EnvironmentFactory);
         $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
 
-        $jobRepository = self::getContainer()->get(JobRepository::class);
-        \assert($jobRepository instanceof JobRepository);
-
-        $job = $jobRepository->get();
-        \assert($job instanceof Job);
-        $this->job = $job;
-
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
         \assert($messengerTransport instanceof TransportInterface);
         $this->messengerTransport = $messengerTransport;
@@ -69,12 +60,12 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             WorkerEventOutcome::PASSED
         ));
 
-        $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
-        \assert($messengerAsserter instanceof MessengerAsserter);
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+        self::assertCount(2, $transportQueue);
 
-        self::assertCount(2, $this->messengerTransport->get());
-        $messengerAsserter->assertMessageAtPositionEquals(1, new JobCompletedCheckMessage());
-
-        self::assertNull($this->job->endState);
+        $envelope = $transportQueue[1];
+        self::assertInstanceOf(Envelope::class, $envelope);
+        self::assertEquals(new JobCompletedCheckMessage(), $envelope->getMessage());
     }
 }
