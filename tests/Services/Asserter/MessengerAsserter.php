@@ -37,11 +37,6 @@ class MessengerAsserter
         return $envelope;
     }
 
-    public function assertQueueIsEmpty(): void
-    {
-        $this->assertQueueCount(0);
-    }
-
     public function assertQueueCount(int $expectedCount): void
     {
         TestCase::assertCount($expectedCount, $this->transport->get());

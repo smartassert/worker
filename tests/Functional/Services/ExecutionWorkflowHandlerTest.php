@@ -20,6 +20,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
 class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
@@ -27,6 +28,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     private ExecutionWorkflowHandler $handler;
     private MessengerAsserter $messengerAsserter;
     private EnvironmentFactory $environmentFactory;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -50,12 +52,16 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $entityRemover->removeForEntity(Job::class);
             $entityRemover->removeForEntity(Test::class);
         }
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     public function testDispatchNextExecuteTestMessageNoMessageDispatched(): void
     {
         $this->handler->dispatchNextExecuteTestMessage();
-        $this->messengerAsserter->assertQueueIsEmpty();
+        self::assertCount(0, $this->messengerTransport->get());
     }
 
     /**
@@ -129,7 +135,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
     ): void {
         $environment = $this->environmentFactory->create($setup);
         $tests = $environment->getTests();
-        $this->messengerAsserter->assertQueueIsEmpty();
+        self::assertCount(0, $this->messengerTransport->get());
 
         $test = $tests[$eventTestIndex];
         $event = new TestEvent(
@@ -222,7 +228,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
         callable $execute,
         int $expectedNextTestIndex
     ): void {
-        $this->messengerAsserter->assertQueueIsEmpty();
+        self::assertCount(0, $this->messengerTransport->get());
 
         $environment = $this->environmentFactory->create($setup);
         $tests = $environment->getTests();

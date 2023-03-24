@@ -18,12 +18,14 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
     private CompilationWorkflowHandler $handler;
     private MessengerAsserter $messengerAsserter;
     private EnvironmentFactory $environmentFactory;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -47,6 +49,10 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
             $entityRemover->removeForEntity(Source::class);
             $entityRemover->removeForEntity(Test::class);
         }
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     /**
@@ -58,7 +64,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
-        $this->messengerAsserter->assertQueueIsEmpty();
+        self::assertCount(0, $this->messengerTransport->get());
     }
 
     /**
