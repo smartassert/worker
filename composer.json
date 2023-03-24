@@ -145,13 +145,13 @@
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml build)"
         ],
         "integration-start": [
-            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d event-receiver html-fixtures compiler chrome-runner firefox-runner delegator postgres caddy users-service users-http results-service results-http)"
+            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d)"
         ],
         "image-start": [
-            "docker-compose -f ./tests/build/docker-compose.yml stop app-web",
+            "docker-compose -f ./tests/build/docker-compose.yml stop app",
             "@db-recreate",
             "@integration-setup",
-            "docker-compose -f ./tests/build/docker-compose.yml start app-web"
+            "docker-compose -f ./tests/build/docker-compose.yml start app"
         ],
         "image-chown-app-source": [
             "docker-compose -f ./tests/build/docker-compose.yml exec -T app-web chown -R www-data:www-data /app/source"
@@ -163,6 +163,7 @@
         "integration-setup": [
             "@integration-build",
             "@integration-start",
+            "docker-compose -f ./tests/build/docker-compose.yml stop app",
             "sleep 2",
             "@db-setup",
             "@users-setup",

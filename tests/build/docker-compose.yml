@@ -106,33 +106,29 @@ services:
     ports:
       - 5432:5432
 
-  caddy:
+  app-http:
     image: caddy:2.4.5-alpine
-    container_name: caddy
+    container_name: app-http
     restart: unless-stopped
-    environment:
-      DOMAIN: ${CADDY_DOMAIN:-localhost}
-      TLS_INTERNAL: ${CADDY_TLS_INTERNAL:-internal}
     ports:
-      - "443:443"
+      - "8000:80"
     links:
-      - app-web:app-web
+      - app:app
     volumes:
       - ./http-config/caddy/index.php:/app/public/index.php
       - ./http-config/caddy/Caddyfile:/etc/caddy/Caddyfile
 
-  app-web:
+  app:
     build:
       context: ../..
       args:
         DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/worker-db?serverVersion=12&charset=utf8
         JOB_TIMEOUT_CHECK_PERIOD_MS: 1000
-    container_name: app-web
+    container_name: app
     depends_on:
       - compiler
       - delegator
       - postgres
     volumes:
-      - /var/log/app-web:/app/var/log
       - ../Fixtures/CompilerSource:/app/source
       - ../Fixtures/CompilerTarget:/app/tests
