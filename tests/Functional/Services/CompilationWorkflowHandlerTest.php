@@ -98,7 +98,7 @@ class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
-        $this->messengerAsserter->assertQueueCount(1);
+        self::assertCount(1, $this->messengerTransport->get());
         $this->messengerAsserter->assertMessageAtPositionEquals(0, $expectedQueuedMessage);
     }
 

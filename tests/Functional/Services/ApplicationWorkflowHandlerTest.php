@@ -20,6 +20,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -27,6 +28,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
     private EventDispatcherInterface $eventDispatcher;
     private Job $job;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -51,6 +53,10 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $job = $jobRepository->get();
         \assert($job instanceof Job);
         $this->job = $job;
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     public function testSubscribesToTestPassedEventApplicationComplete(): void
@@ -66,7 +72,7 @@ class ApplicationWorkflowHandlerTest extends AbstractBaseFunctionalTest
         $messengerAsserter = self::getContainer()->get(MessengerAsserter::class);
         \assert($messengerAsserter instanceof MessengerAsserter);
 
-        $messengerAsserter->assertQueueCount(2);
+        self::assertCount(2, $this->messengerTransport->get());
         $messengerAsserter->assertMessageAtPositionEquals(1, new JobCompletedCheckMessage());
 
         self::assertNull($this->job->endState);

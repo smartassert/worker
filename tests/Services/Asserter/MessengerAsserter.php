@@ -37,11 +37,6 @@ class MessengerAsserter
         return $envelope;
     }
 
-    public function assertQueueCount(int $expectedCount): void
-    {
-        TestCase::assertCount($expectedCount, $this->transport->get());
-    }
-
     public function assertMessageAtPositionEquals(int $index, object $expectedMessage): void
     {
         TestCase::assertEquals(

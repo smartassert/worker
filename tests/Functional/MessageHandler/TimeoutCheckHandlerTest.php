@@ -16,6 +16,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 {
@@ -24,6 +25,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
     private TimeoutCheckHandler $handler;
     private MessengerAsserter $messengerAsserter;
     private EventRecorder $eventRecorder;
+    private TransportInterface $messengerTransport;
 
     protected function setUp(): void
     {
@@ -45,11 +47,15 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
         $eventRecorder = self::getContainer()->get(EventRecorder::class);
         \assert($eventRecorder instanceof EventRecorder);
         $this->eventRecorder = $eventRecorder;
+
+        $messengerTransport = self::getContainer()->get('messenger.transport.async');
+        \assert($messengerTransport instanceof TransportInterface);
+        $this->messengerTransport = $messengerTransport;
     }
 
     public function testInvokeNoJob(): void
     {
-        $this->messengerAsserter->assertQueueCount(0);
+        self::assertCount(0, $this->messengerTransport->get());
 
         $message = new TimeoutCheckMessage();
 
@@ -57,7 +63,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
             ($this->handler)($message);
             self::fail(JobNotFoundException::class . ' not thrown');
         } catch (JobNotFoundException) {
-            $this->messengerAsserter->assertQueueCount(0);
+            self::assertCount(0, $this->messengerTransport->get());
         }
 
         self::assertSame(0, $this->eventRecorder->count());
@@ -83,7 +89,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertSame(0, $this->eventRecorder->count());
 
-        $this->messengerAsserter->assertQueueCount(1);
+        self::assertCount(1, $this->messengerTransport->get());
         $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
         $this->messengerAsserter->assertEnvelopeContainsStamp(
             $this->messengerAsserter->getEnvelopeAtPosition(0),

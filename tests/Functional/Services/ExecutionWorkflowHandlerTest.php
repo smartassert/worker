@@ -147,7 +147,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $this->handler->dispatchNextExecuteTestMessageForTestPassedEvent($event);
 
-        $this->messengerAsserter->assertQueueCount($expectedQueuedMessageCount);
+        self::assertCount($expectedQueuedMessageCount, $this->messengerTransport->get());
 
         if (is_int($expectedNextTestIndex)) {
             $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
@@ -235,7 +235,7 @@ class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
 
         $execute();
 
-        $this->messengerAsserter->assertQueueCount(1);
+        self::assertCount(1, $this->messengerTransport->get());
 
         $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
         self::assertInstanceOf(Test::class, $expectedNextTest);
