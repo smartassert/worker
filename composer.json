@@ -154,7 +154,7 @@
             "docker-compose -f ./tests/build/docker-compose.yml start app"
         ],
         "image-chown-app-source": [
-            "docker-compose -f ./tests/build/docker-compose.yml exec -T app-web chown -R www-data:www-data /app/source"
+            "docker-compose -f ./tests/build/docker-compose.yml exec -T app chown -R www-data:www-data /app/source"
         ],
         "integration-status": "docker-compose -f ./tests/build/docker-compose.yml ps",
         "integration-teardown": [
