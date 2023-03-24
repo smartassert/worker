@@ -9,7 +9,7 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Model\Document\Document;
 
-class StepEvent extends AbstractEvent implements EmittableEventInterface
+class StepEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface
 {
     /**
      * @param non-empty-string $path

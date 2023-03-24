@@ -9,6 +9,7 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\CompileSourceMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,6 +46,9 @@ class EventRecorder implements EventSubscriberInterface
                 ['addEvent', 1000],
             ],
             JobTimeoutEvent::class => [
+                ['addEvent', 1000],
+            ],
+            StepEvent::class => [
                 ['addEvent', 1000],
             ],
         ];
