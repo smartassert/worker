@@ -123,20 +123,38 @@
             "sleep 2",
             "@db-setup"
         ],
+        "users-db-setup": [
+            "docker-compose -f tests/build/docker-compose.yml exec -T users-service php bin/console doctrine:database:create --if-not-exists",
+            "docker-compose -f tests/build/docker-compose.yml exec -T users-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+        ],
+        "users-generate-jwt-keys": "docker-compose -f tests/build/docker-compose.yml exec -T users-service php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction",
+        "users-create-user": [
+            "curl --header 'Authorization: primary_admin_token' --data 'email=user@example.com&password=password' http://localhost:9080/admin/user/create",
+            ""
+        ],
+        "users-setup": [
+            "@users-db-setup",
+            "@users-generate-jwt-keys",
+            "@users-create-user"
+        ],
+        "results-setup": [
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:database:create --if-not-exists",
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+        ],
         "integration-build": [
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml build)"
         ],
         "integration-start": [
-            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d event-receiver html-fixtures compiler chrome-runner firefox-runner delegator postgres caddy)"
+            "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml up -d)"
         ],
         "image-start": [
-            "docker-compose -f ./tests/build/docker-compose.yml stop app-web",
+            "docker-compose -f ./tests/build/docker-compose.yml stop app",
             "@db-recreate",
             "@integration-setup",
-            "docker-compose -f ./tests/build/docker-compose.yml start app-web"
+            "docker-compose -f ./tests/build/docker-compose.yml start app"
         ],
         "image-chown-app-source": [
-            "docker-compose -f ./tests/build/docker-compose.yml exec -T app-web chown -R www-data:www-data /app/source"
+            "docker-compose -f ./tests/build/docker-compose.yml exec -T app chown -R www-data:www-data /app/source"
         ],
         "integration-status": "docker-compose -f ./tests/build/docker-compose.yml ps",
         "integration-teardown": [
@@ -145,8 +163,11 @@
         "integration-setup": [
             "@integration-build",
             "@integration-start",
+            "docker-compose -f ./tests/build/docker-compose.yml stop app",
             "sleep 2",
-            "@db-setup"
+            "@db-setup",
+            "@users-setup",
+            "@results-setup"
         ],
         "test-image": [
             "@image-start",
