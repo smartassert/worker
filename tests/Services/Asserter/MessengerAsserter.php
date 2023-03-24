@@ -6,7 +6,6 @@ namespace App\Tests\Services\Asserter;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Stamp\StampInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class MessengerAsserter
@@ -43,21 +42,5 @@ class MessengerAsserter
             $expectedMessage,
             $this->getEnvelopeAtPosition($index)->getMessage()
         );
-    }
-
-    public function assertEnvelopeContainsStamp(
-        Envelope $envelope,
-        StampInterface $expectedStamp,
-        int $expectedStampIndex
-    ): void {
-        $stamps = $envelope->all();
-        $typeIndex = get_class($expectedStamp);
-
-        TestCase::assertArrayHasKey($typeIndex, $stamps);
-
-        $typeStamps = $stamps[$typeIndex];
-        $actualStamp = $typeStamps[$expectedStampIndex] ?? null;
-
-        TestCase::assertEquals($expectedStamp, $actualStamp);
     }
 }

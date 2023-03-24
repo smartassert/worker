@@ -15,6 +15,7 @@ use App\Tests\Services\Asserter\MessengerAsserter;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
@@ -91,11 +92,18 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTest
 
         self::assertCount(1, $this->messengerTransport->get());
         $this->messengerAsserter->assertMessageAtPositionEquals(0, new TimeoutCheckMessage());
-        $this->messengerAsserter->assertEnvelopeContainsStamp(
-            $this->messengerAsserter->getEnvelopeAtPosition(0),
-            new DelayStamp(30000),
-            0
-        );
+
+        $transportQueue = $this->messengerTransport->get();
+        self::assertIsArray($transportQueue);
+
+        $envelope = $transportQueue[0];
+        self::assertInstanceOf(Envelope::class, $envelope);
+
+        $delayStamps = $envelope->all(DelayStamp::class);
+        self::assertCount(1, $delayStamps);
+
+        $delayStamp = $delayStamps[0];
+        self::assertEquals(new DelayStamp(30000), $delayStamp);
     }
 
     public function testInvokeJobMaximumDurationReached(): void
