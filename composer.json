@@ -139,7 +139,8 @@
         ],
         "results-setup": [
             "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:database:create --if-not-exists",
-            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
+            "docker-compose -f tests/build/docker-compose.yml exec -T results-service php bin/console dbal:run-sql \"insert into job (token, label, user_id) values ('01GWA71YQVHWF5FYFE16VWTMP3', 'label_value', 'user_id_value') on conflict (token, label) do nothing\""
         ],
         "integration-build": [
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker-compose -f ./tests/build/docker-compose.yml build)"
