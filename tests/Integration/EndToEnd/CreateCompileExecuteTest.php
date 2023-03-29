@@ -17,7 +17,6 @@ use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTest;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
-use App\Tests\Services\CallableInvoker;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
@@ -31,7 +30,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 {
     private const MAX_DURATION_IN_SECONDS = 30;
 
-    private CallableInvoker $callableInvoker;
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
     private CreateJobSourceFactory $createJobSourceFactory;
@@ -42,10 +40,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
     protected function setUp(): void
     {
         parent::setUp();
-
-        $callableInvoker = self::getContainer()->get(CallableInvoker::class);
-        \assert($callableInvoker instanceof CallableInvoker);
-        $this->callableInvoker = $callableInvoker;
 
         $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
@@ -88,7 +82,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
-        ?callable $assertions = null
+        callable $assertions
     ): void {
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
@@ -162,9 +156,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
 
         self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
 
-        if (is_callable($assertions)) {
-            $this->callableInvoker->invoke($assertions);
-        }
+        $httpLogReader = self::getContainer()->get(HttpLogReader::class);
+        $deliverEventRequestFactory = self::getContainer()->get(IntegrationDeliverEventRequestFactory::class);
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+
+        $assertions($httpLogReader, $deliverEventRequestFactory, $workerEventRepository, $this->eventDeliveryBaseUrl);
     }
 
     /**
