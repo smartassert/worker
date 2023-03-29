@@ -10,11 +10,6 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\Tests\Services\CallableInvoker:
-        public: true
-        arguments:
-            $container: '@test.service_container'
-
     App\Tests\Services\Integration\HttpLoggerFactory:
 
     app.tests.services.integration.httplogger:

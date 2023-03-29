@@ -17,7 +17,6 @@ use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
-use App\Tests\Services\CallableInvoker;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
@@ -31,7 +30,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 {
     private const MAX_DURATION_IN_SECONDS = 30;
 
-    private CallableInvoker $callableInvoker;
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
     private CreateJobSourceFactory $createJobSourceFactory;
@@ -42,10 +40,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $callableInvoker = self::getContainer()->get(CallableInvoker::class);
-        \assert($callableInvoker instanceof CallableInvoker);
-        $this->callableInvoker = $callableInvoker;
 
         $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
         \assert($clientRequestSender instanceof ClientRequestSender);
@@ -88,7 +82,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
-        ?callable $assertions = null
+        callable $assertions
     ): void {
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
@@ -162,9 +156,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
 
-        if (is_callable($assertions)) {
-            $this->callableInvoker->invoke($assertions);
-        }
+        $httpLogReader = self::getContainer()->get(HttpLogReader::class);
+        $deliverEventRequestFactory = self::getContainer()->get(IntegrationDeliverEventRequestFactory::class);
+        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+
+        $assertions($httpLogReader, $deliverEventRequestFactory, $workerEventRepository, $this->eventDeliveryBaseUrl);
     }
 
     /**
@@ -196,7 +192,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ) use (
                     $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
+                    $firstEvent = $workerEventRepository->findOneBy(
+                        [
+                            'scope' => WorkerEventScope::JOB->value,
+                            'outcome' => WorkerEventOutcome::STARTED->value,
+                        ],
+                        ['id' => 'ASC']
+                    );
                     \assert($firstEvent instanceof WorkerEvent);
                     $firstEventId = (int) $firstEvent->getId();
 
@@ -295,9 +297,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ]);
 
                     $transactions = $httpLogReader->getTransactions();
-                    $httpLogReader->reset();
+                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
+                    $requests = $transactions->getRequests();
 
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $transactions->getRequests());
+                    self::assertCount(count($expectedHttpRequests), $requests);
+                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'compilation failed on second test' => [
@@ -333,7 +337,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ) use (
                     $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
+                    $firstEvent = $workerEventRepository->findOneBy(
+                        [
+                            'scope' => WorkerEventScope::JOB->value,
+                            'outcome' => WorkerEventOutcome::STARTED->value,
+                        ],
+                        ['id' => 'ASC']
+                    );
                     \assert($firstEvent instanceof WorkerEvent);
                     $firstEventId = (int) $firstEvent->getId();
 
@@ -470,9 +480,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ]);
 
                     $transactions = $httpLogReader->getTransactions();
-                    $httpLogReader->reset();
+                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
+                    $requests = $transactions->getRequests();
 
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $transactions->getRequests());
+                    self::assertCount(count($expectedHttpRequests), $requests);
+                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'three successful tests' => [
@@ -534,7 +546,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ) use (
                     $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
+                    $firstEvent = $workerEventRepository->findOneBy(
+                        [
+                            'scope' => WorkerEventScope::JOB->value,
+                            'outcome' => WorkerEventOutcome::STARTED->value,
+                        ],
+                        ['id' => 'ASC']
+                    );
                     \assert($firstEvent instanceof WorkerEvent);
                     $firstEventId = (int) $firstEvent->getId();
 
@@ -1132,9 +1150,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ]);
 
                     $transactions = $httpLogReader->getTransactions();
-                    $httpLogReader->reset();
+                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
+                    $requests = $transactions->getRequests();
 
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $transactions->getRequests());
+                    self::assertCount(count($expectedHttpRequests), $requests);
+                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'step failed' => [
@@ -1292,11 +1312,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ),
                     ]);
 
-                    $transactions = $transactions->slice(
-                        -1 * $expectedHttpRequests->count(),
-                        null
-                    );
-
+                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
                     $requests = $transactions->getRequests();
 
                     self::assertCount(count($expectedHttpRequests), $requests);
