@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Entity;
 
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
-abstract class AbstractEntityTestCase extends AbstractBaseFunctionalTest
+abstract class AbstractEntityTestCase extends AbstractBaseFunctionalTestCase
 {
     protected EntityManagerInterface $entityManager;
 

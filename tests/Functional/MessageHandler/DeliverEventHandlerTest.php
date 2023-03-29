@@ -15,7 +15,7 @@ use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\Services\MockWorkerEventSender;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -27,7 +27,7 @@ use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use webignition\ObjectReflector\ObjectReflector;
 
-class DeliverEventHandlerTest extends AbstractBaseFunctionalTest
+class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

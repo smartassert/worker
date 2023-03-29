@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 
-abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTest
+abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTestCase
 {
     protected EntityRemover $entityRemover;
     protected FileStoreHandler $localSourceStoreHandler;

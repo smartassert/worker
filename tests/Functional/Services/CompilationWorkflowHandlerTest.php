@@ -10,7 +10,7 @@ use App\Entity\Test;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationWorkflowHandler;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -20,7 +20,7 @@ use App\Tests\Services\EnvironmentFactory;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTest
+class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTestCase
 {
     private CompilationWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;

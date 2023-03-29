@@ -11,13 +11,13 @@ use App\Enum\WorkerEventScope;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Message\DeliverEventMessage;
 use App\Messenger\DeliverEventMessageRetryStrategy;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 
-class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTest
+class DeliverEventMessageRetryStrategyTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -15,7 +15,7 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Services\ExecutionProgress;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\Services\MockTestExecutor;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -26,7 +26,7 @@ use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use webignition\ObjectReflector\ObjectReflector;
 
-class ExecuteTestHandlerTest extends AbstractBaseFunctionalTest
+class ExecuteTestHandlerTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

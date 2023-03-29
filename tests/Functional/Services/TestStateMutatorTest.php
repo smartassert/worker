@@ -10,13 +10,13 @@ use App\Enum\WorkerEventOutcome;
 use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Step;
 use App\Services\TestStateMutator;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\TestTestFactory;
 use App\Tests\Services\TestTestMutator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class TestStateMutatorTest extends AbstractBaseFunctionalTest
+class TestStateMutatorTest extends AbstractBaseFunctionalTestCase
 {
     private TestStateMutator $mutator;
     private EventDispatcherInterface $eventDispatcher;

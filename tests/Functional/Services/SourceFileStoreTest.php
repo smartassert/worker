@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Services\SourceFileStore;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\SourceFileInspector;
 
-class SourceFileStoreTest extends AbstractBaseFunctionalTest
+class SourceFileStoreTest extends AbstractBaseFunctionalTestCase
 {
     private SourceFileStore $store;
     private FileStoreHandler $localSourceStoreHandler;
