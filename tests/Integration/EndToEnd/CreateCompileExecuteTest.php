@@ -23,20 +23,22 @@ use App\Tests\Services\Integration\HttpLogReader;
 use App\Tests\Services\IntegrationDeliverEventRequestFactory;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
+use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
+use Symfony\Component\Uid\Ulid;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
 use webignition\HttpHistoryContainer\Collection\RequestCollectionInterface;
 
 class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 {
     private const MAX_DURATION_IN_SECONDS = 30;
-    private const RESULTS_TOKEN = '01GWA71YQVHWF5FYFE16VWTMP3';
 
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
     private WorkerEventRepository $workerEventRepository;
-    private string $eventDeliveryBaseUrl;
+    private string $eventDeliveryUrl;
 
     protected function setUp(): void
     {
@@ -62,9 +64,20 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         \assert($workerEventRepository instanceof WorkerEventRepository);
         $this->workerEventRepository = $workerEventRepository;
 
+        $apiTokenProvider = self::getContainer()->get(ApiTokenProvider::class);
+        \assert($apiTokenProvider instanceof ApiTokenProvider);
+        $apiToken = $apiTokenProvider->get('user@example.com');
+
+        $resultsClient = self::getContainer()->get(ResultsClient::class);
+        \assert($resultsClient instanceof ResultsClient);
+
+        $jobLabel = (string) new Ulid();
+        \assert('' !== $jobLabel);
+        $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
+
         $eventDeliveryBaseUrl = self::getContainer()->getParameter('event_delivery_base_url');
         \assert(is_string($eventDeliveryBaseUrl));
-        $this->eventDeliveryBaseUrl = $eventDeliveryBaseUrl;
+        $this->eventDeliveryUrl = $eventDeliveryBaseUrl . $resultsJob->token;
     }
 
     /**
@@ -88,11 +101,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
-        $eventDeliveryUrl = $this->eventDeliveryBaseUrl . self::RESULTS_TOKEN;
-
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $this->eventDeliveryUrl,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
@@ -122,7 +133,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $jobStatusData = json_decode((string) $jobStatusResponse->getContent(), true);
         self::assertIsArray($jobStatusData);
         self::assertSame($jobLabel, $jobStatusData['label']);
-        self::assertSame($eventDeliveryUrl, $jobStatusData['event_delivery_url']);
+        self::assertSame($this->eventDeliveryUrl, $jobStatusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $jobStatusData['maximum_duration_in_seconds']);
         self::assertSame($sourcePaths, $jobStatusData['sources']);
         self::assertArrayHasKey('event_ids', $jobStatusData);
@@ -161,7 +172,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $deliverEventRequestFactory = self::getContainer()->get(IntegrationDeliverEventRequestFactory::class);
         $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
 
-        $assertions($httpLogReader, $deliverEventRequestFactory, $workerEventRepository, $this->eventDeliveryBaseUrl);
+        $assertions($httpLogReader, $deliverEventRequestFactory, $workerEventRepository, $this->eventDeliveryUrl);
     }
 
     /**
@@ -189,7 +200,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     HttpLogReader $httpLogReader,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
-                    string $eventDeliveryBaseUrl,
+                    string $eventDeliveryUrl,
                 ) use (
                     $jobLabel,
                 ) {
@@ -205,7 +216,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => $firstEventId,
                                 'type' => 'job/started',
@@ -228,7 +239,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/compilation/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/compilation/started',
@@ -238,7 +249,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -250,7 +261,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/failed',
@@ -282,7 +293,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/ended' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/ended',
@@ -334,7 +345,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     HttpLogReader $httpLogReader,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
-                    string $eventDeliveryBaseUrl,
+                    string $eventDeliveryUrl,
                 ) use (
                     $jobLabel,
                 ) {
@@ -350,7 +361,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => $firstEventId,
                                 'type' => 'job/started',
@@ -377,7 +388,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/compilation/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/compilation/started',
@@ -387,7 +398,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -399,7 +410,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/passed: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/passed',
@@ -421,7 +432,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -433,7 +444,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/failed',
@@ -465,7 +476,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/ended' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/ended',
@@ -543,7 +554,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     HttpLogReader $httpLogReader,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
-                    string $eventDeliveryBaseUrl,
+                    string $eventDeliveryUrl,
                 ) use (
                     $jobLabel,
                 ) {
@@ -559,7 +570,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
                     $expectedHttpRequests = new RequestCollection([
                         'job/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => $firstEventId,
                                 'type' => 'job/started',
@@ -591,7 +602,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/compilation/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/compilation/started',
@@ -601,7 +612,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -613,7 +624,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/passed: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/passed',
@@ -635,7 +646,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-firefox-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -647,7 +658,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/passed: chrome-firefox-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/passed',
@@ -669,7 +680,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/started: chrome-open-form' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/started',
@@ -681,7 +692,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'source-compilation/passed: chrome-open-form' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'source-compilation/passed',
@@ -703,7 +714,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/compilation/ended' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/compilation/ended',
@@ -713,7 +724,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/execution/started' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/execution/started',
@@ -723,7 +734,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/started: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/started',
@@ -758,7 +769,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'step/passed: chrome-open-index: open' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'step/passed',
@@ -793,7 +804,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/passed: chrome-open-index' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/passed',
@@ -828,7 +839,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/started: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/started',
@@ -863,7 +874,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'step/passed: chrome-firefox-open-index: chrome, open' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'step/passed',
@@ -892,7 +903,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/passed: chrome-firefox-open-index: chrome' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/passed',
@@ -927,7 +938,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/started: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/started',
@@ -962,7 +973,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'step/passed: chrome-firefox-open-index: firefox open' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'step/passed',
@@ -991,7 +1002,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/passed: chrome-firefox-open-index: firefox' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/passed',
@@ -1026,7 +1037,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/started: chrome-open-form' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/started',
@@ -1061,7 +1072,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'step/passed: chrome-open-form: open' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'step/passed',
@@ -1090,7 +1101,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/passed: chrome-open-form' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/passed',
@@ -1125,7 +1136,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/execution/completed' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/execution/completed',
@@ -1135,7 +1146,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/ended' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/ended',
@@ -1184,7 +1195,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     HttpLogReader $httpLogReader,
                     IntegrationDeliverEventRequestFactory $requestFactory,
                     WorkerEventRepository $workerEventRepository,
-                    string $eventDeliveryBaseUrl,
+                    string $eventDeliveryUrl,
                 ) use (
                     $jobLabel,
                 ) {
@@ -1203,7 +1214,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
                     $expectedHttpRequests = new RequestCollection([
                         'step/failed' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => $firstEventId,
                                 'type' => 'step/failed',
@@ -1251,7 +1262,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'test/failed' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'test/failed',
@@ -1298,7 +1309,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                         'job/ended' => $requestFactory->create(
-                            $eventDeliveryBaseUrl . self::RESULTS_TOKEN,
+                            $eventDeliveryUrl,
                             [
                                 'sequence_number' => ++$firstEventId,
                                 'type' => 'job/ended',
