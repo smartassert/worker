@@ -38,6 +38,7 @@
         "phpunit/php-timer": "^5.0",
         "phpunit/phpunit": "^9.5",
         "psr/log": "^1.1",
+        "smartassert/test-authenticaton-provider-bundle": ">=0.1,<1",
         "squizlabs/php_codesniffer": "dev-master",
         "symfony/browser-kit": "6.2.*",
         "symfony/maker-bundle": "^1.40",
