@@ -53,3 +53,12 @@ services:
     App\Tests\Services\YamlProviderFactory: ~
     SmartAssert\WorkerJobSource\Factory\YamlFileFactory: ~
     SmartAssert\WorkerJobSource\JobSourceSerializer: ~
+
+    SmartAssert\ServiceClient\ResponseFactory\ResponseFactory:
+        factory: ['SmartAssert\ServiceClient\ResponseFactory\ResponseFactory', 'createFactory']
+
+    SmartAssert\ServiceClient\Client: ~
+
+    SmartAssert\UsersClient\Client:
+        arguments:
+            $baseUrl: '%env(string:USERS_BASE_URL)%)'
