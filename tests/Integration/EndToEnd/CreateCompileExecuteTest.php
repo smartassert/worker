@@ -20,7 +20,7 @@ use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\Integration\HttpLogReader;
-use App\Tests\Services\IntegrationDeliverEventRequestFactory;
+use App\Tests\Services\IntegrationDeliverEventRequestFactory as RequestFactory;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
 use SmartAssert\ResultsClient\Client as ResultsClient;
@@ -83,9 +83,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param non-empty-string[]       $manifestPaths
-     * @param string[]                 $sourcePaths
-     * @param array<int, array<mixed>> $expectedTestDataCollection
+     * @param non-empty-string[]                                               $manifestPaths
+     * @param string[]                                                         $sourcePaths
+     * @param array<int, array<mixed>>                                         $expectedTestDataCollection
+     * @param array{scope: non-empty-string, outcome: non-empty-string}        $expectedFirstEventCriteria
+     * @param callable(RequestFactory, string, int, string): RequestCollection $expectedHttpRequestsCreator
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
@@ -96,7 +98,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
-        callable $assertions
+        array $expectedFirstEventCriteria,
+        callable $expectedHttpRequestsCreator,
     ): void {
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
@@ -169,10 +172,28 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
 
         $httpLogReader = self::getContainer()->get(HttpLogReader::class);
-        $deliverEventRequestFactory = self::getContainer()->get(IntegrationDeliverEventRequestFactory::class);
-        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($httpLogReader instanceof HttpLogReader);
 
-        $assertions($httpLogReader, $deliverEventRequestFactory, $workerEventRepository, $this->eventDeliveryUrl);
+        $requestFactory = self::getContainer()->get(RequestFactory::class);
+        \assert($requestFactory instanceof RequestFactory);
+
+        $firstEvent = $this->workerEventRepository->findOneBy($expectedFirstEventCriteria, ['id' => 'ASC']);
+        \assert($firstEvent instanceof WorkerEvent);
+        $firstEventId = (int) $firstEvent->getId();
+
+        $expectedHttpRequests = $expectedHttpRequestsCreator(
+            $requestFactory,
+            $this->eventDeliveryUrl,
+            $firstEventId,
+            $jobLabel
+        );
+
+        $transactions = $httpLogReader->getTransactions();
+        $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
+        $requests = $transactions->getRequests();
+
+        self::assertCount(count($expectedHttpRequests), $requests);
+        $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
     }
 
     /**
@@ -196,25 +217,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
                 'expectedTestDataCollection' => [],
-                'assertions' => function (
-                    HttpLogReader $httpLogReader,
-                    IntegrationDeliverEventRequestFactory $requestFactory,
-                    WorkerEventRepository $workerEventRepository,
+                'expectedFirstEventCriteria' => [
+                    'scope' => WorkerEventScope::JOB->value,
+                    'outcome' => WorkerEventOutcome::STARTED->value,
+                ],
+                'expectedHttpRequestsCreator' => function (
+                    RequestFactory $requestFactory,
                     string $eventDeliveryUrl,
-                ) use (
-                    $jobLabel,
+                    int $firstEventId,
+                    string $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy(
-                        [
-                            'scope' => WorkerEventScope::JOB->value,
-                            'outcome' => WorkerEventOutcome::STARTED->value,
-                        ],
-                        ['id' => 'ASC']
-                    );
-                    \assert($firstEvent instanceof WorkerEvent);
-                    $firstEventId = (int) $firstEvent->getId();
-
-                    $expectedHttpRequests = new RequestCollection([
+                    return new RequestCollection([
                         'job/started' => $requestFactory->create(
                             $eventDeliveryUrl,
                             [
@@ -307,13 +320,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                     ]);
-
-                    $transactions = $httpLogReader->getTransactions();
-                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-                    $requests = $transactions->getRequests();
-
-                    self::assertCount(count($expectedHttpRequests), $requests);
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'compilation failed on second test' => [
@@ -341,25 +347,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 1,
                     ],
                 ],
-                'assertions' => function (
-                    HttpLogReader $httpLogReader,
-                    IntegrationDeliverEventRequestFactory $requestFactory,
-                    WorkerEventRepository $workerEventRepository,
+                'expectedFirstEventCriteria' => [
+                    'scope' => WorkerEventScope::JOB->value,
+                    'outcome' => WorkerEventOutcome::STARTED->value,
+                ],
+                'expectedHttpRequestsCreator' => function (
+                    RequestFactory $requestFactory,
                     string $eventDeliveryUrl,
-                ) use (
-                    $jobLabel,
+                    int $firstEventId,
+                    string $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy(
-                        [
-                            'scope' => WorkerEventScope::JOB->value,
-                            'outcome' => WorkerEventOutcome::STARTED->value,
-                        ],
-                        ['id' => 'ASC']
-                    );
-                    \assert($firstEvent instanceof WorkerEvent);
-                    $firstEventId = (int) $firstEvent->getId();
-
-                    $expectedHttpRequests = new RequestCollection([
+                    return new RequestCollection([
                         'job/started' => $requestFactory->create(
                             $eventDeliveryUrl,
                             [
@@ -490,13 +488,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                     ]);
-
-                    $transactions = $httpLogReader->getTransactions();
-                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-                    $requests = $transactions->getRequests();
-
-                    self::assertCount(count($expectedHttpRequests), $requests);
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'three successful tests' => [
@@ -550,25 +541,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 4,
                     ],
                 ],
-                'assertions' => function (
-                    HttpLogReader $httpLogReader,
-                    IntegrationDeliverEventRequestFactory $requestFactory,
-                    WorkerEventRepository $workerEventRepository,
+                'expectedFirstEventCriteria' => [
+                    'scope' => WorkerEventScope::JOB->value,
+                    'outcome' => WorkerEventOutcome::STARTED->value,
+                ],
+                'expectedHttpRequestsCreator' => function (
+                    RequestFactory $requestFactory,
                     string $eventDeliveryUrl,
-                ) use (
-                    $jobLabel,
+                    int $firstEventId,
+                    string $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy(
-                        [
-                            'scope' => WorkerEventScope::JOB->value,
-                            'outcome' => WorkerEventOutcome::STARTED->value,
-                        ],
-                        ['id' => 'ASC']
-                    );
-                    \assert($firstEvent instanceof WorkerEvent);
-                    $firstEventId = (int) $firstEvent->getId();
-
-                    $expectedHttpRequests = new RequestCollection([
+                    return new RequestCollection([
                         'job/started' => $requestFactory->create(
                             $eventDeliveryUrl,
                             [
@@ -1160,13 +1143,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                     ]);
-
-                    $transactions = $httpLogReader->getTransactions();
-                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-                    $requests = $transactions->getRequests();
-
-                    self::assertCount(count($expectedHttpRequests), $requests);
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
             'step failed' => [
@@ -1191,28 +1167,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 1,
                     ],
                 ],
-                'assertions' => function (
-                    HttpLogReader $httpLogReader,
-                    IntegrationDeliverEventRequestFactory $requestFactory,
-                    WorkerEventRepository $workerEventRepository,
+                'expectedFirstEventCriteria' => [
+                    'scope' => WorkerEventScope::STEP->value,
+                    'outcome' => WorkerEventOutcome::FAILED->value,
+                ],
+                'expectedHttpRequestsCreator' => function (
+                    RequestFactory $requestFactory,
                     string $eventDeliveryUrl,
-                ) use (
-                    $jobLabel,
+                    int $firstEventId,
+                    string $jobLabel,
                 ) {
-                    $firstEvent = $workerEventRepository->findOneBy(
-                        [
-                            'scope' => WorkerEventScope::STEP->value,
-                            'outcome' => WorkerEventOutcome::FAILED->value,
-                        ],
-                        ['id' => 'ASC']
-                    );
-                    \assert($firstEvent instanceof WorkerEvent);
-                    $firstEventId = (int) $firstEvent->getId();
-
-                    $transactions = $httpLogReader->getTransactions();
-                    $httpLogReader->reset();
-
-                    $expectedHttpRequests = new RequestCollection([
+                    return new RequestCollection([
                         'step/failed' => $requestFactory->create(
                             $eventDeliveryUrl,
                             [
@@ -1323,12 +1288,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ),
                     ]);
-
-                    $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-                    $requests = $transactions->getRequests();
-
-                    self::assertCount(count($expectedHttpRequests), $requests);
-                    $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
                 },
             ],
         ];
