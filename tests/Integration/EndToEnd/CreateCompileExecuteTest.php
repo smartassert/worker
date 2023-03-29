@@ -15,7 +15,7 @@ use App\Enum\WorkerEventScope;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
-use App\Tests\Integration\AbstractBaseIntegrationTest;
+use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\CallableInvoker;
 use App\Tests\Services\ClientRequestSender;
@@ -27,7 +27,7 @@ use SebastianBergmann\Timer\Timer;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
 use webignition\HttpHistoryContainer\Collection\RequestCollectionInterface;
 
-class CreateCompileExecuteTest extends AbstractBaseIntegrationTest
+class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 {
     private const MAX_DURATION_IN_SECONDS = 30;
 

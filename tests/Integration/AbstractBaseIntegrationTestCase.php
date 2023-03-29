@@ -8,7 +8,7 @@ use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 
-abstract class AbstractBaseIntegrationTest extends AbstractBaseFunctionalTestCase
+abstract class AbstractBaseIntegrationTestCase extends AbstractBaseFunctionalTestCase
 {
     protected EntityRemover $entityRemover;
     protected FileStoreHandler $localSourceStoreHandler;

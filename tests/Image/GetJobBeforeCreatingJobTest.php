@@ -6,7 +6,7 @@ namespace App\Tests\Image;
 
 use GuzzleHttp\Exception\ClientException;
 
-class GetJobBeforeCreatingJobTest extends AbstractImageTest
+class GetJobBeforeCreatingJobTest extends AbstractImageTestCase
 {
     public function testInitialStatus(): void
     {
