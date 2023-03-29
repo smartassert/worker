@@ -58,3 +58,8 @@ services:
 
     App\Tests\Services\IntegrationDeliverEventRequestFactory:
         public: true
+
+    SmartAssert\ResultsClient\Client:
+        public: true
+        arguments:
+            $baseUrl: '%env(string:RESULTS_BASE_URL)%'
