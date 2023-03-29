@@ -13,7 +13,7 @@ use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
-class WorkerEventRepositoryTest extends AbstractEntityRepositoryTest
+class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
 {
     private WorkerEventRepository $repository;
     private EnvironmentFactory $environmentFactory;

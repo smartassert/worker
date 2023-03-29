@@ -11,7 +11,7 @@ use App\Enum\WorkerEventScope;
 use App\Model\WorkerEventReferenceCollection;
 use App\Tests\Services\EntityRemover;
 
-class WorkerEventTest extends AbstractEntityTest
+class WorkerEventTest extends AbstractEntityTestCase
 {
     protected function setUp(): void
     {

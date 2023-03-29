@@ -8,7 +8,7 @@ use App\Entity\Source;
 use App\Repository\SourceRepository;
 use App\Tests\Services\EntityRemover;
 
-class SourceRepositoryTest extends AbstractEntityRepositoryTest
+class SourceRepositoryTest extends AbstractEntityRepositoryTestCase
 {
     private SourceRepository $repository;
 

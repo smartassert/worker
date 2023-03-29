@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Entity;
 use App\Entity\Job;
 use App\Tests\Services\EntityRemover;
 
-class JobTest extends AbstractEntityTest
+class JobTest extends AbstractEntityTestCase
 {
     protected function setUp(): void
     {

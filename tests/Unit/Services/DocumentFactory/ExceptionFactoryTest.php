@@ -10,7 +10,7 @@ use App\Model\Document\StepException;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\ExceptionFactory;
 
-class ExceptionFactoryTest extends AbstractDocumentFactoryTest
+class ExceptionFactoryTest extends AbstractDocumentFactoryTestCase
 {
     /**
      * @return array<mixed>

@@ -9,7 +9,7 @@ use App\Model\Document\Document;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractDocumentFactoryTest extends TestCase
+abstract class AbstractDocumentFactoryTestCase extends TestCase
 {
     protected DocumentFactoryInterface $factory;
 

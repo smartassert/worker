@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Entity;
 use App\Tests\AbstractBaseFunctionalTest;
 use Doctrine\ORM\EntityManagerInterface;
 
-abstract class AbstractEntityTest extends AbstractBaseFunctionalTest
+abstract class AbstractEntityTestCase extends AbstractBaseFunctionalTest
 {
     protected EntityManagerInterface $entityManager;
 
