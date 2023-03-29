@@ -139,6 +139,10 @@ services:
 
     SmartAssert\ServiceClient\Client: ~
 
+    SmartAssert\ResultsClient\JobEventFactory: ~
+    SmartAssert\ResultsClient\EventFactory: ~
+    SmartAssert\ResultsClient\ResourceReferenceFactory: ~
+
     SmartAssert\ResultsClient\Client:
         arguments:
             $baseUrl: '%env(string:RESULTS_BASE_URL)%'
