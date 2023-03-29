@@ -16,7 +16,7 @@ use App\Event\JobCompletedEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
@@ -25,7 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobEndStateSetterTest extends AbstractBaseFunctionalTest
+class JobEndStateSetterTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

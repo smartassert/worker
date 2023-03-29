@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Services;
 
-use App\Tests\Integration\AbstractBaseIntegrationTest;
+use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use webignition\TcpCliProxyClient\Client;
 
-abstract class AbstractTestCreationTest extends AbstractBaseIntegrationTest
+abstract class AbstractTestCreationTestCase extends AbstractBaseIntegrationTestCase
 {
     protected string $compilerTargetDirectory;
 

@@ -12,7 +12,7 @@ use App\Enum\WorkerEventScope;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventSender;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
@@ -21,7 +21,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class WorkerEventSenderTest extends AbstractBaseFunctionalTest
+class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -14,13 +14,13 @@ use App\Model\Document\Step;
 use App\Model\Document\StepException;
 use App\Repository\TestRepository;
 use App\Services\TestCanceller;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class TestCancellerTest extends AbstractBaseFunctionalTest
+class TestCancellerTest extends AbstractBaseFunctionalTestCase
 {
     private TestCanceller $testCanceller;
     private EventDispatcherInterface $eventDispatcher;

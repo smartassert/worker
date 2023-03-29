@@ -10,11 +10,11 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Services\WorkerEventStateMutator;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use Doctrine\ORM\EntityManagerInterface;
 
-class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTest
+class WorkerEventStateMutatorTest extends AbstractBaseFunctionalTestCase
 {
     private WorkerEventStateMutator $stateMutator;
     private EntityManagerInterface $entityManager;

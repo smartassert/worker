@@ -8,7 +8,7 @@ use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Repository\SourceRepository;
 use App\Services\SourceFactory;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
@@ -18,7 +18,7 @@ use SmartAssert\WorkerJobSource\Model\Manifest;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\YamlFile;
 
-class SourceFactoryTest extends AbstractBaseFunctionalTest
+class SourceFactoryTest extends AbstractBaseFunctionalTestCase
 {
     private SourceFactory $factory;
     private FileStoreHandler $localSourceStoreHandler;

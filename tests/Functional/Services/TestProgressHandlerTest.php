@@ -13,7 +13,7 @@ use App\Enum\WorkerEventScope;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\HasTestInterface;
 use App\Services\TestProgressHandler;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
@@ -22,7 +22,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use webignition\YamlDocument\Document as YamlDocument;
 
-class TestProgressHandlerTest extends AbstractBaseFunctionalTest
+class TestProgressHandlerTest extends AbstractBaseFunctionalTestCase
 {
     private TestProgressHandler $handler;
     private Test $test;

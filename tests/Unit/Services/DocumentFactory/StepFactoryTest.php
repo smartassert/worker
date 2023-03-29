@@ -9,7 +9,7 @@ use App\Model\Document\Step;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\StepFactory;
 
-class StepFactoryTest extends AbstractDocumentFactoryTest
+class StepFactoryTest extends AbstractDocumentFactoryTestCase
 {
     /**
      * @return array<mixed>

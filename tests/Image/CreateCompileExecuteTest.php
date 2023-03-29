@@ -9,7 +9,7 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use Psr\Http\Message\ResponseInterface;
 
-class CreateCompileExecuteTest extends AbstractImageTest
+class CreateCompileExecuteTest extends AbstractImageTestCase
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;

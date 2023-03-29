@@ -31,7 +31,7 @@ use App\Model\Document\Test as TestDocument;
 use App\Model\WorkerEventReferenceCollection;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\MockTestManifest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -42,7 +42,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
-class WorkerEventFactoryTest extends AbstractBaseFunctionalTest
+class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
 {
     use MockeryPHPUnitIntegration;
 

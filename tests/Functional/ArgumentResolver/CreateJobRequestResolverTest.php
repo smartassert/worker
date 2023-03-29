@@ -6,12 +6,12 @@ namespace App\Tests\Functional\ArgumentResolver;
 
 use App\ArgumentResolver\CreateJobRequestResolver;
 use App\Request\CreateJobRequest;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\MockArgumentMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class CreateJobRequestResolverTest extends AbstractBaseFunctionalTest
+class CreateJobRequestResolverTest extends AbstractBaseFunctionalTestCase
 {
     private CreateJobRequestResolver $resolver;
 

@@ -15,7 +15,7 @@ use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
 use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Dumper;
 
-abstract class AbstractImageTest extends TestCase
+abstract class AbstractImageTestCase extends TestCase
 {
     private const JOB_URL = 'https://localhost/job';
     private const APPLICATION_STATE_URL = 'https://localhost/application_state';

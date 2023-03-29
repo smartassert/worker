@@ -13,7 +13,7 @@ use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ExecutionWorkflowHandler;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
@@ -23,7 +23,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
-class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTest
+class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTestCase
 {
     private ExecutionWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;

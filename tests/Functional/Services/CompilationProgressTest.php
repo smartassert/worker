@@ -12,7 +12,7 @@ use App\Enum\CompilationState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Services\CompilationProgress;
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -21,7 +21,7 @@ use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 
-class CompilationProgressTest extends AbstractBaseFunctionalTest
+class CompilationProgressTest extends AbstractBaseFunctionalTestCase
 {
     private CompilationProgress $compilationProgress;
     private EnvironmentFactory $environmentFactory;

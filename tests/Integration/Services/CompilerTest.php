@@ -10,7 +10,7 @@ use webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory;
 use webignition\BasilCompilerModels\Model\ErrorOutput;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
-class CompilerTest extends AbstractTestCreationTest
+class CompilerTest extends AbstractTestCreationTestCase
 {
     private Compiler $compiler;
     private ErrorOutputFactory $errorOutputFactory;

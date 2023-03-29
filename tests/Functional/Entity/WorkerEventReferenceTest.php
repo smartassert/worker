@@ -8,7 +8,7 @@ use App\Entity\WorkerEventReference;
 use App\Tests\Services\EntityRemover;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
-class WorkerEventReferenceTest extends AbstractEntityTest
+class WorkerEventReferenceTest extends AbstractEntityTestCase
 {
     protected function setUp(): void
     {

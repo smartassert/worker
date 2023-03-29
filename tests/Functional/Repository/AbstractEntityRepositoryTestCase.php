@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Entity;
+namespace App\Tests\Functional\Repository;
 
-use App\Tests\AbstractBaseFunctionalTest;
+use App\Tests\AbstractBaseFunctionalTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
-abstract class AbstractEntityTest extends AbstractBaseFunctionalTest
+abstract class AbstractEntityRepositoryTestCase extends AbstractBaseFunctionalTestCase
 {
     protected EntityManagerInterface $entityManager;
 
@@ -18,5 +18,11 @@ abstract class AbstractEntityTest extends AbstractBaseFunctionalTest
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
         \assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
+    }
+
+    protected function persistEntity(object $entity): void
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
     }
 }

@@ -13,7 +13,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use webignition\ObjectReflector\ObjectReflector;
 
-class TestRepositoryTest extends AbstractEntityRepositoryTest
+class TestRepositoryTest extends AbstractEntityRepositoryTestCase
 {
     private TestRepository $repository;
     private EnvironmentFactory $environmentFactory;
