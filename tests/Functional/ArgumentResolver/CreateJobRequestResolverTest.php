@@ -9,7 +9,6 @@ use App\Request\CreateJobRequest;
 use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\MockArgumentMetadata;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class CreateJobRequestResolverTest extends AbstractBaseFunctionalTestCase
 {
@@ -25,33 +24,6 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTestCase
     }
 
     /**
-     * @dataProvider supportsDataProvider
-     */
-    public function testSupports(ArgumentMetadata $argumentMetadata, bool $expected): void
-    {
-        self::assertSame($expected, $this->resolver->supports(\Mockery::mock(Request::class), $argumentMetadata));
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function supportsDataProvider(): array
-    {
-        return [
-            'does not support' => [
-                'argumentMetadata' => (new MockArgumentMetadata())->withGetTypeCall('string')->getMock(),
-                'expected' => false,
-            ],
-            'does support' => [
-                'argumentMetadata' => (new MockArgumentMetadata())
-                    ->withGetTypeCall(CreateJobRequest::class)
-                    ->getMock(),
-                'expected' => true,
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider resolveDataProvider
      */
     public function testResolve(Request $request, CreateJobRequest $expected): void
@@ -61,10 +33,11 @@ class CreateJobRequestResolverTest extends AbstractBaseFunctionalTestCase
             ->getMock()
         ;
 
-        $generator = $this->resolver->resolve($request, $argumentMetadata);
-        $actual = iterator_to_array($generator)[0];
+        $requests = $this->resolver->resolve($request, $argumentMetadata);
+        \assert(is_array($requests));
+        $request = $requests[0];
 
-        self::assertEquals($expected, $actual);
+        self::assertEquals($expected, $request);
     }
 
     /**
