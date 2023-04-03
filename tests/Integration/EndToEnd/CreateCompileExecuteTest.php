@@ -95,12 +95,13 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         array $manifestPaths,
         array $sourcePaths,
         string $jobLabel,
-        int $jobMaximumDurationInSeconds,
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
         callable $expectedEventsCreator,
     ): void {
+        $jobMaximumDurationInSeconds = 60;
+
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
@@ -203,7 +204,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
                 'expectedTestDataCollection' => [],
@@ -305,7 +305,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
                 'expectedTestDataCollection' => [
@@ -455,7 +454,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-form.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::COMPLETE,
                 'expectedTestDataCollection' => [
@@ -1076,7 +1074,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'jobMaximumDurationInSeconds' => 60,
                 'expectedCompilationEndState' => CompilationState::COMPLETE,
                 'expectedExecutionEndState' => ExecutionState::CANCELLED,
                 'expectedTestDataCollection' => [
