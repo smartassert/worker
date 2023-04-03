@@ -1153,20 +1153,177 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'scope' => WorkerEventScope::STEP->value,
                     'outcome' => WorkerEventOutcome::FAILED->value,
                 ],
-                'expectedHttpRequestsCreator' => function (
-                    RequestFactory $requestFactory,
-                    string $eventDeliveryUrl,
-                    int $firstEventId,
-                    string $jobLabel,
+                'expectedHttpRequestsCreator' => null,
+                'expectedEventsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel,
+                    string $resultsJobLabel,
                 ) {
-                    return new RequestCollection([
-                        'step/failed' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => $firstEventId,
-                                'type' => 'step/failed',
-                                'body' => [
-                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+                    \assert('' !== $workerJobLabel);
+
+                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
+                    $sourcePath = 'Test/chrome-open-index-with-step-failure.yml';
+                    $sourceReference = new ResourceReference($sourcePath, md5($workerJobLabel . $sourcePath));
+
+                    return [
+                        'job/started' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                $firstSequenceNumber,
+                                'job/started',
+                                $jobReference,
+                                [
+                                    'tests' => [$sourcePath],
+                                ],
+                                new ResourceReferenceCollection([$sourceReference]),
+                            ),
+                        ),
+                        'job/compilation/started' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(++$firstSequenceNumber, 'job/compilation/started', $jobReference, []),
+                        ),
+                        'source-compilation/started:' . $sourcePath => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'source-compilation/started',
+                                $sourceReference,
+                                [
+                                    'source' => $sourcePath,
+                                ]
+                            ),
+                        ),
+                        'source-compilation/passed:' . $sourcePath => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'source-compilation/passed',
+                                $sourceReference,
+                                [
+                                    'source' => $sourcePath,
+                                ],
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5($workerJobLabel . $sourcePath . 'verify page is open')
+                                    ),
+                                    new ResourceReference(
+                                        'fail on intentionally-missing element',
+                                        md5($workerJobLabel . $sourcePath . 'fail on intentionally-missing element')
+                                    ),
+                                ]),
+                            ),
+                        ),
+                        'job/compilation/ended' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'job/compilation/ended',
+                                $jobReference,
+                                []
+                            ),
+                        ),
+                        'job/execution/started' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'job/execution/started',
+                                $jobReference,
+                                []
+                            ),
+                        ),
+                        'test/started:' . $sourcePath => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'test/started',
+                                $sourceReference,
+                                [
+                                    'source' => $sourcePath,
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => $sourcePath,
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                        'fail on intentionally-missing element',
+                                    ],
+                                ],
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel .
+                                            $sourcePath .
+                                            'verify page is open'
+                                        )
+                                    ),
+                                    new ResourceReference(
+                                        'fail on intentionally-missing element',
+                                        md5(
+                                            $workerJobLabel .
+                                            $sourcePath .
+                                            'fail on intentionally-missing element'
+                                        )
+                                    ),
+                                ])
+                            ),
+                        ),
+                        'step/passed:' . $sourcePath . 'verify page is open' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'step/passed',
+                                new ResourceReference(
+                                    'verify page is open',
+                                    md5(
+                                        $workerJobLabel .
+                                        $sourcePath .
+                                        'verify page is open'
+                                    )
+                                ),
+                                [
+                                    'source' => $sourcePath,
+                                    'name' => 'verify page is open',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ),
+                        ),
+                        'step/failed:' . $sourcePath . 'fail on intentionally-missing element' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'step/failed',
+                                new ResourceReference(
+                                    'fail on intentionally-missing element',
+                                    md5(
+                                        $workerJobLabel .
+                                        $sourcePath .
+                                        'fail on intentionally-missing element'
+                                    )
+                                ),
+                                [
+                                    'source' => $sourcePath,
                                     'document' => [
                                         'type' => 'step',
                                         'payload' => [
@@ -1199,26 +1356,21 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                         ],
                                     ],
                                     'name' => 'fail on intentionally-missing element',
-                                ],
-                                'label' => 'fail on intentionally-missing element',
-                                'reference' => md5(
-                                    $jobLabel .
-                                    'Test/chrome-open-index-with-step-failure.yml' .
-                                    'fail on intentionally-missing element'
-                                ),
-                            ],
+                                ]
+                            ),
                         ),
-                        'test/failed' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'test/failed',
-                                'body' => [
-                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                        'test/failed' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'test/failed',
+                                $sourceReference,
+                                [
+                                    'source' => $sourcePath,
                                     'document' => [
                                         'type' => 'test',
                                         'payload' => [
-                                            'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                            'path' => $sourcePath,
                                             'config' => [
                                                 'browser' => 'chrome',
                                                 'url' => 'http://html-fixtures/index.html',
@@ -1230,46 +1382,40 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                         'fail on intentionally-missing element',
                                     ],
                                 ],
-                                'label' => 'Test/chrome-open-index-with-step-failure.yml',
-                                'reference' => md5(
-                                    $jobLabel .
-                                    'Test/chrome-open-index-with-step-failure.yml'
-                                ),
-                                'related_references' => [
-                                    [
-                                        'label' => 'verify page is open',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-with-step-failure.yml' .
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel .
+                                            $sourcePath .
                                             'verify page is open'
-                                        ),
-                                    ],
-                                    [
-                                        'label' => 'fail on intentionally-missing element',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-with-step-failure.yml' .
+                                        )
+                                    ),
+                                    new ResourceReference(
+                                        'fail on intentionally-missing element',
+                                        md5(
+                                            $workerJobLabel .
+                                            $sourcePath .
                                             'fail on intentionally-missing element'
-                                        ),
-                                    ],
-                                ],
-                            ],
+                                        )
+                                    ),
+                                ])
+                            ),
                         ),
-                        'job/ended' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'job/ended',
-                                'body' => [
+                        'job/ended' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'job/ended',
+                                $jobReference,
+                                [
                                     'end_state' => 'failed/test/failure',
                                     'success' => false,
                                     'event_count' => 11,
-                                ],
-                                'label' => $jobLabel,
-                                'reference' => md5($jobLabel),
-                            ],
+                                ]
+                            ),
                         ),
-                    ]);
+                    ];
                 },
             ],
         ];
