@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\EndToEnd;
 
-use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
@@ -19,9 +16,6 @@ use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
-use App\Tests\Services\Integration\HttpLogReader;
-use App\Tests\Services\IntegrationDeliverEventRequestFactory as RequestFactory;
-use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
 use SmartAssert\ResultsClient\Client as ResultsClient;
 use SmartAssert\ResultsClient\Model\Event\Event;
@@ -31,8 +25,6 @@ use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\Job as ResultsJob;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use Symfony\Component\Uid\Ulid;
-use webignition\HttpHistoryContainer\Collection\RequestCollection;
-use webignition\HttpHistoryContainer\Collection\RequestCollectionInterface;
 
 class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 {
@@ -94,12 +86,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param non-empty-string[]                                                    $manifestPaths
-     * @param string[]                                                              $sourcePaths
-     * @param array<int, array<mixed>>                                              $expectedTestDataCollection
-     * @param array{scope: non-empty-string, outcome: non-empty-string}             $expectedFirstEventCriteria
-     * @param null|callable(RequestFactory, string, int, string): RequestCollection $expectedHttpRequestsCreator
-     * @param null|callable(int, string, string): JobEvent[]                        $expectedEventsCreator
+     * @param non-empty-string[]                        $manifestPaths
+     * @param string[]                                  $sourcePaths
+     * @param array<int, array<mixed>>                  $expectedTestDataCollection
+     * @param callable(int, string, string): JobEvent[] $expectedEventsCreator
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
@@ -110,9 +100,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         CompilationState $expectedCompilationEndState,
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
-        array $expectedFirstEventCriteria,
-        callable $expectedHttpRequestsCreator = null,
-        callable $expectedEventsCreator = null,
+        callable $expectedEventsCreator,
     ): void {
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
@@ -184,48 +172,20 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
 
-        $httpLogReader = self::getContainer()->get(HttpLogReader::class);
-        \assert($httpLogReader instanceof HttpLogReader);
+        $resultsClient = self::getContainer()->get(ResultsClient::class);
+        \assert($resultsClient instanceof ResultsClient);
 
-        $requestFactory = self::getContainer()->get(RequestFactory::class);
-        \assert($requestFactory instanceof RequestFactory);
+        $resultsJobLabel = $this->resultsJob->label;
+        \assert('' !== $resultsJobLabel);
 
-        $firstEvent = $this->workerEventRepository->findOneBy($expectedFirstEventCriteria, ['id' => 'ASC']);
-        \assert($firstEvent instanceof WorkerEvent);
-        $firstEventId = (int) $firstEvent->getId();
+        $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
+        $firstEvent = $events[0];
+        \assert($firstEvent instanceof JobEvent);
+        $firstEventSequenceNumber = $firstEvent->event->sequenceNumber;
 
-        if (is_callable($expectedHttpRequestsCreator)) {
-            $expectedHttpRequests = $expectedHttpRequestsCreator(
-                $requestFactory,
-                $this->eventDeliveryUrl,
-                $firstEventId,
-                $jobLabel
-            );
+        $expectedEvents = $expectedEventsCreator($firstEventSequenceNumber, $jobLabel, $resultsJobLabel);
 
-            $transactions = $httpLogReader->getTransactions();
-            $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-            $requests = $transactions->getRequests();
-
-            self::assertCount(count($expectedHttpRequests), $requests);
-            $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
-        }
-
-        if (is_callable($expectedEventsCreator)) {
-            $resultsClient = self::getContainer()->get(ResultsClient::class);
-            \assert($resultsClient instanceof ResultsClient);
-
-            $resultsJobLabel = $this->resultsJob->label;
-            \assert('' !== $resultsJobLabel);
-
-            $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
-            $firstEvent = $events[0];
-            \assert($firstEvent instanceof JobEvent);
-            $firstEventSequenceNumber = $firstEvent->event->sequenceNumber;
-
-            $expectedEvents = $expectedEventsCreator($firstEventSequenceNumber, $jobLabel, $resultsJobLabel);
-
-            self::assertEquals(array_values($expectedEvents), $events);
-        }
+        self::assertEquals(array_values($expectedEvents), $events);
     }
 
     /**
@@ -249,11 +209,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => CompilationState::FAILED,
                 'expectedExecutionEndState' => ExecutionState::AWAITING,
                 'expectedTestDataCollection' => [],
-                'expectedFirstEventCriteria' => [
-                    'scope' => WorkerEventScope::JOB->value,
-                    'outcome' => WorkerEventOutcome::STARTED->value,
-                ],
-                'expectedHttpRequestsCreator' => null,
                 'expectedEventsCreator' => function (
                     int $firstSequenceNumber,
                     string $workerJobLabel,
@@ -366,11 +321,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 1,
                     ],
                 ],
-                'expectedFirstEventCriteria' => [
-                    'scope' => WorkerEventScope::JOB->value,
-                    'outcome' => WorkerEventOutcome::STARTED->value,
-                ],
-                'expectedHttpRequestsCreator' => null,
                 'expectedEventsCreator' => function (
                     int $firstSequenceNumber,
                     string $workerJobLabel,
@@ -546,11 +496,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 4,
                     ],
                 ],
-                'expectedFirstEventCriteria' => [
-                    'scope' => WorkerEventScope::JOB->value,
-                    'outcome' => WorkerEventOutcome::STARTED->value,
-                ],
-                'expectedHttpRequestsCreator' => null,
                 'expectedEventsCreator' => function (
                     int $firstSequenceNumber,
                     string $workerJobLabel,
@@ -1149,11 +1094,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'position' => 1,
                     ],
                 ],
-                'expectedFirstEventCriteria' => [
-                    'scope' => WorkerEventScope::STEP->value,
-                    'outcome' => WorkerEventOutcome::FAILED->value,
-                ],
-                'expectedHttpRequestsCreator' => null,
                 'expectedEventsCreator' => function (
                     int $firstSequenceNumber,
                     string $workerJobLabel,
@@ -1419,50 +1359,5 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 },
             ],
         ];
-    }
-
-    private function assertRequestCollectionsAreEquivalent(
-        RequestCollectionInterface $expectedRequests,
-        RequestCollectionInterface $requests
-    ): void {
-        $requestsIterator = $requests->getIterator();
-
-        foreach ($expectedRequests as $requestIndex => $expectedRequest) {
-            $request = $requestsIterator->current();
-            $requestsIterator->next();
-
-            self::assertInstanceOf(RequestInterface::class, $request);
-            $this->assertRequestsAreEquivalent($expectedRequest, $request, $requestIndex);
-        }
-    }
-
-    private function assertRequestsAreEquivalent(
-        RequestInterface $expected,
-        RequestInterface $actual,
-        int $requestIndex
-    ): void {
-        self::assertSame(
-            $expected->getMethod(),
-            $actual->getMethod(),
-            'Method of request at index ' . $requestIndex . ' not as expected'
-        );
-
-        self::assertSame(
-            (string) $expected->getUri(),
-            (string) $actual->getUri(),
-            'URL of request at index ' . $requestIndex . ' not as expected'
-        );
-
-        self::assertSame(
-            $expected->getHeaderLine('content-type'),
-            $actual->getHeaderLine('content-type'),
-            'Content-type header of request at index ' . $requestIndex . ' not as expected'
-        );
-
-        self::assertSame(
-            json_decode($expected->getBody()->getContents(), true),
-            json_decode($actual->getBody()->getContents(), true),
-            'Body of request at index ' . $requestIndex . ' not as expected'
-        );
     }
 }
