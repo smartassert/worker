@@ -92,7 +92,8 @@ class ApplicationStateControllerTest extends AbstractBaseFunctionalTestCase
                 (new SourceSetup())->withPath('Test/test1.yml'),
                 (new SourceSetup())->withPath('Test/test2.yml'),
                 (new SourceSetup())->withPath('Test/test3.yml'),
-            ]);
+            ])
+        ;
 
         return [
             'no job' => [
