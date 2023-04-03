@@ -24,6 +24,11 @@ use App\Tests\Services\IntegrationDeliverEventRequestFactory as RequestFactory;
 use Psr\Http\Message\RequestInterface;
 use SebastianBergmann\Timer\Timer;
 use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\Model\Event\Event;
+use SmartAssert\ResultsClient\Model\Event\JobEvent;
+use SmartAssert\ResultsClient\Model\Event\ResourceReference;
+use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Model\Job as ResultsJob;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use Symfony\Component\Uid\Ulid;
 use webignition\HttpHistoryContainer\Collection\RequestCollection;
@@ -39,6 +44,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     private ApplicationProgress $applicationProgress;
     private WorkerEventRepository $workerEventRepository;
     private string $eventDeliveryUrl;
+    private ResultsJob $resultsJob;
+
+    /**
+     * @var non-empty-string
+     */
+    private string $apiToken;
 
     protected function setUp(): void
     {
@@ -66,28 +77,29 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         $apiTokenProvider = self::getContainer()->get(ApiTokenProvider::class);
         \assert($apiTokenProvider instanceof ApiTokenProvider);
-        $apiToken = $apiTokenProvider->get('user@example.com');
+        $this->apiToken = $apiTokenProvider->get('user@example.com');
 
         $resultsClient = self::getContainer()->get(ResultsClient::class);
         \assert($resultsClient instanceof ResultsClient);
 
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
-        $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
+        $this->resultsJob = $resultsClient->createJob($this->apiToken, $jobLabel);
 
         $eventDeliveryBaseUrl = self::getContainer()->getParameter('event_delivery_base_url');
         \assert(is_string($eventDeliveryBaseUrl));
-        $this->eventDeliveryUrl = $eventDeliveryBaseUrl . $resultsJob->token;
+        $this->eventDeliveryUrl = $eventDeliveryBaseUrl . $this->resultsJob->token;
     }
 
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param non-empty-string[]                                               $manifestPaths
-     * @param string[]                                                         $sourcePaths
-     * @param array<int, array<mixed>>                                         $expectedTestDataCollection
-     * @param array{scope: non-empty-string, outcome: non-empty-string}        $expectedFirstEventCriteria
-     * @param callable(RequestFactory, string, int, string): RequestCollection $expectedHttpRequestsCreator
+     * @param non-empty-string[]                                                    $manifestPaths
+     * @param string[]                                                              $sourcePaths
+     * @param array<int, array<mixed>>                                              $expectedTestDataCollection
+     * @param array{scope: non-empty-string, outcome: non-empty-string}             $expectedFirstEventCriteria
+     * @param null|callable(RequestFactory, string, int, string): RequestCollection $expectedHttpRequestsCreator
+     * @param null|callable(int, string, string): JobEvent[]                        $expectedEventsCreator
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
@@ -99,7 +111,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         ExecutionState $expectedExecutionEndState,
         array $expectedTestDataCollection,
         array $expectedFirstEventCriteria,
-        callable $expectedHttpRequestsCreator,
+        callable $expectedHttpRequestsCreator = null,
+        callable $expectedEventsCreator = null,
     ): void {
         $jobStatusResponse = $this->clientRequestSender->getJobStatus();
         $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
@@ -181,19 +194,38 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         \assert($firstEvent instanceof WorkerEvent);
         $firstEventId = (int) $firstEvent->getId();
 
-        $expectedHttpRequests = $expectedHttpRequestsCreator(
-            $requestFactory,
-            $this->eventDeliveryUrl,
-            $firstEventId,
-            $jobLabel
-        );
+        if (is_callable($expectedHttpRequestsCreator)) {
+            $expectedHttpRequests = $expectedHttpRequestsCreator(
+                $requestFactory,
+                $this->eventDeliveryUrl,
+                $firstEventId,
+                $jobLabel
+            );
 
-        $transactions = $httpLogReader->getTransactions();
-        $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
-        $requests = $transactions->getRequests();
+            $transactions = $httpLogReader->getTransactions();
+            $transactions = $transactions->slice(-1 * $expectedHttpRequests->count(), null);
+            $requests = $transactions->getRequests();
 
-        self::assertCount(count($expectedHttpRequests), $requests);
-        $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
+            self::assertCount(count($expectedHttpRequests), $requests);
+            $this->assertRequestCollectionsAreEquivalent($expectedHttpRequests, $requests);
+        }
+
+        if (is_callable($expectedEventsCreator)) {
+            $resultsClient = self::getContainer()->get(ResultsClient::class);
+            \assert($resultsClient instanceof ResultsClient);
+
+            $resultsJobLabel = $this->resultsJob->label;
+            \assert('' !== $resultsJobLabel);
+
+            $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
+            $firstEvent = $events[0];
+            \assert($firstEvent instanceof JobEvent);
+            $firstEventSequenceNumber = $firstEvent->event->sequenceNumber;
+
+            $expectedEvents = $expectedEventsCreator($firstEventSequenceNumber, $jobLabel, $resultsJobLabel);
+
+            self::assertEquals(array_values($expectedEvents), $events);
+        }
     }
 
     /**
@@ -221,72 +253,68 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'scope' => WorkerEventScope::JOB->value,
                     'outcome' => WorkerEventOutcome::STARTED->value,
                 ],
-                'expectedHttpRequestsCreator' => function (
-                    RequestFactory $requestFactory,
-                    string $eventDeliveryUrl,
-                    int $firstEventId,
-                    string $jobLabel,
+                'expectedHttpRequestsCreator' => null,
+                'expectedEventsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel,
+                    string $resultsJobLabel,
                 ) {
-                    return new RequestCollection([
-                        'job/started' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => $firstEventId,
-                                'type' => 'job/started',
-                                'body' => [
-                                    'tests' => [
-                                        'Test/chrome-open-index-compilation-failure.yml',
-                                    ],
+                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+                    \assert('' !== $workerJobLabel);
+
+                    $failedTestPath = 'Test/chrome-open-index-compilation-failure.yml';
+
+                    return [
+                        'job/started' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                $firstSequenceNumber,
+                                'job/started',
+                                new ResourceReference($workerJobLabel, md5($workerJobLabel)),
+                                [
+                                    'tests' => [$failedTestPath],
                                 ],
-                                'label' => $jobLabel,
-                                'reference' => md5($jobLabel),
-                                'related_references' => [
-                                    [
-                                        'label' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'reference' => md5(
-                                            $jobLabel .
-                                            'Test/chrome-open-index-compilation-failure.yml'
-                                        ),
-                                    ],
+                                new ResourceReferenceCollection([
+                                    new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath)),
+                                ]),
+                            ),
+                        ),
+                        'job/compilation/started' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'job/compilation/started',
+                                new ResourceReference($workerJobLabel, md5($workerJobLabel)),
+                                [],
+                                null,
+                            ),
+                        ),
+                        'source-compilation/started: chrome-open-index-compilation-failure' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'source-compilation/started',
+                                new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath)),
+                                [
+                                    'source' => $failedTestPath,
                                 ],
-                            ],
+                                null,
+                            ),
                         ),
-                        'job/compilation/started' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'job/compilation/started',
-                                'body' => [],
-                                'label' => $jobLabel,
-                                'reference' => md5($jobLabel),
-                            ],
-                        ),
-                        'source-compilation/started: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'source-compilation/started',
-                                'body' => [
-                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
-                                ],
-                                'label' => 'Test/chrome-open-index-compilation-failure.yml',
-                                'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
-                            ],
-                        ),
-                        'source-compilation/failed: chrome-open-index-compilation-failure' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'source-compilation/failed',
-                                'body' => [
-                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                        'source-compilation/failed: chrome-open-index-compilation-failure' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'source-compilation/failed',
+                                new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath)),
+                                [
                                     'output' => [
-                                        'message' => 'Invalid test at path ' .
-                                            '"Test/chrome-open-index-compilation-failure.yml"' .
-                                            ': test-step-invalid',
+                                        'message' => 'Invalid test at path "' .
+                                            $failedTestPath .
+                                            '": test-step-invalid',
                                         'code' => 204,
                                         'context' => [
-                                            'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'test_path' => $failedTestPath,
                                             'validation_result' => [
                                                 'type' => 'test',
                                                 'reason' => 'test-step-invalid',
@@ -300,26 +328,26 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                             ],
                                         ],
                                     ],
+                                    'source' => $failedTestPath,
                                 ],
-                                'label' => 'Test/chrome-open-index-compilation-failure.yml',
-                                'reference' => md5($jobLabel . 'Test/chrome-open-index-compilation-failure.yml'),
-                            ],
+                                null,
+                            ),
                         ),
-                        'job/ended' => $requestFactory->create(
-                            $eventDeliveryUrl,
-                            [
-                                'sequence_number' => ++$firstEventId,
-                                'type' => 'job/ended',
-                                'body' => [
+                        'job/ended' => new JobEvent(
+                            $resultsJobLabel,
+                            new Event(
+                                ++$firstSequenceNumber,
+                                'job/ended',
+                                new ResourceReference($workerJobLabel, md5($workerJobLabel)),
+                                [
                                     'end_state' => 'failed/compilation',
                                     'success' => false,
                                     'event_count' => 5,
                                 ],
-                                'label' => $jobLabel,
-                                'reference' => md5($jobLabel),
-                            ],
+                                null,
+                            ),
                         ),
-                    ]);
+                    ];
                 },
             ],
             'compilation failed on second test' => [
