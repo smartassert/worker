@@ -49,6 +49,7 @@ class JobTimeoutMessageOrderTest extends AbstractBaseFunctionalTestCase
         $job = new Job(
             md5((string) rand()),
             'https://example.com/events',
+            'results-token',
             600,
             ['test.yml']
         );

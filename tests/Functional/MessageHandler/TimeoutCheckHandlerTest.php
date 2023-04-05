@@ -69,6 +69,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTestCase
         $job = new Job(
             md5((string) rand()),
             'https://example.com/events',
+            'results-token',
             600,
             ['test.yml']
         );
@@ -107,6 +108,7 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTestCase
             new Job(
                 md5((string) rand()),
                 'https://example.com/events',
+                'results-token',
                 $jobMaximumDuration,
                 ['test.yml']
             )
@@ -152,6 +154,9 @@ class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTestCase
 
         $eventDeliveryUrlProperty = $reflectionClass->getProperty('eventDeliveryUrl');
         $eventDeliveryUrlProperty->setValue($reflectionJob, $job->eventDeliveryUrl);
+
+        $resultsTokenProperty = $reflectionClass->getProperty('resultsToken');
+        $resultsTokenProperty->setValue($reflectionJob, $job->resultsToken);
 
         $testPathsProperty = $reflectionClass->getProperty('testPaths');
         $testPathsProperty->setValue($reflectionJob, $job->testPaths);
