@@ -31,6 +31,7 @@ class EnvironmentFactory
             $job = $this->jobRepository->add(new Job(
                 $jobSetup->getLabel(),
                 $jobSetup->getEventDeliveryUrl(),
+                $jobSetup->getResultsToken(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
             ));
