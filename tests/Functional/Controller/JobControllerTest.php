@@ -126,12 +126,14 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
     {
         $label = 'label value';
         $eventDeliveryUrl = 'https://example.com/events';
+        $resultsToken = 'results-token';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
         $nonEmptyPayload = [
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+            CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
         ];
@@ -167,6 +169,22 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'event_delivery_url/missing',
+                ],
+            ],
+            'missing values: results token missing' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_RESULTS_TOKEN => null,
+                ]),
+                'expectedResponseData' => [
+                    'error_state' => 'results_token/missing',
+                ],
+            ],
+            'missing values: results token empty' => [
+                'requestPayload' => array_merge($nonEmptyPayload, [
+                    CreateJobRequest::KEY_RESULTS_TOKEN => '',
+                ]),
+                'expectedResponseData' => [
+                    'error_state' => 'results_token/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [
@@ -220,6 +238,7 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
             CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
+            CreateJobRequest::KEY_RESULTS_TOKEN => 'results-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
 
@@ -433,6 +452,7 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
     {
         $label = md5((string) rand());
         $eventDeliveryUrl = 'https://example.com/' . md5((string) rand());
+        $resultsToken = md5((string) rand());
         $maximumDuration = rand(1, 1000);
 
         return [
@@ -442,11 +462,13 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
                 ) use (
                     $label,
                     $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -491,11 +513,13 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
                 ) use (
                     $label,
                     $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -558,11 +582,13 @@ class JobControllerTest extends AbstractBaseFunctionalTestCase
                 ) use (
                     $label,
                     $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
