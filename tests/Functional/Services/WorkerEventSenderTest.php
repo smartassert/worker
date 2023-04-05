@@ -53,7 +53,13 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
 
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
-        $jobRepository->add(new Job('label content', 'http://example.com/events', 10, ['test.yml']));
+        $jobRepository->add(new Job(
+            'label content',
+            'http://example.com/events',
+             'results-token',
+            10,
+             ['test.yml']
+            ));
 
         $this->event = new WorkerEvent(
             WorkerEventScope::JOB,

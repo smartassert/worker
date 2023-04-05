@@ -39,6 +39,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             [
                 'label' => md5('label content'),
                 'event_delivery_url' => 'http://event-receiver/status/200',
+                'results_token' => 'results token value',
                 'maximum_duration_in_seconds' => 600,
             ]
         ));
