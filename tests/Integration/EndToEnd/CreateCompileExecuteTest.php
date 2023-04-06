@@ -180,11 +180,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         \assert('' !== $resultsJobLabel);
 
         $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
-        $firstEvent = $events[0];
-        \assert($firstEvent instanceof JobEvent);
-        $firstEventSequenceNumber = $firstEvent->event->sequenceNumber;
+        $firstJobEvent = $events[0];
+        \assert($firstJobEvent instanceof JobEvent);
+        $firstEvent = $firstJobEvent->event;
+        \assert($firstEvent instanceof Event);
 
-        $expectedEvents = $expectedEventsCreator($firstEventSequenceNumber, $jobLabel, $resultsJobLabel);
+        $expectedEvents = $expectedEventsCreator($firstEvent->sequenceNumber, $jobLabel, $resultsJobLabel);
 
         self::assertEquals(array_values($expectedEvents), $events);
     }
