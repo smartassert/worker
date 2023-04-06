@@ -32,10 +32,13 @@ class WorkerEvent implements \JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     public readonly WorkerEventReference $reference;
 
+    /**
+     * @var positive-int
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
@@ -70,7 +73,10 @@ class WorkerEvent implements \JsonSerializable
         }
     }
 
-    public function getId(): ?int
+    /**
+     * @return positive-int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
@@ -99,7 +105,7 @@ class WorkerEvent implements \JsonSerializable
     {
         $data = array_merge(
             [
-                'sequence_number' => (int) $this->getId(),
+                'sequence_number' => $this->getId(),
                 'type' => $this->scope->value . '/' . $this->outcome->value,
 
                 'body' => $this->payload,

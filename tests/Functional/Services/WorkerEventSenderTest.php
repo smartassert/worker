@@ -11,6 +11,8 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
+use App\Repository\WorkerEventReferenceRepository;
+use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
@@ -28,6 +30,8 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
     private WorkerEventSender $sender;
     private MockHandler $mockHandler;
 
+    private WorkerEvent $event;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -43,22 +47,36 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
             $entityRemover->removeForEntity(Job::class);
+            $entityRemover->removeForEntity(WorkerEvent::class);
+            $entityRemover->removeForEntity(WorkerEventReference::class);
         }
-    }
 
-    public function testSendSuccess(): void
-    {
-        $workerEvent = new WorkerEvent(
+        $jobRepository = self::getContainer()->get(JobRepository::class);
+        \assert($jobRepository instanceof JobRepository);
+        $jobRepository->add(new Job('label content', 'http://example.com/events', 10, ['test.yml']));
+
+        $this->event = new WorkerEvent(
             WorkerEventScope::JOB,
             WorkerEventOutcome::STARTED,
             new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
+
+        $referenceRepository = self::getContainer()->get(WorkerEventReferenceRepository::class);
+        \assert($referenceRepository instanceof WorkerEventReferenceRepository);
+        $referenceRepository->add($this->event->reference);
+
+        $eventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        \assert($eventRepository instanceof WorkerEventRepository);
+        $eventRepository->add($this->event);
+    }
+
+    public function testSendSuccess(): void
+    {
         $this->mockHandler->append(new Response(200));
-        $this->createJob();
 
         try {
-            $this->sender->send($workerEvent);
+            $this->sender->send($this->event);
             $this->expectNotToPerformAssertions();
         } catch (NonSuccessfulHttpResponseException | ClientExceptionInterface $e) {
             $this->fail($e::class);
@@ -70,18 +88,10 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
      */
     public function testSendNonSuccessfulResponse(ResponseInterface $response): void
     {
-        $workerEvent = new WorkerEvent(
-            WorkerEventScope::JOB,
-            WorkerEventOutcome::STARTED,
-            new WorkerEventReference('non-empty label', 'non-empty reference'),
-            []
-        );
         $this->mockHandler->append($response);
-        $this->createJob();
+        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($this->event, $response));
 
-        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($workerEvent, $response));
-
-        $this->sender->send($workerEvent);
+        $this->sender->send($this->event);
     }
 
     /**
@@ -105,18 +115,10 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
      */
     public function testSendClientException(\Exception $exception): void
     {
-        $workerEvent = new WorkerEvent(
-            WorkerEventScope::JOB,
-            WorkerEventOutcome::STARTED,
-            new WorkerEventReference('non-empty label', 'non-empty reference'),
-            []
-        );
         $this->mockHandler->append($exception);
-        $this->createJob();
-
         $this->expectExceptionObject($exception);
 
-        $this->sender->send($workerEvent);
+        $this->sender->send($this->event);
     }
 
     /**
@@ -129,12 +131,5 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
                 'exception' => \Mockery::mock(ConnectException::class),
             ],
         ];
-    }
-
-    private function createJob(): void
-    {
-        $jobRepository = self::getContainer()->get(JobRepository::class);
-        \assert($jobRepository instanceof JobRepository);
-        $jobRepository->add(new Job('label content', 'http://example.com/events', 10, ['test.yml']));
     }
 }
