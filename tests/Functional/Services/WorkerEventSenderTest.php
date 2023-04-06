@@ -56,10 +56,10 @@ class WorkerEventSenderTest extends WebTestCase
         $jobRepository->add(new Job(
             'label content',
             'http://example.com/events',
-             'results-token',
+            'results-token',
             10,
-             ['test.yml']
-            ));
+            ['test.yml']
+        ));
 
         $this->event = new WorkerEvent(
             WorkerEventScope::JOB,
