@@ -12,13 +12,13 @@ use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\Event\EventInterface;
+use SmartAssert\ResultsClient\Model\EventInterface;
 
 /**
  * @phpstan-import-type SerializedEvent from EventInterface
  */
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
-class WorkerEvent implements \JsonSerializable, EventInterface
+class WorkerEvent implements \JsonSerializable
 {
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
     public readonly WorkerEventScope $scope;
@@ -121,10 +121,5 @@ class WorkerEvent implements \JsonSerializable, EventInterface
         }
 
         return $data;
-    }
-
-    public function toArray(): array
-    {
-        return $this->jsonSerialize();
     }
 }
