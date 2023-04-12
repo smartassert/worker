@@ -16,9 +16,9 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class DeliverEventHandler
 {
     public function __construct(
-        private WorkerEventRepository $repository,
-        private WorkerEventSender $sender,
-        private WorkerEventStateMutator $workerEventStateMutator
+        private readonly WorkerEventRepository $repository,
+        private readonly WorkerEventSender $sender,
+        private readonly WorkerEventStateMutator $workerEventStateMutator
     ) {
     }
 
