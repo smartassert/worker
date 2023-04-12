@@ -6,33 +6,34 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Exception\JobNotFoundException;
-use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface as HttpClientInterface;
+use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
+use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
+use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
+use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
+use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 
 class WorkerEventSender
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
         private readonly JobRepository $jobRepository,
-        private readonly EventDeliveryRequestFactory $eventDeliveryRequestFactory,
+        private readonly ResultsClient $resultsClient,
     ) {
     }
 
     /**
      * @throws ClientExceptionInterface
-     * @throws NonSuccessfulHttpResponseException
+     * @throws InvalidJobTokenException
+     * @throws InvalidModelDataException
+     * @throws InvalidResponseDataException
+     * @throws InvalidResponseTypeException
      * @throws JobNotFoundException
+     * @throws NonSuccessResponseException
      */
     public function send(WorkerEvent $workerEvent): void
     {
-        $request = $this->eventDeliveryRequestFactory->create($this->jobRepository->get(), $workerEvent);
-
-        $response = $this->httpClient->sendRequest($request);
-
-        if ($response->getStatusCode() >= 300) {
-            throw new NonSuccessfulHttpResponseException($workerEvent, $response);
-        }
+        $this->resultsClient->addEvent($this->jobRepository->get()->resultsToken, $workerEvent);
     }
 }

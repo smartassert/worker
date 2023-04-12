@@ -6,26 +6,21 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Exception\NonSuccessfulHttpResponseException;
+use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
-use App\Services\WorkerEventSender;
 use App\Tests\AbstractBaseFunctionalTestCase;
-use App\Tests\Mock\Services\MockWorkerEventSender;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
-use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use webignition\ObjectReflector\ObjectReflector;
+use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 
 class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
 {
@@ -34,6 +29,7 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
     private DeliverEventHandler $handler;
     private WorkerEventRepository $workerEventRepository;
     private WorkerEvent $workerEvent;
+    private MockHandler $mockHandler;
 
     protected function setUp(): void
     {
@@ -46,6 +42,10 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
         $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($workerEventRepository instanceof WorkerEventRepository);
         $this->workerEventRepository = $workerEventRepository;
+
+        $mockHandler = self::getContainer()->get('app.tests.services.guzzle.handler.queuing');
+        \assert($mockHandler instanceof MockHandler);
+        $this->mockHandler = $mockHandler;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
@@ -75,12 +75,11 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
 
     public function testInvokeSuccess(): void
     {
-        $expectedSentWorkerEvent = clone $this->workerEvent;
-        $expectedSentWorkerEvent->setState(WorkerEventState::SENDING);
-
-        $this->setWorkerEventSender((new MockWorkerEventSender())
-            ->withSendCall($expectedSentWorkerEvent)
-            ->getMock());
+        $this->mockHandler->append(new Response(
+            200,
+            ['content-type' => 'application/json'],
+            (string) json_encode($this->workerEvent)
+        ));
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
@@ -90,66 +89,32 @@ class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
 
         $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
         self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-        self::assertSame(WorkerEventState::COMPLETE, $this->workerEvent->getState());
+        self::assertSame(WorkerEventState::COMPLETE, $workerEvent->getState());
     }
 
-    /**
-     * @dataProvider invokeFailureDataProvider
-     */
-    public function testInvokeFailure(
-        \Exception $workerEventSenderException,
-        WorkerEventState $expectedWorkerEventState
-    ): void {
-        $expectedSentWorkerEvent = clone $this->workerEvent;
-        $expectedSentWorkerEvent->setState(WorkerEventState::SENDING);
-
-        $this->setWorkerEventSender((new MockWorkerEventSender())
-            ->withSendCall($expectedSentWorkerEvent, $workerEventSenderException)
-            ->getMock());
+    public function testInvokeFailure(): void
+    {
+        $resultsClientResponse = new Response(400);
+        $this->mockHandler->append($resultsClientResponse);
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
         self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
 
+        $expectedException = new EventDeliveryException(
+            $this->workerEvent,
+            new NonSuccessResponseException($resultsClientResponse)
+        );
+
         try {
             ($this->handler)($message);
-            $this->fail($workerEventSenderException::class . ' not thrown');
+            $this->fail($expectedException::class . ' not thrown');
         } catch (\Throwable $exception) {
-            self::assertSame($workerEventSenderException, $exception);
+            self::assertEquals($expectedException, $exception);
         }
 
         $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
         self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-        self::assertSame($expectedWorkerEventState, $this->workerEvent->getState());
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function invokeFailureDataProvider(): array
-    {
-        return [
-            'HTTP 400' => [
-                'workerEventSenderException' => new NonSuccessfulHttpResponseException(
-                    new WorkerEvent(
-                        WorkerEventScope::JOB,
-                        WorkerEventOutcome::STARTED,
-                        new WorkerEventReference('non-empty label', md5('reference source')),
-                        []
-                    ),
-                    new Response(400)
-                ),
-                'expectedWorkerEventState' => WorkerEventState::SENDING,
-            ],
-            'Guzzle ConnectException' => [
-                'workerEventSenderException' => \Mockery::mock(ConnectException::class),
-                'expectedWorkerEventState' => WorkerEventState::SENDING,
-            ],
-        ];
-    }
-
-    private function setWorkerEventSender(WorkerEventSender $workerEventSender): void
-    {
-        ObjectReflector::setProperty($this->handler, $this->handler::class, 'sender', $workerEventSender);
+        self::assertSame(WorkerEventState::SENDING, $workerEvent->getState());
     }
 }
