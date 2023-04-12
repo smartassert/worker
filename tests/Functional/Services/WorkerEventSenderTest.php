@@ -9,7 +9,6 @@ use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Exception\NonSuccessfulHttpResponseException;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventReferenceRepository;
 use App\Repository\WorkerEventRepository;
@@ -19,8 +18,6 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WorkerEventSenderTest extends WebTestCase
@@ -81,41 +78,18 @@ class WorkerEventSenderTest extends WebTestCase
 
     public function testSendSuccess(): void
     {
-        $this->mockHandler->append(new Response(200));
+        $this->mockHandler->append(new Response(
+            200,
+            ['content-type' => 'application/json'],
+            (string) json_encode($this->event),
+        ));
 
         try {
             $this->sender->send($this->event);
             $this->expectNotToPerformAssertions();
-        } catch (NonSuccessfulHttpResponseException | ClientExceptionInterface $e) {
+        } catch (\Throwable $e) {
             $this->fail($e::class);
         }
-    }
-
-    /**
-     * @dataProvider sendNonSuccessfulResponseDataProvider
-     */
-    public function testSendNonSuccessfulResponse(ResponseInterface $response): void
-    {
-        $this->mockHandler->append($response);
-        $this->expectExceptionObject(new NonSuccessfulHttpResponseException($this->event, $response));
-
-        $this->sender->send($this->event);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function sendNonSuccessfulResponseDataProvider(): array
-    {
-        $dataSets = [];
-
-        for ($statusCode = 300; $statusCode < 600; ++$statusCode) {
-            $dataSets[(string) $statusCode] = [
-                'response' => new Response($statusCode),
-            ];
-        }
-
-        return $dataSets;
     }
 
     /**

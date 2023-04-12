@@ -7,8 +7,8 @@ namespace App\Tests\Unit\MessageHandler;
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
+use App\Services\WorkerEventSender;
 use App\Services\WorkerEventStateMutator;
-use App\Tests\Mock\Services\MockWorkerEventSender;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -28,16 +28,15 @@ class DeliverEventHandlerTest extends TestCase
             ->andReturnNull()
         ;
 
-        $sender = (new MockWorkerEventSender())
-            ->withoutSendCall()
-            ->getMock()
-        ;
-
         $stateMutator = \Mockery::mock(WorkerEventStateMutator::class);
         $stateMutator->shouldNotReceive('setSending');
         $stateMutator->shouldNotReceive('setComplete');
 
-        $handler = new DeliverEventHandler($repository, $sender, $stateMutator);
+        $handler = new DeliverEventHandler(
+            $repository,
+            \Mockery::mock(WorkerEventSender::class),
+            $stateMutator
+        );
 
         ($handler)($message);
     }
