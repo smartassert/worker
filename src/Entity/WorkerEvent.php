@@ -20,7 +20,7 @@ use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
  * @phpstan-import-type SerializedEvent from EventInterface
  */
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
-class WorkerEvent implements \JsonSerializable
+class WorkerEvent implements \JsonSerializable, EventInterface
 {
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
     public readonly WorkerEventScope $scope;
@@ -63,7 +63,6 @@ class WorkerEvent implements \JsonSerializable
         WorkerEventOutcome $outcome,
         ResourceReferenceInterface $reference,
         array $payload,
-        ?ResourceReferenceCollectionInterface $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
@@ -71,12 +70,6 @@ class WorkerEvent implements \JsonSerializable
         $this->reference = $reference;
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();
-
-        if ($relatedReferences instanceof ResourceReferenceCollectionInterface) {
-            foreach ($relatedReferences->getReferences() as $relatedReference) {
-                $this->relatedReferences->add($relatedReference);
-            }
-        }
     }
 
     /**
@@ -106,7 +99,6 @@ class WorkerEvent implements \JsonSerializable
             [
                 'sequence_number' => $this->getId(),
                 'type' => $this->scope->value . '/' . $this->outcome->value,
-
                 'body' => $this->payload,
             ],
             $this->reference->toArray(),
@@ -122,5 +114,17 @@ class WorkerEvent implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    public function toArray(): array
+    {
+        return $this->jsonSerialize();
+    }
+
+    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): WorkerEvent
+    {
+        $this->relatedReferences = new ArrayCollection($relatedReferences->getReferences());
+
+        return $this;
     }
 }
