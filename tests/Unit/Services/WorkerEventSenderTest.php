@@ -10,12 +10,10 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
-use App\Services\EventDeliveryRequestFactory;
 use App\Services\WorkerEventSender;
-use GuzzleHttp\Psr7\HttpFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Client\ClientInterface;
+use SmartAssert\ResultsClient\Client;
 
 class WorkerEventSenderTest extends TestCase
 {
@@ -23,7 +21,6 @@ class WorkerEventSenderTest extends TestCase
 
     public function testSendNoJob(): void
     {
-        $httpClient = \Mockery::mock(ClientInterface::class);
         $exception = new JobNotFoundException();
 
         $jobRepository = \Mockery::mock(JobRepository::class);
@@ -32,10 +29,9 @@ class WorkerEventSenderTest extends TestCase
             ->andThrow($exception)
         ;
 
-        $httpFactory = new HttpFactory();
-        $requestFactory = new EventDeliveryRequestFactory($httpFactory, $httpFactory);
+        $resultsClient = \Mockery::mock(Client::class);
 
-        $sender = new WorkerEventSender($httpClient, $jobRepository, $requestFactory);
+        $sender = new WorkerEventSender($jobRepository, $resultsClient);
 
         self::expectExceptionObject($exception);
 
