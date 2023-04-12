@@ -7,18 +7,20 @@ namespace App\MessageHandler;
 use App\Entity\WorkerEvent;
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
+use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Services\WorkerEventSender;
 use App\Services\WorkerEventStateMutator;
+use SmartAssert\ResultsClient\Client as ResultsClient;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 class DeliverEventHandler
 {
     public function __construct(
-        private readonly WorkerEventRepository $repository,
-        private readonly WorkerEventSender $sender,
-        private readonly WorkerEventStateMutator $workerEventStateMutator
+        private readonly JobRepository $jobRepository,
+        private readonly WorkerEventRepository $workerEventRepository,
+        private readonly WorkerEventStateMutator $workerEventStateMutator,
+        private readonly ResultsClient $resultsClient,
     ) {
     }
 
@@ -27,13 +29,13 @@ class DeliverEventHandler
      */
     public function __invoke(DeliverEventMessage $message): void
     {
-        $workerEvent = $this->repository->find($message->workerEventId);
+        $workerEvent = $this->workerEventRepository->find($message->workerEventId);
 
         if ($workerEvent instanceof WorkerEvent) {
             $this->workerEventStateMutator->setSending($workerEvent);
 
             try {
-                $this->sender->send($workerEvent);
+                $this->resultsClient->addEvent($this->jobRepository->get()->resultsToken, $workerEvent);
             } catch (\Throwable $e) {
                 throw new EventDeliveryException($workerEvent, $e);
             }

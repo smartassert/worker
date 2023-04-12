@@ -6,11 +6,12 @@ namespace App\Tests\Unit\MessageHandler;
 
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
+use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Services\WorkerEventSender;
 use App\Services\WorkerEventStateMutator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SmartAssert\ResultsClient\Client as ResultsClient;
 
 class DeliverEventHandlerTest extends TestCase
 {
@@ -21,8 +22,8 @@ class DeliverEventHandlerTest extends TestCase
         $workerEventId = 0;
         $message = new DeliverEventMessage($workerEventId);
 
-        $repository = \Mockery::mock(WorkerEventRepository::class);
-        $repository
+        $workerEventRepository = \Mockery::mock(WorkerEventRepository::class);
+        $workerEventRepository
             ->shouldReceive('find')
             ->with($workerEventId)
             ->andReturnNull()
@@ -33,9 +34,10 @@ class DeliverEventHandlerTest extends TestCase
         $stateMutator->shouldNotReceive('setComplete');
 
         $handler = new DeliverEventHandler(
-            $repository,
-            \Mockery::mock(WorkerEventSender::class),
-            $stateMutator
+            \Mockery::mock(JobRepository::class),
+            $workerEventRepository,
+            $stateMutator,
+            \Mockery::mock(ResultsClient::class)
         );
 
         ($handler)($message);
