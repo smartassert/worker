@@ -7,12 +7,14 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Model\WorkerEventReferenceCollection;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use SmartAssert\ResultsClient\Model\EventInterface;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
+use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 /**
  * @phpstan-import-type SerializedEvent from EventInterface
@@ -32,9 +34,9 @@ class WorkerEvent implements \JsonSerializable
     #[ORM\Column(type: 'json')]
     public readonly array $payload;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: WorkerEventReference::class)]
     #[ORM\JoinColumn(nullable: false)]
-    public readonly WorkerEventReference $reference;
+    public readonly ResourceReferenceInterface $reference;
 
     /**
      * @var positive-int
@@ -48,7 +50,7 @@ class WorkerEvent implements \JsonSerializable
     private WorkerEventState $state;
 
     /**
-     * @var Collection<int, WorkerEventReference>
+     * @var Collection<int, ResourceReferenceInterface>
      */
     #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
     private Collection $relatedReferences;
@@ -59,9 +61,9 @@ class WorkerEvent implements \JsonSerializable
     public function __construct(
         WorkerEventScope $scope,
         WorkerEventOutcome $outcome,
-        WorkerEventReference $reference,
+        ResourceReferenceInterface $reference,
         array $payload,
-        ?WorkerEventReferenceCollection $relatedReferences = null,
+        ?ResourceReferenceCollectionInterface $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
@@ -70,8 +72,8 @@ class WorkerEvent implements \JsonSerializable
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();
 
-        if ($relatedReferences instanceof WorkerEventReferenceCollection) {
-            foreach ($relatedReferences as $relatedReference) {
+        if ($relatedReferences instanceof ResourceReferenceCollectionInterface) {
+            foreach ($relatedReferences->getReferences() as $relatedReference) {
                 $this->relatedReferences->add($relatedReference);
             }
         }
@@ -114,10 +116,9 @@ class WorkerEvent implements \JsonSerializable
         foreach ($this->relatedReferences as $reference) {
             $references[] = $reference;
         }
-        $relatedReferences = new WorkerEventReferenceCollection($references);
 
         if (0 !== count($references)) {
-            $data['related_references'] = $relatedReferences->toArray();
+            $data['related_references'] = (new ResourceReferenceCollection($references))->toArray();
         }
 
         return $data;

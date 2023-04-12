@@ -5,10 +5,11 @@ namespace App\Entity;
 use App\Repository\WorkerEventReferenceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 #[ORM\Entity(repositoryClass: WorkerEventReferenceRepository::class)]
 #[ORM\UniqueConstraint(name: 'resource_reference_unique', columns: ['label', 'reference'])]
-class WorkerEventReference
+class WorkerEventReference implements ResourceReferenceInterface
 {
     /**
      * @var non-empty-string
@@ -37,9 +38,6 @@ class WorkerEventReference
         $this->reference = $reference;
     }
 
-    /**
-     * @return array{label: non-empty-string, reference: non-empty-string}
-     */
     public function toArray(): array
     {
         return [

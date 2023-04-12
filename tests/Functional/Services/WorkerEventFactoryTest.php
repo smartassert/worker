@@ -28,7 +28,6 @@ use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
-use App\Model\WorkerEventReferenceCollection;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
 use App\Tests\AbstractBaseFunctionalTestCase;
@@ -39,6 +38,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
@@ -242,7 +242,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'Test/test2.yaml',
                         ],
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
                         new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
                     ])
@@ -271,7 +271,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     [
                         'source' => $testSource,
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
                         new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
                     ]),
@@ -323,7 +323,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
@@ -390,7 +390,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
@@ -413,7 +413,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),
@@ -456,7 +456,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                     ])
                 ),

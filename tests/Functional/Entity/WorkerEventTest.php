@@ -8,8 +8,8 @@ use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Model\WorkerEventReferenceCollection;
 use App\Tests\Services\EntityRemover;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
 class WorkerEventTest extends AbstractEntityTestCase
 {
@@ -60,7 +60,7 @@ class WorkerEventTest extends AbstractEntityTestCase
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
-                    new WorkerEventReferenceCollection([
+                    new ResourceReferenceCollection([
                         new WorkerEventReference('label 1', 'reference 1'),
                         new WorkerEventReference('label 2', 'reference 2'),
                         new WorkerEventReference('label 3', 'reference 3'),
