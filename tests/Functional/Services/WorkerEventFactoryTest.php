@@ -232,7 +232,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                         'Test/test2.yaml',
                     ]
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
@@ -242,11 +242,10 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'Test/test2.yaml',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
-                        new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
+                    new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
+                ])),
             ],
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),
@@ -264,18 +263,17 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
-                        new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
-                    ]),
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
+                    new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
+                ])),
             ],
             SourceCompilationFailedEvent::class => [
                 'event' => new SourceCompilationFailedEvent(
@@ -312,7 +310,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     $testSource,
                     WorkerEventOutcome::STARTED
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -323,10 +321,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                ])),
             ],
             'step/passed' => [
                 'event' => new StepEvent(
@@ -379,7 +376,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     $testSource,
                     WorkerEventOutcome::PASSED
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -390,10 +387,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                ])),
             ],
             'test/failed' => [
                 'event' => new TestEvent(
@@ -402,7 +398,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     $testSource,
                     WorkerEventOutcome::FAILED
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -413,10 +409,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                ])),
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
@@ -445,7 +440,7 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                     $testSource,
                     WorkerEventOutcome::EXCEPTION
                 ),
-                'expected' => new WorkerEvent(
+                'expected' => (new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::EXCEPTION,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -456,10 +451,9 @@ class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
-                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                ])),
             ],
             'step/exception' => [
                 'event' => new StepEvent(
