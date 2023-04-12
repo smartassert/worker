@@ -12,7 +12,7 @@
         "doctrine/orm": "^2.10",
         "guzzlehttp/guzzle": "^7.4",
         "psr/http-factory": "^1.0",
-        "smartassert/results-client": ">=5.1,<6",
+        "smartassert/results-client": ">=5.2,<6",
         "smartassert/worker-job-source": "^0.1.0",
         "smartassert/yaml-file": "^4.0",
         "symfony/console": "6.2.*",
