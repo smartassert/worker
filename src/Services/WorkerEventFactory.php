@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 
 class WorkerEventFactory
 {
@@ -35,12 +36,11 @@ class WorkerEventFactory
             $this->referenceFactory->create($job->label, $event->getReferenceComponents())
         );
 
-        return new WorkerEvent(
-            $event->getScope(),
-            $event->getOutcome(),
-            $reference,
-            $payload,
-            $resourceReferenceCollection
-        );
+        $event = new WorkerEvent($event->getScope(), $event->getOutcome(), $reference, $payload);
+        if ($resourceReferenceCollection instanceof ResourceReferenceCollectionInterface) {
+            $event = $event->withRelatedReferences($resourceReferenceCollection);
+        }
+
+        return $event;
     }
 }
