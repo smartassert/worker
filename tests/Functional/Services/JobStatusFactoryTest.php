@@ -80,7 +80,6 @@ class JobStatusFactoryTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('no sources, no tests label')
-                            ->withEventDeliveryUrl('http://example.com/no-sources-no-tests')
                             ->withMaximumDurationInSeconds(1)
                             ->withTestPaths([
                                 'Test/no-sources-no-tests.yml',
@@ -109,7 +108,6 @@ class JobStatusFactoryTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('has sources, has tests label')
-                            ->withEventDeliveryUrl('http://example.com/has-sources-has-tests')
                             ->withMaximumDurationInSeconds(2)
                             ->withTestPaths([
                                 'Test/has-sources-has-tests1.yml',

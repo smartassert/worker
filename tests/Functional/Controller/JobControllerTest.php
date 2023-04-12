@@ -684,7 +684,6 @@ class JobControllerTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(11)
                             ->withTestPaths([
                                 'Test/test1.yml',
@@ -733,7 +732,6 @@ class JobControllerTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(12)
                             ->withTestPaths([
                                 'Test/test1.yml',

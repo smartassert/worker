@@ -14,11 +14,6 @@ class JobSetup
     /**
      * @var non-empty-string
      */
-    private string $eventDeliveryUrl;
-
-    /**
-     * @var non-empty-string
-     */
     private string $resultsToken;
     private int $maximumDurationInSeconds;
 
@@ -35,7 +30,6 @@ class JobSetup
     public function __construct()
     {
         $this->label = md5('label content');
-        $this->eventDeliveryUrl = 'http://example.com/events';
         $this->resultsToken = 'results-token';
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
@@ -48,14 +42,6 @@ class JobSetup
     public function getLabel(): string
     {
         return $this->label;
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public function getEventDeliveryUrl(): string
-    {
-        return $this->eventDeliveryUrl;
     }
 
     /**
@@ -94,17 +80,6 @@ class JobSetup
     {
         $new = clone $this;
         $new->label = $label;
-
-        return $new;
-    }
-
-    /**
-     * @param non-empty-string $url
-     */
-    public function withEventDeliveryUrl(string $url): self
-    {
-        $new = clone $this;
-        $new->eventDeliveryUrl = $url;
 
         return $new;
     }

@@ -90,7 +90,6 @@ class JobController
 
         $job = $this->jobRepository->add(new Job(
             $request->label,
-            $request->eventDeliveryUrl,
             $request->resultsToken,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths

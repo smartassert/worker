@@ -68,7 +68,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
     {
         $job = new Job(
             md5((string) rand()),
-            'https://example.com/events',
             'results-token',
             600,
             ['test.yml']
@@ -107,7 +106,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $job = $this->createJobWithMutatedStartDateTime(
             new Job(
                 md5((string) rand()),
-                'https://example.com/events',
                 'results-token',
                 $jobMaximumDuration,
                 ['test.yml']
@@ -151,9 +149,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
 
         $labelProperty = $reflectionClass->getProperty('label');
         $labelProperty->setValue($reflectionJob, $job->label);
-
-        $eventDeliveryUrlProperty = $reflectionClass->getProperty('eventDeliveryUrl');
-        $eventDeliveryUrlProperty->setValue($reflectionJob, $job->eventDeliveryUrl);
 
         $resultsTokenProperty = $reflectionClass->getProperty('resultsToken');
         $resultsTokenProperty->setValue($reflectionJob, $job->resultsToken);
