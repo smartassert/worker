@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\Job;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 
 class JobStatus implements \JsonSerializable
 {
@@ -18,7 +19,7 @@ class JobStatus implements \JsonSerializable
         private readonly string $reference,
         private readonly array $sourcePaths,
         private readonly array $serializedTests,
-        private readonly WorkerEventReferenceCollection $testReferences,
+        private readonly ResourceReferenceCollectionInterface $testReferences,
         private readonly array $eventIds,
     ) {
     }

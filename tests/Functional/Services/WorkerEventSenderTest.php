@@ -70,7 +70,9 @@ class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
 
         $referenceRepository = self::getContainer()->get(WorkerEventReferenceRepository::class);
         \assert($referenceRepository instanceof WorkerEventReferenceRepository);
-        $referenceRepository->add($this->event->reference);
+        $eventReference = $this->event->reference;
+        \assert($eventReference instanceof WorkerEventReference);
+        $referenceRepository->add($eventReference);
 
         $eventRepository = self::getContainer()->get(WorkerEventRepository::class);
         \assert($eventRepository instanceof WorkerEventRepository);
