@@ -88,7 +88,6 @@ class JobStatusFactoryTest extends WebTestCase
                     ),
                 'expectedSerializedJobStatus' => [
                     'label' => 'no sources, no tests label',
-                    'event_delivery_url' => 'http://example.com/no-sources-no-tests',
                     'maximum_duration_in_seconds' => 1,
                     'test_paths' => [
                         'Test/no-sources-no-tests.yml',
@@ -153,7 +152,6 @@ class JobStatusFactoryTest extends WebTestCase
                     ]),
                 'expectedSerializedJobStatus' => [
                     'label' => 'has sources, has tests label',
-                    'event_delivery_url' => 'http://example.com/has-sources-has-tests',
                     'maximum_duration_in_seconds' => 2,
                     'test_paths' => [
                         'Test/has-sources-has-tests1.yml',
@@ -244,7 +242,6 @@ class JobStatusFactoryTest extends WebTestCase
         self::assertEquals(
             [
                 'label' => $job->label,
-                'event_delivery_url' => $job->eventDeliveryUrl,
                 'maximum_duration_in_seconds' => $job->maximumDurationInSeconds,
                 'test_paths' => $job->testPaths,
                 'reference' => md5($job->label),

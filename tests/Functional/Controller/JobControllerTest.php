@@ -407,7 +407,6 @@ class JobControllerTest extends WebTestCase
 
         $job = $this->jobRepository->get();
         self::assertSame($responseData['label'], $job->label);
-        self::assertSame($responseData['event_delivery_url'], $job->eventDeliveryUrl);
         self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
@@ -483,7 +482,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -536,7 +534,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -606,7 +603,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -703,7 +699,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => 'label content',
                     'reference' => md5('label content'),
-                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 11,
 
                     'sources' => [
@@ -762,7 +757,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => 'label content',
                     'reference' => md5('label content'),
-                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 12,
                     'sources' => [
                         'Test/test1.yml',

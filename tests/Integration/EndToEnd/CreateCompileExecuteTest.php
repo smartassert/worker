@@ -138,7 +138,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $jobStatusData = json_decode((string) $jobStatusResponse->getContent(), true);
         self::assertIsArray($jobStatusData);
         self::assertSame($jobLabel, $jobStatusData['label']);
-        self::assertSame($this->eventDeliveryUrl, $jobStatusData['event_delivery_url']);
         self::assertSame($jobMaximumDurationInSeconds, $jobStatusData['maximum_duration_in_seconds']);
         self::assertSame($sourcePaths, $jobStatusData['sources']);
         self::assertArrayHasKey('event_ids', $jobStatusData);

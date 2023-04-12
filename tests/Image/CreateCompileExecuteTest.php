@@ -58,7 +58,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             ],
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => self::$eventDeliveryUrl,
                 'results_token' => 'results token value',
                 'maximum_duration_in_seconds' => 600,
             ]
@@ -82,7 +81,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $this->assertJob(
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => self::$eventDeliveryUrl,
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',
