@@ -11,11 +11,11 @@ use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\TestWorkerEventFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class WorkerEventAborterTest extends AbstractBaseFunctionalTestCase
+class WorkerEventAborterTest extends WebTestCase
 {
     private WorkerEventAborter $aborter;
     private WorkerEventRepository $workerEventRepository;

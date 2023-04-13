@@ -16,7 +16,6 @@ use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -26,8 +25,9 @@ use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApplicationStateControllerTest extends AbstractBaseFunctionalTestCase
+class ApplicationStateControllerTest extends WebTestCase
 {
     private ClientRequestSender $clientRequestSender;
     private EnvironmentFactory $environmentFactory;

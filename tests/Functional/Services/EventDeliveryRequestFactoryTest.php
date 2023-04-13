@@ -10,14 +10,14 @@ use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Services\EventDeliveryRequestFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\ObjectReflector\ObjectReflector;
 
-class EventDeliveryRequestFactoryTest extends AbstractBaseFunctionalTestCase
+class EventDeliveryRequestFactoryTest extends WebTestCase
 {
     private const JOB_LABEL = 'job label';
 

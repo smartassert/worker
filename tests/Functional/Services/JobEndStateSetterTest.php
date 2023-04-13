@@ -16,16 +16,16 @@ use App\Event\JobCompletedEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobEndStateSetterTest extends AbstractBaseFunctionalTestCase
+class JobEndStateSetterTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

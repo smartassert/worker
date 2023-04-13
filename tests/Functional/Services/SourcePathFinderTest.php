@@ -8,15 +8,15 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Services\SourcePathFinder;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class SourcePathFinderTest extends AbstractBaseFunctionalTestCase
+class SourcePathFinderTest extends WebTestCase
 {
     private SourcePathFinder $sourcePathFinder;
     private EnvironmentFactory $environmentFactory;

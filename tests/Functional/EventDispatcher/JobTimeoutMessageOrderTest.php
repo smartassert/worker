@@ -11,12 +11,12 @@ use App\Enum\WorkerEventScope;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class JobTimeoutMessageOrderTest extends AbstractBaseFunctionalTestCase
+class JobTimeoutMessageOrderTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

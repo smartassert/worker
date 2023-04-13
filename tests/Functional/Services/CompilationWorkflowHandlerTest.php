@@ -10,17 +10,17 @@ use App\Entity\Test;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationWorkflowHandler;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-class CompilationWorkflowHandlerTest extends AbstractBaseFunctionalTestCase
+class CompilationWorkflowHandlerTest extends WebTestCase
 {
     private CompilationWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;

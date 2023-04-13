@@ -8,12 +8,12 @@ use App\Entity\WorkerEvent;
 use App\Enum\EventDeliveryState;
 use App\Enum\WorkerEventState;
 use App\Services\EventDeliveryProgress;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestWorkerEventFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EventDeliveryProgressTest extends AbstractBaseFunctionalTestCase
+class EventDeliveryProgressTest extends WebTestCase
 {
     private EventDeliveryProgress $eventDeliveryProgress;
     private TestWorkerEventFactory $testWorkerEventFactory;

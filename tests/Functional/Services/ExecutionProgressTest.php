@@ -8,13 +8,13 @@ use App\Entity\Test;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Services\ExecutionProgress;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ExecutionProgressTest extends AbstractBaseFunctionalTestCase
+class ExecutionProgressTest extends WebTestCase
 {
     private ExecutionProgress $executionProgress;
     private EnvironmentFactory $environmentFactory;
