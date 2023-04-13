@@ -1,9 +1,6 @@
 imports:
     - { resource: services/test_common.yaml }
 
-parameters:
-    event_delivery_base_url: '%env(EVENT_DELIVERY_BASE_URL)%'
-
 services:
     _defaults:
         autowire: true

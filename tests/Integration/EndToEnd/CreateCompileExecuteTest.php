@@ -35,7 +35,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
     private WorkerEventRepository $workerEventRepository;
-    private string $eventDeliveryUrl;
     private ResultsJob $resultsJob;
 
     /**
@@ -77,10 +76,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
         $this->resultsJob = $resultsClient->createJob($this->apiToken, $jobLabel);
-
-        $eventDeliveryBaseUrl = self::getContainer()->getParameter('event_delivery_base_url');
-        \assert(is_string($eventDeliveryBaseUrl));
-        $this->eventDeliveryUrl = $eventDeliveryBaseUrl . $this->resultsJob->token;
     }
 
     /**
@@ -107,7 +102,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $this->eventDeliveryUrl,
             CreateJobRequest::KEY_RESULTS_TOKEN => $this->resultsJob->token,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
