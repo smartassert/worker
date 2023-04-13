@@ -55,4 +55,4 @@ jobs:
           composer image-chown-app-source
 
       - name: Run tests
-        run: ./vendor/bin/phpunit tests/Image/${{ matrix.test_name }}.php
+        run: ./vendor/bin/phpunit -c phpunit.integration.xml tests/Image/${{ matrix.test_name }}.php
