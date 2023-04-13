@@ -1,55 +1,20 @@
 imports:
     - { resource: services/test_common.yaml }
 
-parameters:
-    integration_http_log_path: '%env(HTTP_LOG_PATH)%'
-    event_delivery_base_url: '%env(EVENT_DELIVERY_BASE_URL)%'
-
 services:
     _defaults:
         autowire: true
         autoconfigure: true
 
-    App\Tests\Services\Integration\HttpLoggerFactory:
-
-    app.tests.services.integration.httplogger:
-        class: Psr\Log\LoggerInterface
-        factory: [ '@App\Tests\Services\Integration\HttpLoggerFactory', 'create' ]
-        arguments:
-            $path: '%kernel.project_dir%/%integration_http_log_path%'
-
-    App\Tests\Services\Integration\HttpLogReader:
-        public: true
-        arguments:
-            $path: '%kernel.project_dir%/%integration_http_log_path%'
-
-    webignition\HttpHistoryContainer\LoggableContainer:
-        arguments:
-            $logger: '@app.tests.services.integration.httplogger'
-
-    Psr\Http\Client\ClientInterface:
-        class: GuzzleHttp\Client
-        factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
-
-    App\Tests\Services\Guzzle\HandlerFactory: ~
-
-    App\Tests\Services\Guzzle\HandlerStackFactory: ~
-
-    App\Tests\Services\Guzzle\ClientFactory: ~
-
-    App\Tests\Services\Guzzle\Middleware\Factory\HistoryMiddlewareFactory:
-
     app.tests.services.guzzle.handler.curl:
-        public: true
-        class: GuzzleHttp\Handler\MockHandler
-        factory: [ '@App\Tests\Services\Guzzle\HandlerFactory', 'createCurlHandler' ]
+        class: GuzzleHttp\Handler\CurlHandler
 
     GuzzleHttp\HandlerStack:
-        factory: [ '@App\Tests\Services\Guzzle\HandlerStackFactory', 'create' ]
+        factory: [ 'GuzzleHttp\HandlerStack', 'create' ]
         arguments:
             $handler: '@app.tests.services.guzzle.handler.curl'
-            $middlewareFactories:
-                - '@App\Tests\Services\Guzzle\Middleware\Factory\HistoryMiddlewareFactory'
 
-    App\Tests\Services\IntegrationDeliverEventRequestFactory:
+    SmartAssert\ResultsClient\Client:
         public: true
+        arguments:
+            $baseUrl: '%env(string:RESULTS_BASE_URL)%'

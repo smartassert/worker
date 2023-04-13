@@ -21,8 +21,8 @@ class Job
     /**
      * @var non-empty-string
      */
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    public readonly string $eventDeliveryUrl;
+    #[ORM\Column(type: 'string', length: 32, nullable: false)]
+    public readonly string $resultsToken;
 
     #[ORM\Column(type: 'integer')]
     public readonly int $maximumDurationInSeconds;
@@ -41,17 +41,17 @@ class Job
 
     /**
      * @param non-empty-string             $label
-     * @param non-empty-string             $eventDeliveryUrl
+     * @param non-empty-string             $resultsToken
      * @param array<int, non-empty-string> $testPaths
      */
     public function __construct(
         string $label,
-        string $eventDeliveryUrl,
+        string $resultsToken,
         int $maximumDurationInSeconds,
         array $testPaths
     ) {
         $this->label = $label;
-        $this->eventDeliveryUrl = $eventDeliveryUrl;
+        $this->resultsToken = $resultsToken;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();

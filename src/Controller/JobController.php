@@ -53,8 +53,8 @@ class JobController
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->eventDeliveryUrl) {
-            return new ErrorResponse('event_delivery_url/missing');
+        if ('' === $request->resultsToken) {
+            return new ErrorResponse('results_token/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
@@ -86,7 +86,7 @@ class JobController
 
         $job = $this->jobRepository->add(new Job(
             $request->label,
-            $request->eventDeliveryUrl,
+            $request->resultsToken,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths
         ));

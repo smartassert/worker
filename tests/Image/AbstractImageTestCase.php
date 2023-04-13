@@ -7,19 +7,19 @@ namespace App\Tests\Image;
 use App\Tests\Services\Asserter\ApplicationResponseDataAsserter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\Serializer as YamlFileCollectionSerializer;
 use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
 use SmartAssert\YamlFile\YamlFile;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Yaml\Dumper;
 
-abstract class AbstractImageTestCase extends TestCase
+abstract class AbstractImageTestCase extends WebTestCase
 {
-    private const JOB_URL = 'https://localhost/job';
-    private const APPLICATION_STATE_URL = 'https://localhost/application_state';
-    private const EVENT_URL = 'https://localhost/event/%d';
+    private const JOB_URL = 'http://localhost:8000/job';
+    private const APPLICATION_STATE_URL = 'http://localhost:8000/application_state';
+    private const EVENT_URL = 'http://localhost:8000/event/%d';
 
     private static Client $httpClient;
     private static ApplicationResponseDataAsserter $responseDataAsserter;

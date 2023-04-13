@@ -59,7 +59,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => '',
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => '',
+                        CreateJobRequest::KEY_RESULTS_TOKEN => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
@@ -75,14 +75,14 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
+                        CreateJobRequest::KEY_RESULTS_TOKEN => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
-                    'https://example.com/events',
+                    '',
                     300,
                     ''
                 ),
@@ -91,7 +91,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
+                        CreateJobRequest::KEY_RESULTS_TOKEN => 'results-token-value',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
@@ -102,7 +102,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
-                    'https://example.com/events',
+                    'results-token-value',
                     300,
                     <<< 'EOT'
                         ---

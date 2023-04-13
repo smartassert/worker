@@ -212,6 +212,9 @@
     "sebastian/version": {
         "version": "3.0.2"
     },
+    "smartassert/test-authenticaton-provider-bundle": {
+        "version": "0.1"
+    },
     "smartassert/yaml-file": {
         "version": "0.1"
     },
@@ -392,6 +395,18 @@
     },
     "symfony/string": {
         "version": "v5.2.6"
+    },
+    "symfony/uid": {
+        "version": "6.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.2",
+            "ref": "d294ad4add3e15d7eb1bae0221588ca89b38e558"
+        },
+        "files": [
+            "config/packages/uid.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v5.2.6"

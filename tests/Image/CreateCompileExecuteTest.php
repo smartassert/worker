@@ -8,17 +8,30 @@ use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use Psr\Http\Message\ResponseInterface;
+use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
+use Symfony\Component\Uid\Ulid;
 
 class CreateCompileExecuteTest extends AbstractImageTestCase
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-
     protected static ResponseInterface $createResponse;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        $apiTokenProvider = self::getContainer()->get(ApiTokenProvider::class);
+        \assert($apiTokenProvider instanceof ApiTokenProvider);
+        $apiToken = $apiTokenProvider->get('user@example.com');
+
+        $resultsClient = self::getContainer()->get(ResultsClient::class);
+        \assert($resultsClient instanceof ResultsClient);
+
+        $jobLabel = (string) new Ulid();
+        \assert('' !== $jobLabel);
+        $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
 
         self::$createResponse = self::makeCreateJobRequest(array_merge(
             [
@@ -38,7 +51,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             ],
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => 'http://event-receiver/status/200',
+                'results_token' => $resultsJob->token,
                 'maximum_duration_in_seconds' => 600,
             ]
         ));
@@ -61,7 +74,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $this->assertJob(
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => 'http://event-receiver/status/200',
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',

@@ -1,6 +1,8 @@
 parameters:
     basil_local_fixtures_path: '%env(BASIL_LOCAL_FIXTURES_PATH)%'
     basil_local_source_path: '%env(BASIL_LOCAL_SOURCE_PATH)%'
+    test_authentication_provider_bundle_frontend_token_provider_users:
+        'user@example.com': 'password'
 
 services:
     _defaults:
@@ -53,3 +55,13 @@ services:
     App\Tests\Services\YamlProviderFactory: ~
     SmartAssert\WorkerJobSource\Factory\YamlFileFactory: ~
     SmartAssert\WorkerJobSource\JobSourceSerializer: ~
+
+    SmartAssert\UsersClient\Client:
+        arguments:
+            $baseUrl: '%env(string:USERS_BASE_URL)%'
+
+    Psr\Http\Client\ClientInterface:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                handler: '@GuzzleHttp\HandlerStack'

@@ -125,13 +125,13 @@ class JobControllerTest extends WebTestCase
     public function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
-        $eventDeliveryUrl = 'https://example.com/events';
+        $resultsToken = 'results-token';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
         $nonEmptyPayload = [
             CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+            CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
         ];
@@ -153,20 +153,20 @@ class JobControllerTest extends WebTestCase
                     'error_state' => 'label/missing',
                 ],
             ],
-            'missing values: event_delivery_url missing' => [
+            'missing values: results token missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => null,
+                    CreateJobRequest::KEY_RESULTS_TOKEN => null,
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'event_delivery_url/missing',
+                    'error_state' => 'results_token/missing',
                 ],
             ],
-            'missing values: event_delivery_url empty' => [
+            'missing values: results token empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => '',
+                    CreateJobRequest::KEY_RESULTS_TOKEN => '',
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'event_delivery_url/missing',
+                    'error_state' => 'results_token/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [
@@ -219,7 +219,7 @@ class JobControllerTest extends WebTestCase
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
+            CreateJobRequest::KEY_RESULTS_TOKEN => 'results-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
 
@@ -388,7 +388,6 @@ class JobControllerTest extends WebTestCase
 
         $job = $this->jobRepository->get();
         self::assertSame($responseData['label'], $job->label);
-        self::assertSame($responseData['event_delivery_url'], $job->eventDeliveryUrl);
         self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
@@ -432,7 +431,7 @@ class JobControllerTest extends WebTestCase
     public function createSuccessDataProvider(): array
     {
         $label = md5((string) rand());
-        $eventDeliveryUrl = 'https://example.com/' . md5((string) rand());
+        $resultsToken = md5((string) rand());
         $maximumDuration = rand(1, 1000);
 
         return [
@@ -441,12 +440,12 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -461,7 +460,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -490,12 +488,12 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -512,7 +510,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -557,12 +554,12 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
+                    $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
+                        CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -580,7 +577,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => $label,
                     'reference' => md5($label),
-                    'event_delivery_url' => $eventDeliveryUrl,
                     'maximum_duration_in_seconds' => $maximumDuration,
                     'sources' => [
                         'Test/chrome-open-index.yml',
@@ -662,7 +658,6 @@ class JobControllerTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(11)
                             ->withTestPaths([
                                 'Test/test1.yml',
@@ -677,7 +672,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => 'label content',
                     'reference' => md5('label content'),
-                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 11,
 
                     'sources' => [
@@ -712,7 +706,6 @@ class JobControllerTest extends WebTestCase
                     ->withJobSetup(
                         (new JobSetup())
                             ->withLabel('label content')
-                            ->withEventDeliveryUrl('http://example.com/events')
                             ->withMaximumDurationInSeconds(12)
                             ->withTestPaths([
                                 'Test/test1.yml',
@@ -736,7 +729,6 @@ class JobControllerTest extends WebTestCase
                 'expectedResponseData' => [
                     'label' => 'label content',
                     'reference' => md5('label content'),
-                    'event_delivery_url' => 'http://example.com/events',
                     'maximum_duration_in_seconds' => 12,
                     'sources' => [
                         'Test/test1.yml',

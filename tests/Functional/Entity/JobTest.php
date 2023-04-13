@@ -26,7 +26,7 @@ class JobTest extends AbstractEntityTestCase
 
         $job = new Job(
             'label content',
-            'http://example.com/events',
+            'results-token',
             600,
             [
                 'test1.yml',

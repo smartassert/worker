@@ -133,3 +133,16 @@ services:
 
     SmartAssert\WorkerJobSource\Factory\JobSourceFactory: ~
     SmartAssert\WorkerJobSource\JobSourceDeserializer: ~
+
+    SmartAssert\ServiceClient\ResponseFactory\ResponseFactory:
+        factory: ['SmartAssert\ServiceClient\ResponseFactory\ResponseFactory', 'createFactory']
+
+    SmartAssert\ServiceClient\Client: ~
+
+    SmartAssert\ResultsClient\JobEventFactory: ~
+    SmartAssert\ResultsClient\EventFactory: ~
+    SmartAssert\ResultsClient\ResourceReferenceFactory: ~
+
+    SmartAssert\ResultsClient\Client:
+        arguments:
+            $baseUrl: '%env(string:RESULTS_BASE_URL)%'

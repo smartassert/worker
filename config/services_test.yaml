@@ -14,24 +14,12 @@ services:
         public: true
 
     app.tests.services.guzzle.handler.queuing:
-        public: true
         class: GuzzleHttp\Handler\MockHandler
-        factory: [ '@App\Tests\Services\Guzzle\HandlerFactory', 'createQueuingMockHandler' ]
 
     GuzzleHttp\HandlerStack:
-        factory: [ '@App\Tests\Services\Guzzle\HandlerStackFactory', 'create' ]
+        factory: [ 'GuzzleHttp\HandlerStack', 'create' ]
         arguments:
             $handler: '@app.tests.services.guzzle.handler.queuing'
-
-    App\Tests\Services\Guzzle\HandlerFactory: ~
-
-    App\Tests\Services\Guzzle\HandlerStackFactory: ~
-
-    App\Tests\Services\Guzzle\ClientFactory: ~
-
-    Psr\Http\Client\ClientInterface:
-        class: GuzzleHttp\Client
-        factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
 
     App\Tests\Services\SourceFileInspector:
         public: true

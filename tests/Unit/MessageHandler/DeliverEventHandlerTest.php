@@ -6,11 +6,12 @@ namespace App\Tests\Unit\MessageHandler;
 
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
+use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
-use App\Tests\Mock\Services\MockWorkerEventSender;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SmartAssert\ResultsClient\Client as ResultsClient;
 
 class DeliverEventHandlerTest extends TestCase
 {
@@ -21,23 +22,23 @@ class DeliverEventHandlerTest extends TestCase
         $workerEventId = 0;
         $message = new DeliverEventMessage($workerEventId);
 
-        $repository = \Mockery::mock(WorkerEventRepository::class);
-        $repository
+        $workerEventRepository = \Mockery::mock(WorkerEventRepository::class);
+        $workerEventRepository
             ->shouldReceive('find')
             ->with($workerEventId)
             ->andReturnNull()
-        ;
-
-        $sender = (new MockWorkerEventSender())
-            ->withoutSendCall()
-            ->getMock()
         ;
 
         $stateMutator = \Mockery::mock(WorkerEventStateMutator::class);
         $stateMutator->shouldNotReceive('setSending');
         $stateMutator->shouldNotReceive('setComplete');
 
-        $handler = new DeliverEventHandler($repository, $sender, $stateMutator);
+        $handler = new DeliverEventHandler(
+            \Mockery::mock(JobRepository::class),
+            $workerEventRepository,
+            $stateMutator,
+            \Mockery::mock(ResultsClient::class)
+        );
 
         ($handler)($message);
     }

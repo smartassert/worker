@@ -17,7 +17,6 @@ class ApplicationResponseDataAsserter
         TestCase::assertIsArray($actual);
 
         TestCase::assertSame($expected['label'], $actual['label']);
-        TestCase::assertSame($expected['event_delivery_url'], $actual['event_delivery_url']);
         TestCase::assertSame($expected['maximum_duration_in_seconds'], $actual['maximum_duration_in_seconds']);
         TestCase::assertSame($expected['sources'], $actual['sources']);
 
