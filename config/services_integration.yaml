@@ -13,14 +13,10 @@ services:
         class: GuzzleHttp\Client
         factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
 
-    App\Tests\Services\Guzzle\HandlerFactory: ~
-
     App\Tests\Services\Guzzle\ClientFactory: ~
 
     app.tests.services.guzzle.handler.curl:
-        public: true
-        class: GuzzleHttp\Handler\MockHandler
-        factory: [ '@App\Tests\Services\Guzzle\HandlerFactory', 'createCurlHandler' ]
+        class: GuzzleHttp\Handler\CurlHandler
 
     GuzzleHttp\HandlerStack:
         factory: [ 'GuzzleHttp\HandlerStack', 'create' ]
