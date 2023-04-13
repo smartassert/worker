@@ -31,7 +31,6 @@ use App\Model\Document\Test as TestDocument;
 use App\Model\WorkerEventReferenceCollection;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\MockTestManifest;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -39,10 +38,11 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
-class WorkerEventFactoryTest extends AbstractBaseFunctionalTestCase
+class WorkerEventFactoryTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

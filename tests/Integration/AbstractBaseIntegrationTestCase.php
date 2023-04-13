@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class AbstractBaseIntegrationTestCase extends AbstractBaseFunctionalTestCase
+abstract class AbstractBaseIntegrationTestCase extends WebTestCase
 {
     protected EntityRemover $entityRemover;
     protected FileStoreHandler $localSourceStoreHandler;

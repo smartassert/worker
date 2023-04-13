@@ -14,7 +14,6 @@ use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Services\ApplicationProgress;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -22,8 +21,9 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApplicationProgressTest extends AbstractBaseFunctionalTestCase
+class ApplicationProgressTest extends WebTestCase
 {
     private ApplicationProgress $applicationProgress;
     private EnvironmentFactory $environmentFactory;

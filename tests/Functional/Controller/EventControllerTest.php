@@ -9,15 +9,15 @@ use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EventControllerTest extends AbstractBaseFunctionalTestCase
+class EventControllerTest extends WebTestCase
 {
     private ClientRequestSender $clientRequestSender;
     private EnvironmentFactory $environmentFactory;

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Services\TestManifestFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Factory\TestManifestFactoryInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
 
-class TestManifestFactoryTest extends AbstractBaseFunctionalTestCase
+class TestManifestFactoryTest extends WebTestCase
 {
     private TestManifestFactory $testManifestFactory;
     private string $compilerSourceDirectory;

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Services\SourceFileStore;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\SourceFileInspector;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class SourceFileStoreTest extends AbstractBaseFunctionalTestCase
+class SourceFileStoreTest extends WebTestCase
 {
     private SourceFileStore $store;
     private FileStoreHandler $localSourceStoreHandler;

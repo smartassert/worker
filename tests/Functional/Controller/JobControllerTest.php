@@ -14,7 +14,6 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -27,10 +26,11 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
-class JobControllerTest extends AbstractBaseFunctionalTestCase
+class JobControllerTest extends WebTestCase
 {
     private JobRepository $jobRepository;
     private ClientRequestSender $clientRequestSender;

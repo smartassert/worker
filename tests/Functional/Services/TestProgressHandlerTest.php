@@ -13,16 +13,16 @@ use App\Enum\WorkerEventScope;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\HasTestInterface;
 use App\Services\TestProgressHandler;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\YamlDocument\Document as YamlDocument;
 
-class TestProgressHandlerTest extends AbstractBaseFunctionalTestCase
+class TestProgressHandlerTest extends WebTestCase
 {
     private TestProgressHandler $handler;
     private Test $test;

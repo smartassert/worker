@@ -15,7 +15,6 @@ use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\Services\MockWorkerEventSender;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -25,9 +24,10 @@ use App\Tests\Services\EnvironmentFactory;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\ObjectReflector\ObjectReflector;
 
-class DeliverEventHandlerTest extends AbstractBaseFunctionalTestCase
+class DeliverEventHandlerTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

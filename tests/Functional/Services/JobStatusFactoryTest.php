@@ -11,7 +11,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\TestState;
 use App\Repository\WorkerEventRepository;
 use App\Services\JobStatusFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -19,8 +18,9 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class JobStatusFactoryTest extends AbstractBaseFunctionalTestCase
+class JobStatusFactoryTest extends WebTestCase
 {
     private JobStatusFactory $jobStatusFactory;
     private EnvironmentFactory $environmentFactory;

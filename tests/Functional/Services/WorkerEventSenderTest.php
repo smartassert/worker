@@ -14,7 +14,6 @@ use App\Repository\JobRepository;
 use App\Repository\WorkerEventReferenceRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventSender;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
@@ -22,8 +21,9 @@ use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class WorkerEventSenderTest extends AbstractBaseFunctionalTestCase
+class WorkerEventSenderTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

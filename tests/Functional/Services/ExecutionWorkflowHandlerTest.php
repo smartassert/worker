@@ -13,17 +13,17 @@ use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Services\ExecutionWorkflowHandler;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use webignition\ObjectReflector\ObjectReflector;
 
-class ExecutionWorkflowHandlerTest extends AbstractBaseFunctionalTestCase
+class ExecutionWorkflowHandlerTest extends WebTestCase
 {
     private ExecutionWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;

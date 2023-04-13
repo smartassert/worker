@@ -12,7 +12,6 @@ use App\Enum\CompilationState;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Services\CompilationProgress;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -20,8 +19,9 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CompilationProgressTest extends AbstractBaseFunctionalTestCase
+class CompilationProgressTest extends WebTestCase
 {
     private CompilationProgress $compilationProgress;
     private EnvironmentFactory $environmentFactory;

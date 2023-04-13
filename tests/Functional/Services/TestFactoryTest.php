@@ -8,15 +8,15 @@ use App\Entity\Test;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Repository\TestRepository;
 use App\Services\TestFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
 
-class TestFactoryTest extends AbstractBaseFunctionalTestCase
+class TestFactoryTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -10,15 +10,15 @@ use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Repository\JobRepository;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-class TimeoutCheckHandlerTest extends AbstractBaseFunctionalTestCase
+class TimeoutCheckHandlerTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 

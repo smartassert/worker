@@ -8,7 +8,6 @@ use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Repository\SourceRepository;
 use App\Services\SourceFactory;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
@@ -17,8 +16,9 @@ use SmartAssert\WorkerJobSource\Model\JobSource;
 use SmartAssert\WorkerJobSource\Model\Manifest;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\YamlFile;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class SourceFactoryTest extends AbstractBaseFunctionalTestCase
+class SourceFactoryTest extends WebTestCase
 {
     private SourceFactory $factory;
     private FileStoreHandler $localSourceStoreHandler;

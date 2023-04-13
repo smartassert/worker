@@ -15,7 +15,6 @@ use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
 use App\Repository\JobRepository;
 use App\Services\ExecutionProgress;
-use App\Tests\AbstractBaseFunctionalTestCase;
 use App\Tests\Mock\Services\MockTestExecutor;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -24,9 +23,10 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\ObjectReflector\ObjectReflector;
 
-class ExecuteTestHandlerTest extends AbstractBaseFunctionalTestCase
+class ExecuteTestHandlerTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 
