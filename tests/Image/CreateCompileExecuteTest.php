@@ -16,10 +16,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
 {
     private const MICROSECONDS_PER_SECOND = 1000000;
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
-
     protected static ResponseInterface $createResponse;
-
-    private static string $eventDeliveryUrl;
 
     public static function setUpBeforeClass(): void
     {
@@ -35,10 +32,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
         $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
-
-        $eventDeliveryBaseUrl = self::getContainer()->getParameter('event_delivery_base_url');
-        \assert(is_string($eventDeliveryBaseUrl));
-        self::$eventDeliveryUrl = $eventDeliveryBaseUrl . $resultsJob->token;
 
         self::$createResponse = self::makeCreateJobRequest(array_merge(
             [
@@ -58,8 +51,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             ],
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => self::$eventDeliveryUrl,
-                'results_token' => 'results token value',
+                'results_token' => $resultsJob->token,
                 'maximum_duration_in_seconds' => 600,
             ]
         ));
@@ -82,7 +74,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $this->assertJob(
             [
                 'label' => md5('label content'),
-                'event_delivery_url' => self::$eventDeliveryUrl,
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',
