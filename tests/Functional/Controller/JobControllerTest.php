@@ -125,14 +125,12 @@ class JobControllerTest extends WebTestCase
     public function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
-        $eventDeliveryUrl = 'https://example.com/events';
         $resultsToken = 'results-token';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
         $nonEmptyPayload = [
             CreateJobRequest::KEY_LABEL => $label,
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
             CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
@@ -153,22 +151,6 @@ class JobControllerTest extends WebTestCase
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'label/missing',
-                ],
-            ],
-            'missing values: event_delivery_url missing' => [
-                'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => null,
-                ]),
-                'expectedResponseData' => [
-                    'error_state' => 'event_delivery_url/missing',
-                ],
-            ],
-            'missing values: event_delivery_url empty' => [
-                'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_EVENT_DELIVERY_URL => '',
-                ]),
-                'expectedResponseData' => [
-                    'error_state' => 'event_delivery_url/missing',
                 ],
             ],
             'missing values: results token missing' => [
@@ -237,7 +219,6 @@ class JobControllerTest extends WebTestCase
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
-            CreateJobRequest::KEY_EVENT_DELIVERY_URL => 'https://example.com/events',
             CreateJobRequest::KEY_RESULTS_TOKEN => 'results-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
@@ -450,7 +431,6 @@ class JobControllerTest extends WebTestCase
     public function createSuccessDataProvider(): array
     {
         $label = md5((string) rand());
-        $eventDeliveryUrl = 'https://example.com/' . md5((string) rand());
         $resultsToken = md5((string) rand());
         $maximumDuration = rand(1, 1000);
 
@@ -460,13 +440,11 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
                     $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
                         CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
@@ -510,13 +488,11 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
                     $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
                         CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
@@ -578,13 +554,11 @@ class JobControllerTest extends WebTestCase
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
                     $label,
-                    $eventDeliveryUrl,
                     $resultsToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_DELIVERY_URL => $eventDeliveryUrl,
                         CreateJobRequest::KEY_RESULTS_TOKEN => $resultsToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(

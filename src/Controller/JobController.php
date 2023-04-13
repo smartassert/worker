@@ -53,10 +53,6 @@ class JobController
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->eventDeliveryUrl) {
-            return new ErrorResponse('event_delivery_url/missing');
-        }
-
         if ('' === $request->resultsToken) {
             return new ErrorResponse('results_token/missing');
         }
