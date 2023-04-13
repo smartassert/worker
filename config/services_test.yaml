@@ -21,12 +21,6 @@ services:
         arguments:
             $handler: '@app.tests.services.guzzle.handler.queuing'
 
-    App\Tests\Services\Guzzle\ClientFactory: ~
-
-    Psr\Http\Client\ClientInterface:
-        class: GuzzleHttp\Client
-        factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
-
     App\Tests\Services\SourceFileInspector:
         public: true
         arguments:

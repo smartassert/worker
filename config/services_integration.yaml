@@ -9,12 +9,6 @@ services:
         autowire: true
         autoconfigure: true
 
-    Psr\Http\Client\ClientInterface:
-        class: GuzzleHttp\Client
-        factory: [ '@App\Tests\Services\Guzzle\ClientFactory', 'get' ]
-
-    App\Tests\Services\Guzzle\ClientFactory: ~
-
     app.tests.services.guzzle.handler.curl:
         class: GuzzleHttp\Handler\CurlHandler
 
