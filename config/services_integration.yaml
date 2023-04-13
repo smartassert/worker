@@ -23,9 +23,6 @@ services:
         arguments:
             $handler: '@app.tests.services.guzzle.handler.curl'
 
-    App\Tests\Services\IntegrationDeliverEventRequestFactory:
-        public: true
-
     SmartAssert\ResultsClient\Client:
         public: true
         arguments:
