@@ -1,15 +1,6 @@
 version: "3"
 
 services:
-  event-receiver:
-    image: caddy:2.4.5-alpine
-    container_name: caddy-event-receiver
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    volumes:
-      - ./caddy-event-receiver/Caddyfile:/etc/caddy/Caddyfile
-
   users-service:
     image: ghcr.io/smartassert/users:0.8
     container_name: users-service
