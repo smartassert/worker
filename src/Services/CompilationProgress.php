@@ -13,9 +13,9 @@ use App\Repository\WorkerEventRepository;
 class CompilationProgress
 {
     public function __construct(
-        private WorkerEventRepository $workerEventRepository,
-        private SourcePathFinder $sourcePathFinder,
-        private TestRepository $testRepository,
+        private readonly WorkerEventRepository $workerEventRepository,
+        private readonly SourcePathFinder $sourcePathFinder,
+        private readonly TestRepository $testRepository,
     ) {
     }
 
