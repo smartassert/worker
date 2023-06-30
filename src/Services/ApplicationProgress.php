@@ -57,12 +57,4 @@ class ApplicationProgress
 
         return ApplicationState::COMPLETE;
     }
-
-    /**
-     * @param ApplicationState[] $states
-     */
-    public function is(array $states): bool
-    {
-        return in_array($this->get(), $states);
-    }
 }

@@ -25,13 +25,15 @@ class JobCompleteEventDispatcher
 
     public function dispatch(): void
     {
-        if ($this->applicationProgress->is([ApplicationState::COMPLETE])) {
+        $applicationState = $this->applicationProgress->get();
+
+        if (ApplicationState::COMPLETE === $applicationState) {
             $this->eventDispatcher->dispatch(new JobCompletedEvent());
 
             return;
         }
 
-        if (!$this->applicationProgress->is([ApplicationState::TIMED_OUT])) {
+        if (ApplicationState::TIMED_OUT !== $applicationState) {
             $this->messageBus->dispatch(
                 new Envelope(new JobCompletedCheckMessage(), [new DelayStamp($this->dispatchDelay)])
             );

@@ -25,9 +25,8 @@ class JobCompleteEventDispatcherTest extends TestCase
     {
         $applicationProgress = \Mockery::mock(ApplicationProgress::class);
         $applicationProgress
-            ->shouldReceive('is')
-            ->with([ApplicationState::COMPLETE])
-            ->andReturn(true)
+            ->shouldReceive('get')
+            ->andReturn(ApplicationState::COMPLETE)
         ;
 
         $eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);
@@ -54,15 +53,8 @@ class JobCompleteEventDispatcherTest extends TestCase
     {
         $applicationProgress = \Mockery::mock(ApplicationProgress::class);
         $applicationProgress
-            ->shouldReceive('is')
-            ->with([ApplicationState::COMPLETE])
-            ->andReturn(false)
-        ;
-
-        $applicationProgress
-            ->shouldReceive('is')
-            ->with([ApplicationState::TIMED_OUT])
-            ->andReturn(false)
+            ->shouldReceive('get')
+            ->andReturn(ApplicationState::COMPILING)
         ;
 
         $eventDispatcher = \Mockery::mock(EventDispatcherInterface::class);

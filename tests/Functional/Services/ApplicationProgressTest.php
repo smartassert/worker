@@ -216,8 +216,8 @@ class ApplicationProgressTest extends WebTestCase
     ): void {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->applicationProgress->is($expectedIsStates));
-        self::assertFalse($this->applicationProgress->is($expectedIsNotStates));
+        self::assertContains($this->applicationProgress->get(), $expectedIsStates);
+        self::assertNotContains($this->applicationProgress->get(), $expectedIsNotStates);
     }
 
     /**
