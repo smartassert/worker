@@ -83,6 +83,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
      *
      * @param non-empty-string[]                              $manifestPaths
      * @param string[]                                        $sourcePaths
+     * @param array{state: non-empty-string, is_end_state: bool} $expectedCompilationEndState
+     * @param array{state: non-empty-string, is_end_state: bool} $expectedExecutionEndState
      * @param array<int, array<mixed>>                        $expectedTestDataCollection
      * @param callable(int, string, string): EventInterface[] $expectedEventsCreator
      */
@@ -90,8 +92,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         array $manifestPaths,
         array $sourcePaths,
         string $jobLabel,
-        CompilationState $expectedCompilationEndState,
-        ExecutionState $expectedExecutionEndState,
+        array $expectedCompilationEndState,
+        array $expectedExecutionEndState,
         array $expectedTestDataCollection,
         callable $expectedEventsCreator,
     ): void {
@@ -142,9 +144,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         $applicationStateData = json_decode((string) $applicationStateResponse->getContent(), true);
         self::assertIsArray($applicationStateData);
-        self::assertSame($expectedCompilationEndState->value, $applicationStateData['compilation']);
-        self::assertSame($expectedExecutionEndState->value, $applicationStateData['execution']);
-        self::assertSame(EventDeliveryState::COMPLETE->value, $applicationStateData['event_delivery']);
+        self::assertSame($expectedCompilationEndState, $applicationStateData['compilation']);
+        self::assertSame($expectedExecutionEndState, $applicationStateData['execution']);
+        self::assertSame(
+            [
+                'state' => EventDeliveryState::COMPLETE->value,
+                'is_end_state' => true,
+            ],
+            $applicationStateData['event_delivery']
+        );
 
         $testDataCollection = $jobStatusData['tests'];
         self::assertIsArray($testDataCollection);
@@ -197,8 +205,14 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'expectedCompilationEndState' => CompilationState::FAILED,
-                'expectedExecutionEndState' => ExecutionState::AWAITING,
+                'expectedCompilationEndState' => [
+                    'state' => CompilationState::FAILED->value,
+                    'is_end_state' => true,
+                ],
+                'expectedExecutionEndState' => [
+                    'state' => ExecutionState::AWAITING->value,
+                    'is_end_state' => false,
+                ],
                 'expectedTestDataCollection' => [],
                 'expectedEventsCreator' => function (
                     int $firstSequenceNumber,
@@ -290,8 +304,14 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'expectedCompilationEndState' => CompilationState::FAILED,
-                'expectedExecutionEndState' => ExecutionState::AWAITING,
+                'expectedCompilationEndState' => [
+                    'state' => CompilationState::FAILED->value,
+                    'is_end_state' => true,
+                ],
+                'expectedExecutionEndState' => [
+                    'state' => ExecutionState::AWAITING->value,
+                    'is_end_state' => false,
+                ],
                 'expectedTestDataCollection' => [
                     [
                         'browser' => 'chrome',
@@ -430,8 +450,14 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-form.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'expectedCompilationEndState' => CompilationState::COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::COMPLETE,
+                'expectedCompilationEndState' => [
+                    'state' => CompilationState::COMPLETE->value,
+                    'is_end_state' => true,
+                ],
+                'expectedExecutionEndState' => [
+                    'state' => ExecutionState::COMPLETE->value,
+                    'is_end_state' => true,
+                ],
                 'expectedTestDataCollection' => [
                     [
                         'browser' => 'chrome',
@@ -1018,8 +1044,14 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
-                'expectedCompilationEndState' => CompilationState::COMPLETE,
-                'expectedExecutionEndState' => ExecutionState::CANCELLED,
+                'expectedCompilationEndState' => [
+                    'state' => CompilationState::COMPLETE->value,
+                    'is_end_state' => true,
+                ],
+                'expectedExecutionEndState' => [
+                    'state' => ExecutionState::CANCELLED->value,
+                    'is_end_state' => true,
+                ],
                 'expectedTestDataCollection' => [
                     [
                         'browser' => 'chrome',
