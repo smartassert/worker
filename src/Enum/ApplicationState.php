@@ -12,4 +12,9 @@ enum ApplicationState: string
     case COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
     case COMPLETE = 'complete';
     case TIMED_OUT = 'timed-out';
+
+    public static function isEndState(ApplicationState $state): bool
+    {
+        return in_array($state, [self::COMPLETE, self::TIMED_OUT]);
+    }
 }
