@@ -11,7 +11,7 @@ use App\Repository\TestRepository;
 class ExecutionProgress
 {
     public function __construct(
-        private TestRepository $testRepository
+        private readonly TestRepository $testRepository
     ) {
     }
 
