@@ -17,10 +17,10 @@ class ApplicationProgress
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
-        private CompilationProgress $compilationProgress,
-        private ExecutionProgress $executionProgress,
-        private EventDeliveryProgress $eventDeliveryProgress,
-        private WorkerEventRepository $workerEventRepository,
+        private readonly CompilationProgress $compilationProgress,
+        private readonly ExecutionProgress $executionProgress,
+        private readonly EventDeliveryProgress $eventDeliveryProgress,
+        private readonly WorkerEventRepository $workerEventRepository,
     ) {
     }
 
