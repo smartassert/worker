@@ -36,12 +36,4 @@ class ExecutionProgress
 
         return $hasRunningTests ? ExecutionState::RUNNING : ExecutionState::AWAITING;
     }
-
-    /**
-     * @param ExecutionState[] $states
-     */
-    public function is(array $states): bool
-    {
-        return in_array($this->get(), $states);
-    }
 }

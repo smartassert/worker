@@ -12,11 +12,8 @@ enum CompilationState: string
     case COMPLETE = 'complete';
     case UNKNOWN = 'unknown';
 
-    /**
-     * @return CompilationState[]
-     */
-    public static function getFinishedStates(): array
+    public static function isEndState(CompilationState $state): bool
     {
-        return [self::COMPLETE, self::FAILED];
+        return in_array($state, [self::COMPLETE, self::FAILED]);
     }
 }

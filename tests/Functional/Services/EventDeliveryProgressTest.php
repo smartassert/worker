@@ -112,8 +112,8 @@ class EventDeliveryProgressTest extends WebTestCase
             $this->createWorkerEventEntity($state);
         }
 
-        self::assertTrue($this->eventDeliveryProgress->is($expectedIsStates));
-        self::assertFalse($this->eventDeliveryProgress->is($expectedIsNotStates));
+        self::assertContains($this->eventDeliveryProgress->get(), $expectedIsStates);
+        self::assertNotContains($this->eventDeliveryProgress->get(), $expectedIsNotStates);
     }
 
     /**

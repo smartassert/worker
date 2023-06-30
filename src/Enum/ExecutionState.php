@@ -11,11 +11,8 @@ enum ExecutionState: string
     case COMPLETE = 'complete';
     case CANCELLED = 'cancelled';
 
-    /**
-     * @return ExecutionState[]
-     */
-    public static function getFinishedStates(): array
+    public static function isEndState(ExecutionState $state): bool
     {
-        return [self::COMPLETE, self::CANCELLED];
+        return in_array($state, [self::COMPLETE, self::CANCELLED]);
     }
 }
