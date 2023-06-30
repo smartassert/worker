@@ -128,8 +128,8 @@ class ExecutionProgressTest extends WebTestCase
     {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->executionProgress->is($expectedIsStates));
-        self::assertFalse($this->executionProgress->is($expectedIsNotStates));
+        self::assertContains($this->executionProgress->get(), $expectedIsStates);
+        self::assertNotContains($this->executionProgress->get(), $expectedIsNotStates);
     }
 
     /**

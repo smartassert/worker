@@ -48,7 +48,7 @@ class ApplicationProgress
             return ApplicationState::COMPLETE;
         }
 
-        if (false === $this->executionProgress->is(ExecutionState::getFinishedStates())) {
+        if (!ExecutionState::isEndState($this->executionProgress->get())) {
             return ApplicationState::EXECUTING;
         }
 

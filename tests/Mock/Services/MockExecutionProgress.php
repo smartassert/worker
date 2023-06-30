@@ -39,4 +39,18 @@ class MockExecutionProgress
 
         return $this;
     }
+
+    public function withGetCall(ExecutionState $state): self
+    {
+        if (false === $this->mock instanceof MockInterface) {
+            return $this;
+        }
+
+        $this->mock
+            ->shouldReceive('get')
+            ->andReturn($state)
+        ;
+
+        return $this;
+    }
 }
