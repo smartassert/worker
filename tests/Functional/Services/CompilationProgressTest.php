@@ -128,8 +128,8 @@ class CompilationProgressTest extends WebTestCase
     ): void {
         $this->environmentFactory->create($setup);
 
-        self::assertTrue($this->compilationProgress->is($expectedIsStates));
-        self::assertFalse($this->compilationProgress->is($expectedIsNotStates));
+        self::assertContains($this->compilationProgress->get(), $expectedIsStates);
+        self::assertNotContains($this->compilationProgress->get(), $expectedIsNotStates);
     }
 
     /**

@@ -39,11 +39,12 @@ class ApplicationProgress
             return ApplicationState::TIMED_OUT;
         }
 
-        if (false === $this->compilationProgress->is(CompilationState::getFinishedStates())) {
+        $compilationState = $this->compilationProgress->get();
+        if (false === CompilationState::isEndState($compilationState)) {
             return ApplicationState::COMPILING;
         }
 
-        if (CompilationState::FAILED === $this->compilationProgress->get()) {
+        if (CompilationState::FAILED === $compilationState) {
             return ApplicationState::COMPLETE;
         }
 

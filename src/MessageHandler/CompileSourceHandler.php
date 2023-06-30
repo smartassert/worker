@@ -38,7 +38,7 @@ class CompileSourceHandler
      */
     public function __invoke(CompileSourceMessage $message): void
     {
-        if (false === $this->compilationProgress->is([CompilationState::RUNNING])) {
+        if (CompilationState::RUNNING !== $this->compilationProgress->get()) {
             return;
         }
 

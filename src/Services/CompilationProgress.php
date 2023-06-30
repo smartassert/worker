@@ -39,12 +39,4 @@ class CompilationProgress
 
         return 0 === $testCount ? CompilationState::AWAITING : CompilationState::COMPLETE;
     }
-
-    /**
-     * @param CompilationState[] $states
-     */
-    public function is(array $states): bool
-    {
-        return in_array($this->get(), $states);
-    }
 }
