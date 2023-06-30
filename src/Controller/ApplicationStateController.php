@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\SerializedState;
 use App\Services\ApplicationProgress;
 use App\Services\CompilationProgress;
 use App\Services\EventDeliveryProgress;
@@ -25,10 +26,10 @@ class ApplicationStateController
     public function get(): JsonResponse
     {
         return new JsonResponse([
-            'application' => $this->applicationProgress->get()->value,
-            'compilation' => $this->compilationProgress->get()->value,
-            'execution' => $this->executionProgress->get()->value,
-            'event_delivery' => $this->eventDeliveryProgress->get()->value,
+            'application' => new SerializedState($this->applicationProgress->get()),
+            'compilation' => new SerializedState($this->compilationProgress->get()),
+            'execution' => new SerializedState($this->executionProgress->get()),
+            'event_delivery' => new SerializedState($this->eventDeliveryProgress->get()),
         ]);
     }
 }

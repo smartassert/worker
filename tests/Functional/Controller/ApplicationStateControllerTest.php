@@ -98,19 +98,43 @@ class ApplicationStateControllerTest extends WebTestCase
             'no job' => [
                 'setup' => (new EnvironmentSetup()),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::AWAITING_JOB->value,
-                    'compilation' => CompilationState::AWAITING->value,
-                    'event_delivery' => EventDeliveryState::AWAITING->value,
-                    'execution' => ExecutionState::AWAITING->value,
+                    'application' => [
+                        'state' => ApplicationState::AWAITING_JOB->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
                 ],
             ],
             'compilation running' => [
                 'setup' => $environmentSetup,
                 'expectedResponseData' => [
-                    'application' => ApplicationState::COMPILING->value,
-                    'compilation' => CompilationState::RUNNING->value,
-                    'event_delivery' => EventDeliveryState::AWAITING->value,
-                    'execution' => ExecutionState::AWAITING->value,
+                    'application' => [
+                        'state' => ApplicationState::COMPILING->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::RUNNING->value,
+                        'is_end_state' => false,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
                 ],
             ],
             'compilation complete, execution awaiting' => [
@@ -120,10 +144,22 @@ class ApplicationStateControllerTest extends WebTestCase
                     (new TestSetup())->withSource('Test/test3.yml'),
                 ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::EXECUTING->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::AWAITING->value,
-                    'execution' => ExecutionState::AWAITING->value,
+                    'application' => [
+                        'state' => ApplicationState::EXECUTING->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
                 ],
             ],
             'execution running, event delivery awaiting' => [
@@ -135,10 +171,22 @@ class ApplicationStateControllerTest extends WebTestCase
                     (new TestSetup())->withSource('Test/test3.yml'),
                 ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::EXECUTING->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::AWAITING->value,
-                    'execution' => ExecutionState::RUNNING->value,
+                    'application' => [
+                        'state' => ApplicationState::EXECUTING->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::AWAITING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::RUNNING->value,
+                        'is_end_state' => false,
+                    ],
                 ],
             ],
             'execution running, event delivery running' => [
@@ -154,10 +202,22 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(WorkerEventState::QUEUED)
                     ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::EXECUTING->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::RUNNING->value,
-                    'execution' => ExecutionState::RUNNING->value,
+                    'application' => [
+                        'state' => ApplicationState::EXECUTING->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::RUNNING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::RUNNING->value,
+                        'is_end_state' => false,
+                    ],
                 ],
             ],
             'execution complete, event delivery running' => [
@@ -177,10 +237,22 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(WorkerEventState::QUEUED)
                     ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::COMPLETING_EVENT_DELIVERY->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::RUNNING->value,
-                    'execution' => ExecutionState::COMPLETE->value,
+                    'application' => [
+                        'state' => ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                        'is_end_state' => false,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::RUNNING->value,
+                        'is_end_state' => false,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
                 ],
             ],
             'execution complete, event delivery complete' => [
@@ -200,10 +272,22 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::COMPLETE->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::COMPLETE->value,
-                    'execution' => ExecutionState::COMPLETE->value,
+                    'application' => [
+                        'state' => ApplicationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
                 ],
             ],
             'execution failed, event delivery complete' => [
@@ -223,10 +307,22 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::COMPLETE->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::COMPLETE->value,
-                    'execution' => ExecutionState::CANCELLED->value,
+                    'application' => [
+                        'state' => ApplicationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::CANCELLED->value,
+                        'is_end_state' => true,
+                    ],
                 ],
             ],
             'timed out' => [
@@ -250,10 +346,22 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
-                    'application' => ApplicationState::TIMED_OUT->value,
-                    'compilation' => CompilationState::COMPLETE->value,
-                    'event_delivery' => EventDeliveryState::COMPLETE->value,
-                    'execution' => ExecutionState::CANCELLED->value,
+                    'application' => [
+                        'state' => ApplicationState::TIMED_OUT->value,
+                        'is_end_state' => true,
+                    ],
+                    'compilation' => [
+                        'state' => CompilationState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'event_delivery' => [
+                        'state' => EventDeliveryState::COMPLETE->value,
+                        'is_end_state' => true,
+                    ],
+                    'execution' => [
+                        'state' => ExecutionState::CANCELLED->value,
+                        'is_end_state' => true,
+                    ],
                 ],
             ],
         ];
