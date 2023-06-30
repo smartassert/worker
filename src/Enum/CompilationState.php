@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum CompilationState: string
+enum CompilationState: string implements StateInterface
 {
     case AWAITING = 'awaiting';
     case RUNNING = 'running';
@@ -12,8 +12,13 @@ enum CompilationState: string
     case COMPLETE = 'complete';
     case UNKNOWN = 'unknown';
 
-    public static function isEndState(CompilationState $state): bool
+    public static function isEndState(StateInterface $state): bool
     {
         return in_array($state, [self::COMPLETE, self::FAILED]);
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
     }
 }
