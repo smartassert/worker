@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
-use App\Enum\CompilationState;
-use App\Enum\EventDeliveryState;
-use App\Enum\ExecutionState;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Client as ResultsClient;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
@@ -63,7 +60,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $durationExceeded = false;
         $waitThreshold = 60 * self::MICROSECONDS_PER_SECOND;
 
-        while (false === $durationExceeded && false === $this->isApplicationToComplete()) {
+        while (false === $durationExceeded && false === $this->isApplicationComplete()) {
             usleep(self::WAIT_INTERVAL);
             $duration += self::WAIT_INTERVAL;
             $durationExceeded = $duration >= $waitThreshold;
@@ -81,10 +78,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                     'Test/chrome-open-form.yml',
                     'Page/index.yml',
                 ],
-                'application_state' => 'complete',
-                'compilation_state' => 'complete',
-                'execution_state' => 'complete',
-                'event_delivery_state' => 'complete',
                 'tests' => [
                     [
                         'browser' => 'chrome',
@@ -132,10 +125,22 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         );
         $this->assertApplicationState(
             [
-                'application' => 'complete',
-                'compilation' => 'complete',
-                'execution' => 'complete',
-                'event_delivery' => 'complete',
+                'application' => [
+                    'state' => 'complete',
+                    'is_end_state' => true,
+                ],
+                'compilation' => [
+                    'state' => 'complete',
+                    'is_end_state' => true,
+                ],
+                'execution' => [
+                    'state' => 'complete',
+                    'is_end_state' => true,
+                ],
+                'event_delivery' => [
+                    'state' => 'complete',
+                    'is_end_state' => true,
+                ],
             ],
             $this->fetchApplicationState()
         );
@@ -169,12 +174,26 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         self::assertSame('job/started', $responseData['type']);
     }
 
-    private function isApplicationToComplete(): bool
+    private function isApplicationComplete(): bool
     {
         $state = $this->fetchApplicationState();
 
-        return CompilationState::COMPLETE->value === $state['compilation']
-            && ExecutionState::COMPLETE->value === $state['execution']
-            && EventDeliveryState::COMPLETE->value === $state['event_delivery'];
+        return true === $this->isComponentEndState($state, 'compilation')
+            && true === $this->isComponentEndState($state, 'execution')
+            && true === $this->isComponentEndState($state, 'event_delivery');
+    }
+
+    /**
+     * @param array<mixed>     $data
+     * @param non-empty-string $key
+     */
+    private function isComponentEndState(array $data, string $key): bool
+    {
+        $state = $data[$key] ?? [];
+        $state = is_array($state) ? $state : [];
+
+        $isEndState = $state['is_end_state'] ?? false;
+
+        return is_bool($isEndState) ? $isEndState : false;
     }
 }
