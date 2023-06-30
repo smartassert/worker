@@ -81,12 +81,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     /**
      * @dataProvider createAddSourcesCompileExecuteDataProvider
      *
-     * @param non-empty-string[]                              $manifestPaths
-     * @param string[]                                        $sourcePaths
+     * @param non-empty-string[]                                 $manifestPaths
+     * @param string[]                                           $sourcePaths
      * @param array{state: non-empty-string, is_end_state: bool} $expectedCompilationEndState
      * @param array{state: non-empty-string, is_end_state: bool} $expectedExecutionEndState
-     * @param array<int, array<mixed>>                        $expectedTestDataCollection
-     * @param callable(int, string, string): EventInterface[] $expectedEventsCreator
+     * @param array<int, array<mixed>>                           $expectedTestDataCollection
+     * @param callable(int, string, string): EventInterface[]    $expectedEventsCreator
      */
     public function testCreateCompileExecute(
         array $manifestPaths,
