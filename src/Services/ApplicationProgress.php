@@ -52,7 +52,8 @@ class ApplicationProgress
             return ApplicationState::EXECUTING;
         }
 
-        if ($this->eventDeliveryProgress->is([EventDeliveryState::AWAITING, EventDeliveryState::RUNNING])) {
+        $eventDeliveryState = $this->eventDeliveryProgress->get();
+        if (in_array($eventDeliveryState, [EventDeliveryState::AWAITING, EventDeliveryState::RUNNING])) {
             return ApplicationState::COMPLETING_EVENT_DELIVERY;
         }
 

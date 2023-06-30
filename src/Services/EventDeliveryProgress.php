@@ -31,12 +31,4 @@ class EventDeliveryProgress
 
         return $finishedEventCount === $eventCount ? EventDeliveryState::COMPLETE : EventDeliveryState::RUNNING;
     }
-
-    /**
-     * @param EventDeliveryState[] $states
-     */
-    public function is(array $states): bool
-    {
-        return in_array($this->get(), $states);
-    }
 }
