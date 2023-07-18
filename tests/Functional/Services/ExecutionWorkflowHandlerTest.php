@@ -20,14 +20,14 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use webignition\ObjectReflector\ObjectReflector;
 
 class ExecutionWorkflowHandlerTest extends WebTestCase
 {
     private ExecutionWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;
-    private TransportInterface $messengerTransport;
+    private InMemoryTransport $messengerTransport;
 
     protected function setUp(): void
     {
@@ -49,14 +49,14 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         }
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
-        \assert($messengerTransport instanceof TransportInterface);
+        \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
     }
 
     public function testDispatchNextExecuteTestMessageNoMessageDispatched(): void
     {
         $this->handler->dispatchNextExecuteTestMessage();
-        self::assertCount(0, $this->messengerTransport->get());
+        self::assertCount(0, $this->messengerTransport->getSent());
     }
 
     /**
@@ -130,7 +130,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
     ): void {
         $environment = $this->environmentFactory->create($setup);
         $tests = $environment->getTests();
-        self::assertCount(0, $this->messengerTransport->get());
+        self::assertCount(0, $this->messengerTransport->getSent());
 
         $test = $tests[$eventTestIndex];
         $event = new TestEvent(
@@ -142,7 +142,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
 
         $this->handler->dispatchNextExecuteTestMessageForTestPassedEvent($event);
 
-        self::assertCount($expectedQueuedMessageCount, $this->messengerTransport->get());
+        self::assertCount($expectedQueuedMessageCount, $this->messengerTransport->getSent());
 
         if (is_int($expectedNextTestIndex)) {
             $expectedNextTest = $tests[$expectedNextTestIndex] ?? null;
@@ -151,7 +151,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
             $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
             self::assertIsInt($expectedNextTestId);
 
-            $transportQueue = $this->messengerTransport->get();
+            $transportQueue = $this->messengerTransport->getSent();
             self::assertIsArray($transportQueue);
             self::assertCount(1, $transportQueue);
 
@@ -229,7 +229,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         callable $execute,
         int $expectedNextTestIndex
     ): void {
-        self::assertCount(0, $this->messengerTransport->get());
+        self::assertCount(0, $this->messengerTransport->getSent());
 
         $environment = $this->environmentFactory->create($setup);
         $tests = $environment->getTests();
@@ -242,7 +242,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         $expectedNextTestId = ObjectReflector::getProperty($expectedNextTest, 'id');
         self::assertIsInt($expectedNextTestId);
 
-        $transportQueue = $this->messengerTransport->get();
+        $transportQueue = $this->messengerTransport->getSent();
         self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 

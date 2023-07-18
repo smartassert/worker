@@ -18,13 +18,13 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class CompilationWorkflowHandlerTest extends WebTestCase
 {
     private CompilationWorkflowHandler $handler;
     private EnvironmentFactory $environmentFactory;
-    private TransportInterface $messengerTransport;
+    private InMemoryTransport $messengerTransport;
 
     protected function setUp(): void
     {
@@ -46,7 +46,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
         }
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
-        \assert($messengerTransport instanceof TransportInterface);
+        \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
     }
 
@@ -59,7 +59,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
 
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
-        self::assertCount(0, $this->messengerTransport->get());
+        self::assertCount(0, $this->messengerTransport->getSent());
     }
 
     /**
@@ -93,7 +93,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
 
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
-        $transportQueue = $this->messengerTransport->get();
+        $transportQueue = $this->messengerTransport->getSent();
         self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 

@@ -27,7 +27,7 @@ use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use webignition\ObjectReflector\ObjectReflector;
 
 class JobControllerTest extends WebTestCase
@@ -42,7 +42,7 @@ class JobControllerTest extends WebTestCase
     private CreateJobSourceFactory $createJobSourceFactory;
     private WorkerEventRepository $workerEventRepository;
     private EventRecorder $eventRecorder;
-    private TransportInterface $messengerTransport;
+    private InMemoryTransport $messengerTransport;
 
     protected function setUp(): void
     {
@@ -97,7 +97,7 @@ class JobControllerTest extends WebTestCase
         $this->eventRecorder = $eventRecorder;
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
-        \assert($messengerTransport instanceof TransportInterface);
+        \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
     }
 
@@ -417,7 +417,7 @@ class JobControllerTest extends WebTestCase
         self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
         self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
 
-        $transportQueue = $this->messengerTransport->get();
+        $transportQueue = $this->messengerTransport->getSent();
         self::assertIsArray($transportQueue);
         self::assertEquals(
             new TimeoutCheckMessage(),

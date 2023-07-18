@@ -16,7 +16,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class TimeoutCheckHandlerTest extends WebTestCase
 {
@@ -24,7 +24,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
 
     private TimeoutCheckHandler $handler;
     private EventRecorder $eventRecorder;
-    private TransportInterface $messengerTransport;
+    private InMemoryTransport $messengerTransport;
 
     protected function setUp(): void
     {
@@ -44,13 +44,13 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $this->eventRecorder = $eventRecorder;
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
-        \assert($messengerTransport instanceof TransportInterface);
+        \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
     }
 
     public function testInvokeNoJob(): void
     {
-        self::assertCount(0, $this->messengerTransport->get());
+        self::assertCount(0, $this->messengerTransport->getSent());
 
         $message = new TimeoutCheckMessage();
 
@@ -58,7 +58,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
             ($this->handler)($message);
             self::fail(JobNotFoundException::class . ' not thrown');
         } catch (JobNotFoundException) {
-            self::assertCount(0, $this->messengerTransport->get());
+            self::assertCount(0, $this->messengerTransport->getSent());
         }
 
         self::assertSame(0, $this->eventRecorder->count());
@@ -84,7 +84,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
 
         self::assertSame(0, $this->eventRecorder->count());
 
-        $transportQueue = $this->messengerTransport->get();
+        $transportQueue = $this->messengerTransport->getSent();
         self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 

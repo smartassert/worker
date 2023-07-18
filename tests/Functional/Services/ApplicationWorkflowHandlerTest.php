@@ -18,15 +18,14 @@ use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class ApplicationWorkflowHandlerTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 
     private EventDispatcherInterface $eventDispatcher;
-    private TransportInterface $messengerTransport;
+    private InMemoryTransport $messengerTransport;
 
     protected function setUp(): void
     {
@@ -46,7 +45,7 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
         $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
-        \assert($messengerTransport instanceof TransportInterface);
+        \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
     }
 
@@ -60,12 +59,11 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
             WorkerEventOutcome::PASSED
         ));
 
-        $transportQueue = $this->messengerTransport->get();
+        $transportQueue = $this->messengerTransport->getSent();
         self::assertIsArray($transportQueue);
-        self::assertCount(2, $transportQueue);
-
-        $envelope = $transportQueue[1];
-        self::assertInstanceOf(Envelope::class, $envelope);
-        self::assertEquals(new JobCompletedCheckMessage(), $envelope->getMessage());
+        self::assertEquals(
+            new JobCompletedCheckMessage(),
+            $transportQueue[count($transportQueue) - 1]->getMessage()
+        );
     }
 }
