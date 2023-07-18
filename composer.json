@@ -21,7 +21,7 @@
         "symfony/flex": "^1.13",
         "symfony/framework-bundle": "6.2.*",
         "symfony/messenger": "6.2.*",
-        "symfony/yaml": "6.2.*",
+        "symfony/yaml": "6.3.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
         "webignition/yaml-document": "^1.1",
