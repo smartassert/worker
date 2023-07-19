@@ -13,10 +13,12 @@ class Source
     public const TYPE_TEST = 'test';
     public const TYPE_RESOURCE = 'resource';
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
-    private int $id;
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $id;
 
     /**
      * @var Source::TYPE_*
@@ -32,6 +34,7 @@ class Source
      */
     public function __construct(string $type, string $path)
     {
+        $this->id = md5($type . $path);
         $this->type = $type;
         $this->path = $path;
     }
