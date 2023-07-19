@@ -39,8 +39,8 @@ class Test
     public readonly int $position;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]

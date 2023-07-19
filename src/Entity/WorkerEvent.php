@@ -42,8 +42,8 @@ class WorkerEvent implements \JsonSerializable, EventInterface
      * @var positive-int
      */
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
