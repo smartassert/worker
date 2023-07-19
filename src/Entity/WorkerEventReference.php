@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 #[ORM\Entity(repositoryClass: WorkerEventReferenceRepository::class)]
-#[ORM\UniqueConstraint(name: 'resource_reference_unique', columns: ['label', 'reference'])]
 class WorkerEventReference implements ResourceReferenceInterface
 {
     /**
@@ -24,9 +23,8 @@ class WorkerEventReference implements ResourceReferenceInterface
     private readonly string $reference;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
-    private int $id;
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $id;
 
     /**
      * @param non-empty-string $label
@@ -34,8 +32,20 @@ class WorkerEventReference implements ResourceReferenceInterface
      */
     public function __construct(string $label, string $reference)
     {
+        $this->id = self::generateId($label, $reference);
         $this->label = $label;
         $this->reference = $reference;
+    }
+
+    /**
+     * @param non-empty-string $label
+     * @param non-empty-string $reference
+     *
+     * @return non-empty-string
+     */
+    public static function generateId(string $label, string $reference): string
+    {
+        return md5($label . ':' . $reference);
     }
 
     public function toArray(): array

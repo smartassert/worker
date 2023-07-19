@@ -24,15 +24,10 @@ class WorkerEventReferenceFactory
      */
     public function create(string $label, string $reference): WorkerEventReference
     {
-        $workerEventReference = $this->repository->findOneBy([
-            'label' => $label,
-            'reference' => $reference,
-        ]);
+        $workerEventReference = $this->repository->find(WorkerEventReference::generateId($label, $reference));
 
         if (null === $workerEventReference) {
-            $workerEventReference = $this->repository->add(
-                new WorkerEventReference($label, $reference)
-            );
+            $workerEventReference = $this->repository->add(new WorkerEventReference($label, $reference));
         }
 
         return $workerEventReference;
