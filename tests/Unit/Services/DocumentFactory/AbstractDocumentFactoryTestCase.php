@@ -21,11 +21,6 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     }
 
     /**
-     * @return array<mixed>
-     */
-    abstract public function createDataProvider(): array;
-
-    /**
      * @dataProvider createDataProvider
      *
      * @param array<mixed> $data
@@ -34,6 +29,11 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     {
         self::assertEquals($expected, $this->factory->create($data));
     }
+
+    /**
+     * @return array<mixed>
+     */
+    abstract public function createDataProvider(): array;
 
     /**
      * @dataProvider createEmptyTypeDataProvider

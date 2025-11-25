@@ -40,7 +40,7 @@
         "phpunit/phpunit": "^9.5",
         "psr/log": "^1.1",
         "smartassert/test-authenticaton-provider-bundle": ">=0.1,<1",
-        "squizlabs/php_codesniffer": "dev-master",
+        "squizlabs/php_codesniffer": "^3",
         "symfony/browser-kit": "6.3.*",
         "symfony/maker-bundle": "^1.40",
         "symfony/phpunit-bridge": "6.3.*",
@@ -49,6 +49,9 @@
         "webignition/object-reflector": "^1.0"
     },
     "config": {
+        "audit": {
+            "block-insecure": false
+        },
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
