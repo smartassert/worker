@@ -19,12 +19,12 @@ class DeliverEventMessageRetryStrategy implements RetryStrategyInterface
     ) {
     }
 
-    public function isRetryable(Envelope $message, \Throwable $throwable = null): bool
+    public function isRetryable(Envelope $message, ?\Throwable $throwable = null): bool
     {
         return $this->multiplierRetryStrategy->isRetryable($message, $throwable);
     }
 
-    public function getWaitingTime(Envelope $message, \Throwable $throwable = null): int
+    public function getWaitingTime(Envelope $message, ?\Throwable $throwable = null): int
     {
         if ($throwable instanceof EventDeliveryException) {
             $eventDeliveryPreviousException = $throwable->previous;

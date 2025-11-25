@@ -47,6 +47,8 @@ return (new PhpCsFixer\Config())
             'import_classes' => false,
         ],
         'no_useless_concat_operator' => false,
+        'single_line_empty_body' => false,
+        'modifier_keywords' => false,
     ])
     ->setFinder($finder)
 ;

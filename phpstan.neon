@@ -1,4 +1,5 @@
 parameters:
+  treatPhpDocTypesAsCertain: false
   level: 9
   paths:
     - src
@@ -14,10 +15,6 @@ parameters:
       path: src
 
     -
-      message: '#Method .+ has Doctrine\\ORM\\ORMException#'
-      path: src
-
-    -
       message: '#Method App\\Services\\TestExecutor::execute\(\) has .+Invalid(Document|Step)Exception#'
       path: src/Services/TestExecutor.php
 
@@ -28,3 +25,19 @@ parameters:
     -
       message: '#Method .+ throws checked exception BadMethodCallException#'
       path: src
+
+    -
+      message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
+      path: src/Repository
+
+    -
+      message: '#Method .+ throws checked exception .+ORMException#'
+      path: src/Repository
+
+    -
+      message: '#Method .+ throws checked exception .+ORMException#'
+      path: src/Services/WorkerEventStateMutator.php
+
+    -
+      message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
+      path: src/Services/WorkerEventStateMutator.php

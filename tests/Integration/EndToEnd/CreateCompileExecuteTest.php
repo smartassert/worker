@@ -258,9 +258,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             $sourceReference,
                             [
                                 'output' => [
-                                    'message' => 'Invalid test at path "' .
-                                        $failedTestPath .
-                                        '": test-step-invalid',
+                                    'message' => 'Invalid test at path "'
+                                        . $failedTestPath
+                                        . '": test-step-invalid',
                                     'code' => 204,
                                     'context' => [
                                         'test_path' => $failedTestPath,
@@ -403,9 +403,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             [
                                 'source' => $failedTestPath,
                                 'output' => [
-                                    'message' => 'Invalid test at path ' .
-                                        '"Test/chrome-open-index-compilation-failure.yml"' .
-                                        ': test-step-invalid',
+                                    'message' => 'Invalid test at path '
+                                        . '"Test/chrome-open-index-compilation-failure.yml"'
+                                        . ': test-step-invalid',
                                     'code' => 204,
                                     'context' => [
                                         'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
@@ -646,9 +646,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[0] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[0]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -659,9 +659,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'verify page is open',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePaths[0] .
-                                    'verify page is open'
+                                    $workerJobLabel
+                                    . $sourcePaths[0]
+                                    . 'verify page is open'
                                 )
                             ),
                             [
@@ -716,9 +716,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[0] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[0]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -750,9 +750,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[1] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -763,9 +763,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'verify page is open',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePaths[1] .
-                                    'verify page is open'
+                                    $workerJobLabel
+                                    . $sourcePaths[1]
+                                    . 'verify page is open'
                                 )
                             ),
                             [
@@ -814,9 +814,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[1] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -848,9 +848,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[1] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -861,9 +861,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'verify page is open',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePaths[1] .
-                                    'verify page is open'
+                                    $workerJobLabel
+                                    . $sourcePaths[1]
+                                    . 'verify page is open'
                                 )
                             ),
                             [
@@ -912,9 +912,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[1] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -946,9 +946,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[2] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[2]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -959,9 +959,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'verify page is open',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePaths[2] .
-                                    'verify page is open'
+                                    $workerJobLabel
+                                    . $sourcePaths[2]
+                                    . 'verify page is open'
                                 )
                             ),
                             [
@@ -1010,9 +1010,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePaths[2] .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePaths[2]
+                                            . 'verify page is open'
                                         )
                                     ),
                                 ])
@@ -1161,17 +1161,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePath .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePath
+                                            . 'verify page is open'
                                         )
                                     ),
                                     new ResourceReference(
                                         'fail on intentionally-missing element',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePath .
-                                            'fail on intentionally-missing element'
+                                            $workerJobLabel
+                                            . $sourcePath
+                                            . 'fail on intentionally-missing element'
                                         )
                                     ),
                                 ])
@@ -1182,9 +1182,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'verify page is open',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePath .
-                                    'verify page is open'
+                                    $workerJobLabel
+                                    . $sourcePath
+                                    . 'verify page is open'
                                 )
                             ),
                             [
@@ -1212,9 +1212,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             new ResourceReference(
                                 'fail on intentionally-missing element',
                                 md5(
-                                    $workerJobLabel .
-                                    $sourcePath .
-                                    'fail on intentionally-missing element'
+                                    $workerJobLabel
+                                    . $sourcePath
+                                    . 'fail on intentionally-missing element'
                                 )
                             ),
                             [
@@ -1281,17 +1281,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     new ResourceReference(
                                         'verify page is open',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePath .
-                                            'verify page is open'
+                                            $workerJobLabel
+                                            . $sourcePath
+                                            . 'verify page is open'
                                         )
                                     ),
                                     new ResourceReference(
                                         'fail on intentionally-missing element',
                                         md5(
-                                            $workerJobLabel .
-                                            $sourcePath .
-                                            'fail on intentionally-missing element'
+                                            $workerJobLabel
+                                            . $sourcePath
+                                            . 'fail on intentionally-missing element'
                                         )
                                     ),
                                 ])

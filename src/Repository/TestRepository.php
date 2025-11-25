@@ -119,7 +119,7 @@ class TestRepository extends ServiceEntityRepository
             if (is_int($value)) {
                 return $value;
             }
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NonUniqueResultException | NoResultException) {
         }
 
         return null;

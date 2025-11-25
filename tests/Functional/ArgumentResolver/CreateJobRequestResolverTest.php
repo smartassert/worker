@@ -96,8 +96,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
                         ...
-                        EOT
-                        ,
+                        EOT,
                     ],
                 ),
                 'expected' => new CreateJobRequest(
@@ -107,8 +106,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                     <<< 'EOT'
                         ---
                         ...
-                        EOT
-                    ,
+                        EOT,
                 ),
             ],
         ];

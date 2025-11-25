@@ -146,3 +146,5 @@ services:
     SmartAssert\ResultsClient\Client:
         arguments:
             $baseUrl: '%env(string:RESULTS_BASE_URL)%'
+
+    SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
