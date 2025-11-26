@@ -56,7 +56,7 @@ class ExecuteTestHandler
         }
 
         $testDocument = $this->createTestDocumentFromTestEntity($test);
-        $path = $test->source;
+        $path = $test->getSource();
 
         $this->eventDispatcher->dispatch(
             new TestEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED)
@@ -75,15 +75,18 @@ class ExecuteTestHandler
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument
     {
-        return new TestDocument($testEntity->source, [
-            'type' => 'test',
-            'payload' => [
-                'path' => $testEntity->source,
-                'config' => [
-                    'browser' => $testEntity->browser,
-                    'url' => $testEntity->url,
+        return new TestDocument(
+            $testEntity->getSource(),
+            [
+                'type' => 'test',
+                'payload' => [
+                    'path' => $testEntity->getSource(),
+                    'config' => [
+                        'browser' => $testEntity->browser,
+                        'url' => $testEntity->url,
+                    ],
                 ],
-            ],
-        ]);
+            ]
+        );
     }
 }

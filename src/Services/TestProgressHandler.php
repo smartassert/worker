@@ -42,7 +42,7 @@ class TestProgressHandler
             $event = new StepEvent(
                 $test,
                 $step,
-                $test->source,
+                $test->getSource(),
                 $step->getName(),
                 $eventOutcome
             );
@@ -57,12 +57,12 @@ class TestProgressHandler
                 $event = new StepEvent(
                     $test,
                     $exception,
-                    $test->source,
+                    $test->getSource(),
                     $exception->stepName,
                     WorkerEventOutcome::EXCEPTION
                 );
             } else {
-                $event = new TestEvent($test, $exception, $test->source, WorkerEventOutcome::EXCEPTION);
+                $event = new TestEvent($test, $exception, $test->getSource(), WorkerEventOutcome::EXCEPTION);
             }
 
             $this->eventDispatcher->dispatch($event);
