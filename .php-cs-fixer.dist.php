@@ -18,9 +18,6 @@ return (new PhpCsFixer\Config())
             'space' => 'none',
             'space_multiple_catch' => 'single',
         ],
-        'global_namespace_import' => [
-            'import_classes' => false,
-        ],
         'no_useless_concat_operator' => false,
         'single_line_empty_body' => false,
         'modifier_keywords' => false,
