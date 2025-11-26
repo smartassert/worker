@@ -179,8 +179,8 @@ class TestFactoryTest extends WebTestCase
     {
         self::assertSame($expected->browser, $actual->browser);
         self::assertSame($expected->url, $actual->url);
-        self::assertSame($expected->source, $actual->getSource());
-        self::assertSame($expected->target, $actual->target);
+        self::assertSame($expected->getSource(), $actual->getSource());
+        self::assertSame($expected->getTarget(), $actual->getTarget());
         self::assertSame($expected->getState(), $actual->getState());
         self::assertSame($expected->stepNames, $actual->stepNames);
         self::assertSame($expected->position, $actual->position);

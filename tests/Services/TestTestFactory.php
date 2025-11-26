@@ -71,7 +71,7 @@ class TestTestFactory
         $sourceProperty->setValue($reflectionTest, $test->getSource());
 
         $targetProperty = $reflectionClass->getProperty('target');
-        $targetProperty->setValue($reflectionTest, $test->target);
+        $targetProperty->setValue($reflectionTest, $test->getTarget());
 
         $stepNamesProperty = $reflectionClass->getProperty('stepNames');
         $stepNamesProperty->setValue($reflectionTest, $test->stepNames);

@@ -17,15 +17,6 @@ class Test
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $url;
 
-    #[ORM\Column(type: 'text')]
-    public readonly string $source;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(type: 'text')]
-    public readonly string $target;
-
     /**
      * @var non-empty-string[]
      */
@@ -34,6 +25,12 @@ class Test
 
     #[ORM\Column(type: 'integer', nullable: false, unique: true)]
     public readonly int $position;
+
+    #[ORM\Column(type: 'text')]
+    private readonly string $source;
+
+    #[ORM\Column(type: 'text')]
+    private readonly string $target;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -85,5 +82,15 @@ class Test
         \assert('' !== $this->source);
 
         return $this->source;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getTarget(): string
+    {
+        \assert('' !== $this->target);
+
+        return $this->target;
     }
 }
