@@ -92,9 +92,7 @@ class EnvironmentSetup
     public function withWorkerEventSetups(array $workerEventSetups): self
     {
         $new = clone $this;
-        $new->workerEventSetups = array_filter($workerEventSetups, function ($value) {
-            return $value instanceof WorkerEventSetup;
-        });
+        $new->workerEventSetups = $workerEventSetups;
 
         return $new;
     }

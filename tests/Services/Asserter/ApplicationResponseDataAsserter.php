@@ -14,8 +14,6 @@ class ApplicationResponseDataAsserter
      */
     public function assertJob(array $expected, array $actual): void
     {
-        TestCase::assertIsArray($actual);
-
         TestCase::assertSame($expected['label'], $actual['label']);
         TestCase::assertSame($expected['maximum_duration_in_seconds'], $actual['maximum_duration_in_seconds']);
         TestCase::assertSame($expected['sources'], $actual['sources']);
@@ -24,6 +22,9 @@ class ApplicationResponseDataAsserter
         TestCase::assertIsArray($expected['tests']);
 
         foreach ($expected['tests'] as $index => $expectedTest) {
+            \assert(is_array($expectedTest));
+            \assert(is_string($expectedTest['browser']));
+
             TestCase::assertArrayHasKey($index, $actual['tests']);
             $actualTest = $actual['tests'][$index];
             TestCase::assertIsArray($actualTest);
@@ -46,8 +47,6 @@ class ApplicationResponseDataAsserter
      */
     public function assertApplicationState(array $expected, array $actual): void
     {
-        TestCase::assertIsArray($actual);
-
         TestCase::assertSame($expected['application'], $actual['application']);
         TestCase::assertSame($expected['compilation'], $actual['compilation']);
         TestCase::assertSame($expected['execution'], $actual['execution']);

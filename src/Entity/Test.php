@@ -17,14 +17,14 @@ class Test
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $url;
 
-    /**
-     * @var non-empty-string[]
-     */
-    #[ORM\Column(type: 'simple_array')]
-    public readonly array $stepNames;
-
     #[ORM\Column(type: 'integer', nullable: false, unique: true)]
     public readonly int $position;
+
+    /**
+     * @var string[]
+     */
+    #[ORM\Column(type: 'simple_array')]
+    private readonly array $stepNames;
 
     #[ORM\Column(type: 'text')]
     private readonly string $source;
@@ -92,5 +92,13 @@ class Test
         \assert('' !== $this->target);
 
         return $this->target;
+    }
+
+    /**
+     * @return non-empty-string[]
+     */
+    public function getStepNames(): array
+    {
+        return $this->stepNames;
     }
 }

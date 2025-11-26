@@ -81,6 +81,6 @@ class Job
      */
     public function getTestPaths(): array
     {
-        return array_filter($this->testPaths, fn (string $path): bool => '' !== $path);
+        return $this->testPaths;
     }
 }

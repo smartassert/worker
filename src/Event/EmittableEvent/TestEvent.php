@@ -28,7 +28,7 @@ class TestEvent extends AbstractEvent implements EmittableEventInterface, HasTes
             [
                 'source' => $path,
                 'document' => $document->getData(),
-                'step_names' => $testEntity->stepNames,
+                'step_names' => $testEntity->getStepNames(),
             ],
             [
                 $path,
@@ -48,7 +48,7 @@ class TestEvent extends AbstractEvent implements EmittableEventInterface, HasTes
     private function createRelatedReferenceSources(TestEntity $testEntity): array
     {
         $referenceSources = [];
-        foreach ($testEntity->stepNames as $stepName) {
+        foreach ($testEntity->getStepNames() as $stepName) {
             $referenceSources[] = new ResourceReferenceSource($stepName, [$this->path, $stepName]);
         }
 

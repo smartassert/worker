@@ -85,7 +85,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
         self::assertSame(0, $this->eventRecorder->count());
 
         $transportQueue = $this->messengerTransport->getSent();
-        self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 
         $envelope = $transportQueue[0];
@@ -127,7 +126,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
         self::assertInstanceOf(JobTimeoutEvent::class, $jobTimeoutEvent);
 
         $payload = $jobTimeoutEvent->getPayload();
-        self::assertIsArray($payload);
         self::assertArrayHasKey('maximum_duration_in_seconds', $payload);
         self::assertSame($jobMaximumDuration, $payload['maximum_duration_in_seconds']);
     }

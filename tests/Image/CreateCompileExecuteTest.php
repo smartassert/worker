@@ -27,7 +27,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         \assert($resultsClient instanceof ResultsClient);
 
         $jobLabel = (string) new Ulid();
-        \assert('' !== $jobLabel);
         $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
 
         self::$createResponse = self::makeCreateJobRequest(array_merge(

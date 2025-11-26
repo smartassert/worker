@@ -7,11 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method null|Source find($id, $lockMode = null, $lockVersion = null)
- * @method null|Source findOneBy(array $criteria, array $orderBy = null)
- * @method Source[]    findAll()
- * @method Source[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<Source>
  */
 class SourceRepository extends ServiceEntityRepository
@@ -55,7 +50,7 @@ class SourceRepository extends ServiceEntityRepository
         foreach ($result as $item) {
             if (is_array($item)) {
                 $path = $item['path'] ?? '';
-                if ('' !== $path) {
+                if (is_string($path) && '' !== $path) {
                     $paths[] = $path;
                 }
             }

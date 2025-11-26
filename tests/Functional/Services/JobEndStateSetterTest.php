@@ -51,9 +51,7 @@ class JobEndStateSetterTest extends WebTestCase
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
 
-        $job = $jobRepository->get();
-        \assert($job instanceof Job);
-        $this->job = $job;
+        $this->job = $jobRepository->get();
     }
 
     /**
