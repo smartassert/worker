@@ -11,9 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
 {
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Column(type: 'string', length: 32, nullable: false)]
     public readonly string $resultsToken;
 
@@ -67,5 +64,15 @@ class Job
         \assert('' !== $this->label);
 
         return $this->label;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getResultsToken(): string
+    {
+        \assert('' !== $this->resultsToken);
+
+        return $this->resultsToken;
     }
 }
