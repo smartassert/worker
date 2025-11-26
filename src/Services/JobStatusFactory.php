@@ -28,16 +28,16 @@ class JobStatusFactory
         $tests = $this->testRepository->findBy([], ['position' => 'ASC']);
 
         $testPathReferenceSources = [];
-        foreach ($job->testPaths as $testPath) {
+        foreach ($job->getTestPaths() as $testPath) {
             $testPathReferenceSources[] = new ResourceReferenceSource($testPath, [$testPath]);
         }
 
         return new JobStatus(
             $job,
-            $this->referenceFactory->create($job->label),
+            $this->referenceFactory->create($job->getLabel()),
             $this->sourceRepository->findAllPaths(),
             $this->createSerializedTestCollection($tests),
-            $this->resourceReferenceFactory->createCollection($job->label, $testPathReferenceSources),
+            $this->resourceReferenceFactory->createCollection($job->getLabel(), $testPathReferenceSources),
             $this->workerEventRepository->findAllIds(),
         );
     }

@@ -239,16 +239,16 @@ class JobStatusFactoryTest extends WebTestCase
 
         self::assertEquals(
             [
-                'label' => $job->label,
+                'label' => $job->getLabel(),
                 'maximum_duration_in_seconds' => $job->maximumDurationInSeconds,
-                'test_paths' => $job->testPaths,
-                'reference' => md5($job->label),
+                'test_paths' => $job->getTestPaths(),
+                'reference' => md5($job->getLabel()),
                 'sources' => [],
                 'tests' => [],
                 'references' => [
                     [
                         'label' => 'Test/test.yml',
-                        'reference' => md5($job->label . 'Test/test.yml'),
+                        'reference' => md5($job->getLabel() . 'Test/test.yml'),
                     ]
                 ],
                 'event_ids' => $this->workerEventRepository->findAllIds(),

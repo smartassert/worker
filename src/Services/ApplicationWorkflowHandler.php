@@ -87,6 +87,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
 
-        $this->eventDispatcher->dispatch(new JobCompilationEndedEvent($job->label));
+        $this->eventDispatcher->dispatch(new JobCompilationEndedEvent($job->getLabel()));
     }
 }

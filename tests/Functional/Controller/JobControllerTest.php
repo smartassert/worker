@@ -387,7 +387,7 @@ class JobControllerTest extends WebTestCase
         self::assertTrue($this->jobRepository->has());
 
         $job = $this->jobRepository->get();
-        self::assertSame($responseData['label'], $job->label);
+        self::assertSame($responseData['label'], $job->getLabel());
         self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
