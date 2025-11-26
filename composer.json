@@ -48,9 +48,6 @@
         "webignition/object-reflector": "^1.0"
     },
     "config": {
-        "audit": {
-            "block-insecure": false
-        },
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
