@@ -14,13 +14,6 @@ class Job
     /**
      * @var non-empty-string
      */
-    #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32)]
-    public readonly string $label;
-
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Column(type: 'string', length: 32, nullable: false)]
     public readonly string $resultsToken;
 
@@ -38,6 +31,9 @@ class Job
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
     public ?JobEndState $endState;
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 32)]
+    private readonly string $label;
 
     /**
      * @param non-empty-string             $label
@@ -61,5 +57,15 @@ class Job
     public function setEndState(JobEndState $state): void
     {
         $this->endState = $state;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        \assert('' !== $this->label);
+
+        return $this->label;
     }
 }

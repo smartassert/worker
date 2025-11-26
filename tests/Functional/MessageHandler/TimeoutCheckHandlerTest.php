@@ -148,7 +148,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $maximumDurationInSecondsProperty->setValue($reflectionJob, $job->maximumDurationInSeconds);
 
         $labelProperty = $reflectionClass->getProperty('label');
-        $labelProperty->setValue($reflectionJob, $job->label);
+        $labelProperty->setValue($reflectionJob, $job->getLabel());
 
         $resultsTokenProperty = $reflectionClass->getProperty('resultsToken');
         $resultsTokenProperty->setValue($reflectionJob, $job->resultsToken);

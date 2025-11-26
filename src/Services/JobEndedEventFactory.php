@@ -31,7 +31,7 @@ class JobEndedEventFactory
         $eventCount = $this->workerEventRepository->count([]);
 
         return new JobEndedEvent(
-            $job->label,
+            $job->getLabel(),
             $job->endState,
             JobEndState::COMPLETE === $job->endState,
             $eventCount + 1
