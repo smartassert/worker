@@ -20,6 +20,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use SmartAssert\WorkerJobSource\Exception\InvalidManifestException;
 use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
+use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,6 +35,7 @@ class JobController
 
     /**
      * @throws DeserializeException
+     * @throws ProvisionException
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(

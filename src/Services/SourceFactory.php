@@ -8,6 +8,7 @@ use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
 use App\Repository\SourceRepository;
 use SmartAssert\WorkerJobSource\Model\JobSource;
+use SmartAssert\YamlFile\Exception\ProvisionException;
 
 class SourceFactory
 {
@@ -19,6 +20,7 @@ class SourceFactory
 
     /**
      * @throws MissingTestSourceException
+     * @throws ProvisionException
      */
     public function createFromJobSource(JobSource $jobSource): void
     {
