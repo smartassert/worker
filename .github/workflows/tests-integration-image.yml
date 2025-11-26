@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.2']
+        php: ['8.3']
         test_name: ${{ fromJson(needs.setup.outputs.test_names) }}
 
     steps:
