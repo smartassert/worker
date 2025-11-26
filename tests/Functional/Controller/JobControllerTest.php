@@ -404,6 +404,7 @@ class JobControllerTest extends WebTestCase
             self::assertSame($expectedSourceData['type'], $sourceType);
 
             self::assertArrayHasKey('contentFixture', $expectedSourceData);
+            \assert(is_string($expectedSourceData['contentFixture']));
 
             self::assertTrue($this->sourceFileInspector->has($sourcePath));
             self::assertSame(
