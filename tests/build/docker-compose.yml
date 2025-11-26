@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   users-service:
     image: ghcr.io/smartassert/users:8.1
