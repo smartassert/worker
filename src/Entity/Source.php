@@ -13,16 +13,10 @@ class Source
     public const TYPE_TEST = 'test';
     public const TYPE_RESOURCE = 'resource';
 
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 32)]
     private string $id;
 
-    /**
-     * @var Source::TYPE_*
-     */
     #[ORM\Column(type: 'string', length: 255)]
     private readonly string $type;
 
