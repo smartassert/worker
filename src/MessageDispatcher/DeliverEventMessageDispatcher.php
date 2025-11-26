@@ -24,6 +24,7 @@ use App\Services\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
@@ -81,6 +82,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 
     /**
      * @throws JobNotFoundException
+     * @throws ExceptionInterface
      */
     public function dispatchForEvent(EmittableEventInterface $event): ?Envelope
     {

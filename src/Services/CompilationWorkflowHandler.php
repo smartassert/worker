@@ -11,6 +11,7 @@ use App\Event\JobCompiledEvent;
 use App\Message\CompileSourceMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class CompilationWorkflowHandler implements EventSubscriberInterface
@@ -39,6 +40,9 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatchNextCompileSourceMessage(JobStartedEvent|SourceCompilationPassedEvent $event): void
     {
         if (false === CompilationState::isEndState($this->compilationProgress->get())) {

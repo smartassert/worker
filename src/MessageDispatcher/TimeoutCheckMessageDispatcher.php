@@ -8,6 +8,7 @@ use App\Event\EmittableEvent\JobStartedEvent;
 use App\Message\TimeoutCheckMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
@@ -31,6 +32,9 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatch(): void
     {
         $this->messageBus->dispatch(
