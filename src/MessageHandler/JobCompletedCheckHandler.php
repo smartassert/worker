@@ -14,8 +14,7 @@ class JobCompletedCheckHandler
 {
     public function __construct(
         private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ExceptionInterface

@@ -21,8 +21,7 @@ class DeliverEventHandler
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly ResultsClient $resultsClient,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws EventDeliveryException

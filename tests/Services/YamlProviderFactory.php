@@ -13,8 +13,7 @@ class YamlProviderFactory
 {
     public function __construct(
         private readonly FixtureReader $fixtureReader,
-    ) {
-    }
+    ) {}
 
     /**
      * @param string[] $sourcePaths

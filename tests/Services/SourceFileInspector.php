@@ -8,8 +8,7 @@ class SourceFileInspector
 {
     public function __construct(
         private string $path
-    ) {
-    }
+    ) {}
 
     public function read(string $path): string
     {

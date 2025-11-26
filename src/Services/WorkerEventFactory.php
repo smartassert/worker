@@ -14,8 +14,7 @@ class WorkerEventFactory
     public function __construct(
         private readonly WorkerEventReferenceFactory $workerEventReferenceFactory,
         private readonly ReferenceFactory $referenceFactory,
-    ) {
-    }
+    ) {}
 
     public function create(Job $job, EmittableEventInterface $event): WorkerEvent
     {

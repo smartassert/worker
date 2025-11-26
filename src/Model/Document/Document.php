@@ -16,8 +16,7 @@ class Document
      */
     public function __construct(
         private readonly array $data
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>

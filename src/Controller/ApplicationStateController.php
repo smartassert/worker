@@ -19,8 +19,7 @@ class ApplicationStateController
         private readonly CompilationProgress $compilationProgress,
         private readonly ExecutionProgress $executionProgress,
         private readonly EventDeliveryProgress $eventDeliveryProgress,
-    ) {
-    }
+    ) {}
 
     #[Route('/application_state', name: 'application_state', methods: ['GET'])]
     public function get(): JsonResponse

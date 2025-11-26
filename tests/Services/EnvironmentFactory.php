@@ -19,8 +19,7 @@ class EnvironmentFactory
         private SourceRepository $sourceRepository,
         private TestTestFactory $testTestFactory,
         private TestWorkerEventFactory $testWorkerEventFactory,
-    ) {
-    }
+    ) {}
 
     public function create(EnvironmentSetup $setup): Environment
     {

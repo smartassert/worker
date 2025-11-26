@@ -8,8 +8,7 @@ class SourceFileStore
 {
     public function __construct(
         private string $path
-    ) {
-    }
+    ) {}
 
     public function storeContent(string $content, string $relativePath): void
     {

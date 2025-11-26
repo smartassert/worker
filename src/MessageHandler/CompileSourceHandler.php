@@ -27,8 +27,7 @@ class CompileSourceHandler
         private CompilationProgress $compilationProgress,
         private EventDispatcherInterface $eventDispatcher,
         private readonly SourceCompilationFailedEventFactory $sourceCompilationFailedEventFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ClientCreationException

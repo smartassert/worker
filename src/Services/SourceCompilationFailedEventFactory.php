@@ -11,8 +11,7 @@ class SourceCompilationFailedEventFactory
 {
     public function __construct(
         private readonly string $compilerSourceDirectory,
-    ) {
-    }
+    ) {}
 
     /**
      * @param non-empty-string $sourcePath

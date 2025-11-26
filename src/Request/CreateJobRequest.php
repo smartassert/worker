@@ -16,6 +16,5 @@ class CreateJobRequest
         public readonly string $resultsToken,
         public readonly ?int $maximumDurationInSeconds,
         public readonly string $source,
-    ) {
-    }
+    ) {}
 }

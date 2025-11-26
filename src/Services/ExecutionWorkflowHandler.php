@@ -30,8 +30,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         private WorkerEventRepository $workerEventRepository,
         private EventDispatcherInterface $eventDispatcher,
         private readonly JobRepository $jobRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>

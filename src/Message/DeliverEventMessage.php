@@ -8,6 +8,5 @@ class DeliverEventMessage
 {
     public function __construct(
         public readonly int $workerEventId
-    ) {
-    }
+    ) {}
 }

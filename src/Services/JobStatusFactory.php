@@ -20,8 +20,7 @@ class JobStatusFactory
         private readonly ReferenceFactory $referenceFactory,
         private readonly WorkerEventReferenceFactory $resourceReferenceFactory,
         private readonly WorkerEventRepository $workerEventRepository,
-    ) {
-    }
+    ) {}
 
     public function create(Job $job): JobStatus
     {

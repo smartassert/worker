@@ -11,8 +11,7 @@ class FileStoreHandler
     public function __construct(
         private FixtureReader $fixtureReader,
         private string $path
-    ) {
-    }
+    ) {}
 
     public function clear(): void
     {

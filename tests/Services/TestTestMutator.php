@@ -12,8 +12,7 @@ class TestTestMutator
 {
     public function __construct(
         private EntityManagerInterface $entityManager
-    ) {
-    }
+    ) {}
 
     public function setState(Test $test, TestState $state): Test
     {

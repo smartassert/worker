@@ -20,8 +20,7 @@ class TimeoutCheckHandler
         private readonly JobRepository $jobRepository,
         private readonly TimeoutCheckMessageDispatcher $timeoutCheckMessageDispatcher,
         private EventDispatcherInterface $eventDispatcher
-    ) {
-    }
+    ) {}
 
     /**
      * @throws JobNotFoundException

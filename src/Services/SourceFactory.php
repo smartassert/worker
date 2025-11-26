@@ -15,8 +15,7 @@ class SourceFactory
     public function __construct(
         private readonly SourceFileStore $sourceFileStore,
         private readonly SourceRepository $sourceRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws MissingTestSourceException

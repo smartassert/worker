@@ -18,8 +18,7 @@ class TestManifestFactory implements TestManifestFactoryInterface
         private readonly BaseTestManifestFactory $baseTestManifestFactory,
         private readonly string $compilerSourceDirectory,
         private readonly string $compilerTargetDirectory,
-    ) {
-    }
+    ) {}
 
     public function create(array $data): TestManifest
     {

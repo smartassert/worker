@@ -6,6 +6,4 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobEndStateChangeEvent extends Event
-{
-}
+class JobEndStateChangeEvent extends Event {}

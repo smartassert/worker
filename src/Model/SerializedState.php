@@ -10,8 +10,7 @@ class SerializedState implements \JsonSerializable
 {
     public function __construct(
         private readonly StateInterface $state
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{state: non-empty-string, is_end_state: bool}

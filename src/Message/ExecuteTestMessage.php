@@ -8,9 +8,7 @@ class ExecuteTestMessage
 {
     public const TYPE = 'execute-test';
 
-    public function __construct(private int $testId)
-    {
-    }
+    public function __construct(private int $testId) {}
 
     public function getTestId(): int
     {

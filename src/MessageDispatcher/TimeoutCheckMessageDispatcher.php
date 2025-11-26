@@ -17,8 +17,7 @@ class TimeoutCheckMessageDispatcher implements EventSubscriberInterface
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly int $dispatchDelay,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<class-string, array<int, array<int, int|string>>>
