@@ -10,6 +10,7 @@ use App\Message\JobCompletedCheckMessage;
 use App\Services\ApplicationProgress;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
@@ -23,6 +24,9 @@ class JobCompleteEventDispatcher
     ) {
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatch(): void
     {
         $applicationState = $this->applicationProgress->get();

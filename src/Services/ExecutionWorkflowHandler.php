@@ -18,6 +18,7 @@ use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class ExecutionWorkflowHandler implements EventSubscriberInterface
@@ -49,6 +50,9 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
@@ -62,11 +66,17 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatchNextExecuteTestMessageForJobCompiledEvent(JobCompiledEvent $event): void
     {
         $this->dispatchNextExecuteTestMessage();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatchNextExecuteTestMessage(): void
     {
         $testId = $this->testRepository->findNextAwaitingId();

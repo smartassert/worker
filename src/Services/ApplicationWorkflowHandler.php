@@ -17,6 +17,7 @@ use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
 class ApplicationWorkflowHandler implements EventSubscriberInterface
 {
@@ -49,6 +50,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {

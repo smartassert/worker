@@ -11,6 +11,7 @@ use App\MessageDispatcher\TimeoutCheckMessageDispatcher;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
 #[AsMessageHandler]
 class TimeoutCheckHandler
@@ -24,6 +25,7 @@ class TimeoutCheckHandler
 
     /**
      * @throws JobNotFoundException
+     * @throws ExceptionInterface
      */
     public function __invoke(TimeoutCheckMessage $timeoutCheck): void
     {
