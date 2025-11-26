@@ -56,10 +56,6 @@ services:
     SmartAssert\WorkerJobSource\Factory\YamlFileFactory: ~
     SmartAssert\WorkerJobSource\JobSourceSerializer: ~
 
-    SmartAssert\UsersClient\Client:
-        arguments:
-            $baseUrl: '%env(string:USERS_BASE_URL)%'
-
     Psr\Http\Client\ClientInterface:
         class: GuzzleHttp\Client
         arguments:

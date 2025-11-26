@@ -15,17 +15,17 @@
         "smartassert/results-client": ">=5.8,<6",
         "smartassert/worker-job-source": "^3",
         "smartassert/yaml-file": "^8",
-        "symfony/console": "6.4.*",
-        "symfony/doctrine-messenger": "6.4.*",
-        "symfony/dotenv": "6.4.*",
+        "symfony/console": "7.0.*",
+        "symfony/doctrine-messenger": "7.0.*",
+        "symfony/dotenv": "7.0.*",
         "symfony/flex": "^1.13",
-        "symfony/framework-bundle": "6.4.*",
-        "symfony/messenger": "6.4.*",
-        "symfony/yaml": "6.4.*",
+        "symfony/framework-bundle": "7.0.*",
+        "symfony/messenger": "7.0.*",
+        "symfony/yaml": "7.0.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
-        "webignition/yaml-document": "^1.1",
-        "webignition/yaml-document-generator": "^1.0"
+        "webignition/yaml-document": "^2.1",
+        "webignition/yaml-document-generator": "^2.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.4",
@@ -39,12 +39,12 @@
         "phpunit/php-timer": "^5.0",
         "phpunit/phpunit": "^9.5",
         "psr/log": "^1.1",
-        "smartassert/test-authenticaton-provider-bundle": ">=0.1,<1",
+        "smartassert/test-authenticaton-provider-bundle": "^5",
         "squizlabs/php_codesniffer": "^3",
-        "symfony/browser-kit": "6.4.*",
+        "symfony/browser-kit": "7.0.*",
         "symfony/maker-bundle": "^1.40",
-        "symfony/phpunit-bridge": "6.4.*",
-        "symfony/uid": "6.4.*",
+        "symfony/phpunit-bridge": "7.0.*",
+        "symfony/uid": "7.0.*",
         "webignition/http-history-container": "^2.5",
         "webignition/object-reflector": "^1.0"
     },
@@ -135,7 +135,7 @@
         ],
         "users-generate-jwt-keys": "docker compose -f tests/build/docker-compose.yml exec -T users-service php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction",
         "users-create-user": [
-            "curl --header 'Authorization: primary_admin_token' --data 'email=user@example.com&password=password' http://localhost:9080/admin/user/create",
+            "curl --header 'Authorization: primary_admin_token' --data 'identifier=user@example.com&password=password' http://localhost:9080/create",
             ""
         ],
         "users-setup": [
@@ -196,7 +196,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "6.4.*"
+            "require": "7.0.*"
         }
     }
 }
