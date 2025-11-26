@@ -97,7 +97,7 @@ class JobStatusFactoryTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/no-sources-no-tests.yml',
-                            'reference' => md5('no sources, no tests label' . 'Test/no-sources-no-tests.yml'),
+                            'reference' => md5('no sources, no tests labelTest/no-sources-no-tests.yml'),
                         ],
                     ],
                     'event_ids' => [],
@@ -202,11 +202,11 @@ class JobStatusFactoryTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/has-sources-has-tests1.yml',
-                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests1.yml'),
+                            'reference' => md5('has sources, has tests labelTest/has-sources-has-tests1.yml'),
                         ],
                         [
                             'label' => 'Test/has-sources-has-tests2.yml',
-                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests2.yml'),
+                            'reference' => md5('has sources, has tests labelTest/has-sources-has-tests2.yml'),
                         ],
                     ],
                     'event_ids' => [],

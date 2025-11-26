@@ -686,15 +686,15 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/test1.yml',
-                            'reference' => md5('label content' . 'Test/test1.yml'),
+                            'reference' => md5('label contentTest/test1.yml'),
                         ],
                         [
                             'label' => 'Test/test2.yml',
-                            'reference' => md5('label content' . 'Test/test2.yml'),
+                            'reference' => md5('label contentTest/test2.yml'),
                         ],
                         [
                             'label' => 'Test/test3.yml',
-                            'reference' => md5('label content' . 'Test/test3.yml'),
+                            'reference' => md5('label contentTest/test3.yml'),
                         ],
                     ],
                     'tests' => [],
@@ -742,15 +742,15 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/test1.yml',
-                            'reference' => md5('label content' . 'Test/test1.yml'),
+                            'reference' => md5('label contentTest/test1.yml'),
                         ],
                         [
                             'label' => 'Test/test2.yml',
-                            'reference' => md5('label content' . 'Test/test2.yml'),
+                            'reference' => md5('label contentTest/test2.yml'),
                         ],
                         [
                             'label' => 'Test/test3.yml',
-                            'reference' => md5('label content' . 'Test/test3.yml'),
+                            'reference' => md5('label contentTest/test3.yml'),
                         ],
                     ],
                     'tests' => [
