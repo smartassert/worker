@@ -10,15 +10,9 @@ use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 #[ORM\Entity(repositoryClass: WorkerEventReferenceRepository::class)]
 class WorkerEventReference implements ResourceReferenceInterface
 {
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Column(type: Types::TEXT)]
     private readonly string $label;
 
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Column(length: 255)]
     private readonly string $reference;
 
@@ -50,6 +44,9 @@ class WorkerEventReference implements ResourceReferenceInterface
 
     public function toArray(): array
     {
+        \assert('' !== $this->label);
+        \assert('' !== $this->reference);
+
         return [
             'label' => $this->label,
             'reference' => $this->reference,
