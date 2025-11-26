@@ -21,6 +21,7 @@ use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -54,9 +55,7 @@ class JobEndStateSetterTest extends WebTestCase
         $this->job = $jobRepository->get();
     }
 
-    /**
-     * @dataProvider subscribesToEventDataProvider
-     */
+    #[DataProvider('subscribesToEventDataProvider')]
     public function testSubscribesToEvent(Event $event, JobEndState $expectedJobEndState): void
     {
         $this->eventDispatcher->dispatch($event);

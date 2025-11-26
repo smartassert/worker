@@ -12,6 +12,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ExecutionProgressTest extends WebTestCase
@@ -37,9 +38,7 @@ class ExecutionProgressTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider getDataProvider
-     */
+    #[DataProvider('getDataProvider')]
     public function testGet(EnvironmentSetup $setup, ExecutionState $expectedState): void
     {
         $this->environmentFactory->create($setup);
@@ -114,11 +113,10 @@ class ExecutionProgressTest extends WebTestCase
     }
 
     /**
-     * @dataProvider isDataProvider
-     *
      * @param ExecutionState[] $expectedIsStates
      * @param ExecutionState[] $expectedIsNotStates
      */
+    #[DataProvider('isDataProvider')]
     public function testIs(EnvironmentSetup $setup, array $expectedIsStates, array $expectedIsNotStates): void
     {
         $this->environmentFactory->create($setup);

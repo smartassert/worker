@@ -17,6 +17,7 @@ use App\Services\TestCanceller;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestTestFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -54,11 +55,10 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider cancelAwaitingDataProvider
-     *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
+    #[DataProvider('cancelAwaitingDataProvider')]
     public function testCancelAwaiting(array $states, array $expectedStates): void
     {
         $this->createTestsWithStates($states);
@@ -123,11 +123,10 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider cancelUnfinishedDataProvider
-     *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
+    #[DataProvider('cancelUnfinishedDataProvider')]
     public function testCancelUnfinished(
         array $states,
         array $expectedStates
@@ -190,11 +189,10 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider cancelAwaitingFromStepFailureEventDataProvider
-     *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
+    #[DataProvider('cancelAwaitingFromStepFailureEventDataProvider')]
     public function testCancelAwaitingFromStepFailureEvent(
         Document $eventDocument,
         WorkerEventOutcome $eventOutcome,
@@ -213,11 +211,10 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider cancelAwaitingFromStepFailureEventDataProvider
-     *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
+    #[DataProvider('cancelAwaitingFromStepFailureEventDataProvider')]
     public function testSubscribesToStepFailureEvent(
         Document $eventDocument,
         WorkerEventOutcome $eventOutcome,
@@ -297,11 +294,10 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider subscribesToJobTimeoutEventDataProvider
-     *
      * @param TestState[] $states
      * @param TestState[] $expectedStates
      */
+    #[DataProvider('subscribesToJobTimeoutEventDataProvider')]
     public function testSubscribesToJobTimeoutEvent(
         array $states,
         array $expectedStates

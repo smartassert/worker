@@ -11,6 +11,7 @@ use App\Services\EventDeliveryProgress;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\TestWorkerEventFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EventDeliveryProgressTest extends WebTestCase
@@ -37,10 +38,9 @@ class EventDeliveryProgressTest extends WebTestCase
     }
 
     /**
-     * @dataProvider getDataProvider
-     *
      * @param WorkerEventState[] $states
      */
+    #[DataProvider('getDataProvider')]
     public function testGet(array $states, EventDeliveryState $expectedState): void
     {
         foreach ($states as $workerEventState) {
@@ -100,12 +100,11 @@ class EventDeliveryProgressTest extends WebTestCase
     }
 
     /**
-     * @dataProvider isDataProvider
-     *
      * @param WorkerEventState[]   $states
      * @param EventDeliveryState[] $expectedIsStates
      * @param EventDeliveryState[] $expectedIsNotStates
      */
+    #[DataProvider('isDataProvider')]
     public function testIs(array $states, array $expectedIsStates, array $expectedIsNotStates): void
     {
         foreach ($states as $state) {

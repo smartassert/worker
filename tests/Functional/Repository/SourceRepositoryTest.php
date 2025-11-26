@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\Source;
 use App\Repository\SourceRepository;
 use App\Tests\Services\EntityRemover;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SourceRepositoryTest extends AbstractEntityRepositoryTestCase
 {
@@ -27,12 +28,11 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTestCase
     }
 
     /**
-     * @dataProvider findAllPathsDataProvider
-     *
      * @param Source[]            $sources
      * @param null|Source::TYPE_* $type
      * @param string[]            $expectedPaths
      */
+    #[DataProvider('findAllPathsDataProvider')]
     public function testFindAllPaths(array $sources, ?string $type, array $expectedPaths): void
     {
         foreach ($sources as $source) {

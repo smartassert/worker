@@ -8,6 +8,7 @@ use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Step;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\StepFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StepFactoryTest extends AbstractDocumentFactoryTestCase
 {
@@ -33,10 +34,9 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     }
 
     /**
-     * @dataProvider createInvalidStepDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createInvalidStepDataProvider')]
     public function testCreateInvalidStep(array $data, InvalidStepException $expected): void
     {
         self::expectExceptionObject($expected);

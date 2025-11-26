@@ -18,6 +18,7 @@ use App\Tests\Model\JobSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
@@ -59,9 +60,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         self::assertCount(0, $this->messengerTransport->getSent());
     }
 
-    /**
-     * @dataProvider dispatchNextExecuteTestMessageMessageDispatchedDataProvider
-     */
+    #[DataProvider('dispatchNextExecuteTestMessageMessageDispatchedDataProvider')]
     public function testDispatchNextExecuteTestMessageMessageDispatched(
         EnvironmentSetup $setup,
         int $expectedNextTestIndex
@@ -119,9 +118,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider dispatchNextExecuteTestMessageFromTestPassedEventDataProvider
-     */
+    #[DataProvider('dispatchNextExecuteTestMessageFromTestPassedEventDataProvider')]
     public function testDispatchNextExecuteTestMessageFromTestPassedEvent(
         EnvironmentSetup $setup,
         int $eventTestIndex,

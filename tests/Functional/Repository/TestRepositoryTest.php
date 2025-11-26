@@ -11,6 +11,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTestCase
@@ -36,9 +37,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         }
     }
 
-    /**
-     * @dataProvider findMaxPositionDataProvider
-     */
+    #[DataProvider('findMaxPositionDataProvider')]
     public function testFindMaxPosition(EnvironmentSetup $setup, int $expectedMaxPosition): void
     {
         $this->environmentFactory->create($setup);
@@ -122,9 +121,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         ];
     }
 
-    /**
-     * @dataProvider findNextAwaitingIdIsNullDataProvider
-     */
+    #[DataProvider('findNextAwaitingIdIsNullDataProvider')]
     public function testFindNextAwaitingIdIsNull(EnvironmentSetup $setup): void
     {
         $this->environmentFactory->create($setup);
@@ -152,9 +149,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         ];
     }
 
-    /**
-     * @dataProvider findNextAwaitingIdNotNullDataProvider
-     */
+    #[DataProvider('findNextAwaitingIdNotNullDataProvider')]
     public function testFindNextAwaitingIdNotNull(EnvironmentSetup $setup, int $nextAwaitingIndex): void
     {
         $this->environmentFactory->create($setup);
@@ -220,9 +215,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         ];
     }
 
-    /**
-     * @dataProvider findUnfinishedCountDataProvider
-     */
+    #[DataProvider('findUnfinishedCountDataProvider')]
     public function testFindUnfinishedCount(EnvironmentSetup $setup, int $expectedUnfinishedCount): void
     {
         $this->environmentFactory->create($setup);
@@ -279,10 +272,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     }
 
     /**
-     * @dataProvider findAllSourcesDataProvider
-     *
      * @param string[] $expectedSources
      */
+    #[DataProvider('findAllSourcesDataProvider')]
     public function testFindAllSources(EnvironmentSetup $setup, array $expectedSources): void
     {
         $this->environmentFactory->create($setup);

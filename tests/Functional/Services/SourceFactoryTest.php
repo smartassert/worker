@@ -12,6 +12,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\FileStoreHandler;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\WorkerJobSource\Model\JobSource;
 use SmartAssert\WorkerJobSource\Model\Manifest;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
@@ -64,9 +65,7 @@ class SourceFactoryTest extends WebTestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider
-     */
+    #[DataProvider('createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider')]
     public function testCreateFromYamlSourceCollectionThrowsMissingTestSourceException(
         JobSource $jobSource,
         string $expectedMissingTestSourcePath
@@ -110,10 +109,9 @@ class SourceFactoryTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createFromYamlSourceCollectionSuccessDataProvider
-     *
      * @param string[] $expectedSourcePaths
      */
+    #[DataProvider('createFromYamlSourceCollectionSuccessDataProvider')]
     public function testCreateFromYamlSourceCollectionSuccess(
         callable $jobSourceCreator,
         array $expectedSourcePaths,

@@ -13,6 +13,7 @@ use App\Services\TestStateMutator;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\TestTestFactory;
 use App\Tests\Services\TestTestMutator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -44,9 +45,7 @@ class TestStateMutatorTest extends WebTestCase
         $this->test = $testTestFactory->create(new TestSetup());
     }
 
-    /**
-     * @dataProvider setCompleteIfRunningDataProvider
-     */
+    #[DataProvider('setCompleteIfRunningDataProvider')]
     public function testSetCompleteIfRunning(TestState $initialState, TestState $expectedState): void
     {
         $this->testMutator->setState($this->test, $initialState);
@@ -87,10 +86,9 @@ class TestStateMutatorTest extends WebTestCase
     }
 
     /**
-     * @dataProvider handleStepFailedEventDataProvider
-     *
      * @param array<mixed> $documentData
      */
+    #[DataProvider('handleStepFailedEventDataProvider')]
     public function testSetFailedFromStepFailedEventEvent(array $documentData, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(
@@ -103,10 +101,9 @@ class TestStateMutatorTest extends WebTestCase
     }
 
     /**
-     * @dataProvider handleStepFailedEventDataProvider
-     *
      * @param array<mixed> $documentData
      */
+    #[DataProvider('handleStepFailedEventDataProvider')]
     public function testSubscribesToStepFailedEvent(array $documentData, TestState $expectedState): void
     {
         $this->doTestExecuteDocumentReceivedEventDrivenTest(

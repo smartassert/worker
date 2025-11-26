@@ -25,6 +25,7 @@ use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApplicationStateControllerTest extends WebTestCase
@@ -59,10 +60,9 @@ class ApplicationStateControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider getDataProvider
-     *
      * @param array<mixed> $expectedResponseData
      */
+    #[DataProvider('getDataProvider')]
     public function testGet(EnvironmentSetup $setup, array $expectedResponseData): void
     {
         $this->environmentFactory->create($setup);

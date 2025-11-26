@@ -16,6 +16,7 @@ use App\Tests\Mock\Repository\MockTestRepository;
 use App\Tests\Mock\Services\MockExecutionProgress;
 use App\Tests\Mock\Services\MockTestExecutor;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -23,9 +24,7 @@ class ExecuteTestHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @dataProvider invokeNoExecutionDataProvider
-     */
+    #[DataProvider('invokeNoExecutionDataProvider')]
     public function testInvokeNoExecution(
         ExecutionProgress $executionProgress,
         ExecuteTestMessage $message,

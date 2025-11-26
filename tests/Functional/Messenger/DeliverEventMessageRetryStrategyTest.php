@@ -15,6 +15,7 @@ use App\Repository\WorkerEventReferenceRepository;
 use App\Repository\WorkerEventRepository;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -38,9 +39,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         $this->retryStrategy = $retryStrategy;
     }
 
-    /**
-     * @dataProvider isRetryableDataProvider
-     */
+    #[DataProvider('isRetryableDataProvider')]
     public function testIsRetryable(int $retryCount, bool $expected): void
     {
         $envelope = new Envelope(new DeliverEventMessage(0), [new RedeliveryStamp($retryCount)]);
@@ -69,9 +68,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider getWaitingTimeNoThrowableDataProvider
-     */
+    #[DataProvider('getWaitingTimeNoThrowableDataProvider')]
     public function testGetWaitingTimeNoThrowable(int $retryCount, int $expected): void
     {
         $envelope = new Envelope(new DeliverEventMessage(0), [new RedeliveryStamp($retryCount)]);
@@ -103,9 +100,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider getWaitingTimeNonMatchingThrowableDataProvider
-     */
+    #[DataProvider('getWaitingTimeNonMatchingThrowableDataProvider')]
     public function testGetWaitingTimeNonMatchingThrowable(
         int $retryCount,
         ?\Throwable $throwable,
@@ -133,9 +128,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider getWaitingTimeDataProvider
-     */
+    #[DataProvider('getWaitingTimeDataProvider')]
     public function testGetWaitingTime(
         int $retryCount,
         ResponseInterface $encapsulatedHttpResponse,

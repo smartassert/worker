@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Services\DocumentFactory;
 use App\Exception\Document\InvalidDocumentException;
 use App\Model\Document\Document;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractDocumentFactoryTestCase extends TestCase
@@ -21,10 +22,9 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     }
 
     /**
-     * @dataProvider createDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createDataProvider')]
     public function testCreate(array $data, Document $expected): void
     {
         self::assertEquals($expected, $this->factory->create($data));
@@ -36,10 +36,9 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     abstract public static function createDataProvider(): array;
 
     /**
-     * @dataProvider createEmptyTypeDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createEmptyTypeDataProvider')]
     public function testCreateEmptyType(array $data): void
     {
         $this->expectException(InvalidDocumentException::class);
@@ -70,10 +69,9 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     }
 
     /**
-     * @dataProvider createInvalidTypeDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createInvalidTypeDataProvider')]
     public function testCreateInvalidType(array $data, string $expectedExceptionMessage): void
     {
         $this->expectException(InvalidDocumentException::class);

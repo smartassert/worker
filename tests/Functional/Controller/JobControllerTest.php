@@ -26,6 +26,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use webignition\ObjectReflector\ObjectReflector;
@@ -102,12 +103,11 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createBadRequestMissingValuesDataProvider
-     * @dataProvider createBadRequestInvalidSourceDataProvider
-     *
      * @param array<mixed> $requestPayload
      * @param array<mixed> $expectedResponseData
      */
+    #[DataProvider('createBadRequestMissingValuesDataProvider')]
+    #[DataProvider('createBadRequestInvalidSourceDataProvider')]
     public function testCreateBadRequest(array $requestPayload, array $expectedResponseData): void
     {
         self::assertFalse($this->jobRepository->has());
@@ -358,11 +358,10 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createSuccessDataProvider
-     *
      * @param array<mixed>                $expectedResponseData
      * @param array<string, array<mixed>> $expectedStoredSources
      */
+    #[DataProvider('createSuccessDataProvider')]
     public function testCreateSuccess(
         callable $requestDataCreator,
         array $expectedResponseData,
@@ -631,10 +630,9 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider statusDataProvider
-     *
      * @param array<mixed> $expectedResponseData
      */
+    #[DataProvider('statusDataProvider')]
     public function testStatusHasJob(EnvironmentSetup $setup, array $expectedResponseData): void
     {
         $this->environmentFactory->create($setup);

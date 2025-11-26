@@ -18,6 +18,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class JobStatusFactoryTest extends WebTestCase
@@ -52,10 +53,9 @@ class JobStatusFactoryTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createWithoutEventIdsDataProvider
-     *
      * @param array<mixed> $expectedSerializedJobStatus
      */
+    #[DataProvider('createWithoutEventIdsDataProvider')]
     public function testCreateWithoutEventIds(
         EnvironmentSetup $environmentSetup,
         array $expectedSerializedJobStatus

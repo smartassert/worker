@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Model\Document;
 
 use App\Model\Document\Step;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class StepTest extends TestCase
 {
-    /**
-     * @dataProvider statusIsPassedDataProvider
-     */
+    #[DataProvider('statusIsPassedDataProvider')]
     public function testStatusIsPassed(Step $step, bool $expectedIsPassed): void
     {
         self::assertSame($expectedIsPassed, $step->statusIsPassed());
@@ -46,9 +45,7 @@ class StepTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider statusIsFailedDataProvider
-     */
+    #[DataProvider('statusIsFailedDataProvider')]
     public function testStatusIsFailed(Step $step, bool $expectedIsFailed): void
     {
         self::assertSame($expectedIsFailed, $step->statusIsFailed());
@@ -83,9 +80,7 @@ class StepTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getNameDataProvider
-     */
+    #[DataProvider('getNameDataProvider')]
     public function testGetName(Step $step, string $expectedName): void
     {
         self::assertSame($expectedName, $step->getName());
