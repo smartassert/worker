@@ -17,9 +17,6 @@ class Test
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $url;
 
-    /**
-     * @var non-empty-string
-     */
     #[ORM\Column(type: 'text')]
     public readonly string $source;
 
@@ -78,5 +75,15 @@ class Test
         $this->state = $state;
 
         return $this;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getSource(): string
+    {
+        \assert('' !== $this->source);
+
+        return $this->source;
     }
 }
