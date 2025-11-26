@@ -9,7 +9,7 @@
         "ext-json": "*",
         "ext-pdo_pgsql": "*",
         "doctrine/doctrine-bundle": "^2.5",
-        "doctrine/orm": "^2.10",
+        "doctrine/orm": "^3.5",
         "guzzlehttp/guzzle": "^7.4",
         "psr/http-factory": "^1.0",
         "smartassert/results-client": ">=5.8,<6",

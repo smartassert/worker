@@ -20,8 +20,8 @@ class WorkerEventRepository extends ServiceEntityRepository
 
     public function add(WorkerEvent $workerEvent): WorkerEvent
     {
-        $this->_em->persist($workerEvent);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($workerEvent);
+        $this->getEntityManager()->flush();
 
         return $workerEvent;
     }

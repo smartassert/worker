@@ -25,8 +25,8 @@ class TestRepository extends ServiceEntityRepository
 
     public function add(Test $test): Test
     {
-        $this->_em->persist($test);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($test);
+        $this->getEntityManager()->flush();
 
         return $test;
     }
