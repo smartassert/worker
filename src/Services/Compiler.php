@@ -26,8 +26,7 @@ class Compiler
         private HandlerFactory $handlerFactory,
         private readonly ErrorOutputFactory $errorOutputFactory,
         private readonly TestManifestCollectionFactory $testManifestCollectionFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ClientCreationException

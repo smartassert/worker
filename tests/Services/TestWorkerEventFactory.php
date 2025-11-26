@@ -16,8 +16,7 @@ class TestWorkerEventFactory
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly WorkerEventReferenceRepository $workerEventReferenceRepository,
         private readonly EntityManagerInterface $entityManager
-    ) {
-    }
+    ) {}
 
     public function create(WorkerEventSetup $workerEventSetup): WorkerEvent
     {

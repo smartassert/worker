@@ -16,8 +16,7 @@ class TestStateMutator implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TestRepository $testRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>

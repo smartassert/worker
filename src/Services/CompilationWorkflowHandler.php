@@ -21,8 +21,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
         private SourcePathFinder $sourcePathFinder,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<class-string, array<mixed>>

@@ -10,9 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class WorkerEventStateMutator
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private EntityManagerInterface $entityManager) {}
 
     public function setQueued(WorkerEvent $workerEvent): void
     {

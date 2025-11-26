@@ -19,8 +19,7 @@ class TestCanceller implements EventSubscriberInterface
     public function __construct(
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>

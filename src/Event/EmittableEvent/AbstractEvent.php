@@ -24,8 +24,7 @@ class AbstractEvent extends Event implements EmittableEventInterface
         private readonly array $payload = [],
         private readonly array $referenceComponents = [],
         private readonly array $relatedReferenceSources = [],
-    ) {
-    }
+    ) {}
 
     public function getPayload(): array
     {

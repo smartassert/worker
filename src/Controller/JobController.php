@@ -30,8 +30,7 @@ class JobController
 
     public function __construct(
         private readonly JobRepository $jobRepository
-    ) {
-    }
+    ) {}
 
     /**
      * @throws DeserializeException

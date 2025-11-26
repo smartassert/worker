@@ -679,8 +679,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                                 'transformations' => [
                                                     [
                                                         'type' => 'resolution',
-                                                        'source' => '$page.url is $index.url'
-                                                    ]
+                                                        'source' => '$page.url is $index.url',
+                                                    ],
                                                 ],
                                             ],
                                         ],

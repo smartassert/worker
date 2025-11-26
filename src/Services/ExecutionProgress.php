@@ -12,8 +12,7 @@ class ExecutionProgress
 {
     public function __construct(
         private readonly TestRepository $testRepository
-    ) {
-    }
+    ) {}
 
     public function get(): ExecutionState
     {

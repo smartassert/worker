@@ -21,8 +21,7 @@ class TestExecutor
         private readonly Factory $yamlDocumentFactory,
         private readonly TestProgressHandler $testProgressHandler,
         private readonly string $compilerTargetDirectory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ClientCreationException

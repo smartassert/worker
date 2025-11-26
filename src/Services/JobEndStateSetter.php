@@ -22,8 +22,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     public function __construct(
         private readonly JobRepository $jobRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<class-string, array<int, array<int, int|string>>>

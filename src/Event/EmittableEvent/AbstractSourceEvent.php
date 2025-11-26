@@ -18,7 +18,7 @@ abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEve
      */
     public function __construct(
         protected readonly string $source,
-        readonly WorkerEventOutcome $outcome,
+        public readonly WorkerEventOutcome $outcome,
         array $payload = [],
         array $referenceComponents = [],
         array $relatedReferenceSources = []

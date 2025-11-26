@@ -21,8 +21,7 @@ class ApplicationProgress
         private readonly ExecutionProgress $executionProgress,
         private readonly EventDeliveryProgress $eventDeliveryProgress,
         private readonly WorkerEventRepository $workerEventRepository,
-    ) {
-    }
+    ) {}
 
     public function get(): ApplicationState
     {

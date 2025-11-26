@@ -15,8 +15,7 @@ class TestTestFactory
     public function __construct(
         private TestFactory $testFactory,
         private EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     public function create(TestSetup $testSetup): Test
     {

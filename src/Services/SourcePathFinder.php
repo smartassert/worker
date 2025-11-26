@@ -13,8 +13,7 @@ class SourcePathFinder
     public function __construct(
         private TestRepository $testRepository,
         private SourceRepository $sourceRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return null|non-empty-string

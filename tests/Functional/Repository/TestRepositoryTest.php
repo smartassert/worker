@@ -147,7 +147,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                         (new TestSetup())->withState(TestState::RUNNING),
                         (new TestSetup())->withState(TestState::FAILED),
                         (new TestSetup())->withState(TestState::COMPLETE),
-                    ])
+                    ]),
             ],
         ];
     }

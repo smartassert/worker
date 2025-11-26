@@ -15,8 +15,7 @@ class JobEndedEventFactory
     public function __construct(
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventRepository $workerEventRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws JobNotFoundException

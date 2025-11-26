@@ -26,8 +26,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
         private readonly JobEndedEventFactory $jobEndedEventFactory,
         private readonly JobRepository $jobRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<class-string, array<int, array<int, int|string>>>
@@ -45,7 +44,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchJobCompilationStartedEventForJobStartedEvent', 0],
             ],
             JobCompiledEvent::class => [
-                ['dispatchJobCompilationEndedEventForJobCompiledEvent', 0]
+                ['dispatchJobCompilationEndedEventForJobCompiledEvent', 0],
             ],
         ];
     }

@@ -6,6 +6,4 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobCompiledEvent extends Event
-{
-}
+class JobCompiledEvent extends Event {}

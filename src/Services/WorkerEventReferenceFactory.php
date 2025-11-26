@@ -15,8 +15,7 @@ class WorkerEventReferenceFactory
     public function __construct(
         private readonly ReferenceFactory $referenceFactory,
         private readonly WorkerEventReferenceRepository $repository,
-    ) {
-    }
+    ) {}
 
     /**
      * @param non-empty-string $label

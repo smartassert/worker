@@ -16,8 +16,7 @@ class CompilationProgress
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly SourcePathFinder $sourcePathFinder,
         private readonly TestRepository $testRepository,
-    ) {
-    }
+    ) {}
 
     public function get(): CompilationState
     {

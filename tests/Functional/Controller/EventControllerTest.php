@@ -70,7 +70,7 @@ class EventControllerTest extends WebTestCase
                         ->withPayload($eventPayload)
                         ->withReference($eventReferenceEntity)
                         ->withScope(WorkerEventScope::JOB)
-                        ->withOutcome(WorkerEventOutcome::COMPLETED)
+                        ->withOutcome(WorkerEventOutcome::COMPLETED),
                 ])
         );
 

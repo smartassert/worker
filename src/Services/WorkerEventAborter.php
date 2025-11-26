@@ -12,8 +12,7 @@ class WorkerEventAborter
     public function __construct(
         private WorkerEventRepository $repository,
         private WorkerEventStateMutator $workerEventStateMutator,
-    ) {
-    }
+    ) {}
 
     public function abort(int $id): void
     {

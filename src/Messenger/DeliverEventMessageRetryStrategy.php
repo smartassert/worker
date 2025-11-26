@@ -16,8 +16,7 @@ class DeliverEventMessageRetryStrategy implements RetryStrategyInterface
 
     public function __construct(
         private readonly MultiplierRetryStrategy $multiplierRetryStrategy,
-    ) {
-    }
+    ) {}
 
     public function isRetryable(Envelope $message, ?\Throwable $throwable = null): bool
     {

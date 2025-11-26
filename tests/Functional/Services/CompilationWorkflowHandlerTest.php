@@ -76,7 +76,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
                 'setup' => (new EnvironmentSetup())
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml')
+                        (new TestSetup())->withSource('Test/test1.yml'),
                     ]),
             ],
         ];

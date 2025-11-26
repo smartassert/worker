@@ -31,8 +31,7 @@ class ExecuteTestHandler
         private TestStateMutator $testStateMutator,
         private TestRepository $testRepository,
         private ExecutionProgress $executionProgress,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ClientCreationException

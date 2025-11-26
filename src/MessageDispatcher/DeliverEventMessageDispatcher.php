@@ -35,8 +35,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventFactory $workerEventFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, array<int, array<int, int|string>>>

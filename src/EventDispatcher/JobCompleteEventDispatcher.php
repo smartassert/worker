@@ -21,8 +21,7 @@ class JobCompleteEventDispatcher
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
         private readonly int $dispatchDelay,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ExceptionInterface

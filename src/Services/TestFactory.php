@@ -14,8 +14,7 @@ class TestFactory implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TestRepository $repository,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>

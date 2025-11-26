@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-class JobNotFoundException extends \Exception
-{
-}
+class JobNotFoundException extends \Exception {}

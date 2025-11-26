@@ -13,8 +13,7 @@ class CreateJobSourceFactory
         private readonly YamlProviderFactory $yamlProviderFactory,
         private readonly JobSourceFactory $fooJobSourceFactory,
         private readonly JobSourceSerializer $jobSourceSerializer,
-    ) {
-    }
+    ) {}
 
     /**
      * @param non-empty-string[] $manifestPaths

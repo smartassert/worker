@@ -12,8 +12,7 @@ class EventDeliveryProgress
 {
     public function __construct(
         private readonly WorkerEventRepository $repository
-    ) {
-    }
+    ) {}
 
     public function get(): EventDeliveryState
     {

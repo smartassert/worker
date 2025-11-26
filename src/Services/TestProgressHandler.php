@@ -23,8 +23,7 @@ class TestProgressHandler
         private EventDispatcherInterface $eventDispatcher,
         private readonly StepFactory $stepFactory,
         private readonly ExceptionFactory $exceptionFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws InvalidDocumentException

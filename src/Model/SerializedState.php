@@ -10,8 +10,7 @@ class SerializedState implements \JsonSerializable
 {
     public function __construct(
         private readonly StateInterface $state
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{state: non-empty-string, is_end_state: bool}
@@ -20,7 +19,7 @@ class SerializedState implements \JsonSerializable
     {
         return [
             'state' => $this->state->getValue(),
-            'is_end_state' => $this->state::isEndState($this->state)
+            'is_end_state' => $this->state::isEndState($this->state),
         ];
     }
 }

@@ -12,8 +12,7 @@ class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private WorkerEventAborter $workerEventAborter,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, array<int, array<int, int|string>>>

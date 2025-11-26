@@ -21,8 +21,7 @@ class JobStatus implements \JsonSerializable
         private readonly array $serializedTests,
         private readonly ResourceReferenceCollectionInterface $testReferences,
         private readonly array $eventIds,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<mixed>
