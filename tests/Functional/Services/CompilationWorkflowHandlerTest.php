@@ -65,7 +65,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider(): array
+    public static function dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider(): array
     {
         return [
             'no sources' => [
@@ -104,7 +104,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextCompileSourceMessageMessageDispatchedDataProvider(): array
+    public static function dispatchNextCompileSourceMessageMessageDispatchedDataProvider(): array
     {
         return [
             'no sources compiled' => [

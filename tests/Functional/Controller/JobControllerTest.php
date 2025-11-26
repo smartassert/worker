@@ -122,7 +122,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createBadRequestMissingValuesDataProvider(): array
+    public static function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
         $resultsToken = 'results-token';
@@ -215,7 +215,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createBadRequestInvalidSourceDataProvider(): array
+    public static function createBadRequestInvalidSourceDataProvider(): array
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
@@ -427,7 +427,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createSuccessDataProvider(): array
+    public static function createSuccessDataProvider(): array
     {
         $label = md5((string) rand());
         $resultsToken = md5((string) rand());
@@ -649,7 +649,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function statusDataProvider(): array
+    public static function statusDataProvider(): array
     {
         return [
             'new job, has sources, no tests' => [

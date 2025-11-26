@@ -51,7 +51,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isRetryableDataProvider(): array
+    public static function isRetryableDataProvider(): array
     {
         return [
             'retry count is max minus 1' => [
@@ -85,7 +85,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getWaitingTimeNoThrowableDataProvider(): array
+    public static function getWaitingTimeNoThrowableDataProvider(): array
     {
         return [
             'throwable is null, retry count is max minus 1' => [
@@ -122,7 +122,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getWaitingTimeNonMatchingThrowableDataProvider(): array
+    public static function getWaitingTimeNonMatchingThrowableDataProvider(): array
     {
         return [
             'throwable not an instance of EventDeliveryException, retry count is max minus 1' => [
@@ -174,7 +174,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getWaitingTimeDataProvider(): array
+    public static function getWaitingTimeDataProvider(): array
     {
         return [
             'throwable has response with no retry-after header, retry count is max minus 1' => [

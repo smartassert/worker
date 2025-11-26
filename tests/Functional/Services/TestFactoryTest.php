@@ -109,7 +109,7 @@ class TestFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createFromTestManifestCollectionDataProvider(): array
+    public static function createFromTestManifestCollectionDataProvider(): array
     {
         return [
             'empty' => [

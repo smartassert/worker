@@ -60,7 +60,7 @@ class CompilationProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             'awaiting: no job' => [
@@ -135,7 +135,7 @@ class CompilationProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isDataProvider(): array
+    public static function isDataProvider(): array
     {
         return [
             'awaiting: no job' => [

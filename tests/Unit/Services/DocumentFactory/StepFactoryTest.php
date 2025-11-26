@@ -14,7 +14,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createInvalidTypeDataProvider(): array
+    public static function createInvalidTypeDataProvider(): array
     {
         return [
             'type is not step: test' => [
@@ -47,7 +47,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createInvalidStepDataProvider(): array
+    public static function createInvalidStepDataProvider(): array
     {
         return [
             'name missing' => [
@@ -70,7 +70,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         return [
             'step' => [

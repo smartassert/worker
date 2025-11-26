@@ -33,7 +33,7 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     /**
      * @return array<mixed>
      */
-    abstract public function createDataProvider(): array;
+    abstract public static function createDataProvider(): array;
 
     /**
      * @dataProvider createEmptyTypeDataProvider
@@ -51,7 +51,7 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     /**
      * @return array<mixed>
      */
-    public function createEmptyTypeDataProvider(): array
+    public static function createEmptyTypeDataProvider(): array
     {
         return [
             'no data' => [
@@ -85,7 +85,7 @@ abstract class AbstractDocumentFactoryTestCase extends TestCase
     /**
      * @return array<mixed>
      */
-    abstract public function createInvalidTypeDataProvider(): array;
+    abstract public static function createInvalidTypeDataProvider(): array;
 
     abstract protected function createFactory(): DocumentFactoryInterface;
 }

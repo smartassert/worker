@@ -191,7 +191,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     /**
      * @return array<mixed>
      */
-    public function createAddSourcesCompileExecuteDataProvider(): array
+    public static function createAddSourcesCompileExecuteDataProvider(): array
     {
         $jobLabel = md5((string) rand());
 

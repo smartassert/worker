@@ -66,7 +66,7 @@ class JobEndStateSetterTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function subscribesToEventDataProvider(): array
+    public static function subscribesToEventDataProvider(): array
     {
         $testEntity = new TestEntity('chrome', 'http://example.com', 'test.yml', '/', [], 0);
 

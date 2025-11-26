@@ -50,7 +50,7 @@ class ExecuteTestHandlerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function invokeNoExecutionDataProvider(): array
+    public static function invokeNoExecutionDataProvider(): array
     {
         $testInWrongState = \Mockery::mock(Test::class);
         $testInWrongState

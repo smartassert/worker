@@ -50,7 +50,7 @@ class ExecutionProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [
@@ -102,11 +102,6 @@ class ExecutionProgressTest extends WebTestCase
                         (new TestSetup())->withState(TestState::FAILED),
                     ]),
                 'expectedState' => ExecutionState::CANCELLED,
-                'expectedIsNotStates' => [
-                    ExecutionState::AWAITING,
-                    ExecutionState::RUNNING,
-                    ExecutionState::COMPLETE,
-                ],
             ],
             'cancelled: has cancelled tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -135,7 +130,7 @@ class ExecutionProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isDataProvider(): array
+    public static function isDataProvider(): array
     {
         return [
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [

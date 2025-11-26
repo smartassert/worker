@@ -43,7 +43,7 @@ class WorkerEventTest extends AbstractEntityTestCase
     /**
      * @return array<mixed>
      */
-    public function entityMappingDataProvider(): array
+    public static function entityMappingDataProvider(): array
     {
         return [
             'without related references' => [

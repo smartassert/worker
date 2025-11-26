@@ -48,7 +48,7 @@ class SourceRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findAllPathsDataProvider(): array
+    public static function findAllPathsDataProvider(): array
     {
         return [
             'no sources' => [

@@ -75,7 +75,7 @@ class ApplicationStateControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         $environmentSetup = (new EnvironmentSetup())
             ->withJobSetup(

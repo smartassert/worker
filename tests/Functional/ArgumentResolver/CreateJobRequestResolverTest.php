@@ -43,7 +43,7 @@ class CreateJobRequestResolverTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function resolveDataProvider(): array
+    public static function resolveDataProvider(): array
     {
         return [
             'no request parameters' => [

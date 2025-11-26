@@ -60,7 +60,7 @@ class TestStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setCompleteIfRunningDataProvider(): array
+    public static function setCompleteIfRunningDataProvider(): array
     {
         return [
             TestState::AWAITING->value => [
@@ -121,7 +121,7 @@ class TestStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function handleStepFailedEventDataProvider(): array
+    public static function handleStepFailedEventDataProvider(): array
     {
         return [
             'step failed' => [

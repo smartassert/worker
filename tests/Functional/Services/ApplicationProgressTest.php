@@ -62,7 +62,7 @@ class ApplicationProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             'no job, is awaiting' => [
@@ -223,7 +223,7 @@ class ApplicationProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isDataProvider(): array
+    public static function isDataProvider(): array
     {
         return [
             'no job, is awaiting' => [

@@ -20,7 +20,7 @@ class StepTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function statusIsPassedDataProvider(): array
+    public static function statusIsPassedDataProvider(): array
     {
         return [
             'empty' => [
@@ -57,7 +57,7 @@ class StepTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function statusIsFailedDataProvider(): array
+    public static function statusIsFailedDataProvider(): array
     {
         return [
             'empty' => [
@@ -94,7 +94,7 @@ class StepTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function getNameDataProvider(): array
+    public static function getNameDataProvider(): array
     {
         return [
             'non-empty name' => [

@@ -11,7 +11,7 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-.phpunit.result.cache
+.phpunit.cache
 ###< phpunit/phpunit ###
 
 ###> squizlabs/php_codesniffer ###
@@ -23,14 +23,9 @@ tests/build/coverage
 /.php_cs.cache
 /.php-cs-fixer.cache
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
 composer.lock
 
 
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
-/.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###

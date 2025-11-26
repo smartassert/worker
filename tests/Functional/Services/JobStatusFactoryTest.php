@@ -72,7 +72,7 @@ class JobStatusFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createWithoutEventIdsDataProvider(): array
+    public static function createWithoutEventIdsDataProvider(): array
     {
         return [
             'no sources, no tests' => [

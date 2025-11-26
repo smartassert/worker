@@ -70,7 +70,7 @@ class TestCancellerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function cancelAwaitingDataProvider(): array
+    public static function cancelAwaitingDataProvider(): array
     {
         return [
             'no tests' => [
@@ -141,7 +141,7 @@ class TestCancellerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function cancelUnfinishedDataProvider(): array
+    public static function cancelUnfinishedDataProvider(): array
     {
         return [
             'no tests' => [
@@ -238,7 +238,7 @@ class TestCancellerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function cancelAwaitingFromStepFailureEventDataProvider(): array
+    public static function cancelAwaitingFromStepFailureEventDataProvider(): array
     {
         return [
             'step/failed, no awaiting tests, test failed' => [
@@ -319,7 +319,7 @@ class TestCancellerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function subscribesToJobTimeoutEventDataProvider(): array
+    public static function subscribesToJobTimeoutEventDataProvider(): array
     {
         return [
             'no unfinished tests' => [

@@ -53,7 +53,7 @@ class EventDeliveryProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             'no events' => [
@@ -119,7 +119,7 @@ class EventDeliveryProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isDataProvider(): array
+    public static function isDataProvider(): array
     {
         return [
             'no event deliveries' => [

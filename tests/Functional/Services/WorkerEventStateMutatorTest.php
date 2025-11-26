@@ -58,7 +58,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setQueuedDataProvider(): array
+    public static function setQueuedDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -104,7 +104,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setSendingDataProvider(): array
+    public static function setSendingDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -150,7 +150,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setFailedDataProvider(): array
+    public static function setFailedDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -196,7 +196,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setCompleteDataProvider(): array
+    public static function setCompleteDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [

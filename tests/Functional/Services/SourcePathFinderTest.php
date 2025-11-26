@@ -57,7 +57,7 @@ class SourcePathFinderTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextNonCompiledPathDataProvider(): array
+    public static function findNextNonCompiledPathDataProvider(): array
     {
         $sourceSetups = [
             (new SourceSetup())

@@ -91,7 +91,7 @@ class TestProgressHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function handleDataProvider(): array
+    public static function handleDataProvider(): array
     {
         return [
             'step, passed' => [

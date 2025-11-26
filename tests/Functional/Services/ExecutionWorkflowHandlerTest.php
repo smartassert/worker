@@ -78,7 +78,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextExecuteTestMessageMessageDispatchedDataProvider(): array
+    public static function dispatchNextExecuteTestMessageMessageDispatchedDataProvider(): array
     {
         return [
             'two tests, none run' => [
@@ -163,7 +163,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextExecuteTestMessageFromTestPassedEventDataProvider(): array
+    public static function dispatchNextExecuteTestMessageFromTestPassedEventDataProvider(): array
     {
         return [
             'single test, not complete' => [

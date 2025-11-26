@@ -82,7 +82,7 @@ class SourceFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider(): array
+    public static function createFromYamlSourceCollectionThrowsMissingTestSourceExceptionDataProvider(): array
     {
         return [
             'single source in manifest, no sources' => [
@@ -134,7 +134,7 @@ class SourceFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createFromYamlSourceCollectionSuccessDataProvider(): array
+    public static function createFromYamlSourceCollectionSuccessDataProvider(): array
     {
         return [
             'single test in manifest, single test source' => [

@@ -49,7 +49,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findMaxPositionDataProvider(): array
+    public static function findMaxPositionDataProvider(): array
     {
         return [
             'empty' => [
@@ -135,7 +135,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextAwaitingIdIsNullDataProvider(): array
+    public static function findNextAwaitingIdIsNullDataProvider(): array
     {
         return [
             'empty' => [
@@ -173,7 +173,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextAwaitingIdNotNullDataProvider(): array
+    public static function findNextAwaitingIdNotNullDataProvider(): array
     {
         return [
             'awaiting1' => [
@@ -181,7 +181,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                     ->withTestSetups([
                         (new TestSetup())->withState(TestState::AWAITING),
                     ]),
-                'expectedNextAwaitingIndex' => 0,
+                'nextAwaitingIndex' => 0,
             ],
             'awaiting1, awaiting2' => [
                 'setup' => (new EnvironmentSetup())
@@ -193,7 +193,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
                     ]),
-                'expectedNextAwaitingIndex' => 0,
+                'nextAwaitingIndex' => 0,
             ],
             'awaiting2, awaiting1' => [
                 'setup' => (new EnvironmentSetup())
@@ -205,7 +205,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
                     ]),
-                'expectedNextAwaitingIndex' => 1,
+                'nextAwaitingIndex' => 1,
             ],
             'running, failed, awaiting1, complete' => [
                 'setup' => (new EnvironmentSetup())
@@ -215,7 +215,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                         (new TestSetup())->withState(TestState::AWAITING),
                         (new TestSetup())->withState(TestState::COMPLETE),
                     ]),
-                'expectedNextAwaitingIndex' => 2,
+                'nextAwaitingIndex' => 2,
             ],
         ];
     }
@@ -233,7 +233,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findUnfinishedCountDataProvider(): array
+    public static function findUnfinishedCountDataProvider(): array
     {
         return [
             'empty' => [
@@ -293,7 +293,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findAllSourcesDataProvider(): array
+    public static function findAllSourcesDataProvider(): array
     {
         return [
             'empty' => [

@@ -63,7 +63,7 @@ class CompilerTest extends AbstractTestCreationTestCase
     /**
      * @return array<mixed>
      */
-    public function compileSuccessDataProvider(): array
+    public static function compileSuccessDataProvider(): array
     {
         return [
             'Test/chrome-open-index.yml: single-browser test' => [
@@ -145,7 +145,7 @@ class CompilerTest extends AbstractTestCreationTestCase
     /**
      * @return array<mixed>
      */
-    public function compileFailureDataProvider(): array
+    public static function compileFailureDataProvider(): array
     {
         return [
             'unparseable assertion' => [
