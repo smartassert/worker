@@ -16,7 +16,6 @@ use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
-use SebastianBergmann\Timer\Timer;
 use SmartAssert\ResultsClient\Client as ResultsClient;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
@@ -108,13 +107,14 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
 
-        $timer = new Timer();
-        $timer->start();
+        $timerStart = microtime(true);
 
         $createResponse = $this->clientRequestSender->createJob($requestPayload);
 
-        $duration = $timer->stop();
-        self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration->asSeconds());
+        $timerEnd = microtime(true);
+        $duration = $timerEnd - $timerStart;
+
+        self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration);
 
         self::assertSame(200, $createResponse->getStatusCode());
         self::assertSame('application/json', $createResponse->headers->get('content-type'));
