@@ -7,33 +7,8 @@ parameters:
   inferPrivatePropertyTypeFromConstructor: true
   exceptions:
     check:
-      missingCheckedExceptionInThrows: true
       tooWideThrowType: true
   ignoreErrors:
-    -
-      message: '#Method .+ throws checked exception InvalidArgumentException#'
-      path: src
-
-    -
-      message: '#Method .+ throws checked exception#'
-      path: tests
-
-    -
-      message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
-      path: src/Repository
-
-    -
-      message: '#Method .+ throws checked exception .+ORMException#'
-      path: src/Repository
-
-    -
-      message: '#Method .+ throws checked exception .+ORMException#'
-      path: src/Services/WorkerEventStateMutator.php
-
-    -
-      message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
-      path: src/Services/WorkerEventStateMutator.php
-
     -
       message: '#Property App\\Entity\\WorkerEvent::\$reference type mapping mismatch#'
       path: src/Entity/WorkerEvent.php
