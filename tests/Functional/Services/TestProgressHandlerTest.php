@@ -19,6 +19,7 @@ use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\YamlDocument\Document as YamlDocument;
 
@@ -62,10 +63,9 @@ class TestProgressHandlerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider handleDataProvider
-     *
      * @param array<mixed> $expectedEventPayload
      */
+    #[DataProvider('handleDataProvider')]
     public function testHandle(
         YamlDocument $yamlDocument,
         WorkerEventScope $expectedEventScope,
@@ -91,7 +91,7 @@ class TestProgressHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function handleDataProvider(): array
+    public static function handleDataProvider(): array
     {
         return [
             'step, passed' => [

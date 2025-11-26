@@ -11,6 +11,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use webignition\ObjectReflector\ObjectReflector;
 
 class TestRepositoryTest extends AbstractEntityRepositoryTestCase
@@ -36,9 +37,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         }
     }
 
-    /**
-     * @dataProvider findMaxPositionDataProvider
-     */
+    #[DataProvider('findMaxPositionDataProvider')]
     public function testFindMaxPosition(EnvironmentSetup $setup, int $expectedMaxPosition): void
     {
         $this->environmentFactory->create($setup);
@@ -49,7 +48,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findMaxPositionDataProvider(): array
+    public static function findMaxPositionDataProvider(): array
     {
         return [
             'empty' => [
@@ -122,9 +121,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         ];
     }
 
-    /**
-     * @dataProvider findNextAwaitingIdIsNullDataProvider
-     */
+    #[DataProvider('findNextAwaitingIdIsNullDataProvider')]
     public function testFindNextAwaitingIdIsNull(EnvironmentSetup $setup): void
     {
         $this->environmentFactory->create($setup);
@@ -135,7 +132,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextAwaitingIdIsNullDataProvider(): array
+    public static function findNextAwaitingIdIsNullDataProvider(): array
     {
         return [
             'empty' => [
@@ -152,9 +149,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
         ];
     }
 
-    /**
-     * @dataProvider findNextAwaitingIdNotNullDataProvider
-     */
+    #[DataProvider('findNextAwaitingIdNotNullDataProvider')]
     public function testFindNextAwaitingIdNotNull(EnvironmentSetup $setup, int $nextAwaitingIndex): void
     {
         $this->environmentFactory->create($setup);
@@ -173,7 +168,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextAwaitingIdNotNullDataProvider(): array
+    public static function findNextAwaitingIdNotNullDataProvider(): array
     {
         return [
             'awaiting1' => [
@@ -181,7 +176,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                     ->withTestSetups([
                         (new TestSetup())->withState(TestState::AWAITING),
                     ]),
-                'expectedNextAwaitingIndex' => 0,
+                'nextAwaitingIndex' => 0,
             ],
             'awaiting1, awaiting2' => [
                 'setup' => (new EnvironmentSetup())
@@ -193,7 +188,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
                     ]),
-                'expectedNextAwaitingIndex' => 0,
+                'nextAwaitingIndex' => 0,
             ],
             'awaiting2, awaiting1' => [
                 'setup' => (new EnvironmentSetup())
@@ -205,7 +200,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
                     ]),
-                'expectedNextAwaitingIndex' => 1,
+                'nextAwaitingIndex' => 1,
             ],
             'running, failed, awaiting1, complete' => [
                 'setup' => (new EnvironmentSetup())
@@ -215,14 +210,12 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                         (new TestSetup())->withState(TestState::AWAITING),
                         (new TestSetup())->withState(TestState::COMPLETE),
                     ]),
-                'expectedNextAwaitingIndex' => 2,
+                'nextAwaitingIndex' => 2,
             ],
         ];
     }
 
-    /**
-     * @dataProvider findUnfinishedCountDataProvider
-     */
+    #[DataProvider('findUnfinishedCountDataProvider')]
     public function testFindUnfinishedCount(EnvironmentSetup $setup, int $expectedUnfinishedCount): void
     {
         $this->environmentFactory->create($setup);
@@ -233,7 +226,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findUnfinishedCountDataProvider(): array
+    public static function findUnfinishedCountDataProvider(): array
     {
         return [
             'empty' => [
@@ -279,10 +272,9 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     }
 
     /**
-     * @dataProvider findAllSourcesDataProvider
-     *
      * @param string[] $expectedSources
      */
+    #[DataProvider('findAllSourcesDataProvider')]
     public function testFindAllSources(EnvironmentSetup $setup, array $expectedSources): void
     {
         $this->environmentFactory->create($setup);
@@ -293,7 +285,7 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     /**
      * @return array<mixed>
      */
-    public function findAllSourcesDataProvider(): array
+    public static function findAllSourcesDataProvider(): array
     {
         return [
             'empty' => [

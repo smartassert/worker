@@ -8,13 +8,14 @@ use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Step;
 use App\Services\DocumentFactory\DocumentFactoryInterface;
 use App\Services\DocumentFactory\StepFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StepFactoryTest extends AbstractDocumentFactoryTestCase
 {
     /**
      * @return array<mixed>
      */
-    public function createInvalidTypeDataProvider(): array
+    public static function createInvalidTypeDataProvider(): array
     {
         return [
             'type is not step: test' => [
@@ -33,10 +34,9 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     }
 
     /**
-     * @dataProvider createInvalidStepDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createInvalidStepDataProvider')]
     public function testCreateInvalidStep(array $data, InvalidStepException $expected): void
     {
         self::expectExceptionObject($expected);
@@ -47,7 +47,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createInvalidStepDataProvider(): array
+    public static function createInvalidStepDataProvider(): array
     {
         return [
             'name missing' => [
@@ -70,7 +70,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         return [
             'step' => [

@@ -12,6 +12,7 @@ use App\Enum\WorkerEventState;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\Services\EntityRemover;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WorkerEventStateMutatorTest extends WebTestCase
@@ -38,9 +39,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider setQueuedDataProvider
-     */
+    #[DataProvider('setQueuedDataProvider')]
     public function testSetQueued(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
@@ -58,7 +57,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setQueuedDataProvider(): array
+    public static function setQueuedDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -84,9 +83,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider setSendingDataProvider
-     */
+    #[DataProvider('setSendingDataProvider')]
     public function testSetSending(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
@@ -104,7 +101,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setSendingDataProvider(): array
+    public static function setSendingDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -130,9 +127,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider setFailedDataProvider
-     */
+    #[DataProvider('setFailedDataProvider')]
     public function testSetFailed(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
@@ -150,7 +145,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setFailedDataProvider(): array
+    public static function setFailedDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [
@@ -176,9 +171,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider setCompleteDataProvider
-     */
+    #[DataProvider('setCompleteDataProvider')]
     public function testSetComplete(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
         foreach ($this->createEntities() as $workerEvent) {
@@ -196,7 +189,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function setCompleteDataProvider(): array
+    public static function setCompleteDataProvider(): array
     {
         return [
             WorkerEventState::AWAITING->value => [

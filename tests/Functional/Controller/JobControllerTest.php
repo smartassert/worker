@@ -26,6 +26,7 @@ use App\Tests\Services\EnvironmentFactory;
 use App\Tests\Services\EventRecorder;
 use App\Tests\Services\FixtureReader;
 use App\Tests\Services\SourceFileInspector;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use webignition\ObjectReflector\ObjectReflector;
@@ -102,12 +103,11 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createBadRequestMissingValuesDataProvider
-     * @dataProvider createBadRequestInvalidSourceDataProvider
-     *
      * @param array<mixed> $requestPayload
      * @param array<mixed> $expectedResponseData
      */
+    #[DataProvider('createBadRequestMissingValuesDataProvider')]
+    #[DataProvider('createBadRequestInvalidSourceDataProvider')]
     public function testCreateBadRequest(array $requestPayload, array $expectedResponseData): void
     {
         self::assertFalse($this->jobRepository->has());
@@ -122,7 +122,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createBadRequestMissingValuesDataProvider(): array
+    public static function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
         $resultsToken = 'results-token';
@@ -215,7 +215,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createBadRequestInvalidSourceDataProvider(): array
+    public static function createBadRequestInvalidSourceDataProvider(): array
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
@@ -358,11 +358,10 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createSuccessDataProvider
-     *
      * @param array<mixed>                $expectedResponseData
      * @param array<string, array<mixed>> $expectedStoredSources
      */
+    #[DataProvider('createSuccessDataProvider')]
     public function testCreateSuccess(
         callable $requestDataCreator,
         array $expectedResponseData,
@@ -405,6 +404,7 @@ class JobControllerTest extends WebTestCase
             self::assertSame($expectedSourceData['type'], $sourceType);
 
             self::assertArrayHasKey('contentFixture', $expectedSourceData);
+            \assert(is_string($expectedSourceData['contentFixture']));
 
             self::assertTrue($this->sourceFileInspector->has($sourcePath));
             self::assertSame(
@@ -427,7 +427,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createSuccessDataProvider(): array
+    public static function createSuccessDataProvider(): array
     {
         $label = md5((string) rand());
         $resultsToken = md5((string) rand());
@@ -631,10 +631,9 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider statusDataProvider
-     *
      * @param array<mixed> $expectedResponseData
      */
+    #[DataProvider('statusDataProvider')]
     public function testStatusHasJob(EnvironmentSetup $setup, array $expectedResponseData): void
     {
         $this->environmentFactory->create($setup);
@@ -649,7 +648,7 @@ class JobControllerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function statusDataProvider(): array
+    public static function statusDataProvider(): array
     {
         return [
             'new job, has sources, no tests' => [

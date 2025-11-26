@@ -16,6 +16,7 @@ use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Client as ResultsClient;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
@@ -77,8 +78,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     }
 
     /**
-     * @dataProvider createAddSourcesCompileExecuteDataProvider
-     *
      * @param non-empty-string[]                                 $manifestPaths
      * @param string[]                                           $sourcePaths
      * @param array{state: non-empty-string, is_end_state: bool} $expectedCompilationEndState
@@ -86,6 +85,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
      * @param array<int, array<mixed>>                           $expectedTestDataCollection
      * @param callable(int, string, string): EventInterface[]    $expectedEventsCreator
      */
+    #[DataProvider('createAddSourcesCompileExecuteDataProvider')]
     public function testCreateCompileExecute(
         array $manifestPaths,
         array $sourcePaths,
@@ -191,7 +191,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
     /**
      * @return array<mixed>
      */
-    public function createAddSourcesCompileExecuteDataProvider(): array
+    public static function createAddSourcesCompileExecuteDataProvider(): array
     {
         $jobLabel = md5((string) rand());
 

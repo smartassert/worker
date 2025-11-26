@@ -16,6 +16,7 @@ use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
@@ -50,9 +51,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
         $this->messengerTransport = $messengerTransport;
     }
 
-    /**
-     * @dataProvider dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider
-     */
+    #[DataProvider('dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider')]
     public function testDispatchNextCompileSourceMessageNoMessageDispatched(EnvironmentSetup $setup): void
     {
         $this->environmentFactory->create($setup);
@@ -65,7 +64,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider(): array
+    public static function dispatchNextCompileSourceMessageNoMessageDispatchedDataProvider(): array
     {
         return [
             'no sources' => [
@@ -82,9 +81,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider dispatchNextCompileSourceMessageMessageDispatchedDataProvider
-     */
+    #[DataProvider('dispatchNextCompileSourceMessageMessageDispatchedDataProvider')]
     public function testDispatchNextCompileSourceMessageMessageDispatched(
         EnvironmentSetup $setup,
         CompileSourceMessage $expectedQueuedMessage
@@ -104,7 +101,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function dispatchNextCompileSourceMessageMessageDispatchedDataProvider(): array
+    public static function dispatchNextCompileSourceMessageMessageDispatchedDataProvider(): array
     {
         return [
             'no sources compiled' => [

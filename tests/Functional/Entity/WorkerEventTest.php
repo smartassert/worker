@@ -9,6 +9,7 @@ use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Tests\Services\EntityRemover;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
 class WorkerEventTest extends AbstractEntityTestCase
@@ -24,9 +25,7 @@ class WorkerEventTest extends AbstractEntityTestCase
         }
     }
 
-    /**
-     * @dataProvider entityMappingDataProvider
-     */
+    #[DataProvider('entityMappingDataProvider')]
     public function testEntityMapping(WorkerEvent $event): void
     {
         $repository = $this->entityManager->getRepository(WorkerEvent::class);
@@ -43,7 +42,7 @@ class WorkerEventTest extends AbstractEntityTestCase
     /**
      * @return array<mixed>
      */
-    public function entityMappingDataProvider(): array
+    public static function entityMappingDataProvider(): array
     {
         return [
             'without related references' => [

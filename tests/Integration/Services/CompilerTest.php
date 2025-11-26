@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Services;
 
 use App\Services\Compiler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use webignition\BasilCompilerModels\Factory\ErrorOutputFactory;
 use webignition\BasilCompilerModels\Factory\TestManifestCollectionFactory;
 use webignition\BasilCompilerModels\Model\ErrorOutput;
@@ -40,11 +41,10 @@ class CompilerTest extends AbstractTestCreationTestCase
     }
 
     /**
-     * @dataProvider compileSuccessDataProvider
-     *
      * @param string[]     $sources
      * @param array<mixed> $expectedManifestCollectionData
      */
+    #[DataProvider('compileSuccessDataProvider')]
     public function testCompileSuccess(array $sources, string $test, array $expectedManifestCollectionData): void
     {
         foreach ($sources as $source) {
@@ -63,7 +63,7 @@ class CompilerTest extends AbstractTestCreationTestCase
     /**
      * @return array<mixed>
      */
-    public function compileSuccessDataProvider(): array
+    public static function compileSuccessDataProvider(): array
     {
         return [
             'Test/chrome-open-index.yml: single-browser test' => [
@@ -120,11 +120,10 @@ class CompilerTest extends AbstractTestCreationTestCase
     }
 
     /**
-     * @dataProvider compileFailureDataProvider
-     *
      * @param string[]     $sources
      * @param array<mixed> $expectedErrorOutputData
      */
+    #[DataProvider('compileFailureDataProvider')]
     public function testCompileFailure(array $sources, string $test, array $expectedErrorOutputData): void
     {
         foreach ($sources as $source) {
@@ -145,7 +144,7 @@ class CompilerTest extends AbstractTestCreationTestCase
     /**
      * @return array<mixed>
      */
-    public function compileFailureDataProvider(): array
+    public static function compileFailureDataProvider(): array
     {
         return [
             'unparseable assertion' => [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Services\TestManifestFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Factory\TestManifestFactoryInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
@@ -28,10 +29,9 @@ class TestManifestFactoryTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createDataProvider
-     *
      * @param array<mixed> $data
      */
+    #[DataProvider('createDataProvider')]
     public function testCreate(array $data, TestManifest $expected): void
     {
         $source = $data['source'] ?? null;
@@ -44,7 +44,7 @@ class TestManifestFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         return [
             'source path is relative' => [

@@ -14,6 +14,7 @@ use App\Tests\Model\SourceSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SourcePathFinderTest extends WebTestCase
@@ -42,9 +43,7 @@ class SourcePathFinderTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider findNextNonCompiledPathDataProvider
-     */
+    #[DataProvider('findNextNonCompiledPathDataProvider')]
     public function testFindNextNonCompiledPath(
         EnvironmentSetup $setup,
         ?string $expectedNextNonCompiledSource
@@ -57,7 +56,7 @@ class SourcePathFinderTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function findNextNonCompiledPathDataProvider(): array
+    public static function findNextNonCompiledPathDataProvider(): array
     {
         $sourceSetups = [
             (new SourceSetup())

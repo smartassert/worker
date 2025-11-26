@@ -15,7 +15,7 @@ class ExceptionFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createInvalidTypeDataProvider(): array
+    public static function createInvalidTypeDataProvider(): array
     {
         return [
             'type is not exception: test' => [
@@ -36,7 +36,7 @@ class ExceptionFactoryTest extends AbstractDocumentFactoryTestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         return [
             'test-scope exception' => [

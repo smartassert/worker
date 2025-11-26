@@ -12,6 +12,7 @@ use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ExecutionProgressTest extends WebTestCase
@@ -37,9 +38,7 @@ class ExecutionProgressTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider getDataProvider
-     */
+    #[DataProvider('getDataProvider')]
     public function testGet(EnvironmentSetup $setup, ExecutionState $expectedState): void
     {
         $this->environmentFactory->create($setup);
@@ -50,7 +49,7 @@ class ExecutionProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         return [
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [
@@ -102,11 +101,6 @@ class ExecutionProgressTest extends WebTestCase
                         (new TestSetup())->withState(TestState::FAILED),
                     ]),
                 'expectedState' => ExecutionState::CANCELLED,
-                'expectedIsNotStates' => [
-                    ExecutionState::AWAITING,
-                    ExecutionState::RUNNING,
-                    ExecutionState::COMPLETE,
-                ],
             ],
             'cancelled: has cancelled tests' => [
                 'setup' => (new EnvironmentSetup())
@@ -119,11 +113,10 @@ class ExecutionProgressTest extends WebTestCase
     }
 
     /**
-     * @dataProvider isDataProvider
-     *
      * @param ExecutionState[] $expectedIsStates
      * @param ExecutionState[] $expectedIsNotStates
      */
+    #[DataProvider('isDataProvider')]
     public function testIs(EnvironmentSetup $setup, array $expectedIsStates, array $expectedIsNotStates): void
     {
         $this->environmentFactory->create($setup);
@@ -135,7 +128,7 @@ class ExecutionProgressTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function isDataProvider(): array
+    public static function isDataProvider(): array
     {
         return [
             'awaiting: not has finished tests and not has running tests and not has awaiting tests' => [

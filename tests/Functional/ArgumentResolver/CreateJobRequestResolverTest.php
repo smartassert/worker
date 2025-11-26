@@ -7,6 +7,7 @@ namespace App\Tests\Functional\ArgumentResolver;
 use App\ArgumentResolver\CreateJobRequestResolver;
 use App\Request\CreateJobRequest;
 use App\Tests\Mock\MockArgumentMetadata;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,9 +24,7 @@ class CreateJobRequestResolverTest extends WebTestCase
         $this->resolver = $resolver;
     }
 
-    /**
-     * @dataProvider resolveDataProvider
-     */
+    #[DataProvider('resolveDataProvider')]
     public function testResolve(Request $request, CreateJobRequest $expected): void
     {
         $argumentMetadata = (new MockArgumentMetadata())
@@ -43,7 +42,7 @@ class CreateJobRequestResolverTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function resolveDataProvider(): array
+    public static function resolveDataProvider(): array
     {
         return [
             'no request parameters' => [

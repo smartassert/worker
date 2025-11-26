@@ -10,6 +10,7 @@ use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\Services\EntityRemover;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
@@ -88,11 +89,10 @@ class TestFactoryTest extends WebTestCase
     }
 
     /**
-     * @dataProvider createFromTestManifestCollectionDataProvider
-     *
      * @param string[] $manifestKeys
      * @param string[] $expectedTestKeys
      */
+    #[DataProvider('createFromTestManifestCollectionDataProvider')]
     public function testCreateFromTestManifestCollection(array $manifestKeys, array $expectedTestKeys): void
     {
         $manifests = $this->createTestManifestCollection($manifestKeys);
@@ -109,7 +109,7 @@ class TestFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createFromTestManifestCollectionDataProvider(): array
+    public static function createFromTestManifestCollectionDataProvider(): array
     {
         return [
             'empty' => [

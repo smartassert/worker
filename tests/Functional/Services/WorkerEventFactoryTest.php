@@ -37,6 +37,7 @@ use App\Tests\Services\EntityRemover;
 use App\Tests\Services\EnvironmentFactory;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
@@ -81,9 +82,7 @@ class WorkerEventFactoryTest extends WebTestCase
         $this->job = $jobRepository->get();
     }
 
-    /**
-     * @dataProvider createDataProvider
-     */
+    #[DataProvider('createDataProvider')]
     public function testCreate(EmittableEventInterface $event, WorkerEvent $expected): void
     {
         $actual = $this->workerEventFactory->create($this->job, $event);
@@ -152,7 +151,7 @@ class WorkerEventFactoryTest extends WebTestCase
     /**
      * @return array<mixed>
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         $passingStepDocumentData = [
             'type' => 'step',
