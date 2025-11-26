@@ -241,7 +241,7 @@ class JobStatusFactoryTest extends WebTestCase
             [
                 'label' => $job->getLabel(),
                 'maximum_duration_in_seconds' => $job->maximumDurationInSeconds,
-                'test_paths' => $job->testPaths,
+                'test_paths' => $job->getTestPaths(),
                 'reference' => md5($job->getLabel()),
                 'sources' => [],
                 'tests' => [],
