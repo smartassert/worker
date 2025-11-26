@@ -94,7 +94,6 @@ class CompilationWorkflowHandlerTest extends WebTestCase
         $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
 
         $transportQueue = $this->messengerTransport->getSent();
-        self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 
         $envelope = $transportQueue[0];

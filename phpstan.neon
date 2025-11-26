@@ -15,18 +15,10 @@ parameters:
       path: src
 
     -
-      message: '#Method App\\Services\\TestExecutor::execute\(\) has .+Invalid(Document|Step)Exception#'
-      path: src/Services/TestExecutor.php
-
-    -
       message: '#Method .+ throws checked exception#'
       path: tests
 
     -
-      message: '#Method .+ throws checked exception BadMethodCallException#'
-      path: src
-
-    -
       message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
       path: src/Repository
 
@@ -41,3 +33,15 @@ parameters:
     -
       message: '#Method .+ throws checked exception .+UniqueConstraintViolationException#'
       path: src/Services/WorkerEventStateMutator.php
+
+    -
+      message: '#Property App\\Entity\\WorkerEvent::\$reference type mapping mismatch#'
+      path: src/Entity/WorkerEvent.php
+
+    -
+      message: '#Property App\\Entity\\WorkerEvent::\$relatedReferences type mapping mismatch#'
+      path: src/Entity/WorkerEvent.php
+
+    -
+      message: '#Method .+TestRepository::getSingleIntegerResult\(\) has parameter \$query with generic class Doctrine\\ORM\\Query#'
+      path: src/Repository/TestRepository.php

@@ -418,7 +418,6 @@ class JobControllerTest extends WebTestCase
         self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
 
         $transportQueue = $this->messengerTransport->getSent();
-        self::assertIsArray($transportQueue);
         self::assertEquals(
             new TimeoutCheckMessage(),
             $transportQueue[count($transportQueue) - 1]->getMessage()

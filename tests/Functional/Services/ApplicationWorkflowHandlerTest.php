@@ -60,7 +60,6 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
         ));
 
         $transportQueue = $this->messengerTransport->getSent();
-        self::assertIsArray($transportQueue);
         self::assertEquals(
             new JobCompletedCheckMessage(),
             $transportQueue[count($transportQueue) - 1]->getMessage()

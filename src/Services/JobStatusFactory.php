@@ -58,7 +58,7 @@ class JobStatusFactory
                     'url' => $test->url,
                     'source' => $test->getSource(),
                     'target' => $test->getTarget(),
-                    'step_names' => $test->stepNames,
+                    'step_names' => $test->getStepNames(),
                     'state' => $test->getState()->value,
                     'position' => $test->position,
                 ];

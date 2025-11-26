@@ -53,7 +53,6 @@ class WorkerEventAborterTest extends WebTestCase
 
         $id = $workerEvent->getId();
 
-        self::assertIsInt($id);
         self::assertNotSame(WorkerEventState::FAILED, $workerEvent->getState());
 
         $this->aborter->abort($id);

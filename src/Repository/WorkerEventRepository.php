@@ -9,11 +9,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method null|WorkerEvent find($id, $lockMode = null, $lockVersion = null)
- * @method null|WorkerEvent findOneBy(array $criteria, array $orderBy = null)
- * @method WorkerEvent[]    findAll()
- * @method WorkerEvent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<WorkerEvent>
  */
 class WorkerEventRepository extends ServiceEntityRepository

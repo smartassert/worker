@@ -63,12 +63,10 @@ class JobTimeoutMessageOrderTest extends WebTestCase
         self::assertCount(2, $workerEvents);
 
         $jobTimeoutEvent = $workerEvents[0];
-        self::assertInstanceOf(WorkerEvent::class, $jobTimeoutEvent);
         self::assertSame(WorkerEventScope::JOB, $jobTimeoutEvent->scope);
         self::assertSame(WorkerEventOutcome::TIME_OUT, $jobTimeoutEvent->outcome);
 
         $jobEndedEvent = $workerEvents[1];
-        self::assertInstanceOf(WorkerEvent::class, $jobEndedEvent);
         self::assertSame(WorkerEventScope::JOB, $jobEndedEvent->scope);
         self::assertSame(WorkerEventOutcome::ENDED, $jobEndedEvent->outcome);
     }

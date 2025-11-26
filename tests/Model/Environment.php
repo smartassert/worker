@@ -11,7 +11,7 @@ use App\Entity\WorkerEvent;
 
 class Environment
 {
-    private ?Job $job;
+    private Job $job;
 
     /**
      * @var Source[]
@@ -30,7 +30,7 @@ class Environment
 
     public function getJob(): ?Job
     {
-        return $this->job;
+        return $this->job ?? null;
     }
 
     /**

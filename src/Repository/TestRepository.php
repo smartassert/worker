@@ -11,10 +11,6 @@ use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method null|Test find($id, $lockMode = null, $lockVersion = null)
- * @method null|Test findOneBy(array $criteria, array $orderBy = null)
- * @method Test[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- *
  * @extends ServiceEntityRepository<Test>
  */
 class TestRepository extends ServiceEntityRepository
@@ -84,7 +80,11 @@ class TestRepository extends ServiceEntityRepository
         $sources = [];
         foreach ($result as $item) {
             if (is_array($item)) {
-                $sources[] = (string) ($item['source'] ?? null);
+                $source = $item['source'];
+
+                if (is_scalar($source)) {
+                    $sources[] = (string) $source;
+                }
             }
         }
 

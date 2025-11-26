@@ -152,7 +152,6 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
             self::assertIsInt($expectedNextTestId);
 
             $transportQueue = $this->messengerTransport->getSent();
-            self::assertIsArray($transportQueue);
             self::assertCount(1, $transportQueue);
 
             $envelope = $transportQueue[0];
@@ -243,7 +242,6 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
         self::assertIsInt($expectedNextTestId);
 
         $transportQueue = $this->messengerTransport->getSent();
-        self::assertIsArray($transportQueue);
         self::assertCount(1, $transportQueue);
 
         $envelope = $transportQueue[0];

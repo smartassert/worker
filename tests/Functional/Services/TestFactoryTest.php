@@ -182,7 +182,7 @@ class TestFactoryTest extends WebTestCase
         self::assertSame($expected->getSource(), $actual->getSource());
         self::assertSame($expected->getTarget(), $actual->getTarget());
         self::assertSame($expected->getState(), $actual->getState());
-        self::assertSame($expected->stepNames, $actual->stepNames);
+        self::assertSame($expected->getStepNames(), $actual->getStepNames());
         self::assertSame($expected->position, $actual->position);
     }
 

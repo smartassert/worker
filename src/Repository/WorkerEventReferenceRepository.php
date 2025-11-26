@@ -8,11 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<WorkerEventReference>
- *
- * @method null|WorkerEventReference find($id, $lockMode = null, $lockVersion = null)
- * @method null|WorkerEventReference findOneBy(array $criteria, array $orderBy = null)
- * @method WorkerEventReference[]    findAll()
- * @method WorkerEventReference[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class WorkerEventReferenceRepository extends ServiceEntityRepository
 {

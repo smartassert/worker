@@ -74,7 +74,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         \assert($resultsClient instanceof ResultsClient);
 
         $jobLabel = (string) new Ulid();
-        \assert('' !== $jobLabel);
         $this->resultsJob = $resultsClient->createJob($this->apiToken, $jobLabel);
     }
 
