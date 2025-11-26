@@ -38,9 +38,6 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     #[ORM\JoinColumn(nullable: false)]
     public readonly ResourceReferenceInterface $reference;
 
-    /**
-     * @var positive-int
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -77,6 +74,8 @@ class WorkerEvent implements \JsonSerializable, EventInterface
      */
     public function getId(): int
     {
+        \assert($this->id > 0);
+
         return $this->id;
     }
 
