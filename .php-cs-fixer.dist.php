@@ -18,7 +18,6 @@ return (new PhpCsFixer\Config())
             'space' => 'none',
             'space_multiple_catch' => 'single',
         ],
-        'modifier_keywords' => false,
     ])
     ->setFinder($finder)
 ;
