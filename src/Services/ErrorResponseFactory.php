@@ -64,7 +64,7 @@ class ErrorResponseFactory
     public function createFromMissingTestSourceException(MissingTestSourceException $exception): JsonResponse
     {
         return new ErrorResponse('source/test/missing', [
-            'path' => $exception->getPath()
+            'path' => $exception->getPath(),
         ]);
     }
 }

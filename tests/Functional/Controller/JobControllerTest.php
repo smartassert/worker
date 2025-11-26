@@ -195,7 +195,7 @@ class JobControllerTest extends WebTestCase
             ],
             'missing values: source missing' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_SOURCE => null
+                    CreateJobRequest::KEY_SOURCE => null,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/missing',
@@ -203,7 +203,7 @@ class JobControllerTest extends WebTestCase
             ],
             'missing values: source empty' => [
                 'requestPayload' => array_merge($nonEmptyPayload, [
-                    CreateJobRequest::KEY_SOURCE => ''
+                    CreateJobRequest::KEY_SOURCE => '',
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/missing',
@@ -231,7 +231,7 @@ class JobControllerTest extends WebTestCase
                       invalid
                     yaml
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/metadata/invalid',
@@ -252,7 +252,7 @@ class JobControllerTest extends WebTestCase
                     ---
                     file1.yaml content
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/metadata/invalid',
@@ -272,7 +272,7 @@ class JobControllerTest extends WebTestCase
                     ---
                     file1.yaml content
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/metadata/incomplete',
@@ -291,7 +291,7 @@ class JobControllerTest extends WebTestCase
                     ...
                     ---
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/empty',
@@ -308,7 +308,7 @@ class JobControllerTest extends WebTestCase
                       invalid
                     yaml
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/invalid',
@@ -327,7 +327,7 @@ class JobControllerTest extends WebTestCase
                     ---
                     file1content
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/manifest/empty',
@@ -345,7 +345,7 @@ class JobControllerTest extends WebTestCase
                     ---
                     - Test/chrome-open-index.yml
                     ...
-                    EOT
+                    EOT,
                 ]),
                 'expectedResponseData' => [
                     'error_state' => 'source/test/missing',
@@ -448,10 +448,10 @@ class JobControllerTest extends WebTestCase
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
-                                'Test/chrome-open-index.yml'
+                                'Test/chrome-open-index.yml',
                             ],
                             [
-                                'Test/chrome-open-index.yml'
+                                'Test/chrome-open-index.yml',
                             ]
                         ),
                     ];
@@ -469,7 +469,7 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
                         ],
                     ],
                     'tests' => [],
@@ -521,11 +521,11 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
                         ],
                         [
                             'label' => 'InvalidTest/invalid-yaml.yml',
-                            'reference' => md5($label . 'InvalidTest/invalid-yaml.yml')
+                            'reference' => md5($label . 'InvalidTest/invalid-yaml.yml'),
                         ],
                     ],
                     'tests' => [],
@@ -589,11 +589,11 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml')
+                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
                         ],
                         [
                             'label' => 'Test/firefox-open-index.yml',
-                            'reference' => md5($label . 'Test/firefox-open-index.yml')
+                            'reference' => md5($label . 'Test/firefox-open-index.yml'),
                         ],
                     ],
                     'tests' => [],
@@ -686,15 +686,15 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/test1.yml',
-                            'reference' => md5('label content' . 'Test/test1.yml')
+                            'reference' => md5('label content' . 'Test/test1.yml'),
                         ],
                         [
                             'label' => 'Test/test2.yml',
-                            'reference' => md5('label content' . 'Test/test2.yml')
+                            'reference' => md5('label content' . 'Test/test2.yml'),
                         ],
                         [
                             'label' => 'Test/test3.yml',
-                            'reference' => md5('label content' . 'Test/test3.yml')
+                            'reference' => md5('label content' . 'Test/test3.yml'),
                         ],
                     ],
                     'tests' => [],
@@ -742,15 +742,15 @@ class JobControllerTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/test1.yml',
-                            'reference' => md5('label content' . 'Test/test1.yml')
+                            'reference' => md5('label content' . 'Test/test1.yml'),
                         ],
                         [
                             'label' => 'Test/test2.yml',
-                            'reference' => md5('label content' . 'Test/test2.yml')
+                            'reference' => md5('label content' . 'Test/test2.yml'),
                         ],
                         [
                             'label' => 'Test/test3.yml',
-                            'reference' => md5('label content' . 'Test/test3.yml')
+                            'reference' => md5('label content' . 'Test/test3.yml'),
                         ],
                     ],
                     'tests' => [

@@ -59,7 +59,7 @@ class TestFactoryTest extends WebTestCase
                 'Tests/firefox_test.yml',
                 'GeneratedFirefoxTest.php',
                 ['step 1', 'step 2', 'step 3']
-            )
+            ),
         ];
 
         $this->tests = [

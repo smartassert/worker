@@ -45,7 +45,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
                 ['dispatchJobCompilationStartedEventForJobStartedEvent', 0],
             ],
             JobCompiledEvent::class => [
-                ['dispatchJobCompilationEndedEventForJobCompiledEvent', 0]
+                ['dispatchJobCompilationEndedEventForJobCompiledEvent', 0],
             ],
         ];
     }

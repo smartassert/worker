@@ -97,8 +97,8 @@ class JobStatusFactoryTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/no-sources-no-tests.yml',
-                            'reference' => md5('no sources, no tests label' . 'Test/no-sources-no-tests.yml')
-                        ]
+                            'reference' => md5('no sources, no tests label' . 'Test/no-sources-no-tests.yml'),
+                        ],
                     ],
                     'event_ids' => [],
                 ],
@@ -120,7 +120,7 @@ class JobStatusFactoryTest extends WebTestCase
                         (new SourceSetup())
                             ->withPath('Test/has-sources-has-tests2.yml'),
                         (new SourceSetup())
-                            ->withPath('Page/referenced-page.yml')
+                            ->withPath('Page/referenced-page.yml'),
                     ])
                     ->withTestSetups([
                         (new TestSetup())
@@ -202,11 +202,11 @@ class JobStatusFactoryTest extends WebTestCase
                     'references' => [
                         [
                             'label' => 'Test/has-sources-has-tests1.yml',
-                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests1.yml')
+                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests1.yml'),
                         ],
                         [
                             'label' => 'Test/has-sources-has-tests2.yml',
-                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests2.yml')
+                            'reference' => md5('has sources, has tests label' . 'Test/has-sources-has-tests2.yml'),
                         ],
                     ],
                     'event_ids' => [],
@@ -249,7 +249,7 @@ class JobStatusFactoryTest extends WebTestCase
                     [
                         'label' => 'Test/test.yml',
                         'reference' => md5($job->getLabel() . 'Test/test.yml'),
-                    ]
+                    ],
                 ],
                 'event_ids' => $this->workerEventRepository->findAllIds(),
             ],

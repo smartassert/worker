@@ -20,7 +20,7 @@ class SerializedState implements \JsonSerializable
     {
         return [
             'state' => $this->state->getValue(),
-            'is_end_state' => $this->state::isEndState($this->state)
+            'is_end_state' => $this->state::isEndState($this->state),
         ];
     }
 }

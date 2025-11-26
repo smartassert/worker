@@ -199,7 +199,7 @@ class ApplicationStateControllerTest extends WebTestCase
                         (new TestSetup())->withSource('Test/test3.yml'),
                     ])->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withState(WorkerEventState::QUEUED)
+                            ->withState(WorkerEventState::QUEUED),
                     ]),
                 'expectedResponseData' => [
                     'application' => [
@@ -234,7 +234,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(TestState::COMPLETE),
                     ])->withWorkerEventSetups([
                         (new WorkerEventSetup())
-                            ->withState(WorkerEventState::QUEUED)
+                            ->withState(WorkerEventState::QUEUED),
                     ]),
                 'expectedResponseData' => [
                     'application' => [

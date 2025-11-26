@@ -103,8 +103,8 @@ class StepTest extends TestCase
                     [
                         'type' => 'step',
                         'payload' => [
-                            'name' => 'non-empty name'
-                        ]
+                            'name' => 'non-empty name',
+                        ],
                     ]
                 ),
                 'expectedName' => 'non-empty name',

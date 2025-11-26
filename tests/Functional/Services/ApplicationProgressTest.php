@@ -152,7 +152,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
+                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING),
                     ]),
                 'expectedState' => ApplicationState::COMPLETING_EVENT_DELIVERY,
             ],
@@ -172,7 +172,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::COMPLETE,
             ],
@@ -367,7 +367,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING)
+                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
@@ -396,7 +396,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE)
+                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPLETE,

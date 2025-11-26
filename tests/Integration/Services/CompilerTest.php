@@ -95,7 +95,7 @@ class CompilerTest extends AbstractTestCreationTestCase
                     [
                         'config' => [
                             'browser' => 'chrome',
-                            'url' => 'http://html-fixtures/index.html'
+                            'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                         'target' => '{{ target_directory }}/Generated45ead8003cb8ba3fa966dc1ad5a91372Test.php',
@@ -106,7 +106,7 @@ class CompilerTest extends AbstractTestCreationTestCase
                     [
                         'config' => [
                             'browser' => 'firefox',
-                            'url' => 'http://html-fixtures/index.html'
+                            'url' => 'http://html-fixtures/index.html',
                         ],
                         'source' => '{{ source_directory }}/Test/chrome-firefox-open-index.yml',
                         'target' => '{{ target_directory }}/Generated88b4291e887760b0fe2eec8891356665Test.php',

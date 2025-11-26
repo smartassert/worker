@@ -62,7 +62,7 @@ class StepFactoryTest extends AbstractDocumentFactoryTestCase
                     ],
                     'Payload name missing',
                     InvalidStepException::CODE_NAME_MISSING
-                )
+                ),
             ],
         ];
     }
