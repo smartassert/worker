@@ -14,3 +14,30 @@ framework:
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
             'App\Message\JobCompletedCheckMessage': async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'
+
+            routing:
+                '*': async
+
+when@integration:
+    framework:
+        messenger:
+            transports:
+                event_delivery:
+                    dsn: 'sync://'
+                    retry_strategy:
+                        service: App\Messenger\DeliverEventMessageRetryStrategy
+                async:
+                    dsn: 'sync://'
+
+                memory:
+                    dsn: 'in-memory://'
+
+            routing:
+                'App\Message\JobCompletedCheckMessage': memory
+                'App\Message\TimeoutCheckMessage': memory
