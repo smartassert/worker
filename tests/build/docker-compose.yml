@@ -118,6 +118,8 @@ services:
       - compiler
       - delegator
       - postgres
+    links:
+      - results-http:results
     volumes:
       - ../Fixtures/CompilerSource:/app/source
       - ../Fixtures/CompilerTarget:/app/tests
