@@ -46,7 +46,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 ),
             ],
             [
-                'label' => md5('label content'),
+                'label' => $jobLabel,
                 'results_token' => $resultsJob->token,
                 'maximum_duration_in_seconds' => 600,
             ]
