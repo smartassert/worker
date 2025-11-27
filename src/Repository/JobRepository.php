@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Job;
 use App\Exception\JobNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,8 +19,8 @@ class JobRepository extends ServiceEntityRepository
 
     public function add(Job $job): Job
     {
-        $this->_em->persist($job);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($job);
+        $this->getEntityManager()->flush();
 
         return $job;
     }
@@ -45,15 +43,11 @@ class JobRepository extends ServiceEntityRepository
         throw new JobNotFoundException();
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Job $entity, bool $flush = true): void
     {
-        $this->_em->remove($entity);
+        $this->getEntityManager()->remove($entity);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 }

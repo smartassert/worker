@@ -31,13 +31,11 @@ class EntityRemover
     public function removeForEntity(string $className): void
     {
         $repository = $this->entityManager->getRepository($className);
-        if ($repository instanceof ObjectRepository) {
-            $entities = $repository->findAll();
+        $entities = $repository->findAll();
 
-            foreach ($entities as $entity) {
-                $this->entityManager->remove($entity);
-                $this->entityManager->flush();
-            }
+        foreach ($entities as $entity) {
+            $this->entityManager->remove($entity);
+            $this->entityManager->flush();
         }
     }
 }
