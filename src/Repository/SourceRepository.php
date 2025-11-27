@@ -18,8 +18,8 @@ class SourceRepository extends ServiceEntityRepository
 
     public function add(Source $source): Source
     {
-        $this->_em->persist($source);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($source);
+        $this->getEntityManager()->flush();
 
         return $source;
     }

@@ -9,7 +9,6 @@ use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 
 class EntityRemover
 {
@@ -31,13 +30,12 @@ class EntityRemover
     public function removeForEntity(string $className): void
     {
         $repository = $this->entityManager->getRepository($className);
-        if ($repository instanceof ObjectRepository) {
-            $entities = $repository->findAll();
 
-            foreach ($entities as $entity) {
-                $this->entityManager->remove($entity);
-                $this->entityManager->flush();
-            }
+        $entities = $repository->findAll();
+
+        foreach ($entities as $entity) {
+            $this->entityManager->remove($entity);
+            $this->entityManager->flush();
         }
     }
 }

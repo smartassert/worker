@@ -15,6 +15,8 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
     private const WAIT_INTERVAL = self::MICROSECONDS_PER_SECOND;
     protected static ResponseInterface $createResponse;
 
+    private static string $jobId;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -26,8 +28,8 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $resultsClient = self::getContainer()->get(ResultsClient::class);
         \assert($resultsClient instanceof ResultsClient);
 
-        $jobLabel = (string) new Ulid();
-        $resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
+        self::$jobId = (string) new Ulid();
+        $resultsJob = $resultsClient->createJob($apiToken, self::$jobId);
 
         self::$createResponse = self::makeCreateJobRequest(array_merge(
             [
@@ -46,7 +48,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 ),
             ],
             [
-                'label' => md5('label content'),
+                'label' => self::$jobId,
                 'results_token' => $resultsJob->token,
                 'maximum_duration_in_seconds' => 600,
             ]
@@ -69,7 +71,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
 
         $this->assertJob(
             [
-                'label' => md5('label content'),
+                'label' => self::$jobId,
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',
