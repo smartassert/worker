@@ -29,7 +29,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         \assert($resultsClient instanceof ResultsClient);
 
         self::$jobId = (string) new Ulid();
-        $resultsJob = $resultsClient->createJob($apiToken,  self::$jobId);
+        $resultsJob = $resultsClient->createJob($apiToken, self::$jobId);
 
         self::$createResponse = self::makeCreateJobRequest(array_merge(
             [
@@ -48,7 +48,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 ),
             ],
             [
-                'label' =>  self::$jobId,
+                'label' => self::$jobId,
                 'results_token' => $resultsJob->token,
                 'maximum_duration_in_seconds' => 600,
             ]
@@ -71,7 +71,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
 
         $this->assertJob(
             [
-                'label' =>  self::$jobId,
+                'label' => self::$jobId,
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',
