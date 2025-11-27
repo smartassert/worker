@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Entity;
 
 use App\Entity\WorkerEventReference;
 use App\Tests\Services\EntityRemover;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\Exception\EntityIdentityCollisionException;
 
 class WorkerEventReferenceTest extends AbstractEntityTestCase
 {
@@ -38,7 +38,7 @@ class WorkerEventReferenceTest extends AbstractEntityTestCase
         $this->entityManager->persist(new WorkerEventReference('non-empty label', md5('non-empty reference')));
         $this->entityManager->flush();
 
-        self::expectException(UniqueConstraintViolationException::class);
+        self::expectException(EntityIdentityCollisionException::class);
 
         $this->entityManager->persist(new WorkerEventReference('non-empty label', md5('non-empty reference')));
         $this->entityManager->flush();
