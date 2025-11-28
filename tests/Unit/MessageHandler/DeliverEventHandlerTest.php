@@ -11,7 +11,7 @@ use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 
 class DeliverEventHandlerTest extends TestCase
 {

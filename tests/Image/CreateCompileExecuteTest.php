@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Image;
 
 use Psr\Http\Message\ResponseInterface;
-use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use Symfony\Component\Uid\Ulid;
 
