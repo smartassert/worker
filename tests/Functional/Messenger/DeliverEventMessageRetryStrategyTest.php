@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
+use SmartAssert\ServiceClient\Response\Response as ServiceClientResponse;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
@@ -151,9 +152,11 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         \assert($workerEventRepository instanceof WorkerEventRepository);
         $workerEventRepository->add($workerEvent);
 
+        $resultsClientResponse = new ServiceClientResponse($encapsulatedHttpResponse);
+
         $throwable = new EventDeliveryException(
             $workerEvent,
-            new NonSuccessResponseException($encapsulatedHttpResponse)
+            new NonSuccessResponseException($resultsClientResponse)
         );
 
         $envelope = new Envelope(new DeliverEventMessage(0), [new RedeliveryStamp($retryCount)]);

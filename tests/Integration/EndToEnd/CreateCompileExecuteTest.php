@@ -17,7 +17,7 @@ use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
-use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job as ResultsJob;

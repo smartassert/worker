@@ -10,7 +10,7 @@ use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
-use SmartAssert\ResultsClient\Client as ResultsClient;
+use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
