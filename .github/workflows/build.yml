@@ -15,11 +15,6 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-      attestations: write
-      id-token: write
     outputs:
       version: ${{ env.service_version }}
 
@@ -56,6 +51,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
     needs: [setup, verify-setup]
 
     steps:
