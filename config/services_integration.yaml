@@ -19,7 +19,8 @@ services:
         arguments:
             $handler: '@app.tests.services.guzzle.handler.curl'
 
-    SmartAssert\ResultsClient\Client:
+    SmartAssert\ResultsClient\ClientInterface:
+        class: SmartAssert\ResultsClient\Client
         public: true
         arguments:
             $baseUrl: '%env(string:RESULTS_BASE_URL)%'
