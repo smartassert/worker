@@ -15,13 +15,13 @@
         "smartassert/results-client": "^9.1",
         "smartassert/worker-job-source": "^3",
         "smartassert/yaml-file": "^8",
-        "symfony/console": "7.3.*",
-        "symfony/doctrine-messenger": "7.3.*",
-        "symfony/dotenv": "7.3.*",
+        "symfony/console": "7.4.*",
+        "symfony/doctrine-messenger": "7.4.*",
+        "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2.10",
-        "symfony/framework-bundle": "7.3.*",
-        "symfony/messenger": "7.3.*",
-        "symfony/yaml": "7.3.*",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/messenger": "7.4.*",
+        "symfony/yaml": "7.4.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
         "webignition/tcp-cli-proxy-client": "^0.13.0",
         "webignition/yaml-document": "^2.1",
@@ -40,10 +40,10 @@
         "psr/log": "^3.0",
         "smartassert/test-authenticaton-provider-bundle": "^5",
         "squizlabs/php_codesniffer": "^4.0",
-        "symfony/browser-kit": "7.3.*",
+        "symfony/browser-kit": "7.4.*",
         "symfony/maker-bundle": "^1.40",
-        "symfony/phpunit-bridge": "7.3.*",
-        "symfony/uid": "7.3.*",
+        "symfony/phpunit-bridge": "7.4.*",
+        "symfony/uid": "7.4.*",
         "webignition/http-history-container": "^4.0",
         "webignition/object-reflector": "^1.0"
     },
@@ -192,7 +192,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "7.3.*"
+            "require": "7.4.*"
         }
     }
 }
