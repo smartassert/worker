@@ -20,6 +20,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
+use SmartAssert\ServiceClient\Response\Response as ServiceClientResponse;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeliverEventHandlerTest extends WebTestCase
@@ -94,12 +95,14 @@ class DeliverEventHandlerTest extends WebTestCase
 
     public function testInvokeFailure(): void
     {
-        $resultsClientResponse = new Response(400);
-        $this->mockHandler->append($resultsClientResponse);
+        $resultsClientHttpResponse = new Response(400);
+        $this->mockHandler->append($resultsClientHttpResponse);
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
         self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
+
+        $resultsClientResponse = new ServiceClientResponse($resultsClientHttpResponse);
 
         $expectedException = new EventDeliveryException(
             $this->workerEvent,

@@ -29,7 +29,7 @@ class DeliverEventMessageRetryStrategy implements RetryStrategyInterface
             $eventDeliveryPreviousException = $throwable->previous;
 
             if ($eventDeliveryPreviousException instanceof NonSuccessResponseException) {
-                $response = $eventDeliveryPreviousException->getResponse();
+                $response = $eventDeliveryPreviousException->getResponse()->getHttpResponse();
 
                 $retryAfterHeaderLines = $response->getHeader('retry-after');
                 $lastRetryAfterValue = array_pop($retryAfterHeaderLines);

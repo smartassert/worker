@@ -20,7 +20,7 @@ class EventDeliveryException extends \Exception
     public function getHttpResponse(): ?ResponseInterface
     {
         return $this->previous instanceof NonSuccessResponseException
-            ? $this->previous->response
+            ? $this->previous->getResponse()->getHttpResponse()
             : null;
     }
 }
