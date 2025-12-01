@@ -22,7 +22,7 @@ use SmartAssert\WorkerJobSource\JobSourceDeserializer;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
 use SmartAssert\YamlFile\Exception\ProvisionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class JobController
 {
