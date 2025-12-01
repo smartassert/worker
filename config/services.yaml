@@ -140,7 +140,6 @@ services:
 
     SmartAssert\ServiceClient\Client: ~
 
-    SmartAssert\ResultsClient\JobEventFactory: ~
     SmartAssert\ResultsClient\EventFactory: ~
     SmartAssert\ResultsClient\ResourceReferenceFactory: ~
 

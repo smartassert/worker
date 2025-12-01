@@ -10,7 +10,7 @@ use App\Services\CompilationProgress;
 use App\Services\EventDeliveryProgress;
 use App\Services\ExecutionProgress;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ApplicationStateController
 {

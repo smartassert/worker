@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Repository\WorkerEventRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class EventController
 {
