@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use SmartAssert\WorkerJobSource\Exception\InvalidManifestException;
 use SmartAssert\WorkerJobSource\Factory\JobSourceFactory;
 use SmartAssert\WorkerJobSource\JobSourceSerializer;
+use SmartAssert\YamlFile\Exception\Collection\SerializeException;
 
-class CreateJobSourceFactory
+readonly class CreateJobSourceFactory
 {
     public function __construct(
-        private readonly YamlProviderFactory $yamlProviderFactory,
-        private readonly JobSourceFactory $fooJobSourceFactory,
-        private readonly JobSourceSerializer $jobSourceSerializer,
+        private YamlProviderFactory $yamlProviderFactory,
+        private JobSourceFactory $fooJobSourceFactory,
+        private JobSourceSerializer $jobSourceSerializer,
     ) {}
 
     /**
      * @param non-empty-string[] $manifestPaths
      * @param string[]           $sourcePaths
+     *
+     * @throws InvalidManifestException
+     * @throws SerializeException
      */
     public function create(array $manifestPaths, array $sourcePaths): string
     {
-        $sourceProvider = $this->yamlProviderFactory->create($sourcePaths);
-        $jobSource = $this->fooJobSourceFactory->createFromManifestPathsAndSources($manifestPaths, $sourceProvider);
+        $sourceProvider = $this->yamlProviderFactory->create($manifestPaths, $sourcePaths);
+        $jobSource = $this->fooJobSourceFactory->createFromYamlFileCollection($sourceProvider);
 
         return $this->jobSourceSerializer->serialize($jobSource);
     }
