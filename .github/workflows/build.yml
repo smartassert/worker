@@ -45,6 +45,7 @@ jobs:
         env:
           OUTPUTS: ${{ toJson(needs.setup.outputs) }}
         run: |
+          echo "foo ${{ env.service_version }} bar"
           echo "$OUTPUTS"
           ./vendor/smartassert/bash-ga-ci-tools/src/json-contains-no-empty-values.sh
 
