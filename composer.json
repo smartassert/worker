@@ -23,7 +23,7 @@
         "symfony/messenger": "8.0.*",
         "symfony/yaml": "8.0.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
-        "webignition/tcp-cli-proxy-client": "^0.13.0",
+        "webignition/tcp-cli-proxy-client": "^1.0",
         "webignition/yaml-document": "^2.2",
         "webignition/yaml-document-generator": "^2.1"
     },
