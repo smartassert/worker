@@ -865,12 +865,12 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         resolve_target_entities?: array<string, scalar|null>,
  *     },
  * }
- * @psalm-type TestAuthenticationProviderConfig = array<mixed>
  * @psalm-type MakerConfig = array{
  *     root_namespace?: scalar|null, // Default: "App"
  *     generate_final_classes?: bool, // Default: true
  *     generate_final_entities?: bool, // Default: false
  * }
+ * @psalm-type TestAuthenticationProviderConfig = array<mixed>
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
