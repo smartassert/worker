@@ -197,7 +197,25 @@ class ApplicationProgressTest extends WebTestCase
                             ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
-                'expectedState' => ApplicationState::COMPLETE,
+                'expectedState' => ApplicationState::FAILED,
+            ],
+            'execution failed' => [
+                'setup' => (new EnvironmentSetup())
+                    ->withJobSetup(new JobSetup())
+                    ->withSourceSetups([
+                        (new SourceSetup())->withPath('Test/test1.yml'),
+                    ])
+                    ->withTestSetups([
+                        (new TestSetup())
+                            ->withSource('Test/test1.yml')
+                            ->withState(TestState::FAILED),
+                    ])
+                    ->withWorkerEventSetups([
+                        (new WorkerEventSetup())
+                            ->withScope(WorkerEventScope::EXECUTION)
+                            ->withOutcome(WorkerEventOutcome::FAILED),
+                    ]),
+                'expectedState' => ApplicationState::FAILED,
             ],
         ];
     }
