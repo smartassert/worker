@@ -16,6 +16,16 @@ enum ExecutionState: string implements StateInterface
         return in_array($state, [self::COMPLETE, self::CANCELLED]);
     }
 
+    public static function isSuccessState(StateInterface $state): bool
+    {
+        return self::COMPLETE === $state;
+    }
+
+    public static function isFailedState(StateInterface $state): bool
+    {
+        return self::isEndState($state) && false === self::isSuccessState($state);
+    }
+
     public function getValue(): string
     {
         return $this->value;

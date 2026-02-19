@@ -8,6 +8,7 @@ use App\Enum\ApplicationState;
 use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
+use App\Enum\StateInterface;
 use App\Enum\TestState;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
@@ -90,6 +91,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         array $manifestPaths,
         array $sourcePaths,
         string $jobLabel,
+        StateInterface $expectedApplicationState,
         array $expectedCompilationEndState,
         array $expectedExecutionEndState,
         array $expectedTestDataCollection,
@@ -149,6 +151,10 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
             [
                 'state' => EventDeliveryState::COMPLETE->value,
                 'is_end_state' => true,
+                'meta_state' => [
+                    'ended' => true,
+                    'succeeded' => true,
+                ],
             ],
             $applicationStateData['event_delivery']
         );
@@ -171,7 +177,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
         }
 
-        self::assertSame(ApplicationState::COMPLETE, $this->applicationProgress->get());
+        self::assertSame($expectedApplicationState, $this->applicationProgress->get());
 
         $resultsClient = self::getContainer()->get(ResultsClient::class);
         \assert($resultsClient instanceof ResultsClient);
@@ -204,13 +210,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
+                'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
                     'is_end_state' => false,
+                    'meta_state' => [
+                        'ended' => false,
+                        'succeeded' => false,
+                    ],
                 ],
                 'expectedTestDataCollection' => [],
                 'expectedEventsCreator' => function (
@@ -303,13 +318,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
+                'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
                     'is_end_state' => false,
+                    'meta_state' => [
+                        'ended' => false,
+                        'succeeded' => false,
+                    ],
                 ],
                 'expectedTestDataCollection' => [
                     [
@@ -449,13 +473,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-form.yml',
                 ],
                 'jobLabel' => $jobLabel,
+                'expectedApplicationState' => ApplicationState::COMPLETE,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::COMPLETE->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'expectedTestDataCollection' => [
                     [
@@ -1043,13 +1076,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'Test/chrome-open-index-with-step-failure.yml',
                 ],
                 'jobLabel' => $jobLabel,
+                'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::CANCELLED->value,
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
                 ],
                 'expectedTestDataCollection' => [
                     [

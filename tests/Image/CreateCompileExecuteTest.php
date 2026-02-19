@@ -129,18 +129,34 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 'application' => [
                     'state' => 'complete',
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'compilation' => [
                     'state' => 'complete',
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'execution' => [
                     'state' => 'complete',
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
                 'event_delivery' => [
                     'state' => 'complete',
                     'is_end_state' => true,
+                    'meta_state' => [
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
                 ],
             ],
             $this->fetchApplicationState()
@@ -193,8 +209,11 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         $state = $data[$key] ?? [];
         $state = is_array($state) ? $state : [];
 
-        $isEndState = $state['is_end_state'] ?? false;
+        $metaState = $state['meta_state'] ?? [];
+        $metaState = is_array($metaState) ? $metaState : [];
 
-        return is_bool($isEndState) ? $isEndState : false;
+        $metaStateEnded = $metaState['ended'] ?? false;
+
+        return is_bool($metaStateEnded) && $metaStateEnded;
     }
 }

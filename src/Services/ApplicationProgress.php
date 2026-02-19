@@ -43,11 +43,16 @@ class ApplicationProgress
             return ApplicationState::COMPILING;
         }
 
-        if (CompilationState::FAILED === $compilationState) {
-            return ApplicationState::COMPLETE;
+        $executionState = $this->executionProgress->get();
+
+        if (
+            $compilationState::isFailedState($compilationState)
+            || $executionState::isFailedState($executionState)
+        ) {
+            return ApplicationState::FAILED;
         }
 
-        if (!ExecutionState::isEndState($this->executionProgress->get())) {
+        if (!ExecutionState::isEndState($executionState)) {
             return ApplicationState::EXECUTING;
         }
 
