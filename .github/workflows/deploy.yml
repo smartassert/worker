@@ -24,13 +24,6 @@ jobs:
         with:
           ref: ${{ github.event.inputs.version }}
 
-      - name: Checkout bash-read-env-file
-        uses: actions/checkout@v6
-        with:
-          repository: smartassert/bash-read-env-file
-          path: ./vendor/smartassert/bash-read-env-file
-          ref: github-11
-
       - name: Read image versions
         env:
           ENV_FILE_PATH: ./image-versions.env
@@ -56,23 +49,23 @@ jobs:
           echo "$OUTPUTS"
           ./vendor/smartassert/bash-ga-ci-tools/src/json-contains-no-empty-values.sh
 
-#  dispatch-worker-release-event:
-#    name: Dispatch worker release event
-#    runs-on: ubuntu-latest
-#    needs: [setup, verify-setup]
-#
-#    steps:
-#      - name: Dispatch
-#        uses: peter-evans/repository-dispatch@v4
-#        with:
-#          token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
-#          repository: smartassert/worker-deploy
-#          event-type: worker-release
-#          client-payload: |
-#            {
-#              "worker_version": "${{ needs.setup.outputs.worker-version }}",
-#              "compiler_version": "${{ needs.setup.outputs.compiler-version }}",
-#              "chrome_runner_version": "${{ needs.setup.outputs.chrome-runner-version }}",
-#              "firefox_runner_version": "${{ needs.setup.outputs.firefox-runner-version }}",
-#              "delegator_version": "${{ needs.setup.outputs.delegator-version }}"
-#            }
+  dispatch-worker-release-event:
+    name: Dispatch worker release event
+    runs-on: ubuntu-latest
+    needs: [setup, verify-setup]
+
+    steps:
+      - name: Dispatch
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.WORKER_DEPLOY_TOKEN }}
+          repository: smartassert/worker-deploy
+          event-type: worker-release
+          client-payload: |
+            {
+              "worker_version": "${{ needs.setup.outputs.worker-version }}",
+              "compiler_version": "${{ needs.setup.outputs.compiler-version }}",
+              "chrome_runner_version": "${{ needs.setup.outputs.chrome-runner-version }}",
+              "firefox_runner_version": "${{ needs.setup.outputs.firefox-runner-version }}",
+              "delegator_version": "${{ needs.setup.outputs.delegator-version }}"
+            }
