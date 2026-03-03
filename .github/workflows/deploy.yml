@@ -29,12 +29,14 @@ jobs:
         with:
           repository: smartassert/bash-read-env-file
           path: ./vendor/smartassert/bash-read-env-file
-          ref: 1536d0646839fb4689740e7e171869b184d7f11e
+          ref: github-11
 
       - name: Read image versions
         env:
           ENV_FILE_PATH: ./image-versions.env
-        run: ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
+        run: |
+          cat 
+          ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
 
   verify-setup:
     name: Verify setup
