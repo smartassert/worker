@@ -35,7 +35,7 @@ jobs:
         env:
           ENV_FILE_PATH: ./image-versions.env
         run: |
-          ./vendor/smartassert/bash-read-env-file/src/read-env-file.sh
+          ./vendor/smartassert/bash-read-env-file/src/read-env-file.sh >> "$GITHUB_ENV"
 
   verify-setup:
     name: Verify setup
