@@ -29,7 +29,7 @@ jobs:
         with:
           repository: smartassert/bash-read-env-file
           path: ./vendor/smartassert/bash-read-env-file
-          ref: github-11
+          ref: 1536d0646839fb4689740e7e171869b184d7f11e
 
       - name: Read image versions
         env:
