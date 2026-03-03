@@ -34,9 +34,7 @@ jobs:
       - name: Read image versions
         env:
           ENV_FILE_PATH: ./image-versions.env
-        run: |
-          cat 
-          ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
+        run: ./vendor/smartassert/bash-read-env-file/src/read-env-file-ga.sh
 
   verify-setup:
     name: Verify setup
