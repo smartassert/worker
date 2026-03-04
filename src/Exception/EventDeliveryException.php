@@ -14,7 +14,15 @@ class EventDeliveryException extends \Exception
         public readonly WorkerEvent $event,
         public readonly \Throwable $previous,
     ) {
-        parent::__construct('Failed to send event "' . $event->getId() . '"', 0, $previous);
+        parent::__construct(
+            sprintf(
+                'Failed to send event "%d": "%s"',
+                $event->getId(),
+                $previous->getMessage(),
+            ),
+            0,
+            $previous,
+        );
     }
 
     public function getHttpResponse(): ?ResponseInterface
