@@ -27,11 +27,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set env.service_version
-        env:
-          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
-        run: |
-          [[ -n "$RELEASE_TAG_NAME" ]] && echo "service_version=$RELEASE_TAG_NAME" >> "$GITHUB_ENV" || echo "service_version=master" >> "$GITHUB_ENV"
+      - name: Set env.service_version for workflow_dispatch
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        run: echo "service_version=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Set env.service_version for release
+        if: ${{ github.event_name == 'release' }}
+        run: echo "service_version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      - name: Set env.service_version for push to master or pull_request
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        run: echo "service_version=master" >> $GITHUB_ENV
 
   verify-setup:
     name: Verify setup
