@@ -176,7 +176,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
             self::assertSame($expectedTestData['position'], $testData['position']);
             self::assertIsString($testData['target']);
             self::assertMatchesRegularExpression('/^Generated.{32}Test\.php$/', $testData['target']);
-
         }
 
         self::assertSame($expectedApplicationState, $this->applicationProgress->get());
