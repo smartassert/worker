@@ -29,11 +29,25 @@ class ApplicationResponseDataAsserter
             $actualTest = $actual['tests'][$index];
             TestCase::assertIsArray($actualTest);
 
+            \assert(is_string($expectedTest['url']));
+            \assert(is_string($expectedTest['source']));
+            \assert(is_string($expectedTest['state']));
+            \assert(is_int($expectedTest['position']));
+
+            $expectedStepNames = $expectedTest['step_names'];
+            $expectedStepNames = is_array($expectedStepNames) ? $expectedStepNames : [];
+            $filteredExpectedStepNames = [];
+            foreach ($expectedStepNames as $expectedStepName) {
+                if (is_string($expectedStepName)) {
+                    $filteredExpectedStepNames[] = $expectedStepName;
+                }
+            }
+
             $this->assertTest(
                 $expectedTest['browser'],
                 $expectedTest['url'],
                 $expectedTest['source'],
-                $expectedTest['step_names'],
+                $filteredExpectedStepNames,
                 $expectedTest['state'],
                 $expectedTest['position'],
                 $actualTest
@@ -71,6 +85,7 @@ class ApplicationResponseDataAsserter
 
         TestCase::assertSame($expectedSource, $actual['source']);
         TestCase::assertArrayHasKey('target', $actual);
+        TestCase::assertIsString($actual['target']);
         TestCase::assertMatchesRegularExpression('/^Generated[0-9a-f]{32}Test\.php$/i', $actual['target']);
         TestCase::assertSame($expectedStepNames, $actual['step_names']);
         TestCase::assertSame($expectedState, $actual['state']);
