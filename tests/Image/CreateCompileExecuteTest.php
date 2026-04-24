@@ -36,12 +36,10 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 'source' => self::createSerializedSource(
                     [
                         'Test/chrome-open-index.yml',
-                        'Test/chrome-firefox-open-index.yml',
                         'Test/chrome-open-form.yml',
                     ],
                     [
                         'Test/chrome-open-index.yml',
-                        'Test/chrome-firefox-open-index.yml',
                         'Test/chrome-open-form.yml',
                         'Page/index.yml',
                     ]
@@ -75,7 +73,6 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 'maximum_duration_in_seconds' => 600,
                 'sources' => [
                     'Test/chrome-open-index.yml',
-                    'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                     'Page/index.yml',
                 ],
@@ -92,33 +89,13 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                     ],
                     [
                         'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_names' => [
-                            'verify page is open',
-                        ],
-                        'state' => 'complete',
-                        'position' => 2,
-                    ],
-                    [
-                        'browser' => 'firefox',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_names' => [
-                            'verify page is open',
-                        ],
-                        'state' => 'complete',
-                        'position' => 3,
-                    ],
-                    [
-                        'browser' => 'chrome',
                         'url' => 'http://html-fixtures/form.html',
                         'source' => 'Test/chrome-open-form.yml',
                         'step_names' => [
                             'verify page is open',
                         ],
                         'state' => 'complete',
-                        'position' => 4,
+                        'position' => 2,
                     ],
                 ],
             ],
