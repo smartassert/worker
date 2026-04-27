@@ -22,17 +22,22 @@ class MockCompiler
         return $this->mock;
     }
 
-    public function withCompileCall(string $source, int $timeoutInSeconds, OutputInterface $output): self
+    public function withCompileCall(string $source, int $timeoutInSeconds, \Exception|OutputInterface $outcome): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
         }
 
-        $this->mock
+        $expectation = $this->mock
             ->shouldReceive('compile')
             ->with($source, $timeoutInSeconds)
-            ->andReturn($output)
         ;
+
+        if ($outcome instanceof \Exception) {
+            $expectation->andThrow($outcome);
+        } else {
+            $expectation->andReturn($outcome);
+        }
 
         return $this;
     }

@@ -22,6 +22,7 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Model\Document\Exception;
@@ -290,6 +291,18 @@ class WorkerEventFactoryTest extends WebTestCase
                         'output' => [
                             'compile-failure-key' => 'value',
                         ],
+                    ]
+                ),
+            ],
+            SourceCompilationTimedOutEvent::class => [
+                'event' => new SourceCompilationTimedOutEvent($testSource, 600),
+                'expected' => new WorkerEvent(
+                    WorkerEventScope::SOURCE_COMPILATION,
+                    WorkerEventOutcome::TIME_OUT,
+                    new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
+                    [
+                        'source' => $testSource,
+                        'timeout' => 600,
                     ]
                 ),
             ],
