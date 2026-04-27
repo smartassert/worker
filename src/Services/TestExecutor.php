@@ -10,6 +10,7 @@ use App\Exception\Document\InvalidStepException;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 use webignition\TcpCliProxyClient\Handler;
 use webignition\YamlDocument\Document as YamlDocument;
 use webignition\YamlDocument\Factory;
@@ -26,8 +27,8 @@ class TestExecutor
     /**
      * @throws ClientCreationException
      * @throws SocketErrorException
-     * @throws InvalidDocumentException
-     * @throws InvalidStepException
+     * @throws \ErrorException
+     * @throws SocketTimedOutException
      */
     public function execute(Test $test): void
     {

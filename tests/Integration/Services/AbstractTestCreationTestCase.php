@@ -6,6 +6,7 @@ namespace App\Tests\Integration\Services;
 
 use App\Tests\Integration\AbstractBaseIntegrationTestCase;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Handler;
 
 abstract class AbstractTestCreationTestCase extends AbstractBaseIntegrationTestCase
 {
@@ -27,7 +28,7 @@ abstract class AbstractTestCreationTestCase extends AbstractBaseIntegrationTestC
         self::assertInstanceOf(Client::class, $compilerClient);
 
         $request = 'rm ' . $this->compilerTargetDirectory . '/*.php';
-        $compilerClient->request($request);
+        $compilerClient->request($request, new Handler());
 
         parent::tearDown();
     }
