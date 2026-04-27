@@ -62,7 +62,7 @@ class ExecuteTestHandlerTest extends TestCase
                 'executionProgress' => (new MockExecutionProgress())
                     ->withGetCall(ExecutionState::COMPLETE)
                     ->getMock(),
-                'message' => new ExecuteTestMessage(1),
+                'message' => new ExecuteTestMessage(1, 600),
                 'testRepository' => (new MockTestRepository())
                     ->withoutFindCall()
                     ->getMock(),
@@ -71,7 +71,7 @@ class ExecuteTestHandlerTest extends TestCase
                 'executionProgress' => (new MockExecutionProgress())
                     ->withGetCall(ExecutionState::RUNNING)
                     ->getMock(),
-                'message' => new ExecuteTestMessage(1),
+                'message' => new ExecuteTestMessage(1, 600),
                 'testRepository' => (new MockTestRepository())
                     ->withFindCall(1, null)
                     ->getMock(),
@@ -80,7 +80,7 @@ class ExecuteTestHandlerTest extends TestCase
                 'executionProgress' => (new MockExecutionProgress())
                     ->withGetCall(ExecutionState::RUNNING)
                     ->getMock(),
-                'message' => new ExecuteTestMessage(1),
+                'message' => new ExecuteTestMessage(1, 600),
                 'testRepository' => (new MockTestRepository())
                     ->withFindCall(1, $testInWrongState)
                     ->getMock(),

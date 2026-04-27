@@ -92,7 +92,7 @@ class ExecuteTestHandlerTest extends WebTestCase
         $testId = ObjectReflector::getProperty($test, 'id');
         self::assertIsInt($testId);
 
-        $executeTestMessage = new ExecuteTestMessage($testId);
+        $executeTestMessage = new ExecuteTestMessage($testId, 600);
         ($this->handler)($executeTestMessage);
 
         self::assertSame(2, $this->eventRecorder->count());

@@ -155,3 +155,7 @@ services:
     App\MessageFactory\CompileSourceMessageFactory:
         arguments:
             $defaultCompileTimeoutInSeconds: '%compiler_default_timeout_in_seconds%'
+
+    App\MessageFactory\ExecuteTestMessageFactory:
+        arguments:
+            $defaultCompileTimeoutInSeconds: '%compiler_default_timeout_in_seconds%'
