@@ -22,7 +22,7 @@ class MockCompiler
         return $this->mock;
     }
 
-    public function withCompileCall(string $source, OutputInterface $output): self
+    public function withCompileCall(string $source, int $timeoutInSeconds, OutputInterface $output): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
@@ -30,7 +30,7 @@ class MockCompiler
 
         $this->mock
             ->shouldReceive('compile')
-            ->with($source)
+            ->with($source, $timeoutInSeconds)
             ->andReturn($output)
         ;
 

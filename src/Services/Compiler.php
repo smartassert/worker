@@ -37,7 +37,7 @@ class Compiler
      * @throws \ErrorException
      * @throws SocketTimedOutException
      */
-    public function compile(string $source): ErrorOutputInterface|TestManifestCollection
+    public function compile(string $source, int $timeoutInSeconds): ErrorOutputInterface|TestManifestCollection
     {
         $output = '';
         $exitCode = null;
@@ -50,7 +50,8 @@ class Compiler
                 $this->compilerSourceDirectory . '/' . $source,
                 $this->compilerTargetDirectory
             ),
-            $handler
+            $handler,
+            $timeoutInSeconds,
         );
 
         $outputData = $this->yamlParser->parse($output);

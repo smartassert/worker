@@ -117,6 +117,7 @@ class CompileSourceHandlerTest extends WebTestCase
         $compiler = (new MockCompiler())
             ->withCompileCall(
                 $compileSourceMessage->path,
+                600,
                 $testManifestCollection
             )
             ->getMock()
@@ -168,7 +169,8 @@ class CompileSourceHandlerTest extends WebTestCase
         $compiler = (new MockCompiler())
             ->withCompileCall(
                 $compileSourceMessage->path,
-                $errorOutput
+                600,
+                $errorOutput,
             )
             ->getMock()
         ;

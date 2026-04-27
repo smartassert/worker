@@ -44,7 +44,7 @@ class CompileSourceHandler
         $sourcePath = $message->path;
         $this->eventDispatcher->dispatch(new SourceCompilationStartedEvent($sourcePath));
 
-        $output = $this->compiler->compile($sourcePath);
+        $output = $this->compiler->compile($sourcePath, $message->timeoutInSeconds);
 
         $event = $output instanceof ErrorOutputInterface
             ? $this->sourceCompilationFailedEventFactory->create($sourcePath, $output)
