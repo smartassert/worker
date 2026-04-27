@@ -9,5 +9,8 @@ readonly class CompileSourceMessage
     /**
      * @param non-empty-string $path
      */
-    public function __construct(public string $path) {}
+    public function __construct(
+        public string $path,
+        public int $timeoutInSeconds,
+    ) {}
 }

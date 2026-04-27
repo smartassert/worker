@@ -9,6 +9,7 @@ parameters:
     event_delivery_retry_limit: '%env(int:EVENT_DELIVERY_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(int:JOB_TIMEOUT_CHECK_PERIOD_MS)%'
     job_completed_check_period_ms: '%env(int:JOB_COMPLETED_CHECK_PERIOD_MS)%'
+    compiler_default_timeout_in_seconds: 600
 
 services:
     # default configuration for services in *this* file
@@ -150,3 +151,7 @@ services:
             $baseUrl: '%env(string:RESULTS_BASE_URL)%'
 
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
+
+    App\MessageFactory\CompileSourceMessageFactory:
+        arguments:
+            $defaultCompileTimeoutInSeconds: '%compiler_default_timeout_in_seconds%'

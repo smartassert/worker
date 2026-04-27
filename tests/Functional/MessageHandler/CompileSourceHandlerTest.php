@@ -63,7 +63,7 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeNoJob(): void
     {
         $handler = $this->handler;
-        $handler(new CompileSourceMessage('test.yml'));
+        $handler(new CompileSourceMessage('test.yml', 600));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
@@ -76,7 +76,7 @@ class CompileSourceHandlerTest extends WebTestCase
         );
 
         $handler = $this->handler;
-        $handler(new CompileSourceMessage('test.yml'));
+        $handler(new CompileSourceMessage('test.yml', 600));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
@@ -95,7 +95,7 @@ class CompileSourceHandlerTest extends WebTestCase
 
         $this->environmentFactory->create($environmentSetup);
 
-        $compileSourceMessage = new CompileSourceMessage($sourcePath);
+        $compileSourceMessage = new CompileSourceMessage($sourcePath, 600);
 
         $testManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
@@ -153,7 +153,7 @@ class CompileSourceHandlerTest extends WebTestCase
 
         $this->environmentFactory->create($environmentSetup);
 
-        $compileSourceMessage = new CompileSourceMessage($sourcePath);
+        $compileSourceMessage = new CompileSourceMessage($sourcePath, 600);
 
         $errorOutputData = [
             'key1' => 'value1',
