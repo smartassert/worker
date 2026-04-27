@@ -45,7 +45,7 @@ class ExecuteTestHandler
             return;
         }
 
-        $test = $this->testRepository->find($message->getTestId());
+        $test = $this->testRepository->find($message->testId);
         if (null === $test) {
             return;
         }

@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-class ExecuteTestMessage
+readonly class ExecuteTestMessage
 {
-    public const TYPE = 'execute-test';
-
-    public function __construct(private int $testId) {}
-
-    public function getTestId(): int
-    {
-        return $this->testId;
-    }
+    public function __construct(
+        public int $testId,
+    ) {}
 }
