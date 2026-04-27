@@ -31,8 +31,9 @@ class Compiler
 
     /**
      * @throws ClientCreationException
-     * @throws InvalidTestManifestException
      * @throws SocketErrorException
+     * @throws ParseException
+     * @throws InvalidTestManifestException
      * @throws \ErrorException
      * @throws SocketTimedOutException
      */

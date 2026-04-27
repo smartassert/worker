@@ -27,6 +27,8 @@ class TestExecutor
     /**
      * @throws ClientCreationException
      * @throws SocketErrorException
+     * @throws InvalidDocumentException
+     * @throws InvalidStepException
      * @throws \ErrorException
      * @throws SocketTimedOutException
      */
