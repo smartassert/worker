@@ -14,6 +14,7 @@ use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\TcpCliProxyClient\Client;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 use webignition\TcpCliProxyClient\HandlerFactory;
 
 class Compiler
@@ -33,6 +34,8 @@ class Compiler
      * @throws SocketErrorException
      * @throws ParseException
      * @throws InvalidTestManifestException
+     * @throws \ErrorException
+     * @throws SocketTimedOutException
      */
     public function compile(string $source): ErrorOutputInterface|TestManifestCollection
     {
