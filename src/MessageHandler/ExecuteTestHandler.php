@@ -21,6 +21,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 
 #[AsMessageHandler]
 class ExecuteTestHandler
@@ -62,12 +63,22 @@ class ExecuteTestHandler
         );
 
         $this->testStateMutator->setRunning($test);
-        $this->testExecutor->execute($test, $message->timeoutInSeconds);
+
+        $eventOutcome = WorkerEventOutcome::FAILED;
+
+        try {
+            $this->testExecutor->execute($test, $message->timeoutInSeconds);
+        } catch (SocketTimedOutException) {
+            $this->testStateMutator->setCancelled($test);
+
+            $eventOutcome = WorkerEventOutcome::TIME_OUT;
+        }
+
         $this->testStateMutator->setCompleteIfRunning($test);
 
-        $eventOutcome = TestState::COMPLETE === $test->getState()
-            ? WorkerEventOutcome::PASSED
-            : WorkerEventOutcome::FAILED;
+        if (TestState::COMPLETE === $test->getState()) {
+            $eventOutcome = WorkerEventOutcome::PASSED;
+        }
 
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome));
     }

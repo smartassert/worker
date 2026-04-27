@@ -35,16 +35,20 @@ class MockTestExecutor
         return $this;
     }
 
-    public function withExecuteCall(Test $test, int $timeout): self
+    public function withExecuteCall(Test $test, int $timeout, ?\Exception $exception = null): self
     {
         if (false === $this->mock instanceof MockInterface) {
             return $this;
         }
 
-        $this->mock
+        $expectation = $this->mock
             ->shouldReceive('execute')
             ->with($test, $timeout)
         ;
+
+        if ($exception instanceof \Exception) {
+            $expectation->andThrow($exception);
+        }
 
         return $this;
     }
