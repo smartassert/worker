@@ -63,7 +63,7 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeNoJob(): void
     {
         $handler = $this->handler;
-        $handler(\Mockery::mock(CompileSourceMessage::class));
+        $handler(new CompileSourceMessage('test.yml'));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
@@ -76,7 +76,7 @@ class CompileSourceHandlerTest extends WebTestCase
         );
 
         $handler = $this->handler;
-        $handler(\Mockery::mock(CompileSourceMessage::class));
+        $handler(new CompileSourceMessage('test.yml'));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
