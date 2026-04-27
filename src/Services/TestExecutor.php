@@ -49,8 +49,9 @@ class TestExecutor
 
         $this->delegatorClient->request(
             sprintf(
-                './bin/delegator --browser %s %s',
+                './bin/delegator --browser %s --timeout_in_seconds %s %s',
                 $test->browser,
+                $timeoutInSeconds,
                 $this->compilerTargetDirectory . '/' . $test->getTarget()
             ),
             $delegatorClientHandler,
