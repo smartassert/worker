@@ -11,6 +11,7 @@ use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\Mock\MockErrorOutput;
@@ -26,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 
 class CompileSourceHandlerTest extends WebTestCase
 {
@@ -63,7 +65,7 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeNoJob(): void
     {
         $handler = $this->handler;
-        $handler(new CompileSourceMessage('test.yml'));
+        $handler(new CompileSourceMessage('test.yml', 600));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
@@ -76,7 +78,7 @@ class CompileSourceHandlerTest extends WebTestCase
         );
 
         $handler = $this->handler;
-        $handler(new CompileSourceMessage('test.yml'));
+        $handler(new CompileSourceMessage('test.yml', 600));
 
         self::assertSame(0, $this->eventRecorder->count());
     }
@@ -95,7 +97,7 @@ class CompileSourceHandlerTest extends WebTestCase
 
         $this->environmentFactory->create($environmentSetup);
 
-        $compileSourceMessage = new CompileSourceMessage($sourcePath);
+        $compileSourceMessage = new CompileSourceMessage($sourcePath, 600);
 
         $testManifestCollection = new TestManifestCollection([
             (new MockTestManifest())
@@ -117,6 +119,7 @@ class CompileSourceHandlerTest extends WebTestCase
         $compiler = (new MockCompiler())
             ->withCompileCall(
                 $compileSourceMessage->path,
+                600,
                 $testManifestCollection
             )
             ->getMock()
@@ -153,7 +156,7 @@ class CompileSourceHandlerTest extends WebTestCase
 
         $this->environmentFactory->create($environmentSetup);
 
-        $compileSourceMessage = new CompileSourceMessage($sourcePath);
+        $compileSourceMessage = new CompileSourceMessage($sourcePath, 600);
 
         $errorOutputData = [
             'key1' => 'value1',
@@ -168,7 +171,8 @@ class CompileSourceHandlerTest extends WebTestCase
         $compiler = (new MockCompiler())
             ->withCompileCall(
                 $compileSourceMessage->path,
-                $errorOutput
+                600,
+                $errorOutput,
             )
             ->getMock()
         ;
@@ -190,6 +194,54 @@ class CompileSourceHandlerTest extends WebTestCase
         self::assertInstanceOf(SourceCompilationFailedEvent::class, $foo);
         self::assertEquals(
             new SourceCompilationFailedEvent($sourcePath, $errorOutputData),
+            $this->eventRecorder->get(1)
+        );
+    }
+
+    public function testInvokeCompileTimedOut(): void
+    {
+        $sourcePath = 'Test/test1.yml';
+        $environmentSetup = (new EnvironmentSetup())
+            ->withJobSetup(
+                (new JobSetup())->withTestPaths([$sourcePath])
+            )
+            ->withSourceSetups([
+                (new SourceSetup())->withPath($sourcePath),
+            ])
+        ;
+
+        $this->environmentFactory->create($environmentSetup);
+
+        $timeout = rand(0, 100);
+        $compileSourceMessage = new CompileSourceMessage($sourcePath, $timeout);
+
+        $exception = new SocketTimedOutException(600);
+
+        $compiler = (new MockCompiler())
+            ->withCompileCall(
+                $compileSourceMessage->path,
+                $timeout,
+                $exception,
+            )
+            ->getMock()
+        ;
+
+        ObjectReflector::setProperty(
+            $this->handler,
+            CompileSourceHandler::class,
+            'compiler',
+            $compiler
+        );
+
+        ($this->handler)($compileSourceMessage);
+
+        self::assertSame(2, $this->eventRecorder->count());
+        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
+
+        $sourceCompilationTimedOutEvent = $this->eventRecorder->get(1);
+        self::assertInstanceOf(SourceCompilationTimedOutEvent::class, $sourceCompilationTimedOutEvent);
+        self::assertEquals(
+            new SourceCompilationTimedOutEvent($sourcePath, $timeout),
             $this->eventRecorder->get(1)
         );
     }

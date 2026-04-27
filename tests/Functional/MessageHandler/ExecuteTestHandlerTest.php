@@ -25,6 +25,7 @@ use App\Tests\Services\EventRecorder;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\ObjectReflector\ObjectReflector;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 
 class ExecuteTestHandlerTest extends WebTestCase
 {
@@ -82,8 +83,9 @@ class ExecuteTestHandlerTest extends WebTestCase
         self::assertSame(ExecutionState::AWAITING, $executionProgress->get());
         self::assertSame(TestState::AWAITING, $test->getState());
 
+        $timeout = 600;
         $testExecutor = (new MockTestExecutor())
-            ->withExecuteCall($test)
+            ->withExecuteCall($test, $timeout)
             ->getMock()
         ;
 
@@ -92,7 +94,7 @@ class ExecuteTestHandlerTest extends WebTestCase
         $testId = ObjectReflector::getProperty($test, 'id');
         self::assertIsInt($testId);
 
-        $executeTestMessage = new ExecuteTestMessage($testId);
+        $executeTestMessage = new ExecuteTestMessage($testId, $timeout);
         ($this->handler)($executeTestMessage);
 
         self::assertSame(2, $this->eventRecorder->count());
@@ -110,5 +112,57 @@ class ExecuteTestHandlerTest extends WebTestCase
 
         self::assertSame(ExecutionState::COMPLETE, $executionProgress->get());
         self::assertSame(TestState::COMPLETE, $test->getState());
+    }
+
+    public function testInvokeExecuteTimedOut(): void
+    {
+        $environmentSetup = (new EnvironmentSetup())
+            ->withJobSetup(new JobSetup())
+            ->withTestSetups([
+                new TestSetup(),
+            ])
+        ;
+
+        $environment = $this->environmentFactory->create($environmentSetup);
+
+        $tests = $environment->getTests();
+        $test = $tests[0];
+
+        $executionProgress = self::getContainer()->get(ExecutionProgress::class);
+        \assert($executionProgress instanceof ExecutionProgress);
+
+        self::assertSame(ExecutionState::AWAITING, $executionProgress->get());
+        self::assertSame(TestState::AWAITING, $test->getState());
+
+        $timeout = 600;
+        $exception = new SocketTimedOutException(600);
+        $testExecutor = (new MockTestExecutor())
+            ->withExecuteCall($test, $timeout, $exception)
+            ->getMock()
+        ;
+
+        ObjectReflector::setProperty($this->handler, ExecuteTestHandler::class, 'testExecutor', $testExecutor);
+
+        $testId = ObjectReflector::getProperty($test, 'id');
+        self::assertIsInt($testId);
+
+        $executeTestMessage = new ExecuteTestMessage($testId, $timeout);
+        ($this->handler)($executeTestMessage);
+
+        self::assertSame(2, $this->eventRecorder->count());
+
+        $firstTestEvent = $this->eventRecorder->get(0);
+        self::assertInstanceOf(TestEvent::class, $firstTestEvent);
+        self::assertSame(WorkerEventScope::TEST, $firstTestEvent->getScope());
+        self::assertSame(WorkerEventOutcome::STARTED, $firstTestEvent->getOutcome());
+
+        $secondTestEvent = $this->eventRecorder->get(1);
+        self::assertInstanceOf(TestEvent::class, $secondTestEvent);
+        self::assertSame(WorkerEventScope::TEST, $secondTestEvent->getScope());
+        self::assertSame(WorkerEventOutcome::TIME_OUT, $secondTestEvent->getOutcome());
+        self::assertSame($test, $secondTestEvent->getTest());
+
+        self::assertSame(ExecutionState::CANCELLED, $executionProgress->get());
+        self::assertSame(TestState::CANCELLED, $test->getState());
     }
 }

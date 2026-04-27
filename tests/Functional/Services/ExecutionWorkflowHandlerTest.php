@@ -153,7 +153,10 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
 
             $envelope = $transportQueue[0];
             self::assertInstanceOf(Envelope::class, $envelope);
-            self::assertEquals(new ExecuteTestMessage($expectedNextTestId), $envelope->getMessage());
+            self::assertEquals(
+                new ExecuteTestMessage($expectedNextTestId, 600),
+                $envelope->getMessage()
+            );
         }
     }
 
@@ -243,6 +246,9 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
 
         $envelope = $transportQueue[0];
         self::assertInstanceOf(Envelope::class, $envelope);
-        self::assertEquals(new ExecuteTestMessage($expectedNextTestId), $envelope->getMessage());
+        self::assertEquals(
+            new ExecuteTestMessage($expectedNextTestId, 600),
+            $envelope->getMessage()
+        );
     }
 }

@@ -51,7 +51,7 @@ class CompilerTest extends AbstractTestCreationTestCase
             $this->localSourceStoreHandler->copyFixture($source);
         }
 
-        $manifestCollection = $this->compiler->compile($test);
+        $manifestCollection = $this->compiler->compile($test, 600);
         self::assertInstanceOf(TestManifestCollection::class, $manifestCollection);
 
         $expectedManifestCollectionData = $this->replaceCompilerDirectories($expectedManifestCollectionData);
@@ -131,7 +131,7 @@ class CompilerTest extends AbstractTestCreationTestCase
         }
 
         /** @var ErrorOutput $errorOutput */
-        $errorOutput = $this->compiler->compile($test);
+        $errorOutput = $this->compiler->compile($test, 600);
 
         self::assertInstanceOf(ErrorOutput::class, $errorOutput);
 

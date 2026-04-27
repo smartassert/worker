@@ -9,6 +9,7 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\CompileSourceMessage;
@@ -40,6 +41,9 @@ class EventRecorder implements EventSubscriberInterface
                 ['addEvent', 1000],
             ],
             SourceCompilationFailedEvent::class => [
+                ['addEvent', 1000],
+            ],
+            SourceCompilationTimedOutEvent::class => [
                 ['addEvent', 1000],
             ],
             TestEvent::class => [

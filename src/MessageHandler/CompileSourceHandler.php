@@ -7,6 +7,7 @@ namespace App\MessageHandler;
 use App\Enum\CompilationState;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationProgress;
 use App\Services\Compiler;
@@ -18,6 +19,7 @@ use webignition\BasilCompilerModels\Exception\InvalidTestManifestException;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\TcpCliProxyClient\Exception\SocketTimedOutException;
 
 #[AsMessageHandler]
 class CompileSourceHandler
@@ -34,6 +36,7 @@ class CompileSourceHandler
      * @throws SocketErrorException
      * @throws ParseException
      * @throws InvalidTestManifestException
+     * @throws \ErrorException
      */
     public function __invoke(CompileSourceMessage $message): void
     {
@@ -44,11 +47,15 @@ class CompileSourceHandler
         $sourcePath = $message->path;
         $this->eventDispatcher->dispatch(new SourceCompilationStartedEvent($sourcePath));
 
-        $output = $this->compiler->compile($sourcePath);
+        try {
+            $output = $this->compiler->compile($sourcePath, $message->timeoutInSeconds);
 
-        $event = $output instanceof ErrorOutputInterface
-            ? $this->sourceCompilationFailedEventFactory->create($sourcePath, $output)
-            : new SourceCompilationPassedEvent($sourcePath, $output);
+            $event = $output instanceof ErrorOutputInterface
+                ? $this->sourceCompilationFailedEventFactory->create($sourcePath, $output)
+                : new SourceCompilationPassedEvent($sourcePath, $output);
+        } catch (SocketTimedOutException) {
+            $event = new SourceCompilationTimedOutEvent($sourcePath, $message->timeoutInSeconds);
+        }
 
         $this->eventDispatcher->dispatch($event);
     }

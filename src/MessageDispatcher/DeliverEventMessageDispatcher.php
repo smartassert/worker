@@ -14,6 +14,7 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
+use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
@@ -53,6 +54,9 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
                 ['dispatchForEvent', 500],
             ],
             SourceCompilationFailedEvent::class => [
+                ['dispatchForEvent', 200],
+            ],
+            SourceCompilationTimedOutEvent::class => [
                 ['dispatchForEvent', 200],
             ],
             ExecutionEvent::class => [

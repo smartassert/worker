@@ -111,7 +111,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
                         (new SourceSetup())->withPath('Test/test1.yml'),
                         (new SourceSetup())->withPath('Test/test2.yml'),
                     ]),
-                'expectedQueuedMessage' => new CompileSourceMessage('Test/test1.yml'),
+                'expectedQueuedMessage' => new CompileSourceMessage('Test/test1.yml', 600),
             ],
             'all but one sources compiled' => [
                 'setup' => (new EnvironmentSetup())
@@ -123,7 +123,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
                     ->withTestSetups([
                         (new TestSetup())->withSource('Test/test1.yml'),
                     ]),
-                'expectedQueuedMessage' => new CompileSourceMessage('Test/test2.yml'),
+                'expectedQueuedMessage' => new CompileSourceMessage('Test/test2.yml', 600),
             ],
         ];
     }

@@ -12,7 +12,7 @@ use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Exception\JobNotFoundException;
-use App\Message\ExecuteTestMessage;
+use App\MessageFactory\ExecuteTestMessageFactory;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
@@ -30,6 +30,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         private WorkerEventRepository $workerEventRepository,
         private EventDispatcherInterface $eventDispatcher,
         private readonly JobRepository $jobRepository,
+        private readonly ExecuteTestMessageFactory $executeTestMessageFactory,
     ) {}
 
     /**
@@ -81,7 +82,9 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         $testId = $this->testRepository->findNextAwaitingId();
 
         if (is_int($testId)) {
-            $this->messageBus->dispatch(new ExecuteTestMessage($testId));
+            $message = $this->executeTestMessageFactory->create($testId);
+
+            $this->messageBus->dispatch($message);
         }
     }
 

@@ -8,7 +8,7 @@ use App\Enum\CompilationState;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\JobCompiledEvent;
-use App\Message\CompileSourceMessage;
+use App\MessageFactory\CompileSourceMessageFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -21,6 +21,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
         private EventDispatcherInterface $eventDispatcher,
         private MessageBusInterface $messageBus,
         private SourcePathFinder $sourcePathFinder,
+        private CompileSourceMessageFactory $compileSourceMessageFactory,
     ) {}
 
     /**
@@ -48,7 +49,9 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();
 
             if (is_string($sourcePath)) {
-                $this->messageBus->dispatch(new CompileSourceMessage($sourcePath));
+                $message = $this->compileSourceMessageFactory->create($sourcePath);
+
+                $this->messageBus->dispatch($message);
             }
         }
     }

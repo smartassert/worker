@@ -8,5 +8,6 @@ readonly class ExecuteTestMessage
 {
     public function __construct(
         public int $testId,
+        public int $timeoutInSeconds,
     ) {}
 }
