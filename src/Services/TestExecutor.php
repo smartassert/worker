@@ -32,7 +32,7 @@ class TestExecutor
      * @throws \ErrorException
      * @throws SocketTimedOutException
      */
-    public function execute(Test $test): void
+    public function execute(Test $test, int $timeoutInSeconds): void
     {
         $delegatorClientHandler = new Handler();
         $delegatorClientHandler
@@ -53,7 +53,8 @@ class TestExecutor
                 $test->browser,
                 $this->compilerTargetDirectory . '/' . $test->getTarget()
             ),
-            $delegatorClientHandler
+            $delegatorClientHandler,
+            $timeoutInSeconds,
         );
 
         $this->yamlDocumentFactory->stop();

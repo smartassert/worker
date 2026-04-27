@@ -82,8 +82,9 @@ class ExecuteTestHandlerTest extends WebTestCase
         self::assertSame(ExecutionState::AWAITING, $executionProgress->get());
         self::assertSame(TestState::AWAITING, $test->getState());
 
+        $timeout = 600;
         $testExecutor = (new MockTestExecutor())
-            ->withExecuteCall($test)
+            ->withExecuteCall($test, $timeout)
             ->getMock()
         ;
 
@@ -92,7 +93,7 @@ class ExecuteTestHandlerTest extends WebTestCase
         $testId = ObjectReflector::getProperty($test, 'id');
         self::assertIsInt($testId);
 
-        $executeTestMessage = new ExecuteTestMessage($testId, 600);
+        $executeTestMessage = new ExecuteTestMessage($testId, $timeout);
         ($this->handler)($executeTestMessage);
 
         self::assertSame(2, $this->eventRecorder->count());

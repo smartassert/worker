@@ -62,7 +62,7 @@ class ExecuteTestHandler
         );
 
         $this->testStateMutator->setRunning($test);
-        $this->testExecutor->execute($test);
+        $this->testExecutor->execute($test, $message->timeoutInSeconds);
         $this->testStateMutator->setCompleteIfRunning($test);
 
         $eventOutcome = TestState::COMPLETE === $test->getState()
