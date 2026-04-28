@@ -108,7 +108,7 @@ class DeliverEventHandlerTest extends WebTestCase
         $expectedException = new EventDeliveryException(
             $this->workerEvent,
             new InvalidAddEventUrlException(
-                'results-token',
+                'https://results.example.com',
                 new NonSuccessResponseException($resultsClientResponse)
             ),
         );
