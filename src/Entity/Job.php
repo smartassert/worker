@@ -19,8 +19,9 @@ class Job
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
     public ?JobEndState $endState;
-    #[ORM\Column(type: 'string', length: 32, nullable: false)]
-    private readonly string $resultsToken;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private readonly string $eventAddUrl;
 
     /**
      * @var string[]
@@ -34,17 +35,17 @@ class Job
 
     /**
      * @param non-empty-string             $label
-     * @param non-empty-string             $resultsToken
+     * @param non-empty-string             $eventAddUrl
      * @param array<int, non-empty-string> $testPaths
      */
     public function __construct(
         string $label,
-        string $resultsToken,
+        string $eventAddUrl,
         int $maximumDurationInSeconds,
         array $testPaths
     ) {
         $this->label = $label;
-        $this->resultsToken = $resultsToken;
+        $this->eventAddUrl = $eventAddUrl;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
@@ -69,11 +70,11 @@ class Job
     /**
      * @return non-empty-string
      */
-    public function getResultsToken(): string
+    public function getEventAddUrl(): string
     {
-        \assert('' !== $this->resultsToken);
+        \assert('' !== $this->eventAddUrl);
 
-        return $this->resultsToken;
+        return $this->eventAddUrl;
     }
 
     /**

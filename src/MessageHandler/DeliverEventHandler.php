@@ -34,7 +34,7 @@ class DeliverEventHandler
             $this->workerEventStateMutator->setSending($workerEvent);
 
             try {
-                $this->resultsClient->add($this->jobRepository->get()->getResultsToken(), $workerEvent);
+                $this->resultsClient->add($this->jobRepository->get()->getEventAddUrl(), $workerEvent);
             } catch (\Throwable $e) {
                 throw new EventDeliveryException($workerEvent, $e);
             }
