@@ -18,3 +18,9 @@ services:
         factory: [ 'GuzzleHttp\HandlerStack', 'create' ]
         arguments:
             $handler: '@app.tests.services.guzzle.handler.curl'
+
+    SmartAssert\ResultsClient\ClientInterface:
+        class: SmartAssert\ResultsClient\Client
+        public: true
+        arguments:
+            $baseUrl: 'http://localhost:9081'
