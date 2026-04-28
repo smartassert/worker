@@ -6,7 +6,7 @@ namespace App\Exception;
 
 use App\Entity\WorkerEvent;
 use Psr\Http\Message\ResponseInterface;
-use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 
 class EventDeliveryException extends \Exception
 {
@@ -27,8 +27,8 @@ class EventDeliveryException extends \Exception
 
     public function getHttpResponse(): ?ResponseInterface
     {
-        return $this->previous instanceof NonSuccessResponseException
-            ? $this->previous->getResponse()->getHttpResponse()
+        return $this->previous instanceof InvalidAddEventUrlException
+            ? $this->previous->nonSuccessResponseException->getResponse()->getHttpResponse()
             : null;
     }
 }
