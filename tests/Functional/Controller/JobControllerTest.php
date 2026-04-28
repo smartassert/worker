@@ -158,7 +158,7 @@ class JobControllerTest extends WebTestCase
                     CreateJobRequest::KEY_EVENT_ADD_URL => null,
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'results_token/missing',
+                    'error_state' => 'event_add_url/missing',
                 ],
             ],
             'missing values: event add url empty' => [
@@ -166,7 +166,7 @@ class JobControllerTest extends WebTestCase
                     CreateJobRequest::KEY_EVENT_ADD_URL => '',
                 ]),
                 'expectedResponseData' => [
-                    'error_state' => 'results_token/missing',
+                    'error_state' => 'event_add_url/missing',
                 ],
             ],
             'missing values: maximum_duration_in_seconds missing' => [

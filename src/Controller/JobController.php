@@ -55,7 +55,7 @@ class JobController
         }
 
         if ('' === $request->eventAddUrl) {
-            return new ErrorResponse('results_token/missing');
+            return new ErrorResponse('event_add_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
