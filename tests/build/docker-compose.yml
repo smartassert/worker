@@ -30,6 +30,7 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/results?serverVersion=12&charset=utf8
       AUTHENTICATION_BASE_URL: http://users-http
       IS_READY: 1
+      SELF_URL: http://localhost:9081
     depends_on:
       - postgres
       - users-http
