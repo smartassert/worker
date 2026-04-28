@@ -19,6 +19,7 @@ use App\Tests\Services\EnvironmentFactory;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Response\Response as ServiceClientResponse;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -106,7 +107,10 @@ class DeliverEventHandlerTest extends WebTestCase
 
         $expectedException = new EventDeliveryException(
             $this->workerEvent,
-            new NonSuccessResponseException($resultsClientResponse)
+            new InvalidAddEventUrlException(
+                'results-token',
+                new NonSuccessResponseException($resultsClientResponse)
+            ),
         );
 
         try {

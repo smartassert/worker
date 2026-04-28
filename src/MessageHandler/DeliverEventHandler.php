@@ -10,7 +10,7 @@ use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
-use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
+use SmartAssert\ResultsClient\AddEventClientInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -20,7 +20,7 @@ class DeliverEventHandler
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventRepository $workerEventRepository,
         private readonly WorkerEventStateMutator $workerEventStateMutator,
-        private readonly ResultsClient $resultsClient,
+        private readonly AddEventClientInterface $resultsClient,
     ) {}
 
     /**
@@ -34,7 +34,7 @@ class DeliverEventHandler
             $this->workerEventStateMutator->setSending($workerEvent);
 
             try {
-                $this->resultsClient->addEvent($this->jobRepository->get()->getResultsToken(), $workerEvent);
+                $this->resultsClient->add($this->jobRepository->get()->getResultsToken(), $workerEvent);
             } catch (\Throwable $e) {
                 throw new EventDeliveryException($workerEvent, $e);
             }
