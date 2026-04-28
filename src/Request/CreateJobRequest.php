@@ -13,7 +13,7 @@ class CreateJobRequest
 
     public function __construct(
         public readonly string $label,
-        public readonly string $resultsToken,
+        public readonly string $eventAddUrl,
         public readonly ?int $maximumDurationInSeconds,
         public readonly string $source,
     ) {}
