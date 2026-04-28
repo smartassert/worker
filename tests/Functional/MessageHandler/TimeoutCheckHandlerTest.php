@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
+use Symfony\Component\Uid\Ulid;
 
 class TimeoutCheckHandlerTest extends WebTestCase
 {
@@ -68,7 +69,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
     {
         $job = new Job(
             md5((string) rand()),
-            'results-token',
+            'https://results.example.com/event/add/' . new Ulid(),
             600,
             ['test.yml']
         );
@@ -105,7 +106,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $job = $this->createJobWithMutatedStartDateTime(
             new Job(
                 md5((string) rand()),
-                'results-token',
+                'https://results.example.com/event/add/' . new Ulid(),
                 $jobMaximumDuration,
                 ['test.yml']
             )
@@ -148,8 +149,8 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $labelProperty = $reflectionClass->getProperty('label');
         $labelProperty->setValue($reflectionJob, $job->getLabel());
 
-        $resultsTokenProperty = $reflectionClass->getProperty('resultsToken');
-        $resultsTokenProperty->setValue($reflectionJob, $job->getResultsToken());
+        $eventAddUrlProperty = $reflectionClass->getProperty('eventAddUrl');
+        $eventAddUrlProperty->setValue($reflectionJob, $job->getEventAddUrl());
 
         $testPathsProperty = $reflectionClass->getProperty('testPaths');
         $testPathsProperty->setValue($reflectionJob, $job->getTestPaths());

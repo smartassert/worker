@@ -47,7 +47,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             ],
             [
                 'label' => self::$jobId,
-                'results_token' => $resultsJob->token,
+                'event_add_url' => $resultsJob->authenticator,
                 'maximum_duration_in_seconds' => 600,
             ]
         ));

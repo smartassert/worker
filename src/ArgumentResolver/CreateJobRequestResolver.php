@@ -23,8 +23,8 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $label = $request->request->get(CreateJobRequest::KEY_LABEL);
         $label = is_string($label) ? trim($label) : '';
 
-        $resultsToken = $request->request->get(CreateJobRequest::KEY_RESULTS_TOKEN);
-        $resultsToken = is_string($resultsToken) ? trim($resultsToken) : '';
+        $eventAddUrl = $request->request->get(CreateJobRequest::KEY_EVENT_ADD_URL);
+        $eventAddUrl = is_string($eventAddUrl) ? trim($eventAddUrl) : '';
 
         $maximumDurationInSeconds = null;
         if ($request->request->has(CreateJobRequest::KEY_MAXIMUM_DURATION)) {
@@ -37,6 +37,6 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $sourceContent = $request->request->get(CreateJobRequest::KEY_SOURCE);
         $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-        return [new CreateJobRequest($label, $resultsToken, $maximumDurationInSeconds, $sourceContent)];
+        return [new CreateJobRequest($label, $eventAddUrl, $maximumDurationInSeconds, $sourceContent)];
     }
 }

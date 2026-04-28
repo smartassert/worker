@@ -145,10 +145,8 @@ services:
     SmartAssert\ResultsClient\EventFactory: ~
     SmartAssert\ResultsClient\ResourceReferenceFactory: ~
 
-    SmartAssert\ResultsClient\ClientInterface:
-        class: SmartAssert\ResultsClient\Client
-        arguments:
-            $baseUrl: '%env(string:RESULTS_BASE_URL)%'
+    SmartAssert\ResultsClient\AddEventClientInterface:
+        class: SmartAssert\ResultsClient\AddEventClient
 
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
 

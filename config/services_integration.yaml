@@ -23,4 +23,4 @@ services:
         class: SmartAssert\ResultsClient\Client
         public: true
         arguments:
-            $baseUrl: '%env(string:RESULTS_BASE_URL)%'
+            $baseUrl: 'http://localhost:9081'
