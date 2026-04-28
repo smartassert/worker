@@ -104,7 +104,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_RESULTS_TOKEN => $this->resultsJob->authenticator,
+            CreateJobRequest::KEY_EVENT_ADD_URL => $this->resultsJob->authenticator,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];

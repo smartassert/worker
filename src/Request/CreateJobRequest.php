@@ -7,7 +7,7 @@ namespace App\Request;
 class CreateJobRequest
 {
     public const KEY_LABEL = 'label';
-    public const KEY_RESULTS_TOKEN = 'results_token';
+    public const KEY_EVENT_ADD_URL = 'event_add_url';
     public const KEY_MAXIMUM_DURATION = 'maximum_duration_in_seconds';
     public const KEY_SOURCE = 'source';
 
