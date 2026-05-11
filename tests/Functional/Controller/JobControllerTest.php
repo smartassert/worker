@@ -354,6 +354,22 @@ class JobControllerTest extends WebTestCase
                     ],
                 ],
             ],
+            'invalid source: no test paths' => [
+                'requestPayload' => array_merge($nonSourcePayload, [
+                    CreateJobRequest::KEY_SOURCE => <<< 'EOT'
+                    ---
+                    328db4ecb7776156bd52599d25a93a1f:
+                        - manifest.yaml
+                    ...
+                    ---
+                    {  }
+                    ...
+                    EOT,
+                ]),
+                'expectedResponseData' => [
+                    'error_state' => 'source/manifest/empty_test_path_collection',
+                ],
+            ],
         ];
     }
 

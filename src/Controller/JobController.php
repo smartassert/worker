@@ -79,6 +79,13 @@ class JobController
             throw $e;
         }
 
+        //        $manifest = $jobSource->manifest;
+        //        if ([] === $manifest->testPaths) {
+        //            return $errorResponseFactory->createFromMissingTestSourceException(
+        //                new MissingTestSourceException('No test paths found in manifest.')
+        //            );
+        //        }
+
         try {
             $sourceFactory->createFromJobSource($jobSource);
         } catch (MissingTestSourceException $exception) {
