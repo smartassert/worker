@@ -53,6 +53,10 @@ class ErrorResponseFactory
             ]);
         }
 
+        if (InvalidManifestException::CODE_EMPTY_TEST_PATH_COLLECTION === $exception->getCode()) {
+            return new ErrorResponse('source/manifest/empty_test_path_collection');
+        }
+
         $payload = ['message' => $exception->getMessage()];
         if ($exception->getPrevious() instanceof \Throwable) {
             $payload['previous_message'] = $exception->getPrevious()->getMessage();
