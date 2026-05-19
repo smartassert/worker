@@ -101,6 +101,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::AWAITING_JOB->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -108,6 +109,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -115,6 +117,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -122,6 +125,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -134,6 +138,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::COMPILING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -141,6 +146,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::RUNNING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -148,6 +154,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -155,6 +162,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -171,6 +179,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::EXECUTING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -178,6 +187,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -185,6 +195,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -192,6 +203,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -210,6 +222,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::EXECUTING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -217,6 +230,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -224,6 +238,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::AWAITING->value,
                         'meta_state' => [
+                            'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -231,6 +246,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::RUNNING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -253,6 +269,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::EXECUTING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -260,6 +277,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -267,6 +285,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::RUNNING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -274,6 +293,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::RUNNING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -300,6 +320,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::COMPLETING_EVENT_DELIVERY->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -307,6 +328,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -314,6 +336,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::RUNNING->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
                         ],
@@ -321,6 +344,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -347,6 +371,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -354,6 +379,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -361,6 +387,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -368,6 +395,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -394,6 +422,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::FAILED->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
                         ],
@@ -401,6 +430,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -408,6 +438,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -415,6 +446,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::CANCELLED->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
                         ],
@@ -445,6 +477,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'application' => [
                         'state' => ApplicationState::TIMED_OUT->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
                         ],
@@ -452,6 +485,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -459,6 +493,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'event_delivery' => [
                         'state' => EventDeliveryState::COMPLETE->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
                         ],
@@ -466,6 +501,7 @@ class ApplicationStateControllerTest extends WebTestCase
                     'execution' => [
                         'state' => ExecutionState::CANCELLED->value,
                         'meta_state' => [
+                            'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
                         ],

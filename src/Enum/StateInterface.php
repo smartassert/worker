@@ -12,6 +12,8 @@ interface StateInterface
 
     public static function isFailedState(StateInterface $state): bool;
 
+    public static function isPendingState(StateInterface $state): bool;
+
     /**
      * @return non-empty-string
      */

@@ -16,6 +16,7 @@ class SerializedState implements \JsonSerializable
      * @return array{
      *   state: non-empty-string,
      *   meta_state: array{
+     *     pending: bool,
      *     ended: bool,
      *     succeeded: bool,
      *   },
@@ -28,6 +29,7 @@ class SerializedState implements \JsonSerializable
         return [
             'state' => $this->state->getValue(),
             'meta_state' => [
+                'pending' => $this->state::isPendingState($this->state),
                 'ended' => $isEndState,
                 'succeeded' => $this->state::isSuccessState($this->state),
             ],
