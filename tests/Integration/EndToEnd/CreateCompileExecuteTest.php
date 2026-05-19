@@ -150,7 +150,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         self::assertSame(
             [
                 'state' => EventDeliveryState::COMPLETE->value,
-                'is_end_state' => true,
                 'meta_state' => [
                     'ended' => true,
                     'succeeded' => true,
@@ -214,7 +213,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => false,
@@ -222,7 +220,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
-                    'is_end_state' => false,
                     'meta_state' => [
                         'ended' => false,
                         'succeeded' => false,
@@ -322,7 +319,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => false,
@@ -330,7 +326,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
-                    'is_end_state' => false,
                     'meta_state' => [
                         'ended' => false,
                         'succeeded' => false,
@@ -475,7 +470,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedApplicationState' => ApplicationState::COMPLETE,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => true,
@@ -483,7 +477,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::COMPLETE->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => true,
@@ -839,7 +832,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedApplicationState' => ApplicationState::FAILED,
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => true,
@@ -847,7 +839,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::CANCELLED->value,
-                    'is_end_state' => true,
                     'meta_state' => [
                         'ended' => true,
                         'succeeded' => false,
