@@ -29,6 +29,11 @@ enum ApplicationState: string implements StateInterface
         return self::isEndState($state) && false === self::isSuccessState($state);
     }
 
+    public static function isPendingState(StateInterface $state): bool
+    {
+        return self::AWAITING_JOB === $state;
+    }
+
     public function getValue(): string
     {
         return $this->value;

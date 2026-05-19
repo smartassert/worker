@@ -151,6 +151,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
             [
                 'state' => EventDeliveryState::COMPLETE->value,
                 'meta_state' => [
+                    'pending' => false,
                     'ended' => true,
                     'succeeded' => true,
                 ],
@@ -214,6 +215,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => false,
                     ],
@@ -221,6 +223,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
                     'meta_state' => [
+                        'pending' => true,
                         'ended' => false,
                         'succeeded' => false,
                     ],
@@ -320,6 +323,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::FAILED->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => false,
                     ],
@@ -327,6 +331,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
                     'meta_state' => [
+                        'pending' => true,
                         'ended' => false,
                         'succeeded' => false,
                     ],
@@ -471,6 +476,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
                     ],
@@ -478,6 +484,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::COMPLETE->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
                     ],
@@ -833,6 +840,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedCompilationEndState' => [
                     'state' => CompilationState::COMPLETE->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
                     ],
@@ -840,6 +848,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::CANCELLED->value,
                     'meta_state' => [
+                        'pending' => false,
                         'ended' => true,
                         'succeeded' => false,
                     ],
