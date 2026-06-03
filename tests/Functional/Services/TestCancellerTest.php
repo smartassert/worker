@@ -395,7 +395,7 @@ class TestCancellerTest extends WebTestCase
         $tests = [];
 
         foreach ($states as $state) {
-            $tests[] = $this->testFactory->create((new TestSetup())->withState($state));
+            $tests[] = $this->testFactory->create(new TestSetup()->withState($state));
         }
 
         return $tests;

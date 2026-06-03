@@ -668,9 +668,9 @@ class JobControllerTest extends WebTestCase
     {
         return [
             'new job, has sources, no tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(
-                        (new JobSetup())
+                        new JobSetup()
                             ->withLabel('label content')
                             ->withMaximumDurationInSeconds(11)
                             ->withTestPaths([
@@ -679,9 +679,9 @@ class JobControllerTest extends WebTestCase
                                 'Test/test3.yml',
                             ])
                     )->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
-                        (new SourceSetup())->withPath('Test/test3.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test3.yml'),
                     ]),
                 'expectedResponseData' => [
                     'label' => 'label content',
@@ -716,9 +716,9 @@ class JobControllerTest extends WebTestCase
                 ],
             ],
             'new job, has sources, has tests, compilation not complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(
-                        (new JobSetup())
+                        new JobSetup()
                             ->withLabel('label content')
                             ->withMaximumDurationInSeconds(12)
                             ->withTestPaths([
@@ -727,15 +727,15 @@ class JobControllerTest extends WebTestCase
                                 'Test/test3.yml',
                             ])
                     )->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
-                        (new SourceSetup())->withPath('Test/test3.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test3.yml'),
                     ])->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withTarget('GeneratedTest1.php')
                             ->withStepNames(['step 1', 'step 2', 'step 3']),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withTarget('GeneratedTest2.php')
                             ->withStepNames(['step 1', 'step 2']),

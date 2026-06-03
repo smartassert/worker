@@ -57,55 +57,55 @@ class ExecutionProgressTest extends WebTestCase
                 'expectedState' => ExecutionState::AWAITING,
             ],
             'running: not has finished tests and has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::RUNNING),
                     ]),
                 'expectedState' => ExecutionState::RUNNING,
             ],
             'awaiting: not has finished tests and not has running tests and has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING),
                     ]),
                 'expectedState' => ExecutionState::AWAITING,
             ],
             'running: has complete tests and has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
-                        (new TestSetup())->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::RUNNING),
                     ]),
                 'expectedState' => ExecutionState::RUNNING,
             ],
             'running: has complete tests and not has running tests and has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
-                        (new TestSetup())->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::AWAITING),
                     ]),
                 'expectedState' => ExecutionState::RUNNING,
             ],
             'complete: has finished tests and not has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::COMPLETE),
                     ]),
                 'expectedState' => ExecutionState::COMPLETE,
             ],
             'cancelled: has failed tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::FAILED),
+                        new TestSetup()->withState(TestState::FAILED),
                     ]),
                 'expectedState' => ExecutionState::CANCELLED,
             ],
             'cancelled: has cancelled tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::CANCELLED),
+                        new TestSetup()->withState(TestState::CANCELLED),
                     ]),
                 'expectedState' => ExecutionState::CANCELLED,
             ],
@@ -143,9 +143,9 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'running: not has finished tests and has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::RUNNING),
                     ]),
                 'expectedIsStates' => [
@@ -158,9 +158,9 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'awaiting: not has finished tests and not has running tests and has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING),
                     ]),
                 'expectedIsStates' => [
@@ -173,10 +173,10 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'running: has complete tests and has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
-                        (new TestSetup())->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::RUNNING),
                     ]),
                 'expectedIsStates' => [
                     ExecutionState::RUNNING,
@@ -188,10 +188,10 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'running: has complete tests and not has running tests and has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
-                        (new TestSetup())->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::AWAITING),
                     ]),
                 'expectedIsStates' => [
                     ExecutionState::RUNNING,
@@ -203,9 +203,9 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'complete: has finished tests and not has running tests and not has awaiting tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ExecutionState::COMPLETE,
@@ -217,9 +217,9 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'cancelled: has failed tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::FAILED),
+                        new TestSetup()->withState(TestState::FAILED),
                     ]),
                 'expectedIsStates' => [
                     ExecutionState::CANCELLED,
@@ -231,9 +231,9 @@ class ExecutionProgressTest extends WebTestCase
                 ],
             ],
             'cancelled: has cancelled tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::CANCELLED),
+                        new TestSetup()->withState(TestState::CANCELLED),
                     ]),
                 'expectedIsStates' => [
                     ExecutionState::CANCELLED,

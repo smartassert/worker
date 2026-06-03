@@ -67,46 +67,46 @@ class CompilationProgressTest extends WebTestCase
                 'expectedState' => CompilationState::AWAITING,
             ],
             'awaiting: has job, no sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup()),
                 'expectedState' => CompilationState::AWAITING,
             ],
             'running: has job, has sources, no sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test2.yml'),
                     ]),
                 'expectedState' => CompilationState::RUNNING,
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedState' => CompilationState::FAILED,
             ],
             'complete: has job, has sources, no next source' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml'),
                     ]),
                 'expectedState' => CompilationState::COMPLETE,
@@ -149,7 +149,7 @@ class CompilationProgressTest extends WebTestCase
                 ],
             ],
             'awaiting: has job, no sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup()),
                 'expectedIsStates' => [
                     CompilationState::AWAITING,
@@ -162,12 +162,12 @@ class CompilationProgressTest extends WebTestCase
                 ],
             ],
             'running: has job, has sources, no sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
@@ -181,16 +181,16 @@ class CompilationProgressTest extends WebTestCase
                 ],
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
@@ -205,14 +205,14 @@ class CompilationProgressTest extends WebTestCase
                 ],
             ],
             'complete: has job, has sources, no next source' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/test1.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [

@@ -69,117 +69,117 @@ class ApplicationProgressTest extends WebTestCase
                 'expectedState' => ApplicationState::AWAITING_JOB,
             ],
             'no sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::COMPILING,
             ],
             'first source compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
                     ]),
                 'expectedState' => ApplicationState::COMPILING,
             ],
             'all sources compiled, no tests running' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::EXECUTING,
             ],
             'first test complete, no event deliveries' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ]),
                 'expectedState' => ApplicationState::EXECUTING,
             ],
             'first test complete, event delivery for first test complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::EXECUTING,
             ],
             'all tests complete, first event delivery complete, second event delivery running' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml')
+                        new TestSetup()->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::SENDING),
                     ]),
                 'expectedState' => ApplicationState::COMPLETING_EVENT_DELIVERY,
             ],
             'all tests complete, all event deliveries complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml')
+                        new TestSetup()->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::COMPLETE,
             ],
             'has a job-timeout event delivery' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::JOB)
                             ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),
@@ -187,31 +187,31 @@ class ApplicationProgressTest extends WebTestCase
                 'expectedState' => ApplicationState::TIMED_OUT,
             ],
             'compilation failed' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
             ],
             'execution failed' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::EXECUTION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
@@ -256,11 +256,11 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'no sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPILING,
@@ -274,14 +274,14 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'first source compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPILING,
@@ -295,15 +295,15 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'all sources compiled, no tests running' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::EXECUTING,
@@ -317,17 +317,17 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'first test complete, no event deliveries' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::EXECUTING,
@@ -341,20 +341,20 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'first test complete, event delivery for first test complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::EXECUTING,
@@ -368,22 +368,22 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'all tests complete, first event delivery complete, second event delivery running' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml')
+                        new TestSetup()->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::SENDING),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::SENDING),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
@@ -397,22 +397,22 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'all tests complete, all event deliveries complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml')
+                        new TestSetup()->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [
                     ApplicationState::COMPLETE,
@@ -426,10 +426,10 @@ class ApplicationProgressTest extends WebTestCase
                 ],
             ],
             'has a job-timeout event delivery' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withScope(WorkerEventScope::JOB)
                             ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withState(WorkerEventState::COMPLETE),

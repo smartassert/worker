@@ -27,7 +27,7 @@ class CreateJobRequestResolverTest extends WebTestCase
     #[DataProvider('resolveDataProvider')]
     public function testResolve(Request $request, CreateJobRequest $expected): void
     {
-        $argumentMetadata = (new MockArgumentMetadata())
+        $argumentMetadata = new MockArgumentMetadata()
             ->withGetTypeCall(CreateJobRequest::class)
             ->getMock()
         ;

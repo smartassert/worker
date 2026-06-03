@@ -54,10 +54,10 @@ class DeliverEventHandlerTest extends WebTestCase
             $entityRemover->removeForEntity(Job::class);
         }
 
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(new JobSetup())
             ->withWorkerEventSetups([
-                (new WorkerEventSetup())
+                new WorkerEventSetup()
                     ->withState(WorkerEventState::QUEUED),
             ])
         ;

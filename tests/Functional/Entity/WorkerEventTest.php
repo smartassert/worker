@@ -54,12 +54,12 @@ class WorkerEventTest extends AbstractEntityTestCase
                 ),
             ],
             'with related references' => [
-                'event' => (new WorkerEvent(
+                'event' => new WorkerEvent(
                     WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
-                ))->withRelatedReferences(
+                )->withRelatedReferences(
                     new ResourceReferenceCollection([
                         new WorkerEventReference('label 1', 'reference 1'),
                         new WorkerEventReference('label 2', 'reference 2'),

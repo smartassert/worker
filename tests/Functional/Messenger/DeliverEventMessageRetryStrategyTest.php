@@ -181,7 +181,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
             'throwable has response with date-based retry-after header, retry count is max minus 1' => [
                 'retryCount' => self::MAX_RETRIES - 1,
                 'encapsulatedHttpResponse' => new Response(200, [
-                    'retry-after' => (new \DateTime())->format('Y-m-d H:i:s'),
+                    'retry-after' => new \DateTime()->format('Y-m-d H:i:s'),
                 ]),
                 'expected' => 4000,
             ],

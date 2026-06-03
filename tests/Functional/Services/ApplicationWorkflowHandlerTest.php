@@ -42,7 +42,7 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
-        $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+        $environmentFactory->create(new EnvironmentSetup()->withJobSetup(new JobSetup()));
 
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
         \assert($messengerTransport instanceof InMemoryTransport);

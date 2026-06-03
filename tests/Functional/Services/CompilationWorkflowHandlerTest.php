@@ -68,14 +68,14 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     {
         return [
             'no sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup()),
             ],
             'no non-compiled sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
                     ]),
             ],
         ];
@@ -105,23 +105,23 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     {
         return [
             'no sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ]),
                 'expectedQueuedMessage' => new CompileSourceMessage('Test/test1.yml', 600),
             ],
             'all but one sources compiled' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
-                        (new SourceSetup())->withPath('Test/test1.yml'),
-                        (new SourceSetup())->withPath('Test/test2.yml'),
+                        new SourceSetup()->withPath('Test/test1.yml'),
+                        new SourceSetup()->withPath('Test/test2.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
                     ]),
                 'expectedQueuedMessage' => new CompileSourceMessage('Test/test2.yml', 600),
             ],

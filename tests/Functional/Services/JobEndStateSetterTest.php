@@ -47,7 +47,7 @@ class JobEndStateSetterTest extends WebTestCase
 
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
-        $environmentFactory->create((new EnvironmentSetup())->withJobSetup(new JobSetup()));
+        $environmentFactory->create(new EnvironmentSetup()->withJobSetup(new JobSetup()));
 
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
