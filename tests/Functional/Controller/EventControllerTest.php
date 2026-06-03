@@ -64,9 +64,9 @@ class EventControllerTest extends WebTestCase
         $eventReferenceEntity = new WorkerEventReference($eventLabel, $eventReference);
 
         $environment = $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withWorkerEventSetups([
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withPayload($eventPayload)
                         ->withReference($eventReferenceEntity)
                         ->withScope(WorkerEventScope::JOB)

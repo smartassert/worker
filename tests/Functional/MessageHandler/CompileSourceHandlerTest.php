@@ -73,7 +73,7 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeJobInWrongState(): void
     {
         $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withJobSetup(new JobSetup()),
         );
 
@@ -86,12 +86,12 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeCompileSuccess(): void
     {
         $sourcePath = 'Test/test1.yml';
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(
-                (new JobSetup())->withTestPaths([$sourcePath])
+                new JobSetup()->withTestPaths([$sourcePath])
             )
             ->withSourceSetups([
-                (new SourceSetup())->withPath($sourcePath),
+                new SourceSetup()->withPath($sourcePath),
             ])
         ;
 
@@ -100,14 +100,14 @@ class CompileSourceHandlerTest extends WebTestCase
         $compileSourceMessage = new CompileSourceMessage($sourcePath, 600);
 
         $testManifestCollection = new TestManifestCollection([
-            (new MockTestManifest())
+            new MockTestManifest()
                 ->withGetStepNamesCall(['step one', 'step two'])
                 ->withGetBrowserCall('chrome')
                 ->withGetUrlCall('https://example.com')
                 ->withGetSourceCall($sourcePath)
                 ->withGetTargetCall('Target.php')
                 ->getMock(),
-            (new MockTestManifest())
+            new MockTestManifest()
                 ->withGetStepNamesCall(['step one', 'step two'])
                 ->withGetBrowserCall('chrome')
                 ->withGetUrlCall('https://example.com')
@@ -116,7 +116,7 @@ class CompileSourceHandlerTest extends WebTestCase
                 ->getMock(),
         ]);
 
-        $compiler = (new MockCompiler())
+        $compiler = new MockCompiler()
             ->withCompileCall(
                 $compileSourceMessage->path,
                 600,
@@ -145,12 +145,12 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeCompileFailure(): void
     {
         $sourcePath = 'Test/test1.yml';
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(
-                (new JobSetup())->withTestPaths([$sourcePath])
+                new JobSetup()->withTestPaths([$sourcePath])
             )
             ->withSourceSetups([
-                (new SourceSetup())->withPath($sourcePath),
+                new SourceSetup()->withPath($sourcePath),
             ])
         ;
 
@@ -163,12 +163,12 @@ class CompileSourceHandlerTest extends WebTestCase
             'key2' => 'value2',
             'key3' => 'value3',
         ];
-        $errorOutput = (new MockErrorOutput())
+        $errorOutput = new MockErrorOutput()
             ->withToArrayCall($errorOutputData)
             ->getMock()
         ;
 
-        $compiler = (new MockCompiler())
+        $compiler = new MockCompiler()
             ->withCompileCall(
                 $compileSourceMessage->path,
                 600,
@@ -201,12 +201,12 @@ class CompileSourceHandlerTest extends WebTestCase
     public function testInvokeCompileTimedOut(): void
     {
         $sourcePath = 'Test/test1.yml';
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(
-                (new JobSetup())->withTestPaths([$sourcePath])
+                new JobSetup()->withTestPaths([$sourcePath])
             )
             ->withSourceSetups([
-                (new SourceSetup())->withPath($sourcePath),
+                new SourceSetup()->withPath($sourcePath),
             ])
         ;
 
@@ -217,7 +217,7 @@ class CompileSourceHandlerTest extends WebTestCase
 
         $exception = new SocketTimedOutException(600);
 
-        $compiler = (new MockCompiler())
+        $compiler = new MockCompiler()
             ->withCompileCall(
                 $compileSourceMessage->path,
                 $timeout,

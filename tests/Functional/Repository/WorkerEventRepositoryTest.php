@@ -39,15 +39,15 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
     public function testHasForType(): void
     {
         $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withWorkerEventSetups([
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::FAILED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::TEST)
                         ->withOutcome(WorkerEventOutcome::STARTED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::JOB)
                         ->withOutcome(WorkerEventOutcome::TIME_OUT),
                 ])
@@ -63,24 +63,24 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
     public function testGetTypeCount(): void
     {
         $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withWorkerEventSetups([
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::JOB)
                         ->withOutcome(WorkerEventOutcome::STARTED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::STEP)
                         ->withOutcome(WorkerEventOutcome::PASSED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::STEP)
                         ->withOutcome(WorkerEventOutcome::PASSED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
-                    (new WorkerEventSetup())
+                    new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED),
                 ])
@@ -122,7 +122,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
         }
 
         $environment = $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withWorkerEventSetups($workerEventSetups)
         );
 

@@ -72,8 +72,8 @@ class WorkerEventFactoryTest extends WebTestCase
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         if ($environmentFactory instanceof EnvironmentFactory) {
             $environmentFactory->create(
-                (new EnvironmentSetup())->withJobSetup(
-                    (new JobSetup())->withLabel(self::JOB_LABEL)
+                new EnvironmentSetup()->withJobSetup(
+                    new JobSetup()->withLabel(self::JOB_LABEL)
                 )
             );
         }
@@ -215,7 +215,7 @@ class WorkerEventFactoryTest extends WebTestCase
         $testDocument = new TestDocument($testSource, $testDocumentData);
 
         $sourceCompilationPassedManifestCollection = new TestManifestCollection([
-            (new MockTestManifest())
+            new MockTestManifest()
                 ->withGetStepNamesCall([
                     'step one',
                     'step two',
@@ -232,7 +232,7 @@ class WorkerEventFactoryTest extends WebTestCase
                         'Test/test2.yaml',
                     ]
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::JOB,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
@@ -242,7 +242,7 @@ class WorkerEventFactoryTest extends WebTestCase
                             'Test/test2.yaml',
                         ],
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
                     new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
                 ])),
@@ -263,14 +263,14 @@ class WorkerEventFactoryTest extends WebTestCase
                     $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::SOURCE_COMPILATION,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
                     new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
                 ])),
@@ -322,7 +322,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $testSource,
                     WorkerEventOutcome::STARTED
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -333,7 +333,7 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                 ])),
             ],
@@ -388,7 +388,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $testSource,
                     WorkerEventOutcome::PASSED
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -399,7 +399,7 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                 ])),
             ],
@@ -410,7 +410,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $testSource,
                     WorkerEventOutcome::FAILED
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -421,7 +421,7 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                 ])),
             ],
@@ -452,7 +452,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $testSource,
                     WorkerEventOutcome::EXCEPTION
                 ),
-                'expected' => (new WorkerEvent(
+                'expected' => new WorkerEvent(
                     WorkerEventScope::TEST,
                     WorkerEventOutcome::EXCEPTION,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
@@ -463,7 +463,7 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                ))->withRelatedReferences(new ResourceReferenceCollection([
+                )->withRelatedReferences(new ResourceReferenceCollection([
                     new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
                 ])),
             ],

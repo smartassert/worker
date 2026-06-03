@@ -81,37 +81,37 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
     {
         return [
             'two tests, none run' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())->withSource('Test/test1.yml'),
-                        (new TestSetup())->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test1.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
                     ]),
                 'expectedNextTestIndex' => 0,
             ],
             'three tests, first complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
-                        (new TestSetup())->withSource('Test/test3.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test3.yml'),
                     ]),
                 'expectedNextTestIndex' => 1,
             ],
             'three tests, first, second complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test3.yml'),
+                        new TestSetup()->withSource('Test/test3.yml'),
                     ]),
                 'expectedNextTestIndex' => 2,
             ],
@@ -167,10 +167,10 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
     {
         return [
             'single test, not complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
                     ]),
@@ -179,10 +179,10 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
                 'expectedNextTestIndex' => null,
             ],
             'single test, is complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::CANCELLED),
                     ]),
@@ -191,13 +191,13 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
                 'expectedNextTestIndex' => null,
             ],
             'multiple tests, not complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::AWAITING),
                     ]),
@@ -206,13 +206,13 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
                 'expectedNextTestIndex' => null,
             ],
             'multiple tests, complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::AWAITING),
                     ]),

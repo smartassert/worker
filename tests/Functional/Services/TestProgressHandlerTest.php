@@ -47,7 +47,7 @@ class TestProgressHandlerTest extends WebTestCase
         $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
         \assert($environmentFactory instanceof EnvironmentFactory);
 
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 new TestSetup(),

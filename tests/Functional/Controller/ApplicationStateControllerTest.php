@@ -77,9 +77,9 @@ class ApplicationStateControllerTest extends WebTestCase
      */
     public static function getDataProvider(): array
     {
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(
-                (new JobSetup())
+                new JobSetup()
                     ->withLabel('label content')
                     ->withMaximumDurationInSeconds(11)
                     ->withTestPaths([
@@ -88,9 +88,9 @@ class ApplicationStateControllerTest extends WebTestCase
                         'Test/test3.yml',
                     ])
             )->withSourceSetups([
-                (new SourceSetup())->withPath('Test/test1.yml'),
-                (new SourceSetup())->withPath('Test/test2.yml'),
-                (new SourceSetup())->withPath('Test/test3.yml'),
+                new SourceSetup()->withPath('Test/test1.yml'),
+                new SourceSetup()->withPath('Test/test2.yml'),
+                new SourceSetup()->withPath('Test/test3.yml'),
             ])
         ;
 
@@ -171,9 +171,9 @@ class ApplicationStateControllerTest extends WebTestCase
             ],
             'compilation complete, execution awaiting' => [
                 'setup' => $environmentSetup->withTestSetups([
-                    (new TestSetup())->withSource('Test/test1.yml'),
-                    (new TestSetup())->withSource('Test/test2.yml'),
-                    (new TestSetup())->withSource('Test/test3.yml'),
+                    new TestSetup()->withSource('Test/test1.yml'),
+                    new TestSetup()->withSource('Test/test2.yml'),
+                    new TestSetup()->withSource('Test/test3.yml'),
                 ]),
                 'expectedResponseData' => [
                     'application' => [
@@ -212,11 +212,11 @@ class ApplicationStateControllerTest extends WebTestCase
             ],
             'execution running, event delivery awaiting' => [
                 'setup' => $environmentSetup->withTestSetups([
-                    (new TestSetup())
+                    new TestSetup()
                         ->withSource('Test/test1.yml')
                         ->withState(TestState::COMPLETE),
-                    (new TestSetup())->withSource('Test/test2.yml'),
-                    (new TestSetup())->withSource('Test/test3.yml'),
+                    new TestSetup()->withSource('Test/test2.yml'),
+                    new TestSetup()->withSource('Test/test3.yml'),
                 ]),
                 'expectedResponseData' => [
                     'application' => [
@@ -256,13 +256,13 @@ class ApplicationStateControllerTest extends WebTestCase
             'execution running, event delivery running' => [
                 'setup' => $environmentSetup
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())->withSource('Test/test2.yml'),
-                        (new TestSetup())->withSource('Test/test3.yml'),
+                        new TestSetup()->withSource('Test/test2.yml'),
+                        new TestSetup()->withSource('Test/test3.yml'),
                     ])->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withState(WorkerEventState::QUEUED),
                     ]),
                 'expectedResponseData' => [
@@ -303,17 +303,17 @@ class ApplicationStateControllerTest extends WebTestCase
             'execution complete, event delivery running' => [
                 'setup' => $environmentSetup
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test3.yml')
                             ->withState(TestState::COMPLETE),
                     ])->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withState(WorkerEventState::QUEUED),
                     ]),
                 'expectedResponseData' => [
@@ -354,17 +354,17 @@ class ApplicationStateControllerTest extends WebTestCase
             'execution complete, event delivery complete' => [
                 'setup' => $environmentSetup
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test3.yml')
                             ->withState(TestState::COMPLETE),
                     ])->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
@@ -405,17 +405,17 @@ class ApplicationStateControllerTest extends WebTestCase
             'execution failed, event delivery complete' => [
                 'setup' => $environmentSetup
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::COMPLETE),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test3.yml')
                             ->withState(TestState::FAILED),
                     ])->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
@@ -456,19 +456,19 @@ class ApplicationStateControllerTest extends WebTestCase
             'timed out' => [
                 'setup' => $environmentSetup
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml')
                             ->withState(TestState::FAILED),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml')
                             ->withState(TestState::CANCELLED),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test3.yml')
                             ->withState(TestState::CANCELLED),
                     ])->withWorkerEventSetups([
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withState(WorkerEventState::COMPLETE),
-                        (new WorkerEventSetup())
+                        new WorkerEventSetup()
                             ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withScope(WorkerEventScope::JOB)
                             ->withState(WorkerEventState::COMPLETE),

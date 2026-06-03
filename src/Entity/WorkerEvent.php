@@ -109,7 +109,7 @@ class WorkerEvent implements \JsonSerializable, EventInterface
         }
 
         if (0 !== count($references)) {
-            $data['related_references'] = (new ResourceReferenceCollection($references))->toArray();
+            $data['related_references'] = new ResourceReferenceCollection($references)->toArray();
         }
 
         return $data;

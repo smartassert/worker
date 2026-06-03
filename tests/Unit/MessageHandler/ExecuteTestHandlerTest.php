@@ -30,7 +30,7 @@ class ExecuteTestHandlerTest extends TestCase
         ExecuteTestMessage $message,
         TestRepository $testRepository
     ): void {
-        $testExecutor = (new MockTestExecutor())
+        $testExecutor = new MockTestExecutor()
             ->withoutExecuteCall()
             ->getMock()
         ;
@@ -59,29 +59,29 @@ class ExecuteTestHandlerTest extends TestCase
 
         return [
             'execution state not awaiting, not running' => [
-                'executionProgress' => (new MockExecutionProgress())
+                'executionProgress' => new MockExecutionProgress()
                     ->withGetCall(ExecutionState::COMPLETE)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1, 600),
-                'testRepository' => (new MockTestRepository())
+                'testRepository' => new MockTestRepository()
                     ->withoutFindCall()
                     ->getMock(),
             ],
             'no test' => [
-                'executionProgress' => (new MockExecutionProgress())
+                'executionProgress' => new MockExecutionProgress()
                     ->withGetCall(ExecutionState::RUNNING)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1, 600),
-                'testRepository' => (new MockTestRepository())
+                'testRepository' => new MockTestRepository()
                     ->withFindCall(1, null)
                     ->getMock(),
             ],
             'test in wrong state' => [
-                'executionProgress' => (new MockExecutionProgress())
+                'executionProgress' => new MockExecutionProgress()
                     ->withGetCall(ExecutionState::RUNNING)
                     ->getMock(),
                 'message' => new ExecuteTestMessage(1, 600),
-                'testRepository' => (new MockTestRepository())
+                'testRepository' => new MockTestRepository()
                     ->withFindCall(1, $testInWrongState)
                     ->getMock(),
             ],

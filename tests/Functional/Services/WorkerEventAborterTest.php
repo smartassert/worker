@@ -43,7 +43,7 @@ class WorkerEventAborterTest extends WebTestCase
         \assert($testWorkerEventFactory instanceof TestWorkerEventFactory);
 
         $workerEvent = $testWorkerEventFactory->create(
-            (new WorkerEventSetup())
+            new WorkerEventSetup()
                 ->withScope(WorkerEventScope::JOB)
                 ->withOutcome(WorkerEventOutcome::COMPLETED)
                 ->withReference(new WorkerEventReference('non-empty label', 'non-empty reference'))

@@ -56,63 +56,63 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                 'expectedMaxPosition' => 0,
             ],
             'one test, position 1' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
                     ]),
                 'expectedMaxPosition' => 1,
             ],
             'one test, position 3' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(3),
                     ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 2, 3' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(3),
                     ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 3, 2, 1' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(3),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
                     ]),
                 'expectedMaxPosition' => 3,
             ],
             'three tests, position 1, 3, 2' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(3),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
                     ]),
@@ -139,11 +139,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                 'setup' => new EnvironmentSetup(),
             ],
             'running, failed, complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::RUNNING),
-                        (new TestSetup())->withState(TestState::FAILED),
-                        (new TestSetup())->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::FAILED),
+                        new TestSetup()->withState(TestState::COMPLETE),
                     ]),
             ],
         ];
@@ -172,43 +172,43 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
     {
         return [
             'awaiting1' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::AWAITING),
                     ]),
                 'nextAwaitingIndex' => 0,
             ],
             'awaiting1, awaiting2' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
                     ]),
                 'nextAwaitingIndex' => 0,
             ],
             'awaiting2, awaiting1' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(2),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withState(TestState::AWAITING)
                             ->withPosition(1),
                     ]),
                 'nextAwaitingIndex' => 1,
             ],
             'running, failed, awaiting1, complete' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::RUNNING),
-                        (new TestSetup())->withState(TestState::FAILED),
-                        (new TestSetup())->withState(TestState::AWAITING),
-                        (new TestSetup())->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::FAILED),
+                        new TestSetup()->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::COMPLETE),
                     ]),
                 'nextAwaitingIndex' => 2,
             ],
@@ -234,37 +234,37 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                 'expectedUnfinishedCount' => 0,
             ],
             'awaiting1' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::AWAITING),
                     ]),
                 'expectedUnfinishedCount' => 1,
             ],
             'awaiting1, awaiting2' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::AWAITING),
-                        (new TestSetup())->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::AWAITING),
                     ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'awaiting1, running' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::AWAITING),
-                        (new TestSetup())->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::RUNNING),
                     ]),
                 'expectedUnfinishedCount' => 2,
             ],
             'all states' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withState(TestState::AWAITING),
-                        (new TestSetup())->withState(TestState::AWAITING),
-                        (new TestSetup())->withState(TestState::RUNNING),
-                        (new TestSetup())->withState(TestState::FAILED),
-                        (new TestSetup())->withState(TestState::COMPLETE),
-                        (new TestSetup())->withState(TestState::CANCELLED),
+                        new TestSetup()->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::AWAITING),
+                        new TestSetup()->withState(TestState::RUNNING),
+                        new TestSetup()->withState(TestState::FAILED),
+                        new TestSetup()->withState(TestState::COMPLETE),
+                        new TestSetup()->withState(TestState::CANCELLED),
                     ]),
                 'expectedUnfinishedCount' => 3,
             ],
@@ -293,20 +293,20 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                 'expectedSources' => [],
             ],
             'single' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withSource('test1.yaml'),
+                        new TestSetup()->withSource('test1.yaml'),
                     ]),
                 'expectedSources' => [
                     'test1.yaml',
                 ],
             ],
             'multiple' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withSource('test1.yaml'),
-                        (new TestSetup())->withSource('test2.yaml'),
-                        (new TestSetup())->withSource('test3.yaml'),
+                        new TestSetup()->withSource('test1.yaml'),
+                        new TestSetup()->withSource('test2.yaml'),
+                        new TestSetup()->withSource('test3.yaml'),
                     ]),
                 'expectedSources' => [
                     'test1.yaml',
@@ -315,11 +315,11 @@ class TestRepositoryTest extends AbstractEntityRepositoryTestCase
                 ],
             ],
             'multiple, is sorted' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withTestSetups([
-                        (new TestSetup())->withSource('test2.yaml'),
-                        (new TestSetup())->withSource('test1.yaml'),
-                        (new TestSetup())->withSource('test3.yaml'),
+                        new TestSetup()->withSource('test2.yaml'),
+                        new TestSetup()->withSource('test1.yaml'),
+                        new TestSetup()->withSource('test3.yaml'),
                     ]),
                 'expectedSources' => [
                     'test1.yaml',

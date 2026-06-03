@@ -59,16 +59,16 @@ class SourcePathFinderTest extends WebTestCase
     public static function findNextNonCompiledPathDataProvider(): array
     {
         $sourceSetups = [
-            (new SourceSetup())
+            new SourceSetup()
                 ->withType(Source::TYPE_RESOURCE)
                 ->withPath('Page/page1.yml'),
-            (new SourceSetup())
+            new SourceSetup()
                 ->withType(Source::TYPE_TEST)
                 ->withPath('Test/test1.yml'),
-            (new SourceSetup())
+            new SourceSetup()
                 ->withType(Source::TYPE_TEST)
                 ->withPath('Test/test2.yml'),
-            (new SourceSetup())
+            new SourceSetup()
                 ->withType(Source::TYPE_RESOURCE)
                 ->withPath('Page/page2.yml'),
         ];
@@ -79,12 +79,12 @@ class SourcePathFinderTest extends WebTestCase
                 'expectedNextNonCompiledSource' => null,
             ],
             'has job, no sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup()),
                 'expectedNextNonCompiledSource' => null,
             ],
             'has job, has resource-only sources, no tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups([
                         $sourceSetups[0],
@@ -93,29 +93,29 @@ class SourcePathFinderTest extends WebTestCase
                 'expectedNextNonCompiledSource' => null,
             ],
             'has job, has sources, no tests' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups($sourceSetups),
                 'expectedNextNonCompiledSource' => 'Test/test1.yml',
             ],
             'test exists for first test source' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups($sourceSetups)
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml'),
                     ]),
                 'expectedNextNonCompiledSource' => 'Test/test2.yml',
             ],
             'test exists for all sources' => [
-                'setup' => (new EnvironmentSetup())
+                'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withSourceSetups($sourceSetups)
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test1.yml'),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/test2.yml'),
                     ]),
                 'expectedNextNonCompiledSource' => null,

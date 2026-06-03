@@ -76,9 +76,9 @@ class JobStatusFactoryTest extends WebTestCase
     {
         return [
             'no sources, no tests' => [
-                'environmentSetup' => (new EnvironmentSetup())
+                'environmentSetup' => new EnvironmentSetup()
                     ->withJobSetup(
-                        (new JobSetup())
+                        new JobSetup()
                             ->withLabel('no sources, no tests label')
                             ->withMaximumDurationInSeconds(1)
                             ->withTestPaths([
@@ -104,9 +104,9 @@ class JobStatusFactoryTest extends WebTestCase
                 ],
             ],
             'has sources, has tests created not in sequential position order' => [
-                'environmentSetup' => (new EnvironmentSetup())
+                'environmentSetup' => new EnvironmentSetup()
                     ->withJobSetup(
-                        (new JobSetup())
+                        new JobSetup()
                             ->withLabel('has sources, has tests label')
                             ->withMaximumDurationInSeconds(2)
                             ->withTestPaths([
@@ -115,15 +115,15 @@ class JobStatusFactoryTest extends WebTestCase
                             ])
                     )
                     ->withSourceSetups([
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/has-sources-has-tests1.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Test/has-sources-has-tests2.yml'),
-                        (new SourceSetup())
+                        new SourceSetup()
                             ->withPath('Page/referenced-page.yml'),
                     ])
                     ->withTestSetups([
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/has-sources-has-tests2.yml')
                             ->withBrowser('firefox')
                             ->withUrl('http://example.com/test-bar')
@@ -131,7 +131,7 @@ class JobStatusFactoryTest extends WebTestCase
                             ->withTarget('GeneratedFirefoxTest.php')
                             ->withState(TestState::RUNNING)
                             ->withPosition(2),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/has-sources-has-tests1.yml')
                             ->withBrowser('chrome')
                             ->withUrl('http://example.com/test-foo')
@@ -139,7 +139,7 @@ class JobStatusFactoryTest extends WebTestCase
                             ->withTarget('GeneratedChromeTest.php')
                             ->withState(TestState::COMPLETE)
                             ->withPosition(1),
-                        (new TestSetup())
+                        new TestSetup()
                             ->withSource('Test/has-sources-has-tests3.yml')
                             ->withBrowser('firefox')
                             ->withUrl('http://example.com/test-bar')
@@ -218,9 +218,9 @@ class JobStatusFactoryTest extends WebTestCase
     public function testCreateHasEventIds(): void
     {
         $environment = $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withJobSetup(
-                    (new JobSetup())
+                    new JobSetup()
                         ->withTestPaths([
                             'Test/test.yml',
                         ])

@@ -197,7 +197,7 @@ class EventDeliveryProgressTest extends WebTestCase
     private function createWorkerEventEntity(WorkerEventState $state): void
     {
         $this->testWorkerEventFactory->create(
-            (new WorkerEventSetup())->withState($state)
+            new WorkerEventSetup()->withState($state)
         );
     }
 }

@@ -60,7 +60,7 @@ class ExecuteTestHandlerTest extends WebTestCase
 
     public function testInvokeExecuteSuccess(): void
     {
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 new TestSetup(),
@@ -84,7 +84,7 @@ class ExecuteTestHandlerTest extends WebTestCase
         self::assertSame(TestState::AWAITING, $test->getState());
 
         $timeout = 600;
-        $testExecutor = (new MockTestExecutor())
+        $testExecutor = new MockTestExecutor()
             ->withExecuteCall($test, $timeout)
             ->getMock()
         ;
@@ -116,7 +116,7 @@ class ExecuteTestHandlerTest extends WebTestCase
 
     public function testInvokeExecuteTimedOut(): void
     {
-        $environmentSetup = (new EnvironmentSetup())
+        $environmentSetup = new EnvironmentSetup()
             ->withJobSetup(new JobSetup())
             ->withTestSetups([
                 new TestSetup(),
@@ -136,7 +136,7 @@ class ExecuteTestHandlerTest extends WebTestCase
 
         $timeout = 600;
         $exception = new SocketTimedOutException(600);
-        $testExecutor = (new MockTestExecutor())
+        $testExecutor = new MockTestExecutor()
             ->withExecuteCall($test, $timeout, $exception)
             ->getMock()
         ;

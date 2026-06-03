@@ -50,7 +50,7 @@ class CompileSourceMessageFactoryTest extends WebTestCase
         $maximumDurationInSeconds = rand(0, 1000);
 
         $this->environmentFactory->create(
-            (new EnvironmentSetup())
+            new EnvironmentSetup()
                 ->withJobSetup(
                     new JobSetup()
                         ->withMaximumDurationInSeconds($maximumDurationInSeconds)
