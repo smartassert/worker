@@ -243,31 +243,31 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     $sourceReference = new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath));
 
                     return [
-                        'job/started' => new Event(
+                        'job/started' => (new Event(
                             $firstSequenceNumber,
                             'job/started',
                             $jobReference,
                             [
                                 'tests' => [$failedTestPath],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'job/compilation/started' => new Event(
+                        'job/compilation/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/started: chrome-open-index-compilation-failure' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/started: chrome-open-index-compilation-failure' => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $sourceReference,
                             [
                                 'source' => $failedTestPath,
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/failed: chrome-open-index-compilation-failure' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/failed: chrome-open-index-compilation-failure' => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/failed',
                             $sourceReference,
@@ -294,8 +294,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 ],
                                 'source' => $failedTestPath,
                             ]
-                        )->withJob($resultsJobLabel),
-                        'job/ended' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'job/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/ended',
                             $jobReference,
@@ -304,7 +304,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'success' => false,
                                 'event_count' => 5,
                             ]
-                        )->withJob($resultsJobLabel),
+                        ))->withJob($resultsJobLabel),
                     ];
                 },
             ],
@@ -369,40 +369,40 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     );
 
                     return [
-                        'job/started' => new Event(
+                        'job/started' => (new Event(
                             $firstSequenceNumber,
                             'job/started',
                             $jobReference,
                             [
                                 'tests' => [$successfulTestPath, $failedTestPath],
                             ]
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([$failedSourceReference, $successfulSourceReference])
                             ),
-                        'job/compilation/started' => new Event(
+                        'job/compilation/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $successfulTestPath => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/started:' . $successfulTestPath => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $successfulSourceReference,
                             [
                                 'source' => $successfulTestPath,
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $successfulTestPath => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/passed:' . $successfulTestPath => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/passed',
                             $successfulSourceReference,
                             [
                                 'source' => $successfulTestPath,
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -412,15 +412,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'source-compilation/started:' . $failedTestPath => new Event(
+                        'source-compilation/started:' . $failedTestPath => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $failedSourceReference,
                             [
                                 'source' => $failedTestPath,
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/failed' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/failed' => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/failed',
                             $failedSourceReference,
@@ -447,8 +447,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ],
                                 ],
                             ],
-                        )->withJob($resultsJobLabel),
-                        'job/ended' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'job/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/ended',
                             $jobReference,
@@ -457,18 +457,20 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'success' => false,
                                 'event_count' => 7,
                             ]
-                        )->withJob($resultsJobLabel),
+                        ))->withJob($resultsJobLabel),
                     ];
                 },
             ],
-            'two successful tests, chrome only' => [
+            'three successful tests' => [
                 'manifestPaths' => [
                     'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
                 'sourcePaths' => [
                     'Page/index.yml',
                     'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
                     'Test/chrome-open-form.yml',
                 ],
                 'jobLabel' => $jobLabel,
@@ -500,11 +502,27 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ],
                     [
                         'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => TestState::COMPLETE->value,
+                        'position' => 2,
+                    ],
+                    [
+                        'browser' => 'firefox',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => TestState::COMPLETE->value,
+                        'position' => 3,
+                    ],
+                    [
+                        'browser' => 'chrome',
                         'url' => 'http://html-fixtures/form.html',
                         'source' => 'Test/chrome-open-form.yml',
                         'step_names' => ['verify page is open'],
                         'state' => TestState::COMPLETE->value,
-                        'position' => 2,
+                        'position' => 4,
                     ],
                 ],
                 'expectedEventsCreator' => function (
@@ -520,47 +538,49 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
                     $sourcePaths = [
                         'Test/chrome-open-index.yml',
+                        'Test/chrome-firefox-open-index.yml',
                         'Test/chrome-open-form.yml',
                     ];
 
                     $sourceReferences = [
                         new ResourceReference($sourcePaths[0], md5($workerJobLabel . $sourcePaths[0])),
                         new ResourceReference($sourcePaths[1], md5($workerJobLabel . $sourcePaths[1])),
+                        new ResourceReference($sourcePaths[2], md5($workerJobLabel . $sourcePaths[2])),
                     ];
 
                     return [
-                        'job/started' => new Event(
+                        'job/started' => (new Event(
                             $firstSequenceNumber,
                             'job/started',
                             $jobReference,
                             [
                                 'tests' => $sourcePaths,
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection($sourceReferences)),
-                        'job/compilation/started' => new Event(
+                        'job/compilation/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $sourcePaths[0] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/started:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $sourceReferences[0],
                             [
                                 'source' => $sourcePaths[0],
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePaths[0] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/passed:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/passed',
                             $sourceReferences[0],
                             [
                                 'source' => $sourcePaths[0],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -570,22 +590,22 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'source-compilation/started:' . $sourcePaths[1] => new Event(
+                        'source-compilation/started:' . $sourcePaths[1] => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $sourceReferences[1],
                             [
                                 'source' => $sourcePaths[1],
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePaths[1] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/passed:' . $sourcePaths[1] => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/passed',
                             $sourceReferences[1],
                             [
                                 'source' => $sourcePaths[1],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -595,19 +615,44 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job/compilation/ended' => new Event(
+                        'source-compilation/started:' . $sourcePaths[2] => (new Event(
+                            ++$firstSequenceNumber,
+                            'source-compilation/started',
+                            $sourceReferences[2],
+                            [
+                                'source' => $sourcePaths[2],
+                            ]
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/passed:' . $sourcePaths[2] => (new Event(
+                            ++$firstSequenceNumber,
+                            'source-compilation/passed',
+                            $sourceReferences[2],
+                            [
+                                'source' => $sourcePaths[2],
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5($workerJobLabel . $sourcePaths[2] . 'verify page is open')
+                                    ),
+                                ])
+                            ),
+                        'job/compilation/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/ended',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'job/execution/started' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'job/execution/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/execution/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'test/started:' . $sourcePaths[0] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'test/started:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
                             'test/started',
                             $sourceReferences[0],
@@ -627,7 +672,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'verify page is open',
                                 ],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -641,7 +686,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'step/passed:' . $sourcePaths[0] . 'verify page is open' => new Event(
+                        'step/passed:' . $sourcePaths[0] . 'verify page is open' => (new Event(
                             ++$firstSequenceNumber,
                             'step/passed',
                             new ResourceReference(
@@ -676,8 +721,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ],
                                 ],
                             ],
-                        )->withJob($resultsJobLabel),
-                        'test/passed:' . $sourcePaths[0] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'test/passed:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
                             'test/passed',
                             $sourceReferences[0],
@@ -697,7 +742,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'verify page is open',
                                 ],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -711,7 +756,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'test/started:' . $sourcePaths[1] => new Event(
+                        'test/started:' . $sourcePaths[1] . ', chrome' => (new Event(
                             ++$firstSequenceNumber,
                             'test/started',
                             $sourceReferences[1],
@@ -723,7 +768,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                         'path' => $sourcePaths[1],
                                         'config' => [
                                             'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
+                                            'url' => 'http://html-fixtures/index.html',
                                         ],
                                     ],
                                 ],
@@ -731,7 +776,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'verify page is open',
                                 ],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -745,7 +790,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'step/passed:' . $sourcePaths[1] . 'verify page is open' => new Event(
+                        'step/passed:' . $sourcePaths[1] . 'verify page is open, chrome' => (new Event(
                             ++$firstSequenceNumber,
                             'step/passed',
                             new ResourceReference(
@@ -767,15 +812,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                         'statements' => [
                                             [
                                                 'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/form.html"',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
                                                 'status' => 'passed',
                                             ],
                                         ],
                                     ],
                                 ],
                             ],
-                        )->withJob($resultsJobLabel),
-                        'test/passed' . $sourcePaths[1] => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'test/passed' . $sourcePaths[1] . ', chrome' => (new Event(
                             ++$firstSequenceNumber,
                             'test/passed',
                             $sourceReferences[1],
@@ -787,7 +832,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                         'path' => $sourcePaths[1],
                                         'config' => [
                                             'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
+                                            'url' => 'http://html-fixtures/index.html',
                                         ],
                                     ],
                                 ],
@@ -795,7 +840,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'verify page is open',
                                 ],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -809,22 +854,218 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job/execution/completed' => new Event(
+                        'test/started:' . $sourcePaths[1] . ', firefox' => (new Event(
+                            ++$firstSequenceNumber,
+                            'test/started',
+                            $sourceReferences[1],
+                            [
+                                'source' => $sourcePaths[1],
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => $sourcePaths[1],
+                                        'config' => [
+                                            'browser' => 'firefox',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
+                                        )
+                                    ),
+                                ])
+                            ),
+                        'step/passed:' . $sourcePaths[1] . 'verify page is open, firefox' => (new Event(
+                            ++$firstSequenceNumber,
+                            'step/passed',
+                            new ResourceReference(
+                                'verify page is open',
+                                md5(
+                                    $workerJobLabel
+                                    . $sourcePaths[1]
+                                    . 'verify page is open'
+                                )
+                            ),
+                            [
+                                'source' => $sourcePaths[1],
+                                'name' => 'verify page is open',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                'status' => 'passed',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ))->withJob($resultsJobLabel),
+                        'test/passed' . $sourcePaths[1] . ', firefox' => (new Event(
+                            ++$firstSequenceNumber,
+                            'test/passed',
+                            $sourceReferences[1],
+                            [
+                                'source' => $sourcePaths[1],
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => $sourcePaths[1],
+                                        'config' => [
+                                            'browser' => 'firefox',
+                                            'url' => 'http://html-fixtures/index.html',
+                                        ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel
+                                            . $sourcePaths[1]
+                                            . 'verify page is open'
+                                        )
+                                    ),
+                                ])
+                            ),
+                        'test/started:' . $sourcePaths[2] => (new Event(
+                            ++$firstSequenceNumber,
+                            'test/started',
+                            $sourceReferences[2],
+                            [
+                                'source' => $sourcePaths[2],
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => $sourcePaths[2],
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/form.html',
+                                        ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel
+                                            . $sourcePaths[2]
+                                            . 'verify page is open'
+                                        )
+                                    ),
+                                ])
+                            ),
+                        'step/passed:' . $sourcePaths[2] . 'verify page is open' => (new Event(
+                            ++$firstSequenceNumber,
+                            'step/passed',
+                            new ResourceReference(
+                                'verify page is open',
+                                md5(
+                                    $workerJobLabel
+                                    . $sourcePaths[2]
+                                    . 'verify page is open'
+                                )
+                            ),
+                            [
+                                'source' => $sourcePaths[2],
+                                'name' => 'verify page is open',
+                                'document' => [
+                                    'type' => 'step',
+                                    'payload' => [
+                                        'name' => 'verify page is open',
+                                        'status' => 'passed',
+                                        'statements' => [
+                                            [
+                                                'type' => 'assertion',
+                                                'source' => '$page.url is "http://html-fixtures/form.html"',
+                                                'status' => 'passed',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ))->withJob($resultsJobLabel),
+                        'test/passed' . $sourcePaths[2] => (new Event(
+                            ++$firstSequenceNumber,
+                            'test/passed',
+                            $sourceReferences[2],
+                            [
+                                'source' => $sourcePaths[2],
+                                'document' => [
+                                    'type' => 'test',
+                                    'payload' => [
+                                        'path' => $sourcePaths[2],
+                                        'config' => [
+                                            'browser' => 'chrome',
+                                            'url' => 'http://html-fixtures/form.html',
+                                        ],
+                                    ],
+                                ],
+                                'step_names' => [
+                                    'verify page is open',
+                                ],
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5(
+                                            $workerJobLabel
+                                            . $sourcePaths[2]
+                                            . 'verify page is open'
+                                        )
+                                    ),
+                                ])
+                            ),
+                        'job/execution/completed' => (new Event(
                             ++$firstSequenceNumber,
                             'job/execution/completed',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'job/ended' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'job/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/ended',
                             $jobReference,
                             [
                                 'end_state' => 'complete',
                                 'success' => true,
-                                'event_count' => 16,
+                                'event_count' => 24,
                             ]
-                        )->withJob($resultsJobLabel),
+                        ))->withJob($resultsJobLabel),
                     ];
                 },
             ],
@@ -877,38 +1118,38 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     $sourceReference = new ResourceReference($sourcePath, md5($workerJobLabel . $sourcePath));
 
                     return [
-                        'job/started' => new Event(
+                        'job/started' => (new Event(
                             $firstSequenceNumber,
                             'job/started',
                             $jobReference,
                             [
                                 'tests' => [$sourcePath],
                             ],
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'job/compilation/started' => new Event(
+                        'job/compilation/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $sourcePath => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/started:' . $sourcePath => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/started',
                             $sourceReference,
                             [
                                 'source' => $sourcePath,
                             ]
-                        )->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePath => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'source-compilation/passed:' . $sourcePath => (new Event(
                             ++$firstSequenceNumber,
                             'source-compilation/passed',
                             $sourceReference,
                             [
                                 'source' => $sourcePath,
                             ]
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -922,19 +1163,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job/compilation/ended' => new Event(
+                        'job/compilation/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/compilation/ended',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'job/execution/started' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'job/execution/started' => (new Event(
                             ++$firstSequenceNumber,
                             'job/execution/started',
                             $jobReference,
                             []
-                        )->withJob($resultsJobLabel),
-                        'test/started:' . $sourcePath => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'test/started:' . $sourcePath => (new Event(
                             ++$firstSequenceNumber,
                             'test/started',
                             $sourceReference,
@@ -955,7 +1196,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'fail on intentionally-missing element',
                                 ],
                             ]
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -977,7 +1218,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'step/passed:' . $sourcePath . 'verify page is open' => new Event(
+                        'step/passed:' . $sourcePath . 'verify page is open' => (new Event(
                             ++$firstSequenceNumber,
                             'step/passed',
                             new ResourceReference(
@@ -1006,8 +1247,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ],
                                 ],
                             ],
-                        )->withJob($resultsJobLabel),
-                        'step/failed:' . $sourcePath . 'fail on intentionally-missing element' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'step/failed:' . $sourcePath . 'fail on intentionally-missing element' => (new Event(
                             ++$firstSequenceNumber,
                             'step/failed',
                             new ResourceReference(
@@ -1053,8 +1294,8 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 ],
                                 'name' => 'fail on intentionally-missing element',
                             ]
-                        )->withJob($resultsJobLabel),
-                        'test/failed' => new Event(
+                        ))->withJob($resultsJobLabel),
+                        'test/failed' => (new Event(
                             ++$firstSequenceNumber,
                             'test/failed',
                             $sourceReference,
@@ -1075,7 +1316,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     'fail on intentionally-missing element',
                                 ],
                             ]
-                        )
+                        ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([
@@ -1097,7 +1338,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job/ended' => new Event(
+                        'job/ended' => (new Event(
                             ++$firstSequenceNumber,
                             'job/ended',
                             $jobReference,
@@ -1106,7 +1347,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'success' => false,
                                 'event_count' => 11,
                             ]
-                        )->withJob($resultsJobLabel),
+                        ))->withJob($resultsJobLabel),
                     ];
                 },
             ],
