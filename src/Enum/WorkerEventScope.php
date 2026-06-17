@@ -12,5 +12,4 @@ enum WorkerEventScope: string
     case EXECUTION = 'job/execution';
     case TEST = 'test';
     case STEP = 'step';
-    case UNKNOWN = 'unknown';
 }
