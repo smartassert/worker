@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Test;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Document;
@@ -196,12 +197,14 @@ class TestCancellerTest extends WebTestCase
     public function testCancelAwaitingFromStepFailureEvent(
         Document $eventDocument,
         WorkerEventOutcome $eventOutcome,
+        WorkerEventType $eventType,
         array $states,
         array $expectedStates
     ): void {
         $this->doTestStepFailureEventDrivenTest(
             $eventDocument,
             $eventOutcome,
+            $eventType,
             $states,
             function (StepEvent $event) {
                 $this->testCanceller->cancelAwaitingFromTestFailureEvent($event);
@@ -218,12 +221,14 @@ class TestCancellerTest extends WebTestCase
     public function testSubscribesToStepFailureEvent(
         Document $eventDocument,
         WorkerEventOutcome $eventOutcome,
+        WorkerEventType $eventType,
         array $states,
         array $expectedStates
     ): void {
         $this->doTestStepFailureEventDrivenTest(
             $eventDocument,
             $eventOutcome,
+            $eventType,
             $states,
             function (StepEvent $event) {
                 $this->eventDispatcher->dispatch($event);
@@ -241,6 +246,7 @@ class TestCancellerTest extends WebTestCase
             'step/failed, no awaiting tests, test failed' => [
                 'eventDocument' => new Step('step name', []),
                 'eventOutcome' => WorkerEventOutcome::FAILED,
+                'eventType' => WorkerEventType::STEP_FAILED,
                 'states' => [
                     TestState::FAILED,
                     TestState::COMPLETE,
@@ -253,6 +259,7 @@ class TestCancellerTest extends WebTestCase
             'step/failed, has awaiting tests, test failed' => [
                 'eventDocument' => new Step('step name', []),
                 'eventOutcome' => WorkerEventOutcome::FAILED,
+                'eventType' => WorkerEventType::STEP_FAILED,
                 'states' => [
                     TestState::FAILED,
                     TestState::AWAITING,
@@ -267,6 +274,7 @@ class TestCancellerTest extends WebTestCase
             'step/exception, no awaiting tests, test failed' => [
                 'eventDocument' => new StepException('step name', []),
                 'eventOutcome' => WorkerEventOutcome::EXCEPTION,
+                'eventType' => WorkerEventType::STEP_EXCEPTION,
                 'states' => [
                     TestState::FAILED,
                     TestState::COMPLETE,
@@ -279,6 +287,7 @@ class TestCancellerTest extends WebTestCase
             'step/exception, has awaiting tests, test failed' => [
                 'eventDocument' => new StepException('step name', []),
                 'eventOutcome' => WorkerEventOutcome::EXCEPTION,
+                'eventType' => WorkerEventType::STEP_EXCEPTION,
                 'states' => [
                     TestState::FAILED,
                     TestState::AWAITING,
@@ -366,6 +375,7 @@ class TestCancellerTest extends WebTestCase
     private function doTestStepFailureEventDrivenTest(
         Document $eventDocument,
         WorkerEventOutcome $eventOutcome,
+        WorkerEventType $eventType,
         array $states,
         callable $execute,
         array $expectedStates
@@ -379,7 +389,8 @@ class TestCancellerTest extends WebTestCase
             $eventDocument,
             'test.yml',
             'step name',
-            $eventOutcome
+            $eventOutcome,
+            $eventType,
         ));
 
         $this->assertTestStates($expectedStates);

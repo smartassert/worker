@@ -9,6 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
 use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
@@ -75,7 +76,8 @@ class JobEndStateSetterTest extends WebTestCase
                     $testEntity,
                     new TestDocument('test.yml', []),
                     'test.yml',
-                    WorkerEventOutcome::FAILED
+                    WorkerEventOutcome::FAILED,
+                    WorkerEventType::TEST_FAILED,
                 ),
                 'expectedJobEndState' => JobEndState::FAILED_TEST_FAILURE,
             ],
@@ -84,7 +86,8 @@ class JobEndStateSetterTest extends WebTestCase
                     $testEntity,
                     new Exception(ExecutionExceptionScope::TEST, []),
                     'test.yml',
-                    WorkerEventOutcome::EXCEPTION
+                    WorkerEventOutcome::EXCEPTION,
+                    WorkerEventType::TEST_EXCEPTION,
                 ),
                 'expectedJobEndState' => JobEndState::FAILED_TEST_EXCEPTION,
             ],
