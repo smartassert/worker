@@ -15,4 +15,10 @@ enum WorkerEventType: string
     case SOURCE_COMPILATION_PASSED = 'source-compilation/passed';
     case SOURCE_COMPILATION_STARTED = 'source-compilation/started';
     case SOURCE_COMPILATION_TIMED_OUT = 'source-compilation/timed-out';
+    case JOB_EXECUTION_STARTED = 'job/execution/started';
+    case JOB_EXECUTION_COMPLETED = 'job/execution/completed';
+    case TEST_STARTED = 'test/started';
+    case TEST_FAILED = 'test/failed';
+    case TEST_PASSED = 'test/passed';
+    case TEST_TIMED_OUT = 'test/timed-out';
 }
