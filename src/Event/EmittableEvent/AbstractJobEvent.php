@@ -6,6 +6,7 @@ namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
 abstract class AbstractJobEvent extends AbstractEvent implements EmittableEventInterface
@@ -19,6 +20,7 @@ abstract class AbstractJobEvent extends AbstractEvent implements EmittableEventI
     public function __construct(
         string $label,
         WorkerEventOutcome $outcome,
+        WorkerEventType $type,
         array $payload = [],
         array $referenceComponents = [],
         array $relatedReferenceSources = []
@@ -27,6 +29,7 @@ abstract class AbstractJobEvent extends AbstractEvent implements EmittableEventI
             $label,
             WorkerEventScope::JOB,
             $outcome,
+            $type,
             $payload,
             $referenceComponents,
             $relatedReferenceSources

@@ -7,6 +7,7 @@ namespace App\Event\EmittableEvent;
 use App\Entity\Test;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Model\Document\Document;
 
 class StepEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface
@@ -20,12 +21,14 @@ class StepEvent extends AbstractEvent implements EmittableEventInterface, HasTes
         Document $document,
         string $path,
         string $stepName,
-        WorkerEventOutcome $outcome
+        WorkerEventOutcome $outcome,
+        WorkerEventType $type,
     ) {
         parent::__construct(
             $stepName,
             WorkerEventScope::STEP,
             $outcome,
+            $type,
             [
                 'source' => $path,
                 'document' => $document->getData(),

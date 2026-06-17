@@ -6,6 +6,7 @@ namespace App\Event\EmittableEvent;
 
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
 interface EmittableEventInterface
@@ -23,6 +24,8 @@ interface EmittableEventInterface
     public function getScope(): WorkerEventScope;
 
     public function getOutcome(): WorkerEventOutcome;
+
+    public function getType(): WorkerEventType;
 
     /**
      * @return ResourceReferenceSource[]

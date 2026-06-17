@@ -8,6 +8,7 @@ use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
@@ -59,12 +60,19 @@ class ExecuteTestHandler
         $path = $test->getSource();
 
         $this->eventDispatcher->dispatch(
-            new TestEvent($test, $testDocument, $path, WorkerEventOutcome::STARTED)
+            new TestEvent(
+                $test,
+                $testDocument,
+                $path,
+                WorkerEventOutcome::STARTED,
+                WorkerEventType::TEST_STARTED,
+            )
         );
 
         $this->testStateMutator->setRunning($test);
 
         $eventOutcome = WorkerEventOutcome::FAILED;
+        $eventType = WorkerEventType::TEST_FAILED;
 
         try {
             $this->testExecutor->execute($test, $message->timeoutInSeconds);
@@ -72,15 +80,17 @@ class ExecuteTestHandler
             $this->testStateMutator->setCancelled($test);
 
             $eventOutcome = WorkerEventOutcome::TIME_OUT;
+            $eventType = WorkerEventType::TEST_TIMED_OUT;
         }
 
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if (TestState::COMPLETE === $test->getState()) {
             $eventOutcome = WorkerEventOutcome::PASSED;
+            $eventType = WorkerEventType::TEST_PASSED;
         }
 
-        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome));
+        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome, $eventType));
     }
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument
