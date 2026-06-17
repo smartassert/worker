@@ -21,4 +21,7 @@ enum WorkerEventType: string
     case TEST_FAILED = 'test/failed';
     case TEST_PASSED = 'test/passed';
     case TEST_TIMED_OUT = 'test/timed-out';
+    case STEP_EXCEPTION = 'step/exception';
+    case STEP_FAILED = 'step/failed';
+    case STEP_PASSED = 'step/passed';
 }
