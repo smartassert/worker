@@ -98,6 +98,14 @@ class WorkerEventSetup
         return $new;
     }
 
+    public function withType(WorkerEventType $type): self
+    {
+        $new = clone $this;
+        $new->type = $type;
+
+        return $new;
+    }
+
     public function getReference(): WorkerEventReference
     {
         return $this->reference;

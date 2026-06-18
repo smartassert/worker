@@ -103,7 +103,7 @@ class WorkerEvent implements \JsonSerializable, EventInterface
         $data = array_merge(
             [
                 'sequence_number' => $this->getId(),
-                'type' => $this->scope->value . '/' . $this->outcome->value,
+                'type' => $this->type->value,
                 'body' => $this->payload,
             ],
             $this->reference->toArray(),
