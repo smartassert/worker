@@ -300,7 +300,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
             ],
-            'job/execution/started' => [
+            'job-execution/started' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
                     WorkerEventType::JOB_EXECUTION_STARTED,
@@ -426,7 +426,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
             ],
-            'job/execution/completed' => [
+            'job-execution/completed' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
                     WorkerEventType::JOB_EXECUTION_COMPLETED
@@ -561,7 +561,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
             ],
-            'job/compilation/started' => [
+            'job-compilation/started' => [
                 'event' => new JobCompilationStartedEvent(self::JOB_LABEL),
                 'expected' => new WorkerEvent(
                     WorkerEventType::JOB_COMPILATION_STARTED,
