@@ -10,7 +10,7 @@ readonly class JobCompilationEventType implements JobCompilationEventTypeInterfa
      * @param EventTypeInterface::JOB_COMPILATION_ENDED|EventTypeInterface::JOB_COMPILATION_STARTED $value
      */
     public function __construct(
-        private readonly string $value,
+        private string $value,
     ) {}
 
     public function serialize(): string

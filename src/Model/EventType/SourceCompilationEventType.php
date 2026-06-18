@@ -10,7 +10,7 @@ readonly class SourceCompilationEventType implements SourceCompilationEventTypeI
      * @param EventTypeInterface::SOURCE_COMPILATION_* $value
      */
     public function __construct(
-        private readonly string $value,
+        private string $value,
     ) {}
 
     public function serialize(): string

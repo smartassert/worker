@@ -10,7 +10,7 @@ readonly class TestEventType implements TestEventTypeInterface
      * @param EventTypeInterface::TEST_* $value
      */
     public function __construct(
-        private readonly string $value,
+        private string $value,
     ) {}
 
     public function serialize(): string
