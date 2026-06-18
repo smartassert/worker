@@ -246,7 +246,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     private function createEntity(): WorkerEvent
     {
         return new WorkerEvent(
-            WorkerEventType::SOURCE_COMPILATION_FAILED,
+            WorkerEventType::SOURCE_COMPILATION_FAILED->value,
             new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );

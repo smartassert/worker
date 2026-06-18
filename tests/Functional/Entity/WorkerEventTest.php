@@ -46,14 +46,14 @@ class WorkerEventTest extends AbstractEntityTestCase
         return [
             'without related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventType::SOURCE_COMPILATION_FAILED,
+                    WorkerEventType::SOURCE_COMPILATION_FAILED->value,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     []
                 ),
             ],
             'with related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventType::SOURCE_COMPILATION_FAILED,
+                    WorkerEventType::SOURCE_COMPILATION_FAILED->value,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
                 )->withRelatedReferences(

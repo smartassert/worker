@@ -135,7 +135,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         int $expected
     ): void {
         $workerEvent = new WorkerEvent(
-            WorkerEventType::JOB_STARTED,
+            WorkerEventType::JOB_STARTED->value,
             new WorkerEventReference(md5((string) rand()), md5((string) rand())),
             []
         );

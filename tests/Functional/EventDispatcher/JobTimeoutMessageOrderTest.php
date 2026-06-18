@@ -62,9 +62,9 @@ class JobTimeoutMessageOrderTest extends WebTestCase
         self::assertCount(2, $workerEvents);
 
         $jobTimeoutEvent = $workerEvents[0];
-        self::assertSame(WorkerEventType::JOB_TIMED_OUT, $jobTimeoutEvent->type);
+        self::assertSame(WorkerEventType::JOB_TIMED_OUT->value, $jobTimeoutEvent->type);
 
         $jobEndedEvent = $workerEvents[1];
-        self::assertSame(WorkerEventType::JOB_ENDED, $jobEndedEvent->type);
+        self::assertSame(WorkerEventType::JOB_ENDED->value, $jobEndedEvent->type);
     }
 }
