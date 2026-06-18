@@ -6,11 +6,14 @@ namespace App\Tests\Model;
 
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 
 class WorkerEventSetup
 {
-    private WorkerEventType $type;
+    /**
+     * @var EventTypeInterface::*
+     */
+    private string $type;
 
     /**
      * @var array<mixed>
@@ -23,13 +26,16 @@ class WorkerEventSetup
 
     public function __construct()
     {
-        $this->type = WorkerEventType::SOURCE_COMPILATION_PASSED;
+        $this->type = EventTypeInterface::SOURCE_COMPILATION_PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');
     }
 
-    public function getType(): WorkerEventType
+    /**
+     * @return EventTypeInterface::*
+     */
+    public function getType(): string
     {
         return $this->type;
     }
@@ -66,7 +72,10 @@ class WorkerEventSetup
         return $new;
     }
 
-    public function withType(WorkerEventType $type): self
+    /**
+     * @param EventTypeInterface::* $type
+     */
+    public function withType(string $type): self
     {
         $new = clone $this;
         $new->type = $type;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
@@ -41,16 +41,16 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
+                        ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::TEST_STARTED),
+                        ->withType(EventTypeInterface::TEST_STARTED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::JOB_TIMED_OUT),
+                        ->withType(EventTypeInterface::JOB_TIMED_OUT),
                 ])
         );
 
-        self::assertTrue($this->repository->hasForType(WorkerEventType::SOURCE_COMPILATION_FAILED));
-        self::assertFalse($this->repository->hasForType(WorkerEventType::STEP_PASSED));
+        self::assertTrue($this->repository->hasForType(EventTypeInterface::SOURCE_COMPILATION_FAILED));
+        self::assertFalse($this->repository->hasForType(EventTypeInterface::STEP_PASSED));
     }
 
     public function testGetTypeCount(): void
@@ -59,38 +59,38 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::JOB_STARTED),
+                        ->withType(EventTypeInterface::JOB_STARTED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::STEP_PASSED),
+                        ->withType(EventTypeInterface::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::STEP_PASSED),
+                        ->withType(EventTypeInterface::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
                 ])
         );
 
         self::assertSame(
             0,
-            $this->repository->getTypeCount(WorkerEventType::JOB_EXECUTION_COMPLETED)
+            $this->repository->getTypeCount(EventTypeInterface::JOB_EXECUTION_COMPLETED)
         );
 
         self::assertSame(
             1,
-            $this->repository->getTypeCount(WorkerEventType::JOB_STARTED)
+            $this->repository->getTypeCount(EventTypeInterface::JOB_STARTED)
         );
 
         self::assertSame(
             2,
-            $this->repository->getTypeCount(WorkerEventType::STEP_PASSED)
+            $this->repository->getTypeCount(EventTypeInterface::STEP_PASSED)
         );
 
         self::assertSame(
             3,
-            $this->repository->getTypeCount(WorkerEventType::SOURCE_COMPILATION_PASSED)
+            $this->repository->getTypeCount(EventTypeInterface::SOURCE_COMPILATION_PASSED)
         );
     }
 

@@ -6,7 +6,7 @@ namespace App\Tests\Functional\Entity;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Tests\Services\EntityRemover;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
@@ -46,14 +46,14 @@ class WorkerEventTest extends AbstractEntityTestCase
         return [
             'without related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventType::SOURCE_COMPILATION_FAILED->value,
+                    EventTypeInterface::SOURCE_COMPILATION_FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     []
                 ),
             ],
             'with related references' => [
                 'event' => new WorkerEvent(
-                    WorkerEventType::SOURCE_COMPILATION_FAILED->value,
+                    EventTypeInterface::SOURCE_COMPILATION_FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
                 )->withRelatedReferences(

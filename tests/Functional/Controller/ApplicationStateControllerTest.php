@@ -14,7 +14,7 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\SourceSetup;
@@ -468,7 +468,7 @@ class ApplicationStateControllerTest extends WebTestCase
                         new WorkerEventSetup()
                             ->withState(WorkerEventState::COMPLETE),
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::JOB_TIMED_OUT)
+                            ->withType(EventTypeInterface::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
