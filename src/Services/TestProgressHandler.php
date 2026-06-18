@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
 use App\Model\Document\Document;
 use App\Model\Document\StepException;
-use App\Model\EventType\EventTypeInterface;
 use App\Services\DocumentFactory\ExceptionFactory;
 use App\Services\DocumentFactory\StepFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;

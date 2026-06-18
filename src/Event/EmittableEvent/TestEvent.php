@@ -6,7 +6,6 @@ namespace App\Event\EmittableEvent;
 
 use App\Entity\Test as TestEntity;
 use App\Model\Document\Document;
-use App\Model\EventType\EventTypeInterface;
 use App\Model\ResourceReferenceSource;
 
 class TestEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface

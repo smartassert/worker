@@ -6,7 +6,6 @@ namespace App\Event\EmittableEvent;
 
 use App\Entity\Test;
 use App\Model\Document\Document;
-use App\Model\EventType\EventTypeInterface;
 
 class StepEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface
 {

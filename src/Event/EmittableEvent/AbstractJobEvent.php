@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Model\EventType\EventTypeInterface as EventType;
+use App\Event\EmittableEvent\EventTypeInterface as EventType;
 use App\Model\ResourceReferenceSource;
 
 abstract class AbstractJobEvent extends AbstractEvent implements EmittableEventInterface

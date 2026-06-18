@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\EventType;
+namespace App\Event\EmittableEvent;
 
 interface EventTypeInterface
 {
@@ -25,9 +25,4 @@ interface EventTypeInterface
     public const string STEP_EXCEPTION = 'step/exception';
     public const string STEP_FAILED = 'step/failed';
     public const string STEP_PASSED = 'step/passed';
-
-    /**
-     * @return EventTypeInterface::*
-     */
-    public function serialize(): string;
 }

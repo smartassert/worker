@@ -6,12 +6,12 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
-use App\Model\EventType\EventTypeInterface;
 use App\Repository\TestRepository;
 use App\Services\TestCanceller;
 use App\Tests\Model\TestSetup;

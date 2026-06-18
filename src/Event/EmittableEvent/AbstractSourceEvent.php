@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Model\EventType\EventTypeInterface;
 use App\Model\ResourceReferenceSource;
 
 abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEventInterface

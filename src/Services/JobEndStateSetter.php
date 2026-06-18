@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\JobEndState;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\Exception\JobNotFoundException;
-use App\Model\EventType\EventTypeInterface;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

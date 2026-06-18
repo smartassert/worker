@@ -7,9 +7,9 @@ namespace App\Services;
 use App\Entity\Test;
 use App\Enum\TestState;
 use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\StepEvent;
-use App\Model\EventType\EventTypeInterface;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

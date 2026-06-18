@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Model\EventType\EventTypeInterface;
-
 class JobTimeoutEvent extends AbstractJobEvent implements EmittableEventInterface
 {
     public function __construct(

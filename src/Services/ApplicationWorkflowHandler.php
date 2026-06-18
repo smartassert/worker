@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobCompilationEndedEvent;
 use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
@@ -12,7 +13,6 @@ use App\Event\JobCompiledEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Exception\JobNotFoundException;
-use App\Model\EventType\EventTypeInterface;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
