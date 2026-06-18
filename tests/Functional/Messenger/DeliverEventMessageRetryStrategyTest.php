@@ -6,8 +6,7 @@ namespace App\Tests\Functional\Messenger;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
 use App\Messenger\DeliverEventMessageRetryStrategy;
@@ -136,8 +135,7 @@ class DeliverEventMessageRetryStrategyTest extends WebTestCase
         int $expected
     ): void {
         $workerEvent = new WorkerEvent(
-            WorkerEventScope::JOB,
-            WorkerEventOutcome::STARTED,
+            WorkerEventType::JOB_STARTED,
             new WorkerEventReference(md5((string) rand()), md5((string) rand())),
             []
         );

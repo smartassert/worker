@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobCompilationEndedEvent;
 use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
@@ -54,7 +53,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchJobCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
             return;
         }
 

@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
-use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
@@ -134,7 +134,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
             $test,
             new TestDocument('test.yml', []),
             'test.yml',
-            WorkerEventOutcome::PASSED
+            WorkerEventType::TEST_PASSED,
         );
 
         $this->handler->dispatchNextExecuteTestMessageForTestPassedEvent($event);

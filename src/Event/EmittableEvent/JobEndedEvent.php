@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Event\EmittableEvent;
 
 use App\Enum\JobEndState;
-use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 
 class JobEndedEvent extends AbstractJobEvent implements EmittableEventInterface
 {
@@ -17,7 +17,7 @@ class JobEndedEvent extends AbstractJobEvent implements EmittableEventInterface
     ) {
         parent::__construct(
             $label,
-            WorkerEventOutcome::ENDED,
+            WorkerEventType::JOB_ENDED,
             [
                 'end_state' => $jobEndedState->value,
                 'success' => $success,

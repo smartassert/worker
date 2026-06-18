@@ -11,8 +11,7 @@ use App\Entity\WorkerEventReference;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobCompilationStartedEvent;
@@ -233,8 +232,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::STARTED,
+                    WorkerEventType::JOB_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'tests' => [
@@ -250,8 +248,7 @@ class WorkerEventFactoryTest extends WebTestCase
             SourceCompilationStartedEvent::class => [
                 'event' => new SourceCompilationStartedEvent($testSource),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::SOURCE_COMPILATION,
-                    WorkerEventOutcome::STARTED,
+                    WorkerEventType::SOURCE_COMPILATION_STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -264,8 +261,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $sourceCompilationPassedManifestCollection
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::SOURCE_COMPILATION,
-                    WorkerEventOutcome::PASSED,
+                    WorkerEventType::SOURCE_COMPILATION_PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -283,8 +279,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::SOURCE_COMPILATION,
-                    WorkerEventOutcome::FAILED,
+                    WorkerEventType::SOURCE_COMPILATION_FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -297,8 +292,7 @@ class WorkerEventFactoryTest extends WebTestCase
             SourceCompilationTimedOutEvent::class => [
                 'event' => new SourceCompilationTimedOutEvent($testSource, 600),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::SOURCE_COMPILATION,
-                    WorkerEventOutcome::TIME_OUT,
+                    WorkerEventType::SOURCE_COMPILATION_TIMED_OUT,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -307,10 +301,12 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job/execution/started' => [
-                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::STARTED),
+                'event' => new ExecutionEvent(
+                    self::JOB_LABEL,
+                    WorkerEventType::JOB_EXECUTION_STARTED,
+                ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::EXECUTION,
-                    WorkerEventOutcome::STARTED,
+                    WorkerEventType::JOB_EXECUTION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),
@@ -320,11 +316,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest,
                     $testDocument,
                     $testSource,
-                    WorkerEventOutcome::STARTED
+                    WorkerEventType::TEST_STARTED,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::TEST,
-                    WorkerEventOutcome::STARTED,
+                    WorkerEventType::TEST_STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -343,11 +338,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     new Step('passing step', $passingStepDocumentData),
                     $testSource,
                     'passing step',
-                    WorkerEventOutcome::PASSED
+                    WorkerEventType::STEP_PASSED,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::STEP,
-                    WorkerEventOutcome::PASSED,
+                    WorkerEventType::STEP_PASSED,
                     new WorkerEventReference(
                         'passing step',
                         md5(self::JOB_LABEL . $testSource . 'passing step')
@@ -365,11 +359,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     new Step('failing step', $failingStepDocumentData),
                     $testSource,
                     'failing step',
-                    WorkerEventOutcome::FAILED,
+                    WorkerEventType::STEP_FAILED,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::STEP,
-                    WorkerEventOutcome::FAILED,
+                    WorkerEventType::STEP_FAILED,
                     new WorkerEventReference(
                         'failing step',
                         md5(self::JOB_LABEL . $testSource . 'failing step')
@@ -386,11 +379,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument,
                     $testSource,
-                    WorkerEventOutcome::PASSED
+                    WorkerEventType::TEST_PASSED,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::TEST,
-                    WorkerEventOutcome::PASSED,
+                    WorkerEventType::TEST_PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -408,11 +400,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest->setState(TestState::FAILED),
                     $testDocument,
                     $testSource,
-                    WorkerEventOutcome::FAILED
+                    WorkerEventType::TEST_FAILED,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::TEST,
-                    WorkerEventOutcome::FAILED,
+                    WorkerEventType::TEST_FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -428,8 +419,7 @@ class WorkerEventFactoryTest extends WebTestCase
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::TIME_OUT,
+                    WorkerEventType::JOB_TIMED_OUT,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'maximum_duration_in_seconds' => 10,
@@ -437,10 +427,12 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job/execution/completed' => [
-                'event' => new ExecutionEvent(self::JOB_LABEL, WorkerEventOutcome::COMPLETED),
+                'event' => new ExecutionEvent(
+                    self::JOB_LABEL,
+                    WorkerEventType::JOB_EXECUTION_COMPLETED
+                ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::EXECUTION,
-                    WorkerEventOutcome::COMPLETED,
+                    WorkerEventType::JOB_EXECUTION_COMPLETED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),
@@ -450,11 +442,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest,
                     new Exception(ExecutionExceptionScope::TEST, $exceptionTestDocumentData),
                     $testSource,
-                    WorkerEventOutcome::EXCEPTION
+                    WorkerEventType::TEST_EXCEPTION,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::TEST,
-                    WorkerEventOutcome::EXCEPTION,
+                    WorkerEventType::TEST_EXCEPTION,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -473,11 +464,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     new StepException('step name', $exceptionStepDocumentData),
                     $testSource,
                     'step name',
-                    WorkerEventOutcome::EXCEPTION,
+                    WorkerEventType::STEP_EXCEPTION,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::STEP,
-                    WorkerEventOutcome::EXCEPTION,
+                    WorkerEventType::STEP_EXCEPTION,
                     new WorkerEventReference('step name', md5(self::JOB_LABEL . $testSource . 'step name')),
                     [
                         'source' => $testSource,
@@ -494,8 +484,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     1
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::ENDED,
+                    WorkerEventType::JOB_ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'end_state' => JobEndState::COMPLETE->value,
@@ -512,8 +501,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     2
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::ENDED,
+                    WorkerEventType::JOB_ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'end_state' => JobEndState::TIMED_OUT->value,
@@ -530,8 +518,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     3
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::ENDED,
+                    WorkerEventType::JOB_ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'end_state' => JobEndState::FAILED_COMPILATION->value,
@@ -548,8 +535,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     4,
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::ENDED,
+                    WorkerEventType::JOB_ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'end_state' => JobEndState::FAILED_TEST_FAILURE->value,
@@ -566,8 +552,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     5
                 ),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB,
-                    WorkerEventOutcome::ENDED,
+                    WorkerEventType::JOB_ENDED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     [
                         'end_state' => JobEndState::FAILED_TEST_EXCEPTION->value,
@@ -579,8 +564,7 @@ class WorkerEventFactoryTest extends WebTestCase
             'job/compilation/started' => [
                 'event' => new JobCompilationStartedEvent(self::JOB_LABEL),
                 'expected' => new WorkerEvent(
-                    WorkerEventScope::JOB_COMPILATION,
-                    WorkerEventOutcome::STARTED,
+                    WorkerEventType::JOB_COMPILATION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),

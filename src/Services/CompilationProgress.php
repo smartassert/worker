@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\CompilationState;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
 
@@ -21,8 +20,7 @@ class CompilationProgress
     public function get(): CompilationState
     {
         $compilationFailedCount = $this->workerEventRepository->getTypeCount(
-            WorkerEventScope::SOURCE_COMPILATION,
-            WorkerEventOutcome::FAILED
+            WorkerEventType::SOURCE_COMPILATION_FAILED,
         );
 
         if (0 !== $compilationFailedCount) {

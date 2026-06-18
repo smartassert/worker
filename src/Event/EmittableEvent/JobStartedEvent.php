@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
+use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
 class JobStartedEvent extends AbstractJobEvent implements EmittableEventInterface
@@ -18,7 +18,13 @@ class JobStartedEvent extends AbstractJobEvent implements EmittableEventInterfac
     ) {
         $relatedReferenceSources = $this->createRelatedReferenceSources($testPaths);
 
-        parent::__construct($label, WorkerEventOutcome::STARTED, ['tests' => $testPaths], [], $relatedReferenceSources);
+        parent::__construct(
+            $label,
+            WorkerEventType::JOB_STARTED,
+            ['tests' => $testPaths],
+            [],
+            $relatedReferenceSources
+        );
     }
 
     /**

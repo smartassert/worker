@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,11 +21,8 @@ use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent implements \JsonSerializable, EventInterface
 {
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventScope::class)]
-    public readonly WorkerEventScope $scope;
-
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
-    public readonly WorkerEventOutcome $outcome;
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
+    public readonly WorkerEventType $type;
 
     /**
      * @var array<mixed>
@@ -55,15 +51,10 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     /**
      * @param array<mixed> $payload
      */
-    public function __construct(
-        WorkerEventScope $scope,
-        WorkerEventOutcome $outcome,
-        ResourceReferenceInterface $reference,
-        array $payload,
-    ) {
+    public function __construct(WorkerEventType $type, ResourceReferenceInterface $reference, array $payload)
+    {
         $this->state = WorkerEventState::AWAITING;
-        $this->scope = $scope;
-        $this->outcome = $outcome;
+        $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();
@@ -97,7 +88,7 @@ class WorkerEvent implements \JsonSerializable, EventInterface
         $data = array_merge(
             [
                 'sequence_number' => $this->getId(),
-                'type' => $this->scope->value . '/' . $this->outcome->value,
+                'type' => $this->type->value,
                 'body' => $this->payload,
             ],
             $this->reference->toArray(),

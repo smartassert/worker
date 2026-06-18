@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
@@ -42,22 +41,16 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::FAILED),
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::TEST)
-                        ->withOutcome(WorkerEventOutcome::STARTED),
+                        ->withType(WorkerEventType::TEST_STARTED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::JOB)
-                        ->withOutcome(WorkerEventOutcome::TIME_OUT),
+                        ->withType(WorkerEventType::JOB_TIMED_OUT),
                 ])
         );
 
-        self::assertTrue($this->repository->hasForType(
-            WorkerEventScope::SOURCE_COMPILATION,
-            WorkerEventOutcome::FAILED
-        ));
-        self::assertFalse($this->repository->hasForType(WorkerEventScope::STEP, WorkerEventOutcome::PASSED));
+        self::assertTrue($this->repository->hasForType(WorkerEventType::SOURCE_COMPILATION_FAILED));
+        self::assertFalse($this->repository->hasForType(WorkerEventType::STEP_PASSED));
     }
 
     public function testGetTypeCount(): void
@@ -66,44 +59,38 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::JOB)
-                        ->withOutcome(WorkerEventOutcome::STARTED),
+                        ->withType(WorkerEventType::JOB_STARTED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::STEP)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::STEP)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                 ])
         );
 
         self::assertSame(
             0,
-            $this->repository->getTypeCount(WorkerEventScope::EXECUTION, WorkerEventOutcome::COMPLETED)
+            $this->repository->getTypeCount(WorkerEventType::JOB_EXECUTION_COMPLETED)
         );
 
         self::assertSame(
             1,
-            $this->repository->getTypeCount(WorkerEventScope::JOB, WorkerEventOutcome::STARTED)
+            $this->repository->getTypeCount(WorkerEventType::JOB_STARTED)
         );
 
         self::assertSame(
             2,
-            $this->repository->getTypeCount(WorkerEventScope::STEP, WorkerEventOutcome::PASSED)
+            $this->repository->getTypeCount(WorkerEventType::STEP_PASSED)
         );
 
         self::assertSame(
             3,
-            $this->repository->getTypeCount(WorkerEventScope::SOURCE_COMPILATION, WorkerEventOutcome::PASSED)
+            $this->repository->getTypeCount(WorkerEventType::SOURCE_COMPILATION_PASSED)
         );
     }
 

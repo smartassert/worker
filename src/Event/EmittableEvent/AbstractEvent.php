@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -19,8 +18,7 @@ class AbstractEvent extends Event implements EmittableEventInterface
      */
     public function __construct(
         private readonly string $label,
-        private readonly WorkerEventScope $scope,
-        private readonly WorkerEventOutcome $outcome,
+        private readonly WorkerEventType $type,
         private readonly array $payload = [],
         private readonly array $referenceComponents = [],
         private readonly array $relatedReferenceSources = [],
@@ -36,14 +34,9 @@ class AbstractEvent extends Event implements EmittableEventInterface
         return $this->referenceComponents;
     }
 
-    public function getScope(): WorkerEventScope
+    public function getType(): WorkerEventType
     {
-        return $this->scope;
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
+        return $this->type;
     }
 
     public function getRelatedReferenceSources(): array

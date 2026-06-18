@@ -6,9 +6,8 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use App\Services\WorkerEventStateMutator;
 use App\Tests\Services\EntityRemover;
 use Doctrine\ORM\EntityManagerInterface;
@@ -247,8 +246,7 @@ class WorkerEventStateMutatorTest extends WebTestCase
     private function createEntity(): WorkerEvent
     {
         return new WorkerEvent(
-            WorkerEventScope::SOURCE_COMPILATION,
-            WorkerEventOutcome::FAILED,
+            WorkerEventType::SOURCE_COMPILATION_FAILED,
             new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
         );
