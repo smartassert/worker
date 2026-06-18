@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace App\Event\EmittableEvent;
 
 use App\Entity\Test;
-use App\Enum\WorkerEventType;
 use App\Model\Document\Document;
+use App\Model\EventType\EventTypeInterface;
 
 class StepEvent extends AbstractEvent implements EmittableEventInterface, HasTestInterface
 {
     /**
-     * @param non-empty-string $path
-     * @param non-empty-string $stepName
+     * @param non-empty-string           $path
+     * @param non-empty-string           $stepName
+     * @param EventTypeInterface::STEP_* $type
      */
     public function __construct(
         private readonly Test $test,
         Document $document,
         string $path,
         string $stepName,
-        WorkerEventType $type,
+        string $type,
     ) {
         parent::__construct(
             $stepName,

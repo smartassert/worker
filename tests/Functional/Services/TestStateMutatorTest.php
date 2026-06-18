@@ -6,9 +6,9 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Step;
+use App\Model\EventType\EventTypeInterface;
 use App\Services\TestStateMutator;
 use App\Tests\Model\TestSetup;
 use App\Tests\Services\TestTestFactory;
@@ -146,7 +146,7 @@ class TestStateMutatorTest extends WebTestCase
             new Step('step name', $documentData),
             'test.yml',
             'step name',
-            WorkerEventType::STEP_FAILED,
+            EventTypeInterface::STEP_FAILED,
         );
         $execute($event);
 

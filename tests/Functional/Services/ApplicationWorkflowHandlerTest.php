@@ -7,10 +7,10 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Model\Document\Test as TestDocument;
+use App\Model\EventType\EventTypeInterface;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Services\EntityRemover;
@@ -56,7 +56,7 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
             $testEntity,
             new TestDocument('test.yml', []),
             'test.yml',
-            WorkerEventType::TEST_PASSED,
+            EventTypeInterface::TEST_PASSED,
         ));
 
         $transportQueue = $this->messengerTransport->getSent();

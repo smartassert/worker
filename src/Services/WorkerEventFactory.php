@@ -35,7 +35,7 @@ class WorkerEventFactory
             $this->referenceFactory->create($job->getLabel(), $event->getReferenceComponents())
         );
 
-        $event = new WorkerEvent($event->getType()->value, $reference, $payload);
+        $event = new WorkerEvent($event->getType(), $reference, $payload);
         if ($resourceReferenceCollection instanceof ResourceReferenceCollectionInterface) {
             $event = $event->withRelatedReferences($resourceReferenceCollection);
         }

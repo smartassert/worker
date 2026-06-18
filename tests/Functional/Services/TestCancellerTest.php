@@ -6,12 +6,12 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Model\Document\Document;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
+use App\Model\EventType\EventTypeInterface;
 use App\Repository\TestRepository;
 use App\Services\TestCanceller;
 use App\Tests\Model\TestSetup;
@@ -189,13 +189,14 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @param TestState[] $states
-     * @param TestState[] $expectedStates
+     * @param EventTypeInterface::STEP_* $eventType
+     * @param TestState[]                $states
+     * @param TestState[]                $expectedStates
      */
     #[DataProvider('cancelAwaitingFromStepFailureEventDataProvider')]
     public function testCancelAwaitingFromStepFailureEvent(
         Document $eventDocument,
-        WorkerEventType $eventType,
+        string $eventType,
         array $states,
         array $expectedStates
     ): void {
@@ -211,13 +212,14 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @param TestState[] $states
-     * @param TestState[] $expectedStates
+     * @param EventTypeInterface::STEP_* $eventType
+     * @param TestState[]                $states
+     * @param TestState[]                $expectedStates
      */
     #[DataProvider('cancelAwaitingFromStepFailureEventDataProvider')]
     public function testSubscribesToStepFailureEvent(
         Document $eventDocument,
-        WorkerEventType $eventType,
+        string $eventType,
         array $states,
         array $expectedStates
     ): void {
@@ -240,7 +242,7 @@ class TestCancellerTest extends WebTestCase
         return [
             'step/failed, no awaiting tests, test failed' => [
                 'eventDocument' => new Step('step name', []),
-                'eventType' => WorkerEventType::STEP_FAILED,
+                'eventType' => EventTypeInterface::STEP_FAILED,
                 'states' => [
                     TestState::FAILED,
                     TestState::COMPLETE,
@@ -252,7 +254,7 @@ class TestCancellerTest extends WebTestCase
             ],
             'step/failed, has awaiting tests, test failed' => [
                 'eventDocument' => new Step('step name', []),
-                'eventType' => WorkerEventType::STEP_FAILED,
+                'eventType' => EventTypeInterface::STEP_FAILED,
                 'states' => [
                     TestState::FAILED,
                     TestState::AWAITING,
@@ -266,7 +268,7 @@ class TestCancellerTest extends WebTestCase
             ],
             'step/exception, no awaiting tests, test failed' => [
                 'eventDocument' => new StepException('step name', []),
-                'eventType' => WorkerEventType::STEP_EXCEPTION,
+                'eventType' => EventTypeInterface::STEP_EXCEPTION,
                 'states' => [
                     TestState::FAILED,
                     TestState::COMPLETE,
@@ -278,7 +280,7 @@ class TestCancellerTest extends WebTestCase
             ],
             'step/exception, has awaiting tests, test failed' => [
                 'eventDocument' => new StepException('step name', []),
-                'eventType' => WorkerEventType::STEP_EXCEPTION,
+                'eventType' => EventTypeInterface::STEP_EXCEPTION,
                 'states' => [
                     TestState::FAILED,
                     TestState::AWAITING,
@@ -360,12 +362,13 @@ class TestCancellerTest extends WebTestCase
     }
 
     /**
-     * @param TestState[] $states
-     * @param TestState[] $expectedStates
+     * @param EventTypeInterface::STEP_* $eventType
+     * @param TestState[]                $states
+     * @param TestState[]                $expectedStates
      */
     private function doTestStepFailureEventDrivenTest(
         Document $eventDocument,
-        WorkerEventType $eventType,
+        string $eventType,
         array $states,
         callable $execute,
         array $expectedStates

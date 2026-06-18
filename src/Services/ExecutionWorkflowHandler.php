@@ -12,6 +12,7 @@ use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Exception\JobNotFoundException;
 use App\MessageFactory\ExecuteTestMessageFactory;
+use App\Model\EventType\EventTypeInterface;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
 use App\Repository\WorkerEventRepository;
@@ -54,7 +55,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (EventTypeInterface::TEST_PASSED !== $event->getType()) {
             return;
         }
 
@@ -94,7 +95,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         $this->eventDispatcher->dispatch(new ExecutionEvent(
             $this->jobRepository->get()->getLabel(),
-            WorkerEventType::JOB_EXECUTION_STARTED,
+            EventTypeInterface::JOB_EXECUTION_STARTED,
         ));
     }
 
@@ -103,7 +104,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (EventTypeInterface::TEST_PASSED !== $event->getType()) {
             return;
         }
 
@@ -117,7 +118,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new ExecutionEvent(
                 $job->getLabel(),
-                WorkerEventType::JOB_EXECUTION_COMPLETED,
+                EventTypeInterface::JOB_EXECUTION_COMPLETED,
             ));
         }
     }

@@ -8,10 +8,10 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\Model\Document\Test as TestDocument;
+use App\Model\EventType\EventTypeInterface;
 use App\Services\ExecutionWorkflowHandler;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -134,7 +134,7 @@ class ExecutionWorkflowHandlerTest extends WebTestCase
             $test,
             new TestDocument('test.yml', []),
             'test.yml',
-            WorkerEventType::TEST_PASSED,
+            EventTypeInterface::TEST_PASSED,
         );
 
         $this->handler->dispatchNextExecuteTestMessageForTestPassedEvent($event);

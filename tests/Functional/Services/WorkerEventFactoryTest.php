@@ -28,6 +28,7 @@ use App\Model\Document\Exception;
 use App\Model\Document\Step;
 use App\Model\Document\StepException;
 use App\Model\Document\Test as TestDocument;
+use App\Model\EventType\EventTypeInterface;
 use App\Repository\JobRepository;
 use App\Services\WorkerEventFactory;
 use App\Tests\Mock\MockTestManifest;
@@ -303,7 +304,7 @@ class WorkerEventFactoryTest extends WebTestCase
             'job-execution/started' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
-                    WorkerEventType::JOB_EXECUTION_STARTED,
+                    EventTypeInterface::JOB_EXECUTION_STARTED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::JOB_EXECUTION_STARTED->value,
@@ -316,7 +317,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest,
                     $testDocument,
                     $testSource,
-                    WorkerEventType::TEST_STARTED,
+                    EventTypeInterface::TEST_STARTED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::TEST_STARTED->value,
@@ -338,7 +339,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     new Step('passing step', $passingStepDocumentData),
                     $testSource,
                     'passing step',
-                    WorkerEventType::STEP_PASSED,
+                    EventTypeInterface::STEP_PASSED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::STEP_PASSED->value,
@@ -359,7 +360,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     new Step('failing step', $failingStepDocumentData),
                     $testSource,
                     'failing step',
-                    WorkerEventType::STEP_FAILED,
+                    EventTypeInterface::STEP_FAILED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::STEP_FAILED->value,
@@ -379,7 +380,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest->setState(TestState::COMPLETE),
                     $testDocument,
                     $testSource,
-                    WorkerEventType::TEST_PASSED,
+                    EventTypeInterface::TEST_PASSED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::TEST_PASSED->value,
@@ -400,7 +401,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest->setState(TestState::FAILED),
                     $testDocument,
                     $testSource,
-                    WorkerEventType::TEST_FAILED,
+                    EventTypeInterface::TEST_FAILED,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::TEST_FAILED->value,
@@ -429,7 +430,7 @@ class WorkerEventFactoryTest extends WebTestCase
             'job-execution/completed' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
-                    WorkerEventType::JOB_EXECUTION_COMPLETED
+                    EventTypeInterface::JOB_EXECUTION_COMPLETED
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::JOB_EXECUTION_COMPLETED->value,
@@ -442,7 +443,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     $genericTest,
                     new Exception(ExecutionExceptionScope::TEST, $exceptionTestDocumentData),
                     $testSource,
-                    WorkerEventType::TEST_EXCEPTION,
+                    EventTypeInterface::TEST_EXCEPTION,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::TEST_EXCEPTION->value,
@@ -464,7 +465,7 @@ class WorkerEventFactoryTest extends WebTestCase
                     new StepException('step name', $exceptionStepDocumentData),
                     $testSource,
                     'step name',
-                    WorkerEventType::STEP_EXCEPTION,
+                    EventTypeInterface::STEP_EXCEPTION,
                 ),
                 'expected' => new WorkerEvent(
                     WorkerEventType::STEP_EXCEPTION->value,

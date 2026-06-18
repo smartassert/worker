@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\JobEndState;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\Exception\JobNotFoundException;
+use App\Model\EventType\EventTypeInterface;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -68,7 +68,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     {
         $this->setJobEndStateOnTestEventWithType(
             $event,
-            WorkerEventType::TEST_FAILED,
+            EventTypeInterface::TEST_FAILED,
             JobEndState::FAILED_TEST_FAILURE
         );
     }
@@ -88,17 +88,19 @@ class JobEndStateSetter implements EventSubscriberInterface
     {
         $this->setJobEndStateOnTestEventWithType(
             $event,
-            WorkerEventType::TEST_EXCEPTION,
+            EventTypeInterface::TEST_EXCEPTION,
             JobEndState::FAILED_TEST_EXCEPTION
         );
     }
 
     /**
+     * @param EventTypeInterface::* $type
+     *
      * @throws JobNotFoundException
      */
     private function setJobEndStateOnTestEventWithType(
         TestEvent $event,
-        WorkerEventType $type,
+        string $type,
         JobEndState $state
     ): void {
         if ($type !== $event->getType()) {

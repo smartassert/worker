@@ -8,9 +8,9 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\HasTestInterface;
+use App\Model\EventType\EventTypeInterface;
 use App\Services\TestProgressHandler;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -67,7 +67,7 @@ class TestProgressHandlerTest extends WebTestCase
     #[DataProvider('handleDataProvider')]
     public function testHandle(
         YamlDocument $yamlDocument,
-        WorkerEventType $expectedEventType,
+        string $expectedEventType,
         array $expectedEventPayload,
     ): void {
         $this->handler->handle($this->test, $yamlDocument);
@@ -105,7 +105,7 @@ class TestProgressHandlerTest extends WebTestCase
                           status: passed
                     EOF
                 ),
-                'expectedEventType' => WorkerEventType::STEP_PASSED,
+                'expectedEventType' => EventTypeInterface::STEP_PASSED,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [
@@ -160,7 +160,7 @@ class TestProgressHandlerTest extends WebTestCase
                                       position: 1
                     EOF
                 ),
-                'expectedEventType' => WorkerEventType::STEP_FAILED,
+                'expectedEventType' => EventTypeInterface::STEP_FAILED,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [
@@ -221,7 +221,7 @@ class TestProgressHandlerTest extends WebTestCase
                       code: 123
                     EOF
                 ),
-                'expectedEventType' => WorkerEventType::TEST_EXCEPTION,
+                'expectedEventType' => EventTypeInterface::TEST_EXCEPTION,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [
