@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\JobEndState;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
@@ -67,9 +66,9 @@ class JobEndStateSetter implements EventSubscriberInterface
      */
     public function setJobEndStateOnTestFailedEvent(TestEvent $event): void
     {
-        $this->setJobEndStateOnTestEventWithOutcome(
+        $this->setJobEndStateOnTestEventWithType(
             $event,
-            WorkerEventOutcome::FAILED,
+            WorkerEventType::TEST_FAILED,
             JobEndState::FAILED_TEST_FAILURE
         );
     }
@@ -87,9 +86,9 @@ class JobEndStateSetter implements EventSubscriberInterface
      */
     public function setJobEndStateOnTestExceptionEvent(TestEvent $event): void
     {
-        $this->setJobEndStateOnTestEventWithOutcome(
+        $this->setJobEndStateOnTestEventWithType(
             $event,
-            WorkerEventOutcome::EXCEPTION,
+            WorkerEventType::TEST_EXCEPTION,
             JobEndState::FAILED_TEST_EXCEPTION
         );
     }
@@ -97,14 +96,12 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    private function setJobEndStateOnTestEventWithOutcome(
+    private function setJobEndStateOnTestEventWithType(
         TestEvent $event,
-        WorkerEventOutcome $outcome,
+        WorkerEventType $type,
         JobEndState $state
     ): void {
-        if (
-            !(WorkerEventScope::TEST === $event->getScope() && $outcome === $event->getOutcome())
-        ) {
+        if ($type !== $event->getType()) {
             return;
         }
 
