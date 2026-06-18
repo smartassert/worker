@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\EventType;
 
-class JobEventType implements JobEventTypeInterface
+readonly class JobEventType implements JobEventTypeInterface
 {
     /**
      * @param EventTypeInterface::JOB_ENDED|EventTypeInterface::JOB_STARTED|EventTypeInterface::JOB_TIMED_OUT $value

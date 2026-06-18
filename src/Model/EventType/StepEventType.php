@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\EventType;
 
-class StepEventType implements StepEventTypeInterface
+readonly class StepEventType implements StepEventTypeInterface
 {
     /**
      * @param EventTypeInterface::STEP_* $value

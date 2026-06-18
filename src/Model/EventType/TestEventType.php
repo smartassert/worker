@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\EventType;
 
-class TestEventType implements TestEventTypeInterface
+readonly class TestEventType implements TestEventTypeInterface
 {
     /**
      * @param EventTypeInterface::TEST_* $value

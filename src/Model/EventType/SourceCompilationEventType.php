@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\EventType;
 
-class SourceCompilationEventType implements SourceCompilationEventTypeInterface
+readonly class SourceCompilationEventType implements SourceCompilationEventTypeInterface
 {
     /**
      * @param EventTypeInterface::SOURCE_COMPILATION_* $value
