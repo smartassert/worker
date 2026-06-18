@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,12 +27,9 @@ class WorkerEventRepository extends ServiceEntityRepository
         return $workerEvent;
     }
 
-    public function hasForType(WorkerEventScope $scope, WorkerEventOutcome $outcome): bool
+    public function hasForType(WorkerEventType $type): bool
     {
-        return $this->count([
-            'scope' => $scope->value,
-            'outcome' => $outcome->value,
-        ]) > 0;
+        return $this->count(['type' => $type->value]) > 0;
     }
 
     public function getTypeCount(WorkerEventScope $scope, WorkerEventOutcome $outcome): int

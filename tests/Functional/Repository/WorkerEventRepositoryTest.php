@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
@@ -43,21 +44,21 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::FAILED),
+                        ->withOutcome(WorkerEventOutcome::FAILED)
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::TEST)
-                        ->withOutcome(WorkerEventOutcome::STARTED),
+                        ->withOutcome(WorkerEventOutcome::STARTED)
+                        ->withType(WorkerEventType::TEST_STARTED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::JOB)
-                        ->withOutcome(WorkerEventOutcome::TIME_OUT),
+                        ->withOutcome(WorkerEventOutcome::TIME_OUT)
+                        ->withType(WorkerEventType::JOB_TIMED_OUT),
                 ])
         );
 
-        self::assertTrue($this->repository->hasForType(
-            WorkerEventScope::SOURCE_COMPILATION,
-            WorkerEventOutcome::FAILED
-        ));
-        self::assertFalse($this->repository->hasForType(WorkerEventScope::STEP, WorkerEventOutcome::PASSED));
+        self::assertTrue($this->repository->hasForType(WorkerEventType::SOURCE_COMPILATION_FAILED));
+        self::assertFalse($this->repository->hasForType(WorkerEventType::STEP_PASSED));
     }
 
     public function testGetTypeCount(): void
