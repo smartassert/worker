@@ -8,8 +8,7 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
+use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\HasTestInterface;
 use App\Services\TestProgressHandler;
@@ -68,8 +67,7 @@ class TestProgressHandlerTest extends WebTestCase
     #[DataProvider('handleDataProvider')]
     public function testHandle(
         YamlDocument $yamlDocument,
-        WorkerEventScope $expectedEventScope,
-        WorkerEventOutcome $expectedEventOutcome,
+        WorkerEventType $expectedEventType,
         array $expectedEventPayload,
     ): void {
         $this->handler->handle($this->test, $yamlDocument);
@@ -83,8 +81,7 @@ class TestProgressHandlerTest extends WebTestCase
         self::assertTrue($event instanceof HasTestInterface);
 
         self::assertSame($this->test, $event->getTest());
-        self::assertSame($expectedEventScope, $event->getScope());
-        self::assertSame($expectedEventOutcome, $event->getOutcome());
+        self::assertSame($expectedEventType, $event->getType());
         self::assertSame($expectedEventPayload, $event->getPayload());
     }
 
@@ -108,8 +105,7 @@ class TestProgressHandlerTest extends WebTestCase
                           status: passed
                     EOF
                 ),
-                'expectedEventScope' => WorkerEventScope::STEP,
-                'expectedEventOutcome' => WorkerEventOutcome::PASSED,
+                'expectedEventType' => WorkerEventType::STEP_PASSED,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [
@@ -164,8 +160,7 @@ class TestProgressHandlerTest extends WebTestCase
                                       position: 1
                     EOF
                 ),
-                'expectedEventScope' => WorkerEventScope::STEP,
-                'expectedEventOutcome' => WorkerEventOutcome::FAILED,
+                'expectedEventType' => WorkerEventType::STEP_FAILED,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [
@@ -226,8 +221,7 @@ class TestProgressHandlerTest extends WebTestCase
                       code: 123
                     EOF
                 ),
-                'expectedEventScope' => WorkerEventScope::TEST,
-                'expectedEventOutcome' => WorkerEventOutcome::EXCEPTION,
+                'expectedEventType' => WorkerEventType::TEST_EXCEPTION,
                 'expectedEventPayload' => [
                     'source' => 'Test/test.yml',
                     'document' => [

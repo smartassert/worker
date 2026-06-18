@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\TestEvent;
@@ -56,7 +55,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
-        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
             return;
         }
 
@@ -106,7 +105,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (!(WorkerEventScope::TEST === $event->getScope() && WorkerEventOutcome::PASSED === $event->getOutcome())) {
+        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
             return;
         }
 
