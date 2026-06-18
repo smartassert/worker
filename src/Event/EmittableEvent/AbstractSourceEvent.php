@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
@@ -19,7 +17,6 @@ abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEve
      */
     public function __construct(
         protected readonly string $source,
-        public readonly WorkerEventOutcome $outcome,
         WorkerEventType $type,
         array $payload = [],
         array $referenceComponents = [],
@@ -27,8 +24,6 @@ abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEve
     ) {
         parent::__construct(
             $source,
-            WorkerEventScope::SOURCE_COMPILATION,
-            $outcome,
             $type,
             array_merge(['source' => $source], $payload),
             array_merge([$source], $referenceComponents),

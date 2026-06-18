@@ -7,7 +7,6 @@ namespace App\MessageHandler;
 use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
@@ -64,14 +63,12 @@ class ExecuteTestHandler
                 $test,
                 $testDocument,
                 $path,
-                WorkerEventOutcome::STARTED,
                 WorkerEventType::TEST_STARTED,
             )
         );
 
         $this->testStateMutator->setRunning($test);
 
-        $eventOutcome = WorkerEventOutcome::FAILED;
         $eventType = WorkerEventType::TEST_FAILED;
 
         try {
@@ -79,18 +76,16 @@ class ExecuteTestHandler
         } catch (SocketTimedOutException) {
             $this->testStateMutator->setCancelled($test);
 
-            $eventOutcome = WorkerEventOutcome::TIME_OUT;
             $eventType = WorkerEventType::TEST_TIMED_OUT;
         }
 
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if (TestState::COMPLETE === $test->getState()) {
-            $eventOutcome = WorkerEventOutcome::PASSED;
             $eventType = WorkerEventType::TEST_PASSED;
         }
 
-        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventOutcome, $eventType));
+        $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventType));
     }
 
     public function createTestDocumentFromTestEntity(TestEntity $testEntity): TestDocument

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
@@ -21,7 +20,6 @@ class JobStartedEvent extends AbstractJobEvent implements EmittableEventInterfac
 
         parent::__construct(
             $label,
-            WorkerEventOutcome::STARTED,
             WorkerEventType::JOB_STARTED,
             ['tests' => $testPaths],
             [],

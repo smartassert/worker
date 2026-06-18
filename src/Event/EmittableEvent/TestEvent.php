@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Event\EmittableEvent;
 
 use App\Entity\Test as TestEntity;
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Model\Document\Document;
 use App\Model\ResourceReferenceSource;
@@ -20,13 +18,10 @@ class TestEvent extends AbstractEvent implements EmittableEventInterface, HasTes
         private readonly TestEntity $testEntity,
         Document $document,
         private readonly string $path,
-        WorkerEventOutcome $outcome,
         WorkerEventType $type,
     ) {
         parent::__construct(
             $path,
-            WorkerEventScope::TEST,
-            $outcome,
             $type,
             [
                 'source' => $path,

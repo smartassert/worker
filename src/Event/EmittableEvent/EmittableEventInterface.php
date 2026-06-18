@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
@@ -20,10 +18,6 @@ interface EmittableEventInterface
      * @return string[]
      */
     public function getReferenceComponents(): array;
-
-    public function getScope(): WorkerEventScope;
-
-    public function getOutcome(): WorkerEventOutcome;
 
     public function getType(): WorkerEventType;
 

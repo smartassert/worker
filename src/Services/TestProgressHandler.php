@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
@@ -38,14 +37,12 @@ class TestProgressHandler
 
         if ('step' === $document->getType()) {
             $step = $this->stepFactory->create($documentData);
-            $eventOutcome = $step->statusIsPassed() ? WorkerEventOutcome::PASSED : WorkerEventOutcome::FAILED;
             $eventType = $step->statusIsPassed() ? WorkerEventType::STEP_PASSED : WorkerEventType::STEP_FAILED;
             $event = new StepEvent(
                 $test,
                 $step,
                 $test->getSource(),
                 $step->getName(),
-                $eventOutcome,
                 $eventType,
             );
 
@@ -61,7 +58,6 @@ class TestProgressHandler
                     $exception,
                     $test->getSource(),
                     $exception->stepName,
-                    WorkerEventOutcome::EXCEPTION,
                     WorkerEventType::STEP_EXCEPTION,
                 );
             } else {
@@ -69,7 +65,6 @@ class TestProgressHandler
                     $test,
                     $exception,
                     $test->getSource(),
-                    WorkerEventOutcome::EXCEPTION,
                     WorkerEventType::TEST_EXCEPTION,
                 );
             }

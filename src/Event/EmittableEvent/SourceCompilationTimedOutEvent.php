@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 
 class SourceCompilationTimedOutEvent extends AbstractSourceEvent
@@ -13,7 +12,6 @@ class SourceCompilationTimedOutEvent extends AbstractSourceEvent
     {
         parent::__construct(
             $source,
-            WorkerEventOutcome::TIME_OUT,
             WorkerEventType::SOURCE_COMPILATION_TIMED_OUT,
             [
                 'timeout' => $timeoutInSeconds,
