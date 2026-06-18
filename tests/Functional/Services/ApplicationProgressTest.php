@@ -10,7 +10,6 @@ use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Services\ApplicationProgress;
@@ -180,7 +179,6 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withType(WorkerEventType::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
@@ -194,7 +192,6 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withOutcome(WorkerEventOutcome::FAILED)
                             ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
@@ -211,8 +208,7 @@ class ApplicationProgressTest extends WebTestCase
                             ->withState(TestState::FAILED),
                     ])
                     ->withWorkerEventSetups([
-                        new WorkerEventSetup()
-                            ->withOutcome(WorkerEventOutcome::FAILED),
+                        new WorkerEventSetup(),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
             ],
@@ -429,7 +425,6 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withType(WorkerEventType::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),

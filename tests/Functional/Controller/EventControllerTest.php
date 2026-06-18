@@ -7,7 +7,6 @@ namespace App\Tests\Functional\Controller;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventType;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
@@ -69,7 +68,6 @@ class EventControllerTest extends WebTestCase
                     new WorkerEventSetup()
                         ->withPayload($eventPayload)
                         ->withReference($eventReferenceEntity)
-                        ->withOutcome(WorkerEventOutcome::COMPLETED)
                         ->withType(WorkerEventType::JOB_ENDED),
                 ])
         );

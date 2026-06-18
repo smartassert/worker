@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Model;
 
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {
-    private WorkerEventOutcome $outcome;
     private WorkerEventType $type;
 
     /**
@@ -25,16 +23,10 @@ class WorkerEventSetup
 
     public function __construct()
     {
-        $this->outcome = WorkerEventOutcome::PASSED;
         $this->type = WorkerEventType::SOURCE_COMPILATION_PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');
-    }
-
-    public function getOutcome(): WorkerEventOutcome
-    {
-        return $this->outcome;
     }
 
     public function getType(): WorkerEventType
@@ -70,14 +62,6 @@ class WorkerEventSetup
     {
         $new = clone $this;
         $new->state = $state;
-
-        return $new;
-    }
-
-    public function withOutcome(WorkerEventOutcome $outcome): self
-    {
-        $new = clone $this;
-        $new->outcome = $outcome;
 
         return $new;
     }
