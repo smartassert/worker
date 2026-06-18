@@ -7,7 +7,6 @@ namespace App\Tests\Functional\Services;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventAborter;
@@ -44,7 +43,6 @@ class WorkerEventAborterTest extends WebTestCase
 
         $workerEvent = $testWorkerEventFactory->create(
             new WorkerEventSetup()
-                ->withScope(WorkerEventScope::JOB)
                 ->withOutcome(WorkerEventOutcome::COMPLETED)
                 ->withReference(new WorkerEventReference('non-empty label', 'non-empty reference'))
                 ->withState(WorkerEventState::QUEUED)

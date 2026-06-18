@@ -6,7 +6,6 @@ namespace App\Tests\Functional\Repository;
 
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Model\EnvironmentSetup;
@@ -43,15 +42,12 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::FAILED)
                         ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::TEST)
                         ->withOutcome(WorkerEventOutcome::STARTED)
                         ->withType(WorkerEventType::TEST_STARTED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::JOB)
                         ->withOutcome(WorkerEventOutcome::TIME_OUT)
                         ->withType(WorkerEventType::JOB_TIMED_OUT),
                 ])
@@ -67,27 +63,21 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::JOB)
                         ->withOutcome(WorkerEventOutcome::STARTED)
                         ->withType(WorkerEventType::JOB_STARTED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::STEP)
                         ->withOutcome(WorkerEventOutcome::PASSED)
                         ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::STEP)
                         ->withOutcome(WorkerEventOutcome::PASSED)
                         ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED)
                         ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED)
                         ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                         ->withOutcome(WorkerEventOutcome::PASSED)
                         ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                 ])

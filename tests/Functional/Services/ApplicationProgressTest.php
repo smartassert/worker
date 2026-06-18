@@ -11,7 +11,6 @@ use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventOutcome;
-use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Services\ApplicationProgress;
@@ -181,7 +180,6 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withScope(WorkerEventScope::JOB)
                             ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withType(WorkerEventType::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
@@ -196,7 +194,6 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withScope(WorkerEventScope::SOURCE_COMPILATION)
                             ->withOutcome(WorkerEventOutcome::FAILED)
                             ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
                     ]),
@@ -215,7 +212,6 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withScope(WorkerEventScope::EXECUTION)
                             ->withOutcome(WorkerEventOutcome::FAILED),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
@@ -433,7 +429,6 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withScope(WorkerEventScope::JOB)
                             ->withOutcome(WorkerEventOutcome::TIME_OUT)
                             ->withType(WorkerEventType::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
