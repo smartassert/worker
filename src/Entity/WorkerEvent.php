@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,9 @@ class WorkerEvent implements \JsonSerializable, EventInterface
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventOutcome::class)]
     public readonly WorkerEventOutcome $outcome;
+
+    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
+    public readonly WorkerEventType $type;
 
     /**
      * @var array<mixed>
@@ -58,12 +62,14 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     public function __construct(
         WorkerEventScope $scope,
         WorkerEventOutcome $outcome,
+        WorkerEventType $type,
         ResourceReferenceInterface $reference,
         array $payload,
     ) {
         $this->state = WorkerEventState::AWAITING;
         $this->scope = $scope;
         $this->outcome = $outcome;
+        $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
         $this->relatedReferences = new ArrayCollection();

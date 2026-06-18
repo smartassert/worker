@@ -8,11 +8,13 @@ use App\Entity\WorkerEventReference;
 use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventScope;
 use App\Enum\WorkerEventState;
+use App\Enum\WorkerEventType;
 
 class WorkerEventSetup
 {
     private WorkerEventScope $scope;
     private WorkerEventOutcome $outcome;
+    private WorkerEventType $type;
 
     /**
      * @var array<mixed>
@@ -27,6 +29,7 @@ class WorkerEventSetup
     {
         $this->scope = WorkerEventScope::SOURCE_COMPILATION;
         $this->outcome = WorkerEventOutcome::PASSED;
+        $this->type = WorkerEventType::SOURCE_COMPILATION_PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');
@@ -40,6 +43,11 @@ class WorkerEventSetup
     public function getOutcome(): WorkerEventOutcome
     {
         return $this->outcome;
+    }
+
+    public function getType(): WorkerEventType
+    {
+        return $this->type;
     }
 
     /**
