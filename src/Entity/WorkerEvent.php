@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,8 +20,8 @@ use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent implements \JsonSerializable, EventInterface
 {
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventType::class)]
-    public readonly WorkerEventType $type;
+    #[ORM\Column(type: 'string', length: 255)]
+    public readonly string $type;
 
     /**
      * @var array<mixed>
@@ -49,9 +48,10 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     private Collection $relatedReferences;
 
     /**
-     * @param array<mixed> $payload
+     * @param non-empty-string $type
+     * @param array<mixed>     $payload
      */
-    public function __construct(WorkerEventType $type, ResourceReferenceInterface $reference, array $payload)
+    public function __construct(string $type, ResourceReferenceInterface $reference, array $payload)
     {
         $this->state = WorkerEventState::AWAITING;
         $this->type = $type;
@@ -88,7 +88,7 @@ class WorkerEvent implements \JsonSerializable, EventInterface
         $data = array_merge(
             [
                 'sequence_number' => $this->getId(),
-                'type' => $this->type->value,
+                'type' => $this->type,
                 'body' => $this->payload,
             ],
             $this->reference->toArray(),
