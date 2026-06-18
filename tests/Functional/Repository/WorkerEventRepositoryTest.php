@@ -68,43 +68,49 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::JOB)
-                        ->withOutcome(WorkerEventOutcome::STARTED),
+                        ->withOutcome(WorkerEventOutcome::STARTED)
+                        ->withType(WorkerEventType::JOB_STARTED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::STEP)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withOutcome(WorkerEventOutcome::PASSED)
+                        ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::STEP)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withOutcome(WorkerEventOutcome::PASSED)
+                        ->withType(WorkerEventType::STEP_PASSED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withOutcome(WorkerEventOutcome::PASSED)
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withOutcome(WorkerEventOutcome::PASSED)
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                     new WorkerEventSetup()
                         ->withScope(WorkerEventScope::SOURCE_COMPILATION)
-                        ->withOutcome(WorkerEventOutcome::PASSED),
+                        ->withOutcome(WorkerEventOutcome::PASSED)
+                        ->withType(WorkerEventType::SOURCE_COMPILATION_PASSED),
                 ])
         );
 
         self::assertSame(
             0,
-            $this->repository->getTypeCount(WorkerEventScope::EXECUTION, WorkerEventOutcome::COMPLETED)
+            $this->repository->getTypeCount(WorkerEventType::JOB_EXECUTION_COMPLETED)
         );
 
         self::assertSame(
             1,
-            $this->repository->getTypeCount(WorkerEventScope::JOB, WorkerEventOutcome::STARTED)
+            $this->repository->getTypeCount(WorkerEventType::JOB_STARTED)
         );
 
         self::assertSame(
             2,
-            $this->repository->getTypeCount(WorkerEventScope::STEP, WorkerEventOutcome::PASSED)
+            $this->repository->getTypeCount(WorkerEventType::STEP_PASSED)
         );
 
         self::assertSame(
             3,
-            $this->repository->getTypeCount(WorkerEventScope::SOURCE_COMPILATION, WorkerEventOutcome::PASSED)
+            $this->repository->getTypeCount(WorkerEventType::SOURCE_COMPILATION_PASSED)
         );
     }
 
