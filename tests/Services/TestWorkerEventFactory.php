@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Services;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventOutcome;
 use App\Repository\WorkerEventReferenceRepository;
 use App\Repository\WorkerEventRepository;
 use App\Tests\Model\WorkerEventSetup;
@@ -33,7 +32,6 @@ class TestWorkerEventFactory
         }
 
         $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
-            WorkerEventOutcome::STARTED,
             $workerEventSetup->getType(),
             $workerEventReferenceEntity,
             $workerEventSetup->getPayload()

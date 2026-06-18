@@ -6,7 +6,6 @@ namespace App\Tests\Functional\Services;
 
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventOutcome;
 use App\Enum\WorkerEventState;
 use App\Enum\WorkerEventType;
 use App\Services\WorkerEventStateMutator;
@@ -247,7 +246,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
     private function createEntity(): WorkerEvent
     {
         return new WorkerEvent(
-            WorkerEventOutcome::FAILED,
             WorkerEventType::SOURCE_COMPILATION_FAILED,
             new WorkerEventReference('non-empty label', 'non-empty reference'),
             []
