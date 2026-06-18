@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
@@ -54,7 +54,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchNextExecuteTestMessageForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (EventTypeInterface::TEST_PASSED !== $event->getType()) {
             return;
         }
 
@@ -94,7 +94,7 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     {
         $this->eventDispatcher->dispatch(new ExecutionEvent(
             $this->jobRepository->get()->getLabel(),
-            WorkerEventType::JOB_EXECUTION_STARTED,
+            EventTypeInterface::JOB_EXECUTION_STARTED,
         ));
     }
 
@@ -103,21 +103,21 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
-        if (WorkerEventType::TEST_PASSED !== $event->getType()) {
+        if (EventTypeInterface::TEST_PASSED !== $event->getType()) {
             return;
         }
 
         $executionStateComplete = ExecutionState::COMPLETE === $this->executionProgress->get();
 
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
-            WorkerEventType::JOB_EXECUTION_COMPLETED,
+            EventTypeInterface::JOB_EXECUTION_COMPLETED,
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $job = $this->jobRepository->get();
             $this->eventDispatcher->dispatch(new ExecutionEvent(
                 $job->getLabel(),
-                WorkerEventType::JOB_EXECUTION_COMPLETED,
+                EventTypeInterface::JOB_EXECUTION_COMPLETED,
             ));
         }
     }

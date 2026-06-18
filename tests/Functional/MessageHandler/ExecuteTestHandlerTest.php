@@ -8,7 +8,7 @@ use App\Entity\Job;
 use App\Entity\Test;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\ExecuteTestMessage;
 use App\MessageHandler\ExecuteTestHandler;
@@ -100,11 +100,11 @@ class ExecuteTestHandlerTest extends WebTestCase
 
         $firstTestEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(TestEvent::class, $firstTestEvent);
-        self::assertSame(WorkerEventType::TEST_STARTED, $firstTestEvent->getType());
+        self::assertSame(EventTypeInterface::TEST_STARTED, $firstTestEvent->getType());
 
         $secondTestEvent = $this->eventRecorder->get(1);
         self::assertInstanceOf(TestEvent::class, $secondTestEvent);
-        self::assertSame(WorkerEventType::TEST_PASSED, $secondTestEvent->getType());
+        self::assertSame(EventTypeInterface::TEST_PASSED, $secondTestEvent->getType());
         self::assertSame($test, $secondTestEvent->getTest());
 
         self::assertSame(ExecutionState::COMPLETE, $executionProgress->get());
@@ -150,11 +150,11 @@ class ExecuteTestHandlerTest extends WebTestCase
 
         $firstTestEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(TestEvent::class, $firstTestEvent);
-        self::assertSame(WorkerEventType::TEST_STARTED, $firstTestEvent->getType());
+        self::assertSame(EventTypeInterface::TEST_STARTED, $firstTestEvent->getType());
 
         $secondTestEvent = $this->eventRecorder->get(1);
         self::assertInstanceOf(TestEvent::class, $secondTestEvent);
-        self::assertSame(WorkerEventType::TEST_TIMED_OUT, $secondTestEvent->getType());
+        self::assertSame(EventTypeInterface::TEST_TIMED_OUT, $secondTestEvent->getType());
         self::assertSame($test, $secondTestEvent->getTest());
 
         self::assertSame(ExecutionState::CANCELLED, $executionProgress->get());

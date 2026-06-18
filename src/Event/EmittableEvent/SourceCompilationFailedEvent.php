@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventType;
-
 class SourceCompilationFailedEvent extends AbstractSourceEvent
 {
     /**
@@ -15,7 +13,7 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent
     {
         parent::__construct(
             $source,
-            WorkerEventType::SOURCE_COMPILATION_FAILED,
+            EventTypeInterface::SOURCE_COMPILATION_FAILED,
             [
                 'output' => $payloadOutput,
             ]

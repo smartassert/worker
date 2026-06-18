@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,14 +25,20 @@ class WorkerEventRepository extends ServiceEntityRepository
         return $workerEvent;
     }
 
-    public function hasForType(WorkerEventType $type): bool
+    /**
+     * @param EventTypeInterface::* $type
+     */
+    public function hasForType(string $type): bool
     {
-        return $this->count(['type' => $type->value]) > 0;
+        return $this->count(['type' => $type]) > 0;
     }
 
-    public function getTypeCount(WorkerEventType $type): int
+    /**
+     * @param EventTypeInterface::* $type
+     */
+    public function getTypeCount(string $type): int
     {
-        return $this->count(['type' => $type->value]);
+        return $this->count(['type' => $type]);
     }
 
     /**

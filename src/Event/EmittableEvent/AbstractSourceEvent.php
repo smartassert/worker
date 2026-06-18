@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 
 abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
-     * @param non-empty-string          $source
-     * @param array<mixed>              $payload
-     * @param string[]                  $referenceComponents
-     * @param ResourceReferenceSource[] $relatedReferenceSources
+     * @param non-empty-string                         $source
+     * @param EventTypeInterface::SOURCE_COMPILATION_* $type
+     * @param array<mixed>                             $payload
+     * @param string[]                                 $referenceComponents
+     * @param ResourceReferenceSource[]                $relatedReferenceSources
      */
     public function __construct(
         protected readonly string $source,
-        WorkerEventType $type,
+        string $type,
         array $payload = [],
         array $referenceComponents = [],
         array $relatedReferenceSources = []

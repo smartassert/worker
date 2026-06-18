@@ -7,7 +7,7 @@ namespace App\MessageHandler;
 use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface as EventType;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\Document\InvalidDocumentException;
 use App\Exception\Document\InvalidStepException;
@@ -59,30 +59,25 @@ class ExecuteTestHandler
         $path = $test->getSource();
 
         $this->eventDispatcher->dispatch(
-            new TestEvent(
-                $test,
-                $testDocument,
-                $path,
-                WorkerEventType::TEST_STARTED,
-            )
+            new TestEvent($test, $testDocument, $path, EventType::TEST_STARTED)
         );
 
         $this->testStateMutator->setRunning($test);
 
-        $eventType = WorkerEventType::TEST_FAILED;
+        $eventType = EventType::TEST_FAILED;
 
         try {
             $this->testExecutor->execute($test, $message->timeoutInSeconds);
         } catch (SocketTimedOutException) {
             $this->testStateMutator->setCancelled($test);
 
-            $eventType = WorkerEventType::TEST_TIMED_OUT;
+            $eventType = EventType::TEST_TIMED_OUT;
         }
 
         $this->testStateMutator->setCompleteIfRunning($test);
 
         if (TestState::COMPLETE === $test->getState()) {
-            $eventType = WorkerEventType::TEST_PASSED;
+            $eventType = EventType::TEST_PASSED;
         }
 
         $this->eventDispatcher->dispatch(new TestEvent($test, $testDocument, $path, $eventType));

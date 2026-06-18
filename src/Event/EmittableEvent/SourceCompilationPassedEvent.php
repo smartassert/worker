@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-use App\Enum\WorkerEventType;
 use App\Model\ResourceReferenceSource;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
@@ -19,7 +18,7 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
     ) {
         parent::__construct(
             $source,
-            WorkerEventType::SOURCE_COMPILATION_PASSED,
+            EventTypeInterface::SOURCE_COMPILATION_PASSED,
             [],
             [],
             $this->createRelatedReferenceSources($testManifestCollection, $source)

@@ -6,7 +6,7 @@ namespace App\Tests\Functional\EventDispatcher;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
@@ -62,9 +62,9 @@ class JobTimeoutMessageOrderTest extends WebTestCase
         self::assertCount(2, $workerEvents);
 
         $jobTimeoutEvent = $workerEvents[0];
-        self::assertSame(WorkerEventType::JOB_TIMED_OUT->value, $jobTimeoutEvent->type);
+        self::assertSame(EventTypeInterface::JOB_TIMED_OUT, $jobTimeoutEvent->type);
 
         $jobEndedEvent = $workerEvents[1];
-        self::assertSame(WorkerEventType::JOB_ENDED->value, $jobEndedEvent->type);
+        self::assertSame(EventTypeInterface::JOB_ENDED, $jobEndedEvent->type);
     }
 }

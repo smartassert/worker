@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Controller;
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
@@ -68,7 +68,7 @@ class EventControllerTest extends WebTestCase
                     new WorkerEventSetup()
                         ->withPayload($eventPayload)
                         ->withReference($eventReferenceEntity)
-                        ->withType(WorkerEventType::JOB_ENDED),
+                        ->withType(EventTypeInterface::JOB_ENDED),
                 ])
         );
 

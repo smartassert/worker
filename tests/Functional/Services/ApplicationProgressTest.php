@@ -11,7 +11,7 @@ use App\Entity\WorkerEvent;
 use App\Enum\ApplicationState;
 use App\Enum\TestState;
 use App\Enum\WorkerEventState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Services\ApplicationProgress;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -179,7 +179,7 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::JOB_TIMED_OUT)
+                            ->withType(EventTypeInterface::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedState' => ApplicationState::TIMED_OUT,
@@ -192,7 +192,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
             ],
@@ -425,7 +425,7 @@ class ApplicationProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::JOB_TIMED_OUT)
+                            ->withType(EventTypeInterface::JOB_TIMED_OUT)
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedIsStates' => [

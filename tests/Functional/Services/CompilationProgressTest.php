@@ -9,7 +9,7 @@ use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
 use App\Enum\CompilationState;
-use App\Enum\WorkerEventType;
+use App\Event\EmittableEvent\EventTypeInterface;
 use App\Services\CompilationProgress;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -92,7 +92,7 @@ class CompilationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::FAILED,
             ],
@@ -189,7 +189,7 @@ class CompilationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(WorkerEventType::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::FAILED,
