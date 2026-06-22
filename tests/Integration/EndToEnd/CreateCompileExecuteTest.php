@@ -640,9 +640,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job-compilation/ended' => (new Event(
+                        'job-compilation/completed' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/ended',
+                            'job-compilation/completed',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
@@ -1163,9 +1163,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job-compilation/ended' => (new Event(
+                        'job-compilation/completed' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/ended',
+                            'job-compilation/completed',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
