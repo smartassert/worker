@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set env.service_version for workflow_dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - name: Checkout bash-ga-ci-tools
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: smartassert/bash-ga-ci-tools
           path: ./vendor/smartassert/bash-ga-ci-tools
@@ -71,7 +71,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -96,7 +96,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Trigger deploy workflow
         if: ${{ needs.setup.outputs.version != 'master' }}
