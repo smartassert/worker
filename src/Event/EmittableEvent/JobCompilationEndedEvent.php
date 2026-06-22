@@ -8,6 +8,6 @@ class JobCompilationEndedEvent extends AbstractEvent implements EmittableEventIn
 {
     public function __construct(string $label)
     {
-        parent::__construct($label, EventTypeInterface::JOB_COMPILATION_ENDED);
+        parent::__construct($label, EventTypeInterface::JOB_COMPILATION_COMPLETED);
     }
 }
