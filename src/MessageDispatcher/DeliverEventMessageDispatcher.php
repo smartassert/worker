@@ -6,11 +6,11 @@ namespace App\MessageDispatcher;
 
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
-use App\Event\EmittableEvent\JobCompilationEndedEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LIfeCompilationStartedEvent;
+use App\Event\EmittableEvent\LifecycleCompilationCompletedEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
@@ -77,7 +77,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             LIfeCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            JobCompilationEndedEvent::class => [
+            LifecycleCompilationCompletedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];
