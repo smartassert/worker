@@ -9,7 +9,7 @@ interface EventTypeInterface
     public const string JOB_STARTED = 'job/started';
     public const string JOB_TIMED_OUT = 'job/timed-out';
     public const string JOB_ENDED = 'job/ended';
-    public const string LIFECYCLE_COMPILATION_STARTED = 'job-compilation/started';
+    public const string LIFECYCLE_COMPILATION_STARTED = 'lifecycle/compilation-started';
     public const string JOB_COMPILATION_COMPLETED = 'job-compilation/completed';
     public const string SOURCE_COMPILATION_FAILED = 'source-compilation/failed';
     public const string SOURCE_COMPILATION_PASSED = 'source-compilation/passed';
