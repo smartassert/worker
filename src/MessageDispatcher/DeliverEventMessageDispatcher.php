@@ -9,12 +9,12 @@ use App\Event\EmittableEvent\CompilationPassedEvent;
 use App\Event\EmittableEvent\CompilationStartedEvent;
 use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
-use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LifecycleCompilationCompletedEvent;
 use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
+use App\Event\EmittableEvent\LifecycleExecutionEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
@@ -59,7 +59,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             CompilationTimedOutEvent::class => [
                 ['dispatchForEvent', 200],
             ],
-            ExecutionEvent::class => [
+            LifecycleExecutionEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             JobTimeoutEvent::class => [

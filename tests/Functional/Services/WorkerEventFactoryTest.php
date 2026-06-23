@@ -17,11 +17,11 @@ use App\Event\EmittableEvent\CompilationStartedEvent;
 use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\EventTypeInterface;
-use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
+use App\Event\EmittableEvent\LifecycleExecutionEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Model\Document\Exception;
@@ -301,7 +301,7 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-execution/started' => [
-                'event' => new ExecutionEvent(
+                'event' => new LifecycleExecutionEvent(
                     self::JOB_LABEL,
                     EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
                 ),
@@ -427,7 +427,7 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-execution/completed' => [
-                'event' => new ExecutionEvent(
+                'event' => new LifecycleExecutionEvent(
                     self::JOB_LABEL,
                     EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED
                 ),

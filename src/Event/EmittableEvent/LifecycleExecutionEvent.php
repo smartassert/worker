@@ -6,7 +6,7 @@ namespace App\Event\EmittableEvent;
 
 use App\Event\EmittableEvent\EventTypeInterface as EventType;
 
-class ExecutionEvent extends AbstractEvent implements EmittableEventInterface
+class LifecycleExecutionEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
      * @param non-empty-string                                                                $label
