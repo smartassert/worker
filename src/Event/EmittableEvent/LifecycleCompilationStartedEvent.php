@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-class LIfeCompilationStartedEvent extends AbstractEvent implements EmittableEventInterface
+class LifecycleCompilationStartedEvent extends AbstractEvent implements EmittableEventInterface
 {
     public function __construct(string $label)
     {

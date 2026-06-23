@@ -9,8 +9,8 @@ use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\LIfeCompilationStartedEvent;
 use App\Event\EmittableEvent\LifecycleCompilationCompletedEvent;
+use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
@@ -74,7 +74,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             JobEndedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            LIfeCompilationStartedEvent::class => [
+            LifecycleCompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
             LifecycleCompilationCompletedEvent::class => [

@@ -17,7 +17,7 @@ use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\LIfeCompilationStartedEvent;
+use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
 use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\SourceCompilationPassedEvent;
 use App\Event\EmittableEvent\SourceCompilationStartedEvent;
@@ -562,7 +562,7 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-compilation/started' => [
-                'event' => new LIfeCompilationStartedEvent(self::JOB_LABEL),
+                'event' => new LifecycleCompilationStartedEvent(self::JOB_LABEL),
                 'expected' => new WorkerEvent(
                     EventTypeInterface::LIFECYCLE_COMPILATION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
