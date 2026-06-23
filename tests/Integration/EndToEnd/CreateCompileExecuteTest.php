@@ -395,9 +395,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'source' => $successfulTestPath,
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $successfulTestPath => (new Event(
+                        'compilation/passed:' . $successfulTestPath => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/passed',
+                            'compilation/passed',
                             $successfulSourceReference,
                             [
                                 'source' => $successfulTestPath,
@@ -573,9 +573,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'source' => $sourcePaths[0],
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePaths[0] => (new Event(
+                        'compilation/passed:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/passed',
+                            'compilation/passed',
                             $sourceReferences[0],
                             [
                                 'source' => $sourcePaths[0],
@@ -598,9 +598,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'source' => $sourcePaths[1],
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePaths[1] => (new Event(
+                        'compilation/passed:' . $sourcePaths[1] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/passed',
+                            'compilation/passed',
                             $sourceReferences[1],
                             [
                                 'source' => $sourcePaths[1],
@@ -623,9 +623,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'source' => $sourcePaths[2],
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePaths[2] => (new Event(
+                        'compilation/passed:' . $sourcePaths[2] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/passed',
+                            'compilation/passed',
                             $sourceReferences[2],
                             [
                                 'source' => $sourcePaths[2],
@@ -1142,9 +1142,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'source' => $sourcePath,
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/passed:' . $sourcePath => (new Event(
+                        'compilation/passed:' . $sourcePath => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/passed',
+                            'compilation/passed',
                             $sourceReference,
                             [
                                 'source' => $sourcePath,
