@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Event\EmittableEvent\EventTypeInterface;
-use App\Event\EmittableEvent\JobCompilationEndedEvent;
-use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
+use App\Event\EmittableEvent\LifecycleCompilationEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobEndStateChangeEvent;
@@ -75,7 +74,10 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 
     public function dispatchJobCompilationStartedEventForJobStartedEvent(JobStartedEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new JobCompilationStartedEvent($event->getLabel()));
+        $this->eventDispatcher->dispatch(new LifecycleCompilationEvent(
+            $event->getLabel(),
+            EventTypeInterface::LIFECYCLE_COMPILATION_STARTED,
+        ));
     }
 
     /**
@@ -85,6 +87,9 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
 
-        $this->eventDispatcher->dispatch(new JobCompilationEndedEvent($job->getLabel()));
+        $this->eventDispatcher->dispatch(new LifecycleCompilationEvent(
+            $job->getLabel(),
+            EventTypeInterface::LIFECYCLE_COMPILATION_COMPLETED,
+        ));
     }
 }

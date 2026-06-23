@@ -92,7 +92,7 @@ class CompilationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::COMPILATION_FAILED),
                     ]),
                 'expectedState' => CompilationState::FAILED,
             ],
@@ -189,7 +189,7 @@ class CompilationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::COMPILATION_FAILED),
                     ]),
                 'expectedIsStates' => [
                     CompilationState::FAILED,

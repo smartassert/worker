@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-class SourceCompilationTimedOutEvent extends AbstractSourceEvent
+class CompilationTimedOutEvent extends AbstractSourceEvent
 {
     public function __construct(string $source, int $timeoutInSeconds)
     {
         parent::__construct(
             $source,
-            EventTypeInterface::SOURCE_COMPILATION_TIMED_OUT,
+            EventTypeInterface::COMPILATION_TIMED_OUT,
             [
                 'timeout' => $timeoutInSeconds,
             ]

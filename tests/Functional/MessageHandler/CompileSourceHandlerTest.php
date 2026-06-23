@@ -8,10 +8,10 @@ use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
 use App\Entity\WorkerEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
-use App\Event\EmittableEvent\SourceCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
+use App\Event\EmittableEvent\CompilationFailedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationStartedEvent;
+use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Message\CompileSourceMessage;
 use App\MessageHandler\CompileSourceHandler;
 use App\Tests\Mock\MockErrorOutput;
@@ -135,9 +135,9 @@ class CompileSourceHandlerTest extends WebTestCase
         ($this->handler)($compileSourceMessage);
 
         self::assertSame(2, $this->eventRecorder->count());
-        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
+        self::assertEquals(new CompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
         self::assertEquals(
-            new SourceCompilationPassedEvent($sourcePath, $testManifestCollection),
+            new CompilationPassedEvent($sourcePath, $testManifestCollection),
             $this->eventRecorder->get(1)
         );
     }
@@ -188,12 +188,12 @@ class CompileSourceHandlerTest extends WebTestCase
         $handler($compileSourceMessage);
 
         self::assertSame(2, $this->eventRecorder->count());
-        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
+        self::assertEquals(new CompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
 
         $foo = $this->eventRecorder->get(1);
-        self::assertInstanceOf(SourceCompilationFailedEvent::class, $foo);
+        self::assertInstanceOf(CompilationFailedEvent::class, $foo);
         self::assertEquals(
-            new SourceCompilationFailedEvent($sourcePath, $errorOutputData),
+            new CompilationFailedEvent($sourcePath, $errorOutputData),
             $this->eventRecorder->get(1)
         );
     }
@@ -236,12 +236,12 @@ class CompileSourceHandlerTest extends WebTestCase
         ($this->handler)($compileSourceMessage);
 
         self::assertSame(2, $this->eventRecorder->count());
-        self::assertEquals(new SourceCompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
+        self::assertEquals(new CompilationStartedEvent($sourcePath), $this->eventRecorder->get(0));
 
         $sourceCompilationTimedOutEvent = $this->eventRecorder->get(1);
-        self::assertInstanceOf(SourceCompilationTimedOutEvent::class, $sourceCompilationTimedOutEvent);
+        self::assertInstanceOf(CompilationTimedOutEvent::class, $sourceCompilationTimedOutEvent);
         self::assertEquals(
-            new SourceCompilationTimedOutEvent($sourcePath, $timeout),
+            new CompilationTimedOutEvent($sourcePath, $timeout),
             $this->eventRecorder->get(1)
         );
     }

@@ -41,7 +41,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
             new EnvironmentSetup()
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
-                        ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
+                        ->withType(EventTypeInterface::COMPILATION_FAILED),
                     new WorkerEventSetup()
                         ->withType(EventTypeInterface::TEST_STARTED),
                     new WorkerEventSetup()
@@ -49,7 +49,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
                 ])
         );
 
-        self::assertTrue($this->repository->hasForType(EventTypeInterface::SOURCE_COMPILATION_FAILED));
+        self::assertTrue($this->repository->hasForType(EventTypeInterface::COMPILATION_FAILED));
         self::assertFalse($this->repository->hasForType(EventTypeInterface::STEP_PASSED));
     }
 
@@ -65,17 +65,17 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
                     new WorkerEventSetup()
                         ->withType(EventTypeInterface::STEP_PASSED),
                     new WorkerEventSetup()
-                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::COMPILATION_PASSED),
                     new WorkerEventSetup()
-                        ->withType(EventTypeInterface::SOURCE_COMPILATION_PASSED),
+                        ->withType(EventTypeInterface::COMPILATION_PASSED),
                 ])
         );
 
         self::assertSame(
             0,
-            $this->repository->getTypeCount(EventTypeInterface::JOB_EXECUTION_COMPLETED)
+            $this->repository->getTypeCount(EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED)
         );
 
         self::assertSame(
@@ -90,7 +90,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
 
         self::assertSame(
             3,
-            $this->repository->getTypeCount(EventTypeInterface::SOURCE_COMPILATION_PASSED)
+            $this->repository->getTypeCount(EventTypeInterface::COMPILATION_PASSED)
         );
     }
 

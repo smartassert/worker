@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Enum\CompilationState;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
-use App\Event\EmittableEvent\SourceCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationStartedEvent;
+use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationProgress;
 use App\Services\Compiler;
@@ -45,16 +45,16 @@ class CompileSourceHandler
         }
 
         $sourcePath = $message->path;
-        $this->eventDispatcher->dispatch(new SourceCompilationStartedEvent($sourcePath));
+        $this->eventDispatcher->dispatch(new CompilationStartedEvent($sourcePath));
 
         try {
             $output = $this->compiler->compile($sourcePath, $message->timeoutInSeconds);
 
             $event = $output instanceof ErrorOutputInterface
                 ? $this->sourceCompilationFailedEventFactory->create($sourcePath, $output)
-                : new SourceCompilationPassedEvent($sourcePath, $output);
+                : new CompilationPassedEvent($sourcePath, $output);
         } catch (SocketTimedOutException) {
-            $event = new SourceCompilationTimedOutEvent($sourcePath, $message->timeoutInSeconds);
+            $event = new CompilationTimedOutEvent($sourcePath, $message->timeoutInSeconds);
         }
 
         $this->eventDispatcher->dispatch($event);

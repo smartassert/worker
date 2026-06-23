@@ -11,17 +11,17 @@ use App\Entity\WorkerEventReference;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
 use App\Enum\TestState;
+use App\Event\EmittableEvent\CompilationFailedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationStartedEvent;
+use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\EventTypeInterface;
-use App\Event\EmittableEvent\ExecutionEvent;
-use App\Event\EmittableEvent\JobCompilationStartedEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
-use App\Event\EmittableEvent\SourceCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
+use App\Event\EmittableEvent\LifecycleCompilationEvent;
+use App\Event\EmittableEvent\LifecycleExecutionEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Model\Document\Exception;
@@ -245,23 +245,23 @@ class WorkerEventFactoryTest extends WebTestCase
                     new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
                 ])),
             ],
-            SourceCompilationStartedEvent::class => [
-                'event' => new SourceCompilationStartedEvent($testSource),
+            CompilationStartedEvent::class => [
+                'event' => new CompilationStartedEvent($testSource),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::SOURCE_COMPILATION_STARTED,
+                    EventTypeInterface::COMPILATION_STARTED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
                     ]
                 ),
             ],
-            SourceCompilationPassedEvent::class => [
-                'event' => new SourceCompilationPassedEvent(
+            CompilationPassedEvent::class => [
+                'event' => new CompilationPassedEvent(
                     $testSource,
                     $sourceCompilationPassedManifestCollection
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::SOURCE_COMPILATION_PASSED,
+                    EventTypeInterface::COMPILATION_PASSED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -271,15 +271,15 @@ class WorkerEventFactoryTest extends WebTestCase
                     new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
                 ])),
             ],
-            SourceCompilationFailedEvent::class => [
-                'event' => new SourceCompilationFailedEvent(
+            CompilationFailedEvent::class => [
+                'event' => new CompilationFailedEvent(
                     $testSource,
                     [
                         'compile-failure-key' => 'value',
                     ]
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::SOURCE_COMPILATION_FAILED,
+                    EventTypeInterface::COMPILATION_FAILED,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -289,10 +289,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     ]
                 ),
             ],
-            SourceCompilationTimedOutEvent::class => [
-                'event' => new SourceCompilationTimedOutEvent($testSource, 600),
+            CompilationTimedOutEvent::class => [
+                'event' => new CompilationTimedOutEvent($testSource, 600),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::SOURCE_COMPILATION_TIMED_OUT,
+                    EventTypeInterface::COMPILATION_TIMED_OUT,
                     new WorkerEventReference($testSource, md5(self::JOB_LABEL . $testSource)),
                     [
                         'source' => $testSource,
@@ -301,12 +301,12 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-execution/started' => [
-                'event' => new ExecutionEvent(
+                'event' => new LifecycleExecutionEvent(
                     self::JOB_LABEL,
-                    EventTypeInterface::JOB_EXECUTION_STARTED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_EXECUTION_STARTED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),
@@ -427,12 +427,12 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-execution/completed' => [
-                'event' => new ExecutionEvent(
+                'event' => new LifecycleExecutionEvent(
                     self::JOB_LABEL,
-                    EventTypeInterface::JOB_EXECUTION_COMPLETED
+                    EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_EXECUTION_COMPLETED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),
@@ -562,9 +562,12 @@ class WorkerEventFactoryTest extends WebTestCase
                 ),
             ],
             'job-compilation/started' => [
-                'event' => new JobCompilationStartedEvent(self::JOB_LABEL),
+                'event' => new LifecycleCompilationEvent(
+                    self::JOB_LABEL,
+                    EventTypeInterface::LIFECYCLE_COMPILATION_STARTED
+                ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_COMPILATION_STARTED,
+                    EventTypeInterface::LIFECYCLE_COMPILATION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),

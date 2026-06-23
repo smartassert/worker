@@ -26,7 +26,7 @@ class WorkerEventSetup
 
     public function __construct()
     {
-        $this->type = EventTypeInterface::SOURCE_COMPILATION_PASSED;
+        $this->type = EventTypeInterface::COMPILATION_PASSED;
         $this->payload = [];
         $this->state = WorkerEventState::AWAITING;
         $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');

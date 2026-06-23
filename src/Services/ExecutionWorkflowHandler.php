@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Event\EmittableEvent\EventTypeInterface;
-use App\Event\EmittableEvent\ExecutionEvent;
+use App\Event\EmittableEvent\LifecycleExecutionEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Exception\JobNotFoundException;
@@ -92,9 +92,9 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobCompiledEvent $event): void
     {
-        $this->eventDispatcher->dispatch(new ExecutionEvent(
+        $this->eventDispatcher->dispatch(new LifecycleExecutionEvent(
             $this->jobRepository->get()->getLabel(),
-            EventTypeInterface::JOB_EXECUTION_STARTED,
+            EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
         ));
     }
 
@@ -110,14 +110,14 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         $executionStateComplete = ExecutionState::COMPLETE === $this->executionProgress->get();
 
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
-            EventTypeInterface::JOB_EXECUTION_COMPLETED,
+            EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
         );
 
         if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
             $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new ExecutionEvent(
+            $this->eventDispatcher->dispatch(new LifecycleExecutionEvent(
                 $job->getLabel(),
-                EventTypeInterface::JOB_EXECUTION_COMPLETED,
+                EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
             ));
         }
     }

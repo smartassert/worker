@@ -192,7 +192,7 @@ class ApplicationProgressTest extends WebTestCase
                     ])
                     ->withWorkerEventSetups([
                         new WorkerEventSetup()
-                            ->withType(EventTypeInterface::SOURCE_COMPILATION_FAILED),
+                            ->withType(EventTypeInterface::COMPILATION_FAILED),
                     ]),
                 'expectedState' => ApplicationState::FAILED,
             ],
