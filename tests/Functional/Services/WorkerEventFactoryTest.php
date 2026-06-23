@@ -564,7 +564,7 @@ class WorkerEventFactoryTest extends WebTestCase
             'job-compilation/started' => [
                 'event' => new LIfeCompilationStartedEvent(self::JOB_LABEL),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_COMPILATION_STARTED,
+                    EventTypeInterface::LIFECYCLE_COMPILATION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),

@@ -8,6 +8,6 @@ class LIfeCompilationStartedEvent extends AbstractEvent implements EmittableEven
 {
     public function __construct(string $label)
     {
-        parent::__construct($label, EventTypeInterface::JOB_COMPILATION_STARTED);
+        parent::__construct($label, EventTypeInterface::LIFECYCLE_COMPILATION_STARTED);
     }
 }
