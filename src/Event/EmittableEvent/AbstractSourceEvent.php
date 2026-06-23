@@ -9,11 +9,11 @@ use App\Model\ResourceReferenceSource;
 abstract class AbstractSourceEvent extends AbstractEvent implements EmittableEventInterface
 {
     /**
-     * @param non-empty-string                         $source
-     * @param EventTypeInterface::SOURCE_COMPILATION_* $type
-     * @param array<mixed>                             $payload
-     * @param string[]                                 $referenceComponents
-     * @param ResourceReferenceSource[]                $relatedReferenceSources
+     * @param non-empty-string                  $source
+     * @param EventTypeInterface::COMPILATION_* $type
+     * @param array<mixed>                      $payload
+     * @param string[]                          $referenceComponents
+     * @param ResourceReferenceSource[]         $relatedReferenceSources
      */
     public function __construct(
         protected readonly string $source,
