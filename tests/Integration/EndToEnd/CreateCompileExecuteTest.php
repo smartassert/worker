@@ -253,23 +253,23 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'job-compilation/started' => (new Event(
+                        'lifecycle/compilation-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/started',
+                            'lifecycle/compilation-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/started: chrome-open-index-compilation-failure' => (new Event(
+                        'compilation/started: chrome-open-index-compilation-failure' => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $sourceReference,
                             [
                                 'source' => $failedTestPath,
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/failed: chrome-open-index-compilation-failure' => (new Event(
+                        'compilation/failed: chrome-open-index-compilation-failure' => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/failed',
+                            'compilation/failed',
                             $sourceReference,
                             [
                                 'output' => [
@@ -381,15 +381,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ->withRelatedReferences(
                                 new ResourceReferenceCollection([$failedSourceReference, $successfulSourceReference])
                             ),
-                        'job-compilation/started' => (new Event(
+                        'lifecycle/compilation-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/started',
+                            'lifecycle/compilation-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $successfulTestPath => (new Event(
+                        'compilation/started:' . $successfulTestPath => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $successfulSourceReference,
                             [
                                 'source' => $successfulTestPath,
@@ -412,17 +412,17 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'source-compilation/started:' . $failedTestPath => (new Event(
+                        'compilation/started:' . $failedTestPath => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $failedSourceReference,
                             [
                                 'source' => $failedTestPath,
                             ]
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/failed' => (new Event(
+                        'compilation/failed' => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/failed',
+                            'compilation/failed',
                             $failedSourceReference,
                             [
                                 'source' => $failedTestPath,
@@ -559,15 +559,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection($sourceReferences)),
-                        'job-compilation/started' => (new Event(
+                        'lifecycle/compilation-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/started',
+                            'lifecycle/compilation-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $sourcePaths[0] => (new Event(
+                        'compilation/started:' . $sourcePaths[0] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $sourceReferences[0],
                             [
                                 'source' => $sourcePaths[0],
@@ -590,9 +590,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'source-compilation/started:' . $sourcePaths[1] => (new Event(
+                        'compilation/started:' . $sourcePaths[1] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $sourceReferences[1],
                             [
                                 'source' => $sourcePaths[1],
@@ -615,9 +615,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'source-compilation/started:' . $sourcePaths[2] => (new Event(
+                        'compilation/started:' . $sourcePaths[2] => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $sourceReferences[2],
                             [
                                 'source' => $sourcePaths[2],
@@ -1128,15 +1128,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ))
                             ->withJob($resultsJobLabel)
                             ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'job-compilation/started' => (new Event(
+                        'lifecycle/compilation-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/started',
+                            'lifecycle/compilation-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'source-compilation/started:' . $sourcePath => (new Event(
+                        'compilation/started:' . $sourcePath => (new Event(
                             ++$firstSequenceNumber,
-                            'source-compilation/started',
+                            'compilation/started',
                             $sourceReference,
                             [
                                 'source' => $sourcePath,
