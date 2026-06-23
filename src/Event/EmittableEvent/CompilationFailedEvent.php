@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Event\EmittableEvent;
 
-class SourceCompilationFailedEvent extends AbstractSourceEvent
+class CompilationFailedEvent extends AbstractSourceEvent
 {
     /**
      * @param array<mixed> $payloadOutput
@@ -13,7 +13,7 @@ class SourceCompilationFailedEvent extends AbstractSourceEvent
     {
         parent::__construct(
             $source,
-            EventTypeInterface::SOURCE_COMPILATION_FAILED,
+            EventTypeInterface::COMPILATION_FAILED,
             [
                 'output' => $payloadOutput,
             ]

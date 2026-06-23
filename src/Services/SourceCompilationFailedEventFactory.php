@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
+use App\Event\EmittableEvent\CompilationFailedEvent;
 use webignition\BasilCompilerModels\Model\ErrorOutputInterface;
 
 class SourceCompilationFailedEventFactory
@@ -16,7 +16,7 @@ class SourceCompilationFailedEventFactory
     /**
      * @param non-empty-string $sourcePath
      */
-    public function create(string $sourcePath, ErrorOutputInterface $output): SourceCompilationFailedEvent
+    public function create(string $sourcePath, ErrorOutputInterface $output): CompilationFailedEvent
     {
         $payloadOutput = $output->toArray();
 
@@ -35,6 +35,6 @@ class SourceCompilationFailedEventFactory
             $payloadOutput['context'] = $context;
         }
 
-        return new SourceCompilationFailedEvent($sourcePath, $payloadOutput);
+        return new CompilationFailedEvent($sourcePath, $payloadOutput);
     }
 }

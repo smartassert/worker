@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Services;
 
 use App\Entity\Test;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
 use App\Repository\TestRepository;
 use App\Services\TestFactory;
 use App\Tests\Services\EntityRemover;
@@ -140,7 +140,7 @@ class TestFactoryTest extends WebTestCase
     public function testCreateFromSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
-            $event = new SourceCompilationPassedEvent('Test/test.yml', $collection);
+            $event = new CompilationPassedEvent('Test/test.yml', $collection);
 
             return $this->factory->createFromSourceCompileSuccessEvent($event);
         });
@@ -149,7 +149,7 @@ class TestFactoryTest extends WebTestCase
     public function testSubscribesToSourceCompileSuccessEvent(): void
     {
         $this->doSourceCompileSuccessEventDrivenTest(function (TestManifestCollection $collection) {
-            $event = new SourceCompilationPassedEvent('Test/test.yml', $collection);
+            $event = new CompilationPassedEvent('Test/test.yml', $collection);
             $this->eventDispatcher->dispatch($event);
 
             $testRepository = self::getContainer()->get(TestRepository::class);

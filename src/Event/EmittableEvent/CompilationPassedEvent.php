@@ -7,7 +7,7 @@ namespace App\Event\EmittableEvent;
 use App\Model\ResourceReferenceSource;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 
-class SourceCompilationPassedEvent extends AbstractSourceEvent
+class CompilationPassedEvent extends AbstractSourceEvent
 {
     /**
      * @param non-empty-string $source
@@ -18,7 +18,7 @@ class SourceCompilationPassedEvent extends AbstractSourceEvent
     ) {
         parent::__construct(
             $source,
-            EventTypeInterface::SOURCE_COMPILATION_PASSED,
+            EventTypeInterface::COMPILATION_PASSED,
             [],
             [],
             $this->createRelatedReferenceSources($testManifestCollection, $source)

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Test;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
 use App\Repository\TestRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
@@ -22,7 +22,7 @@ class TestFactory implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SourceCompilationPassedEvent::class => [
+            CompilationPassedEvent::class => [
                 ['createFromSourceCompileSuccessEvent', 100],
             ],
         ];
@@ -31,7 +31,7 @@ class TestFactory implements EventSubscriberInterface
     /**
      * @return Test[]
      */
-    public function createFromSourceCompileSuccessEvent(SourceCompilationPassedEvent $event): array
+    public function createFromSourceCompileSuccessEvent(CompilationPassedEvent $event): array
     {
         return $this->createFromManifestCollection($event->getTestManifestCollection()->getManifests());
     }

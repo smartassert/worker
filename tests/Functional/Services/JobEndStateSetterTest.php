@@ -8,9 +8,9 @@ use App\Entity\Job;
 use App\Entity\Test as TestEntity;
 use App\Enum\ExecutionExceptionScope;
 use App\Enum\JobEndState;
+use App\Event\EmittableEvent\CompilationFailedEvent;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompletedEvent;
 use App\Model\Document\Exception;
@@ -93,7 +93,7 @@ class JobEndStateSetterTest extends WebTestCase
                 'expectedJobEndState' => JobEndState::TIMED_OUT,
             ],
             'source-compilation/failed' => [
-                'event' => new SourceCompilationFailedEvent('test.yml', []),
+                'event' => new CompilationFailedEvent('test.yml', []),
                 'expectedJobEndState' => JobEndState::FAILED_COMPILATION,
             ],
             'job/completed' => [

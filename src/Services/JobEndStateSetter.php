@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\JobEndState;
+use App\Event\EmittableEvent\CompilationFailedEvent;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
@@ -36,7 +36,7 @@ class JobEndStateSetter implements EventSubscriberInterface
             JobTimeoutEvent::class => [
                 ['setJobEndStateOnJobTimeoutEvent', 100],
             ],
-            SourceCompilationFailedEvent::class => [
+            CompilationFailedEvent::class => [
                 ['setJobEndStateOnSourceCompilationFailedEvent', 100],
             ],
             JobCompletedEvent::class => [
@@ -76,7 +76,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnSourceCompilationFailedEvent(SourceCompilationFailedEvent $event): void
+    public function setJobEndStateOnSourceCompilationFailedEvent(CompilationFailedEvent $event): void
     {
         $this->setJobEndState(JobEndState::FAILED_COMPILATION);
     }

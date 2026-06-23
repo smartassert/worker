@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Services;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Entity\Test;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
 use App\Message\CompileSourceMessage;
 use App\Services\CompilationWorkflowHandler;
 use App\Tests\Model\EnvironmentSetup;
@@ -56,7 +56,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     {
         $this->environmentFactory->create($setup);
 
-        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
+        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(CompilationPassedEvent::class));
 
         self::assertCount(0, $this->messengerTransport->getSent());
     }
@@ -88,7 +88,7 @@ class CompilationWorkflowHandlerTest extends WebTestCase
     ): void {
         $this->environmentFactory->create($setup);
 
-        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(SourceCompilationPassedEvent::class));
+        $this->handler->dispatchNextCompileSourceMessage(\Mockery::mock(CompilationPassedEvent::class));
 
         $transportQueue = $this->messengerTransport->getSent();
         self::assertCount(1, $transportQueue);

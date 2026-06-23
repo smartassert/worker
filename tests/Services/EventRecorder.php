@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use App\Event\EmittableEvent\CompilationFailedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationStartedEvent;
+use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
-use App\Event\EmittableEvent\SourceCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Message\CompileSourceMessage;
@@ -34,16 +34,16 @@ class EventRecorder implements EventSubscriberInterface
             CompileSourceMessage::class => [
                 ['addEvent', 1000],
             ],
-            SourceCompilationStartedEvent::class => [
+            CompilationStartedEvent::class => [
                 ['addEvent', 1000],
             ],
-            SourceCompilationPassedEvent::class => [
+            CompilationPassedEvent::class => [
                 ['addEvent', 1000],
             ],
-            SourceCompilationFailedEvent::class => [
+            CompilationFailedEvent::class => [
                 ['addEvent', 1000],
             ],
-            SourceCompilationTimedOutEvent::class => [
+            CompilationTimedOutEvent::class => [
                 ['addEvent', 1000],
             ],
             TestEvent::class => [

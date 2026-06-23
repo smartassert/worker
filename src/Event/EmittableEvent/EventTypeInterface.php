@@ -11,10 +11,10 @@ interface EventTypeInterface
     public const string JOB_ENDED = 'job/ended';
     public const string LIFECYCLE_COMPILATION_STARTED = 'lifecycle/compilation-started';
     public const string LIFECYCLE_COMPILATION_COMPLETED = 'lifecycle/compilation-completed';
-    public const string SOURCE_COMPILATION_FAILED = 'source-compilation/failed';
-    public const string SOURCE_COMPILATION_PASSED = 'source-compilation/passed';
-    public const string SOURCE_COMPILATION_STARTED = 'source-compilation/started';
-    public const string SOURCE_COMPILATION_TIMED_OUT = 'source-compilation/timed-out';
+    public const string COMPILATION_FAILED = 'compilation/failed';
+    public const string COMPILATION_PASSED = 'compilation/passed';
+    public const string COMPILATION_STARTED = 'compilation/started';
+    public const string COMPILATION_TIMED_OUT = 'compilation/timed-out';
     public const string LIFECYCLE_EXECUTION_STARTED = 'lifecycle/execution-started';
     public const string LIFECYCLE_EXECUTION_COMPLETED = 'lifecycle/execution-completed';
     public const string TEST_STARTED = 'test/started';

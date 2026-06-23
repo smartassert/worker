@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
+use App\Event\EmittableEvent\CompilationFailedEvent;
+use App\Event\EmittableEvent\CompilationPassedEvent;
+use App\Event\EmittableEvent\CompilationStartedEvent;
+use App\Event\EmittableEvent\CompilationTimedOutEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\ExecutionEvent;
 use App\Event\EmittableEvent\JobEndedEvent;
@@ -11,10 +15,6 @@ use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LifecycleCompilationCompletedEvent;
 use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationFailedEvent;
-use App\Event\EmittableEvent\SourceCompilationPassedEvent;
-use App\Event\EmittableEvent\SourceCompilationStartedEvent;
-use App\Event\EmittableEvent\SourceCompilationTimedOutEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
@@ -47,16 +47,16 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             JobStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            SourceCompilationStartedEvent::class => [
+            CompilationStartedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            SourceCompilationPassedEvent::class => [
+            CompilationPassedEvent::class => [
                 ['dispatchForEvent', 500],
             ],
-            SourceCompilationFailedEvent::class => [
+            CompilationFailedEvent::class => [
                 ['dispatchForEvent', 200],
             ],
-            SourceCompilationTimedOutEvent::class => [
+            CompilationTimedOutEvent::class => [
                 ['dispatchForEvent', 200],
             ],
             ExecutionEvent::class => [
