@@ -640,15 +640,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job-compilation/completed' => (new Event(
+                        'lifecycle/compilation-completed' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/completed',
+                            'lifecycle/compilation-completed',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'job-execution/started' => (new Event(
+                        'lifecycle/execution-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-execution/started',
+                            'lifecycle/execution-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
@@ -1050,9 +1050,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job-execution/completed' => (new Event(
+                        'lifecycle/execution-completed' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-execution/completed',
+                            'lifecycle/execution-completed',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
@@ -1163,15 +1163,15 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                     ),
                                 ])
                             ),
-                        'job-compilation/completed' => (new Event(
+                        'lifecycle/compilation-completed' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-compilation/completed',
+                            'lifecycle/compilation-completed',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
-                        'job-execution/started' => (new Event(
+                        'lifecycle/execution-started' => (new Event(
                             ++$firstSequenceNumber,
-                            'job-execution/started',
+                            'lifecycle/execution-started',
                             $jobReference,
                             []
                         ))->withJob($resultsJobLabel),
