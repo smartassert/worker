@@ -8,6 +8,6 @@ class LifecycleCompilationCompletedEvent extends AbstractEvent implements Emitta
 {
     public function __construct(string $label)
     {
-        parent::__construct($label, EventTypeInterface::JOB_COMPILATION_COMPLETED);
+        parent::__construct($label, EventTypeInterface::LIFECYCLE_COMPILATION_COMPLETED);
     }
 }
