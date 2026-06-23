@@ -303,10 +303,10 @@ class WorkerEventFactoryTest extends WebTestCase
             'job-execution/started' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
-                    EventTypeInterface::JOB_EXECUTION_STARTED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_EXECUTION_STARTED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),
@@ -429,10 +429,10 @@ class WorkerEventFactoryTest extends WebTestCase
             'job-execution/completed' => [
                 'event' => new ExecutionEvent(
                     self::JOB_LABEL,
-                    EventTypeInterface::JOB_EXECUTION_COMPLETED
+                    EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED
                 ),
                 'expected' => new WorkerEvent(
-                    EventTypeInterface::JOB_EXECUTION_COMPLETED,
+                    EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
                     new WorkerEventReference(self::JOB_LABEL, md5(self::JOB_LABEL)),
                     []
                 ),

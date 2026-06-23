@@ -75,7 +75,7 @@ class WorkerEventRepositoryTest extends AbstractEntityRepositoryTestCase
 
         self::assertSame(
             0,
-            $this->repository->getTypeCount(EventTypeInterface::JOB_EXECUTION_COMPLETED)
+            $this->repository->getTypeCount(EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED)
         );
 
         self::assertSame(

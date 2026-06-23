@@ -15,8 +15,8 @@ interface EventTypeInterface
     public const string SOURCE_COMPILATION_PASSED = 'source-compilation/passed';
     public const string SOURCE_COMPILATION_STARTED = 'source-compilation/started';
     public const string SOURCE_COMPILATION_TIMED_OUT = 'source-compilation/timed-out';
-    public const string JOB_EXECUTION_STARTED = 'job-execution/started';
-    public const string JOB_EXECUTION_COMPLETED = 'job-execution/completed';
+    public const string LIFECYCLE_EXECUTION_STARTED = 'lifecycle/execution-started';
+    public const string LIFECYCLE_EXECUTION_COMPLETED = 'lifecycle/execution-completed';
     public const string TEST_STARTED = 'test/started';
     public const string TEST_FAILED = 'test/failed';
     public const string TEST_PASSED = 'test/passed';
