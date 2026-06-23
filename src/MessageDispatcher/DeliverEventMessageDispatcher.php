@@ -12,8 +12,7 @@ use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Event\EmittableEvent\JobEndedEvent;
 use App\Event\EmittableEvent\JobStartedEvent;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Event\EmittableEvent\LifecycleCompilationCompletedEvent;
-use App\Event\EmittableEvent\LifecycleCompilationStartedEvent;
+use App\Event\EmittableEvent\LifecycleCompilationEvent;
 use App\Event\EmittableEvent\LifecycleExecutionEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
@@ -74,10 +73,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
             JobEndedEvent::class => [
                 ['dispatchForEvent', 0],
             ],
-            LifecycleCompilationStartedEvent::class => [
-                ['dispatchForEvent', 0],
-            ],
-            LifecycleCompilationCompletedEvent::class => [
+            LifecycleCompilationEvent::class => [
                 ['dispatchForEvent', 0],
             ],
         ];
