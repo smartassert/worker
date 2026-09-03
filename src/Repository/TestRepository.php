@@ -23,12 +23,10 @@ class TestRepository extends ServiceEntityRepository
         parent::__construct($registry, Test::class);
     }
 
-    public function add(Test $test): Test
+    public function add(Test $test): void
     {
         $this->getEntityManager()->persist($test);
         $this->getEntityManager()->flush();
-
-        return $test;
     }
 
     public function findMaxPosition(): int

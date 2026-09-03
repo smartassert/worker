@@ -66,14 +66,18 @@ class TestFactory implements EventSubscriberInterface
         string $target,
         array $stepNames
     ): Test {
-        return $this->repository->add(new Test(
+        $test = new Test(
             $browser,
             $url,
             $source,
             $target,
             $stepNames,
             $this->repository->findMaxPosition() + 1
-        ));
+        );
+
+        $this->repository->add($test);
+
+        return $test;
     }
 
     private function createFromManifest(TestManifest $manifest): Test
