@@ -6,22 +6,12 @@ namespace App\Model;
 
 use App\Enum\StateInterface;
 
-class SerializedState implements \JsonSerializable
+class SerializedState implements SerializableComponentStateInterface
 {
     public function __construct(
         private readonly StateInterface $state
     ) {}
 
-    /**
-     * @return array{
-     *   state: non-empty-string,
-     *   meta_state: array{
-     *     pending: bool,
-     *     ended: bool,
-     *     succeeded: bool,
-     *   },
-     * }
-     */
     public function jsonSerialize(): array
     {
         $isEndState = $this->state::isEndState($this->state);
@@ -34,5 +24,10 @@ class SerializedState implements \JsonSerializable
                 'succeeded' => $this->state::isSuccessState($this->state),
             ],
         ];
+    }
+
+    public function toArray(): array
+    {
+        return $this->jsonSerialize();
     }
 }
