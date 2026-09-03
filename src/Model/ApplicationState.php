@@ -32,4 +32,9 @@ final readonly class ApplicationState implements SerializableApplicationStateInt
     {
         return $this->jsonSerialize();
     }
+
+    public function equals(ApplicationState $comparator): bool
+    {
+        return $this->toArray() === $comparator->toArray();
+    }
 }
