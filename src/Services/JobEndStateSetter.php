@@ -20,6 +20,7 @@ class JobEndStateSetter implements EventSubscriberInterface
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
+        private readonly EntityMutator $entityMutator,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -117,7 +118,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
         $job->setEndState($state);
-        $this->jobRepository->add($job);
+        $this->entityMutator->save($job);
 
         $this->eventDispatcher->dispatch(new JobEndStateChangeEvent());
     }

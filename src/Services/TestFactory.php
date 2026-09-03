@@ -14,6 +14,7 @@ class TestFactory implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TestRepository $repository,
+        private readonly EntityMutator $entityMutator,
     ) {}
 
     /**
@@ -75,7 +76,7 @@ class TestFactory implements EventSubscriberInterface
             $this->repository->findMaxPosition() + 1
         );
 
-        $this->repository->add($test);
+        $this->entityMutator->save($test);
 
         return $test;
     }
