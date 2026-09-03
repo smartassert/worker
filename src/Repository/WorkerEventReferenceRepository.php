@@ -16,11 +16,9 @@ class WorkerEventReferenceRepository extends ServiceEntityRepository
         parent::__construct($registry, WorkerEventReference::class);
     }
 
-    public function add(WorkerEventReference $entity): WorkerEventReference
+    public function add(WorkerEventReference $entity): void
     {
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
-
-        return $entity;
     }
 }

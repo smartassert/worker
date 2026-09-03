@@ -26,7 +26,8 @@ class WorkerEventReferenceFactory
         $workerEventReference = $this->repository->find(WorkerEventReference::generateId($label, $reference));
 
         if (null === $workerEventReference) {
-            $workerEventReference = $this->repository->add(new WorkerEventReference($label, $reference));
+            $workerEventReference = new WorkerEventReference($label, $reference);
+            $this->repository->add($workerEventReference);
         }
 
         return $workerEventReference;
