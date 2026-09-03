@@ -37,7 +37,9 @@ class SourceFactory
             }
 
             $this->sourceFileStore->storeContent($source->content, $sourcePath);
-            $this->sourceRepository->add(new Source($sourceType, $sourcePath));
+
+            $source = new Source($sourceType, $sourcePath);
+            $this->sourceRepository->add($source);
         }
 
         foreach ($manifestTestPaths as $manifestTestPath) {

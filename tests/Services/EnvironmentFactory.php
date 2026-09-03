@@ -41,9 +41,9 @@ class EnvironmentFactory
 
         $sources = [];
         foreach ($setup->getSourceSetups() as $sourceSetup) {
-            $sources[] = $this->sourceRepository->add(
-                new Source($sourceSetup->getType(), $sourceSetup->getPath())
-            );
+            $source = new Source($sourceSetup->getType(), $sourceSetup->getPath());
+            $this->sourceRepository->add($source);
+            $sources[] = $source;
         }
 
         $tests = [];
