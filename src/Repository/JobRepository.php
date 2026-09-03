@@ -42,12 +42,4 @@ class JobRepository extends ServiceEntityRepository
 
         throw new JobNotFoundException();
     }
-
-    public function remove(Job $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($entity);
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
 }
