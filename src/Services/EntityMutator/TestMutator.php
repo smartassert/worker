@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Services\EntityMutator;
 
-use App\Entity\Job;
+use App\Entity\Test;
 use App\Event\ApplicationStateChangedEvent;
-use App\Repository\JobRepository;
+use App\Repository\TestRepository;
 use App\Services\ApplicationStateFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final readonly class JobMutator
+final readonly class TestMutator
 {
     public function __construct(
-        private JobRepository $repository,
+        private TestRepository $repository,
         private ApplicationStateFactory $applicationStateFactory,
         private EventDispatcherInterface $eventDispatcher,
     ) {}
 
-    public function save(Job $entity): void
+    public function save(Test $entity): void
     {
         $preSaveState = $this->applicationStateFactory->create();
         $this->repository->add($entity);

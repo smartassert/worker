@@ -8,13 +8,13 @@ use App\Entity\Test;
 use App\Enum\TestState;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\StepEvent;
-use App\Repository\TestRepository;
+use App\Services\EntityMutator\TestMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TestStateMutator implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly TestRepository $testRepository,
+        private readonly TestMutator $testMutator,
     ) {}
 
     /**
@@ -63,6 +63,6 @@ class TestStateMutator implements EventSubscriberInterface
     private function set(Test $test, TestState $state): void
     {
         $test->setState($state);
-        $this->testRepository->add($test);
+        $this->testMutator->save($test);
     }
 }
