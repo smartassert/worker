@@ -16,12 +16,10 @@ class SourceRepository extends ServiceEntityRepository
         parent::__construct($registry, Source::class);
     }
 
-    public function add(Source $source): Source
+    public function add(Source $source): void
     {
         $this->getEntityManager()->persist($source);
         $this->getEntityManager()->flush();
-
-        return $source;
     }
 
     /**

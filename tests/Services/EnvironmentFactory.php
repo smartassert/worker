@@ -27,21 +27,23 @@ class EnvironmentFactory
 
         $jobSetup = $setup->getJobSetup();
         if ($jobSetup instanceof JobSetup) {
-            $job = $this->jobRepository->add(new Job(
+            $job = new Job(
                 $jobSetup->getLabel(),
                 $jobSetup->getEventAddUrl(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
-            ));
+            );
+
+            $this->jobRepository->add($job);
 
             $environment = $environment->withJob($job);
         }
 
         $sources = [];
         foreach ($setup->getSourceSetups() as $sourceSetup) {
-            $sources[] = $this->sourceRepository->add(
-                new Source($sourceSetup->getType(), $sourceSetup->getPath())
-            );
+            $source = new Source($sourceSetup->getType(), $sourceSetup->getPath());
+            $this->sourceRepository->add($source);
+            $sources[] = $source;
         }
 
         $tests = [];

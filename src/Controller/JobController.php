@@ -85,12 +85,14 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $job = $this->jobRepository->add(new Job(
+        $job = new Job(
             $request->label,
             $request->eventAddUrl,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths
-        ));
+        );
+
+        $this->jobRepository->add($job);
 
         $eventDispatcher->dispatch(new JobStartedEvent(
             $job->getLabel(),
