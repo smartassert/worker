@@ -17,12 +17,10 @@ class JobRepository extends ServiceEntityRepository
         parent::__construct($registry, Job::class);
     }
 
-    public function add(Job $job): Job
+    public function add(Job $job): void
     {
         $this->getEntityManager()->persist($job);
         $this->getEntityManager()->flush();
-
-        return $job;
     }
 
     public function has(): bool

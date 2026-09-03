@@ -27,12 +27,14 @@ class EnvironmentFactory
 
         $jobSetup = $setup->getJobSetup();
         if ($jobSetup instanceof JobSetup) {
-            $job = $this->jobRepository->add(new Job(
+            $job = new Job(
                 $jobSetup->getLabel(),
                 $jobSetup->getEventAddUrl(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
-            ));
+            );
+
+            $this->jobRepository->add($job);
 
             $environment = $environment->withJob($job);
         }
