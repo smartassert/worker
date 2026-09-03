@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Entity\Test;
 use App\Event\EmittableEvent\CompilationPassedEvent;
 use App\Repository\TestRepository;
-use App\Services\EntityMutator\TestMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use webignition\BasilCompilerModels\Model\TestManifest;
 
@@ -15,7 +14,7 @@ class TestFactory implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TestRepository $repository,
-        private readonly TestMutator $testMutator,
+        private readonly EntityMutator $entityMutator,
     ) {}
 
     /**
@@ -77,7 +76,7 @@ class TestFactory implements EventSubscriberInterface
             $this->repository->findMaxPosition() + 1
         );
 
-        $this->testMutator->save($test);
+        $this->entityMutator->save($test);
 
         return $test;
     }

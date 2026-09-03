@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Entity\Source;
 use App\Exception\MissingTestSourceException;
-use App\Services\EntityMutator\SourceMutator;
 use SmartAssert\WorkerJobSource\Model\JobSource;
 use SmartAssert\YamlFile\Exception\ProvisionException;
 
@@ -14,7 +13,7 @@ readonly class SourceFactory
 {
     public function __construct(
         private SourceFileStore $sourceFileStore,
-        private SourceMutator $sourceMutator,
+        private EntityMutator $entityMutator,
     ) {}
 
     /**
@@ -39,7 +38,7 @@ readonly class SourceFactory
             $this->sourceFileStore->storeContent($source->content, $sourcePath);
 
             $source = new Source($sourceType, $sourcePath);
-            $this->sourceMutator->save($source);
+            $this->entityMutator->save($source);
         }
 
         foreach ($manifestTestPaths as $manifestTestPath) {

@@ -13,7 +13,6 @@ use App\Event\JobCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
-use App\Services\EntityMutator\JobMutator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,7 +20,7 @@ class JobEndStateSetter implements EventSubscriberInterface
 {
     public function __construct(
         private readonly JobRepository $jobRepository,
-        private readonly JobMutator $jobMutator,
+        private readonly EntityMutator $entityMutator,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -119,7 +118,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     {
         $job = $this->jobRepository->get();
         $job->setEndState($state);
-        $this->jobMutator->save($job);
+        $this->entityMutator->save($job);
 
         $this->eventDispatcher->dispatch(new JobEndStateChangeEvent());
     }

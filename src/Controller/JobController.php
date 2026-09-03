@@ -13,7 +13,7 @@ use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
 use App\Request\CreateJobRequest;
 use App\Response\ErrorResponse;
-use App\Services\EntityMutator\JobMutator;
+use App\Services\EntityMutator;
 use App\Services\ErrorResponseFactory;
 use App\Services\JobStatusFactory;
 use App\Services\SourceFactory;
@@ -39,7 +39,7 @@ class JobController
      */
     #[Route(self::PATH_JOB, name: 'create', methods: ['POST'])]
     public function create(
-        JobMutator $jobMutator,
+        EntityMutator $entityMutator,
         SourceFactory $sourceFactory,
         EventDispatcherInterface $eventDispatcher,
         ErrorResponseFactory $errorResponseFactory,
@@ -94,7 +94,7 @@ class JobController
             $jobSource->manifest->testPaths
         );
 
-        $jobMutator->save($job);
+        $entityMutator->save($job);
 
         $eventDispatcher->dispatch(new JobStartedEvent(
             $job->getLabel(),

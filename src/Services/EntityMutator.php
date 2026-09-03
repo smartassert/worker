@@ -2,26 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Services\EntityMutator;
+namespace App\Services;
 
+use App\Entity\Job;
 use App\Entity\Source;
+use App\Entity\Test;
+use App\Entity\WorkerEvent;
+use App\Entity\WorkerEventReference;
 use App\Event\ApplicationStateChangedEvent;
-use App\Repository\SourceRepository;
-use App\Services\ApplicationStateFactory;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final readonly class SourceMutator
+final readonly class EntityMutator
 {
     public function __construct(
-        private SourceRepository $repository,
         private ApplicationStateFactory $applicationStateFactory,
         private EventDispatcherInterface $eventDispatcher,
+        private EntityManagerInterface $entityManager,
     ) {}
 
-    public function save(Source $entity): void
+    public function save(Job|Source|Test|WorkerEvent|WorkerEventReference $entity): void
     {
         $preSaveState = $this->applicationStateFactory->create();
-        $this->repository->add($entity);
+
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
         $postSaveState = $this->applicationStateFactory->create();
 
         if (false === $postSaveState->equals($preSaveState)) {
