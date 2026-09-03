@@ -31,11 +31,13 @@ class TestWorkerEventFactory
             $this->entityManager->flush();
         }
 
-        $workerEvent = $this->workerEventRepository->add(new WorkerEvent(
+        $workerEvent = new WorkerEvent(
             $workerEventSetup->getType(),
             $workerEventReferenceEntity,
             $workerEventSetup->getPayload()
-        ));
+        );
+
+        $this->workerEventRepository->add($workerEvent);
 
         $workerEvent->setState($workerEventSetup->getState());
         $this->entityManager->flush();
