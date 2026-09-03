@@ -18,7 +18,7 @@ use App\Event\EmittableEvent\TestEvent;
 use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
-use App\Repository\WorkerEventRepository;
+use App\Services\EntityMutator\WorkerEventMutator;
 use App\Services\WorkerEventFactory;
 use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,7 +31,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly WorkerEventStateMutator $workerEventStateMutator,
-        private readonly WorkerEventRepository $workerEventRepository,
+        private readonly WorkerEventMutator $workerEventMutator,
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventFactory $workerEventFactory,
     ) {}
@@ -84,7 +84,7 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         $job = $this->jobRepository->get();
 
         $workerEvent = $this->workerEventFactory->create($job, $event);
-        $this->workerEventRepository->add($workerEvent);
+        $this->workerEventMutator->save($workerEvent);
 
         $this->workerEventStateMutator->setQueued($workerEvent);
 
