@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Image;
 
 use App\Enum\ApplicationState;
+use App\Enum\CompilationState;
+use App\Enum\EventDeliveryState;
+use App\Enum\ExecutionState;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
@@ -150,7 +153,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'succeeded' => true,
                     ],
                     'previous_states' => [
-                        'previous_compilation_state',
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::COMPLETE->value,
                     ],
                 ],
                 'execution' => [
@@ -161,7 +166,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'succeeded' => true,
                     ],
                     'previous_states' => [
-                        'previous_execution_state',
+                        ExecutionState::AWAITING->value,
+                        ExecutionState::RUNNING->value,
+                        ExecutionState::COMPLETE->value,
                     ],
                 ],
                 'event_delivery' => [
@@ -172,7 +179,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'succeeded' => true,
                     ],
                     'previous_states' => [
-                        'previous_event_delivery_state',
+                        EventDeliveryState::AWAITING->value,
+                        EventDeliveryState::RUNNING->value,
+                        EventDeliveryState::COMPLETE->value,
                     ],
                 ],
             ],
