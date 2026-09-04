@@ -45,10 +45,6 @@ enum EventDeliveryState: string implements StateInterface
             return [self::AWAITING, $this];
         }
 
-        if (self::COMPLETE === $this) {
-            return [self::AWAITING, self::RUNNING, $this];
-        }
-
-        return [];
+        return [self::AWAITING, self::RUNNING, $this];
     }
 }
