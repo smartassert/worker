@@ -165,3 +165,7 @@ services:
     App\MessageFactory\ExecuteTestMessageFactory:
         arguments:
             $defaultCompileTimeoutInSeconds: '%compiler_default_timeout_in_seconds%'
+
+    App\MessageDispatcher\SendWebhookMessageDispatcher:
+        arguments:
+            $secret: '%state_notify_secret%'
