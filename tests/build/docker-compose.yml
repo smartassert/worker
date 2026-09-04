@@ -88,6 +88,10 @@ services:
     ports:
       - 9501:8000
 
+  callback-receiver:
+    image: mendhak/http-https-echo:19
+    container_name: callback-receiver
+
   postgres:
     env_file: .env
     image: postgres:12.5-alpine
