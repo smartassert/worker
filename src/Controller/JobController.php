@@ -91,7 +91,8 @@ class JobController
             $request->label,
             $request->eventAddUrl,
             $request->maximumDurationInSeconds,
-            $jobSource->manifest->testPaths
+            $jobSource->manifest->testPaths,
+            $request->stateNotifyUrl,
         );
 
         $entityMutator->save($job);
