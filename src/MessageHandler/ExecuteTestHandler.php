@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Entity\Test as TestEntity;
-use App\Enum\ExecutionState;
 use App\Enum\TestState;
 use App\Event\EmittableEvent\EventTypeInterface as EventType;
 use App\Event\EmittableEvent\TestEvent;
@@ -42,7 +41,7 @@ class ExecuteTestHandler
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
-        if (ExecutionState::isEndState($this->executionProgress->get())) {
+        if ($this->executionProgress->get()->isEnd()) {
             return;
         }
 

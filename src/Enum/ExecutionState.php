@@ -11,24 +11,24 @@ enum ExecutionState: string implements StateInterface
     case COMPLETE = 'complete';
     case CANCELLED = 'cancelled';
 
-    public static function isEndState(StateInterface $state): bool
+    public function isEnd(): bool
     {
-        return in_array($state, [self::COMPLETE, self::CANCELLED]);
+        return in_array($this, [self::COMPLETE, self::CANCELLED]);
     }
 
-    public static function isSuccessState(StateInterface $state): bool
+    public function isSuccess(): bool
     {
-        return self::COMPLETE === $state;
+        return self::COMPLETE === $this;
     }
 
-    public static function isFailedState(StateInterface $state): bool
+    public function isFailed(): bool
     {
-        return self::isEndState($state) && false === self::isSuccessState($state);
+        return $this->isEnd() && false === $this->isSuccess();
     }
 
-    public static function isPendingState(StateInterface $state): bool
+    public function isPending(): bool
     {
-        return self::AWAITING === $state;
+        return self::AWAITING === $this;
     }
 
     public function getValue(): string

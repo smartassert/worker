@@ -45,7 +45,7 @@ class CompilationWorkflowHandler implements EventSubscriberInterface
      */
     public function dispatchNextCompileSourceMessage(CompilationPassedEvent|JobStartedEvent $event): void
     {
-        if (false === CompilationState::isEndState($this->compilationProgress->get())) {
+        if (false === $this->compilationProgress->get()->isEnd()) {
             $sourcePath = $this->sourcePathFinder->findNextNonCompiledPath();
 
             if (is_string($sourcePath)) {

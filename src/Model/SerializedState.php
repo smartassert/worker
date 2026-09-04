@@ -14,14 +14,12 @@ class SerializedState implements SerializableComponentStateInterface
 
     public function jsonSerialize(): array
     {
-        $isEndState = $this->state::isEndState($this->state);
-
         return [
             'state' => $this->state->getValue(),
             'meta_state' => [
-                'pending' => $this->state::isPendingState($this->state),
-                'ended' => $isEndState,
-                'succeeded' => $this->state::isSuccessState($this->state),
+                'pending' => $this->state->isPending(),
+                'ended' => $this->state->isEnd(),
+                'succeeded' => $this->state->isSuccess(),
             ],
         ];
     }
