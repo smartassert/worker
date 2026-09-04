@@ -10,6 +10,7 @@ parameters:
     job_timeout_check_period_ms: '%env(int:JOB_TIMEOUT_CHECK_PERIOD_MS)%'
     job_completed_check_period_ms: '%env(int:JOB_COMPLETED_CHECK_PERIOD_MS)%'
     compiler_default_timeout_in_seconds: 600
+    state_notify_secret: '%env(STATE_NOTIFY_SECRET)%'
 
 services:
     # default configuration for services in *this* file
