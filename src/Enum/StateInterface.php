@@ -6,13 +6,13 @@ namespace App\Enum;
 
 interface StateInterface
 {
-    public static function isEndState(StateInterface $state): bool;
+    public function isEndState(): bool;
 
-    public static function isSuccessState(StateInterface $state): bool;
+    public function isSuccessState(): bool;
 
-    public static function isFailedState(StateInterface $state): bool;
+    public function isFailedState(): bool;
 
-    public static function isPendingState(StateInterface $state): bool;
+    public function isPendingState(): bool;
 
     /**
      * @return non-empty-string

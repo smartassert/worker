@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\ApplicationState;
-use App\Enum\CompilationState;
 use App\Enum\EventDeliveryState;
-use App\Enum\ExecutionState;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
@@ -35,20 +33,20 @@ class ApplicationProgress
         }
 
         $compilationState = $this->compilationProgress->get();
-        if (false === CompilationState::isEndState($compilationState)) {
+        if (false === $compilationState->isEndState()) {
             return ApplicationState::COMPILING;
         }
 
         $executionState = $this->executionProgress->get();
 
         if (
-            $compilationState::isFailedState($compilationState)
-            || $executionState::isFailedState($executionState)
+            $compilationState->isFailedState()
+            || $executionState->isFailedState()
         ) {
             return ApplicationState::FAILED;
         }
 
-        if (!ExecutionState::isEndState($executionState)) {
+        if (false === $executionState->isEndState()) {
             return ApplicationState::EXECUTING;
         }
 

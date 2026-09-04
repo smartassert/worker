@@ -10,24 +10,24 @@ enum EventDeliveryState: string implements StateInterface
     case RUNNING = 'running';
     case COMPLETE = 'complete';
 
-    public static function isEndState(StateInterface $state): bool
+    public function isEndState(): bool
     {
-        return self::COMPLETE === $state;
+        return self::COMPLETE === $this;
     }
 
-    public static function isSuccessState(StateInterface $state): bool
+    public function isSuccessState(): bool
     {
-        return self::COMPLETE === $state;
+        return self::COMPLETE === $this;
     }
 
-    public static function isFailedState(StateInterface $state): bool
+    public function isFailedState(): bool
     {
-        return self::isEndState($state) && false === self::isSuccessState($state);
+        return $this->isEndState() && false === $this->isSuccessState();
     }
 
-    public static function isPendingState(StateInterface $state): bool
+    public function isPendingState(): bool
     {
-        return self::AWAITING === $state;
+        return self::AWAITING === $this;
     }
 
     public function getValue(): string
