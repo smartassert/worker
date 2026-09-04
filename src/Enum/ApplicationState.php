@@ -57,6 +57,7 @@ enum ApplicationState: string implements StateInterface
         if (in_array($this, self::ACTIVE_STATES)) {
             $position = array_search($this, self::ACTIVE_STATES);
             $position = false === $position ? 0 : $position;
+            ++$position;
 
             return array_slice(self::ACTIVE_STATES, 0, $position);
         }
