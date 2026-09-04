@@ -133,6 +133,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        'previous_application_state',
+                    ],
                 ],
                 'compilation' => [
                     'state' => 'complete',
@@ -140,6 +143,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'previous_compilation_state',
                     ],
                 ],
                 'execution' => [
@@ -149,6 +155,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        'previous_execution_state',
+                    ],
                 ],
                 'event_delivery' => [
                     'state' => 'complete',
@@ -156,6 +165,9 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'previous_event_delivery_state',
                     ],
                 ],
             ],
