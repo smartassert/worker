@@ -33,20 +33,17 @@ class ApplicationProgress
         }
 
         $compilationState = $this->compilationProgress->get();
-        if (false === $compilationState->isEndState()) {
+        if (false === $compilationState->isEnd()) {
             return ApplicationState::COMPILING;
         }
 
         $executionState = $this->executionProgress->get();
 
-        if (
-            $compilationState->isFailedState()
-            || $executionState->isFailedState()
-        ) {
+        if ($compilationState->isFailed() || $executionState->isFailed()) {
             return ApplicationState::FAILED;
         }
 
-        if (false === $executionState->isEndState()) {
+        if (false === $executionState->isEnd()) {
             return ApplicationState::EXECUTING;
         }
 

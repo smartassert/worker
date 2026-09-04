@@ -14,22 +14,22 @@ enum ApplicationState: string implements StateInterface
     case TIMED_OUT = 'timed-out';
     case FAILED = 'failed';
 
-    public function isEndState(): bool
+    public function isEnd(): bool
     {
         return in_array($this, [self::COMPLETE, self::TIMED_OUT, self::FAILED]);
     }
 
-    public function isSuccessState(): bool
+    public function isSuccess(): bool
     {
         return self::COMPLETE === $this;
     }
 
-    public function isFailedState(): bool
+    public function isFailed(): bool
     {
-        return $this->isEndState() && false === $this->isSuccessState();
+        return $this->isEnd() && false === $this->isSuccess();
     }
 
-    public function isPendingState(): bool
+    public function isPending(): bool
     {
         return self::AWAITING_JOB === $this;
     }

@@ -41,7 +41,7 @@ class ExecuteTestHandler
      */
     public function __invoke(ExecuteTestMessage $message): void
     {
-        if ($this->executionProgress->get()->isEndState()) {
+        if ($this->executionProgress->get()->isEnd()) {
             return;
         }
 

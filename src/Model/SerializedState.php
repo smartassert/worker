@@ -17,9 +17,9 @@ class SerializedState implements SerializableComponentStateInterface
         return [
             'state' => $this->state->getValue(),
             'meta_state' => [
-                'pending' => $this->state->isPendingState(),
-                'ended' => $this->state->isEndState(),
-                'succeeded' => $this->state->isSuccessState(),
+                'pending' => $this->state->isPending(),
+                'ended' => $this->state->isEnd(),
+                'succeeded' => $this->state->isSuccess(),
             ],
         ];
     }
