@@ -104,6 +104,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::AWAITING->value,
@@ -111,6 +114,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -120,6 +126,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
@@ -127,6 +136,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
                         ],
                     ],
                 ],
@@ -141,6 +153,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::RUNNING->value,
@@ -148,6 +164,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -157,6 +177,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
@@ -164,6 +187,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
                         ],
                     ],
                 ],
@@ -182,6 +208,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -189,6 +220,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -198,6 +234,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::AWAITING->value,
@@ -205,6 +244,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
                         ],
                     ],
                 ],
@@ -225,6 +267,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -232,6 +279,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -241,6 +293,9 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::RUNNING->value,
@@ -248,6 +303,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
                         ],
                     ],
                 ],
@@ -272,6 +331,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -279,6 +343,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -288,6 +357,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                            EventDeliveryState::RUNNING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::RUNNING->value,
@@ -295,6 +368,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => false,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
                         ],
                     ],
                 ],
@@ -323,6 +400,12 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                            ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -330,6 +413,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -339,6 +427,10 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                            EventDeliveryState::RUNNING->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::COMPLETE->value,
@@ -346,6 +438,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
+                            ExecutionState::COMPLETE->value,
                         ],
                     ],
                 ],
@@ -374,6 +471,13 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => true,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                            ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                            ApplicationState::COMPLETE->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -381,6 +485,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -390,6 +499,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => true,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                            EventDeliveryState::RUNNING->value,
+                            EventDeliveryState::COMPLETE->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::COMPLETE->value,
@@ -397,6 +511,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
+                            ExecutionState::COMPLETE->value,
                         ],
                     ],
                 ],
@@ -425,6 +544,13 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                            ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                            ApplicationState::FAILED->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -432,6 +558,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -441,6 +572,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => true,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                            EventDeliveryState::RUNNING->value,
+                            EventDeliveryState::COMPLETE->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::CANCELLED->value,
@@ -448,6 +584,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
+                            ExecutionState::CANCELLED->value,
                         ],
                     ],
                 ],
@@ -479,6 +620,13 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => false,
                         ],
+                        'previous_states' => [
+                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::COMPILING->value,
+                            ApplicationState::EXECUTING->value,
+                            ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                            ApplicationState::TIMED_OUT->value,
+                        ],
                     ],
                     'compilation' => [
                         'state' => CompilationState::COMPLETE->value,
@@ -486,6 +634,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => true,
+                        ],
+                        'previous_states' => [
+                            CompilationState::AWAITING->value,
+                            CompilationState::RUNNING->value,
+                            CompilationState::COMPLETE->value,
                         ],
                     ],
                     'event_delivery' => [
@@ -495,6 +648,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'ended' => true,
                             'succeeded' => true,
                         ],
+                        'previous_states' => [
+                            EventDeliveryState::AWAITING->value,
+                            EventDeliveryState::RUNNING->value,
+                            EventDeliveryState::COMPLETE->value,
+                        ],
                     ],
                     'execution' => [
                         'state' => ExecutionState::CANCELLED->value,
@@ -502,6 +660,11 @@ class ApplicationStateControllerTest extends WebTestCase
                             'pending' => false,
                             'ended' => true,
                             'succeeded' => false,
+                        ],
+                        'previous_states' => [
+                            ExecutionState::AWAITING->value,
+                            ExecutionState::RUNNING->value,
+                            ExecutionState::CANCELLED->value,
                         ],
                     ],
                 ],

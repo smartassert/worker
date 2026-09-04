@@ -155,6 +155,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     'ended' => true,
                     'succeeded' => true,
                 ],
+                'previous_states' => [
+                    EventDeliveryState::AWAITING->value,
+                    EventDeliveryState::RUNNING->value,
+                    EventDeliveryState::COMPLETE->value,
+                ],
             ],
             $applicationStateData['event_delivery']
         );
@@ -219,6 +224,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'ended' => true,
                         'succeeded' => false,
                     ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::FAILED->value,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
@@ -226,6 +236,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'pending' => true,
                         'ended' => false,
                         'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
                     ],
                 ],
                 'expectedTestDataCollection' => [],
@@ -327,6 +340,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'ended' => true,
                         'succeeded' => false,
                     ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::FAILED->value,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::AWAITING->value,
@@ -334,6 +352,9 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'pending' => true,
                         'ended' => false,
                         'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
                     ],
                 ],
                 'expectedTestDataCollection' => [
@@ -482,6 +503,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::COMPLETE->value,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::COMPLETE->value,
@@ -489,6 +515,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
+                        ExecutionState::RUNNING->value,
+                        ExecutionState::COMPLETE->value,
                     ],
                 ],
                 'expectedTestDataCollection' => [
@@ -1085,6 +1116,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::COMPLETE->value,
+                    ],
                 ],
                 'expectedExecutionEndState' => [
                     'state' => ExecutionState::CANCELLED->value,
@@ -1092,6 +1128,11 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
+                        ExecutionState::RUNNING->value,
+                        ExecutionState::CANCELLED->value,
                     ],
                 ],
                 'expectedTestDataCollection' => [

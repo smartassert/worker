@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Image;
 
+use App\Enum\ApplicationState;
+use App\Enum\CompilationState;
+use App\Enum\EventDeliveryState;
+use App\Enum\ExecutionState;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
@@ -133,6 +137,13 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        ApplicationState::AWAITING_JOB->value,
+                        ApplicationState::COMPILING->value,
+                        ApplicationState::EXECUTING->value,
+                        ApplicationState::COMPLETING_EVENT_DELIVERY->value,
+                        ApplicationState::COMPLETE->value,
+                    ],
                 ],
                 'compilation' => [
                     'state' => 'complete',
@@ -140,6 +151,11 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::COMPLETE->value,
                     ],
                 ],
                 'execution' => [
@@ -149,6 +165,11 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'ended' => true,
                         'succeeded' => true,
                     ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
+                        ExecutionState::RUNNING->value,
+                        ExecutionState::COMPLETE->value,
+                    ],
                 ],
                 'event_delivery' => [
                     'state' => 'complete',
@@ -156,6 +177,11 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'pending' => false,
                         'ended' => true,
                         'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        EventDeliveryState::AWAITING->value,
+                        EventDeliveryState::RUNNING->value,
+                        EventDeliveryState::COMPLETE->value,
                     ],
                 ],
             ],

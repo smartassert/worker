@@ -14,6 +14,11 @@ class SerializedState implements SerializableComponentStateInterface
 
     public function jsonSerialize(): array
     {
+        $previousStates = [];
+        foreach ($this->state->getPreviousStates() as $previousState) {
+            $previousStates[] = $previousState->getValue();
+        }
+
         return [
             'state' => $this->state->getValue(),
             'meta_state' => [
@@ -21,6 +26,7 @@ class SerializedState implements SerializableComponentStateInterface
                 'ended' => $this->state->isEnd(),
                 'succeeded' => $this->state->isSuccess(),
             ],
+            'previous_states' => $previousStates,
         ];
     }
 
