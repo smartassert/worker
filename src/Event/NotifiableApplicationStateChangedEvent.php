@@ -16,13 +16,13 @@ class NotifiableApplicationStateChangedEvent extends Event implements Notifiable
     public const string REMOTE_EVENT_NAME = 'worker.application.state_changed';
 
     public function __construct(
-        private readonly Job $job,
+        private readonly ?Job $job,
         private readonly ApplicationStateChangedEvent $event,
     ) {}
 
     public function getNotifyUrl(): ?string
     {
-        $baseUrl = $this->job->getStateNotifyUrl();
+        $baseUrl = $this->job?->getStateNotifyUrl();
         if (null === $baseUrl) {
             return null;
         }

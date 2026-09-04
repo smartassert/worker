@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Event\ApplicationStateChangedEvent;
 use App\Event\NotifiableApplicationStateChangedEvent;
-use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -28,12 +27,9 @@ readonly class NotifiableApplicationStateChangedEventFactory implements EventSub
         ];
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function createNotifiableApplicationStateChangedEvent(
         ApplicationStateChangedEvent $event
     ): NotifiableApplicationStateChangedEvent {
-        return new NotifiableApplicationStateChangedEvent($this->jobRepository->get(), $event);
+        return new NotifiableApplicationStateChangedEvent($this->jobRepository->findOneBy([]), $event);
     }
 }
