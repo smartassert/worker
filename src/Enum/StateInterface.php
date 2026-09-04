@@ -18,4 +18,9 @@ interface StateInterface
      * @return non-empty-string
      */
     public function getValue(): string;
+
+    /**
+     * @return StateInterface[]
+     */
+    public function getPreviousStates(): array;
 }
