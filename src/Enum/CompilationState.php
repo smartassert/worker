@@ -10,7 +10,6 @@ enum CompilationState: string implements StateInterface
     case RUNNING = 'running';
     case FAILED = 'failed';
     case COMPLETE = 'complete';
-    case UNKNOWN = 'unknown';
 
     public function isEnd(): bool
     {

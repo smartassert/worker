@@ -143,7 +143,6 @@ class CompilationProgressTest extends WebTestCase
                     CompilationState::RUNNING,
                     CompilationState::FAILED,
                     CompilationState::COMPLETE,
-                    CompilationState::UNKNOWN,
                 ],
             ],
             'awaiting: has job, no sources' => [
@@ -156,7 +155,6 @@ class CompilationProgressTest extends WebTestCase
                     CompilationState::RUNNING,
                     CompilationState::FAILED,
                     CompilationState::COMPLETE,
-                    CompilationState::UNKNOWN,
                 ],
             ],
             'running: has job, has sources, no sources compiled' => [
@@ -175,7 +173,6 @@ class CompilationProgressTest extends WebTestCase
                     CompilationState::AWAITING,
                     CompilationState::FAILED,
                     CompilationState::COMPLETE,
-                    CompilationState::UNKNOWN,
                 ],
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
@@ -198,7 +195,6 @@ class CompilationProgressTest extends WebTestCase
                     CompilationState::AWAITING,
                     CompilationState::RUNNING,
                     CompilationState::COMPLETE,
-                    CompilationState::UNKNOWN,
                 ],
             ],
             'complete: has job, has sources, no next source' => [
@@ -219,7 +215,6 @@ class CompilationProgressTest extends WebTestCase
                     CompilationState::AWAITING,
                     CompilationState::RUNNING,
                     CompilationState::FAILED,
-                    CompilationState::UNKNOWN,
                 ],
             ],
         ];
