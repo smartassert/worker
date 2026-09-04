@@ -34,4 +34,21 @@ enum EventDeliveryState: string implements StateInterface
     {
         return $this->value;
     }
+
+    public function getPreviousStates(): array
+    {
+        if (self::AWAITING === $this) {
+            return [$this];
+        }
+
+        if (self::RUNNING === $this) {
+            return [self::AWAITING, $this];
+        }
+
+        if (self::COMPLETE === $this) {
+            return [self::AWAITING, self::RUNNING, $this];
+        }
+
+        return [];
+    }
 }
