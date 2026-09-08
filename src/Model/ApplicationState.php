@@ -44,6 +44,10 @@ final readonly class ApplicationState implements SerializableApplicationStateInt
             return $this->eventDeliveryState;
         }
 
+        if ($this->compilationState->isFailed()) {
+            return $this->eventDeliveryState;
+        }
+
         if (!$this->compilationState->isEnd() || !$this->executionState->isEnd()) {
             return EventDeliveryState::RUNNING;
         }
