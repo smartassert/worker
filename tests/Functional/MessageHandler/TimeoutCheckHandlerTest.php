@@ -158,6 +158,9 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $endStateProperty = $reflectionClass->getProperty('endState');
         $endStateProperty->setValue($reflectionJob, null);
 
+        $stateNotifyUrlProperty = $reflectionClass->getProperty('stateNotifyUrl');
+        $stateNotifyUrlProperty->setValue($reflectionJob, $job->getStateNotifyUrl());
+
         return $reflectionJob;
     }
 }
