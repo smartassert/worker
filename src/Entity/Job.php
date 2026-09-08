@@ -40,7 +40,7 @@ class Job
      * @param non-empty-string             $label
      * @param non-empty-string             $eventAddUrl
      * @param array<int, non-empty-string> $testPaths
-     *                                                  param ?non-empty-string $stateNotifyUrl
+     * @param ?non-empty-string            $stateNotifyUrl
      */
     public function __construct(
         string $label,
