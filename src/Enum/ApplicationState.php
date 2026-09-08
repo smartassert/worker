@@ -6,7 +6,7 @@ namespace App\Enum;
 
 enum ApplicationState: string implements StateInterface
 {
-    case AWAITING = 'awaiting-job';
+    case AWAITING = 'awaiting';
     case COMPILING = 'compiling';
     case EXECUTING = 'executing';
     case COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
