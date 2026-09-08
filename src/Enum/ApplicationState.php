@@ -6,7 +6,7 @@ namespace App\Enum;
 
 enum ApplicationState: string implements StateInterface
 {
-    case AWAITING_JOB = 'awaiting-job';
+    case AWAITING = 'awaiting';
     case COMPILING = 'compiling';
     case EXECUTING = 'executing';
     case COMPLETING_EVENT_DELIVERY = 'completing-event-delivery';
@@ -15,7 +15,7 @@ enum ApplicationState: string implements StateInterface
     case FAILED = 'failed';
 
     private const array ACTIVE_STATES = [
-        self::AWAITING_JOB,
+        self::AWAITING,
         self::COMPILING,
         self::EXECUTING,
         self::COMPLETING_EVENT_DELIVERY,
@@ -44,7 +44,7 @@ enum ApplicationState: string implements StateInterface
 
     public function isPending(): bool
     {
-        return self::AWAITING_JOB === $this;
+        return self::AWAITING === $this;
     }
 
     public function getValue(): string

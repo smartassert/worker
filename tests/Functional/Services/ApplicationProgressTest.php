@@ -65,7 +65,7 @@ class ApplicationProgressTest extends WebTestCase
         return [
             'no job, is awaiting' => [
                 'setup' => new EnvironmentSetup(),
-                'expectedState' => ApplicationState::AWAITING_JOB,
+                'expectedState' => ApplicationState::AWAITING,
             ],
             'no sources compiled' => [
                 'setup' => new EnvironmentSetup()
@@ -240,7 +240,7 @@ class ApplicationProgressTest extends WebTestCase
             'no job, is awaiting' => [
                 'setup' => new EnvironmentSetup(),
                 'expectedIsStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                 ],
                 'expectedIsNotStates' => [
                     ApplicationState::COMPILING,
@@ -261,7 +261,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::COMPILING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -282,7 +282,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::COMPILING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -304,7 +304,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -328,7 +328,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -355,7 +355,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::EXECUTING,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                     ApplicationState::COMPLETE,
@@ -384,7 +384,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETE,
@@ -413,7 +413,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::COMPLETE,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,
@@ -432,7 +432,7 @@ class ApplicationProgressTest extends WebTestCase
                     ApplicationState::TIMED_OUT,
                 ],
                 'expectedIsNotStates' => [
-                    ApplicationState::AWAITING_JOB,
+                    ApplicationState::AWAITING,
                     ApplicationState::COMPILING,
                     ApplicationState::EXECUTING,
                     ApplicationState::COMPLETING_EVENT_DELIVERY,

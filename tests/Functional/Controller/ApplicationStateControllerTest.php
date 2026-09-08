@@ -98,14 +98,14 @@ class ApplicationStateControllerTest extends WebTestCase
                 'setup' => (new EnvironmentSetup()),
                 'expectedResponseData' => [
                     'application' => [
-                        'state' => ApplicationState::AWAITING_JOB->value,
+                        'state' => ApplicationState::AWAITING->value,
                         'meta_state' => [
                             'pending' => true,
                             'ended' => false,
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                         ],
                     ],
                     'compilation' => [
@@ -154,7 +154,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                         ],
                     ],
@@ -209,7 +209,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                         ],
@@ -268,7 +268,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                         ],
@@ -332,7 +332,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                         ],
@@ -401,7 +401,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                             ApplicationState::COMPLETING_EVENT_DELIVERY->value,
@@ -472,7 +472,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => true,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                             ApplicationState::COMPLETING_EVENT_DELIVERY->value,
@@ -545,7 +545,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                             ApplicationState::COMPLETING_EVENT_DELIVERY->value,
@@ -621,7 +621,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             'succeeded' => false,
                         ],
                         'previous_states' => [
-                            ApplicationState::AWAITING_JOB->value,
+                            ApplicationState::AWAITING->value,
                             ApplicationState::COMPILING->value,
                             ApplicationState::EXECUTING->value,
                             ApplicationState::COMPLETING_EVENT_DELIVERY->value,
