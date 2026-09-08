@@ -24,7 +24,7 @@ final readonly class ApplicationState implements SerializableApplicationStateInt
             'application' => new SerializedState($this->applicationState)->toArray(),
             'compilation' => new SerializedState($this->compilationState)->toArray(),
             'execution' => new SerializedState($this->executionState)->toArray(),
-            'event_delivery' => new SerializedState($this->eventDeliveryState)->toArray(),
+            'event_delivery' => new SerializedState($this->createEventDeliveryState())->toArray(),
         ];
     }
 
@@ -36,5 +36,18 @@ final readonly class ApplicationState implements SerializableApplicationStateInt
     public function equals(ApplicationState $comparator): bool
     {
         return $this->toArray() === $comparator->toArray();
+    }
+
+    private function createEventDeliveryState(): EventDeliveryState
+    {
+        if (EventDeliveryState::COMPLETE !== $this->eventDeliveryState) {
+            return $this->eventDeliveryState;
+        }
+
+        if (!$this->compilationState->isEnd() || !$this->executionState->isEnd()) {
+            return EventDeliveryState::RUNNING;
+        }
+
+        return $this->eventDeliveryState;
     }
 }
