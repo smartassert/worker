@@ -87,12 +87,15 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
+        $stateNotifyUrl = $request->stateNotifyUrl;
+        $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
+
         $job = new Job(
             $request->label,
             $request->eventAddUrl,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths,
-            $request->stateNotifyUrl,
+            $stateNotifyUrl,
         );
 
         $entityMutator->save($job);
