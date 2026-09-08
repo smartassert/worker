@@ -23,7 +23,7 @@ class ApplicationProgress
     public function get(): ApplicationState
     {
         if (false === $this->jobRepository->has()) {
-            return ApplicationState::AWAITING_JOB;
+            return ApplicationState::AWAITING;
         }
 
         $jobTimeoutCount = $this->workerEventRepository->getTypeCount(EventTypeInterface::JOB_TIMED_OUT);

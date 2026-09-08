@@ -138,7 +138,7 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                         'succeeded' => true,
                     ],
                     'previous_states' => [
-                        ApplicationState::AWAITING_JOB->value,
+                        ApplicationState::AWAITING->value,
                         ApplicationState::COMPILING->value,
                         ApplicationState::EXECUTING->value,
                         ApplicationState::COMPLETING_EVENT_DELIVERY->value,
