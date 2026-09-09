@@ -6,11 +6,12 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
-use Doctrine\ORM\EntityManagerInterface;
 
-class WorkerEventStateMutator
+final readonly class WorkerEventStateMutator
 {
-    public function __construct(private EntityManagerInterface $entityManager) {}
+    public function __construct(
+        private EntityMutator $entityMutator,
+    ) {}
 
     public function setQueued(WorkerEvent $workerEvent): void
     {
@@ -44,7 +45,6 @@ class WorkerEventStateMutator
     {
         $workerEvent->setState($state);
 
-        $this->entityManager->persist($workerEvent);
-        $this->entityManager->flush();
+        $this->entityMutator->save($workerEvent);
     }
 }
