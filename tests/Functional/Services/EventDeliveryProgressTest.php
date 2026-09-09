@@ -41,13 +41,13 @@ class EventDeliveryProgressTest extends WebTestCase
      * @param WorkerEventState[] $states
      */
     #[DataProvider('getDataProvider')]
-    public function testGet(array $states, EventDeliveryState $expectedState): void
+    public function testGet(array $states, EventDeliveryState $expected): void
     {
         foreach ($states as $workerEventState) {
             $this->createWorkerEventEntity($workerEventState);
         }
 
-        self::assertSame($expectedState, $this->eventDeliveryProgress->get());
+        self::assertSame($expected, $this->eventDeliveryProgress->get());
     }
 
     /**
@@ -58,7 +58,7 @@ class EventDeliveryProgressTest extends WebTestCase
         return [
             'no events' => [
                 'states' => [],
-                'expectedState' => EventDeliveryState::AWAITING,
+                'expected' => EventDeliveryState::AWAITING,
             ],
             'awaiting, sending, queued' => [
                 'states' => [
@@ -66,7 +66,7 @@ class EventDeliveryProgressTest extends WebTestCase
                     WorkerEventState::QUEUED,
                     WorkerEventState::SENDING,
                 ],
-                'expectedState' => EventDeliveryState::RUNNING,
+                'expected' => EventDeliveryState::RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
                 'states' => [
@@ -75,7 +75,7 @@ class EventDeliveryProgressTest extends WebTestCase
                     WorkerEventState::SENDING,
                     WorkerEventState::COMPLETE,
                 ],
-                'expectedState' => EventDeliveryState::RUNNING,
+                'expected' => EventDeliveryState::RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
                 'states' => [
@@ -84,7 +84,7 @@ class EventDeliveryProgressTest extends WebTestCase
                     WorkerEventState::SENDING,
                     WorkerEventState::FAILED,
                 ],
-                'expectedState' => EventDeliveryState::RUNNING,
+                'expected' => EventDeliveryState::RUNNING,
             ],
             'two complete, three failed' => [
                 'states' => [
@@ -94,102 +94,7 @@ class EventDeliveryProgressTest extends WebTestCase
                     WorkerEventState::FAILED,
                     WorkerEventState::FAILED,
                 ],
-                'expectedState' => EventDeliveryState::COMPLETE,
-            ],
-        ];
-    }
-
-    /**
-     * @param WorkerEventState[]   $states
-     * @param EventDeliveryState[] $expectedIsStates
-     * @param EventDeliveryState[] $expectedIsNotStates
-     */
-    #[DataProvider('isDataProvider')]
-    public function testIs(array $states, array $expectedIsStates, array $expectedIsNotStates): void
-    {
-        foreach ($states as $state) {
-            $this->createWorkerEventEntity($state);
-        }
-
-        self::assertContains($this->eventDeliveryProgress->get(), $expectedIsStates);
-        self::assertNotContains($this->eventDeliveryProgress->get(), $expectedIsNotStates);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public static function isDataProvider(): array
-    {
-        return [
-            'no event deliveries' => [
-                'states' => [],
-                'expectedIsStates' => [
-                    EventDeliveryState::AWAITING,
-                ],
-                'expectedIsNotStates' => [
-                    EventDeliveryState::RUNNING,
-                    EventDeliveryState::COMPLETE,
-                ],
-            ],
-            'awaiting, sending, queued' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                ],
-                'expectedIsStates' => [
-                    EventDeliveryState::RUNNING,
-                ],
-                'expectedIsNotStates' => [
-                    EventDeliveryState::AWAITING,
-                    EventDeliveryState::COMPLETE,
-                ],
-            ],
-            'awaiting, sending, queued, complete' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                    WorkerEventState::COMPLETE,
-                ],
-                'expectedIsStates' => [
-                    EventDeliveryState::RUNNING,
-                ],
-                'expectedIsNotStates' => [
-                    EventDeliveryState::AWAITING,
-                    EventDeliveryState::COMPLETE,
-                ],
-            ],
-            'awaiting, sending, queued, failed' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                    WorkerEventState::FAILED,
-                ],
-                'expectedIsStates' => [
-                    EventDeliveryState::RUNNING,
-                ],
-                'expectedIsNotStates' => [
-                    EventDeliveryState::AWAITING,
-                    EventDeliveryState::COMPLETE,
-                ],
-            ],
-            'two complete, three failed' => [
-                'states' => [
-                    WorkerEventState::COMPLETE,
-                    WorkerEventState::COMPLETE,
-                    WorkerEventState::FAILED,
-                    WorkerEventState::FAILED,
-                    WorkerEventState::FAILED,
-                ],
-                'expectedIsStates' => [
-                    EventDeliveryState::COMPLETE,
-                ],
-                'expectedIsNotStates' => [
-                    EventDeliveryState::AWAITING,
-                    EventDeliveryState::RUNNING,
-                ],
+                'expected' => EventDeliveryState::COMPLETE,
             ],
         ];
     }
