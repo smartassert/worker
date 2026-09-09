@@ -48,11 +48,11 @@ class CompilationProgressTest extends WebTestCase
     }
 
     #[DataProvider('getDataProvider')]
-    public function testGet(EnvironmentSetup $setup, CompilationState $expectedState): void
+    public function testGet(EnvironmentSetup $setup, CompilationState $expected): void
     {
         $this->environmentFactory->create($setup);
 
-        self::assertSame($expectedState->value, $this->compilationProgress->get()->value);
+        self::assertSame($expected->value, $this->compilationProgress->get()->value);
     }
 
     /**
@@ -63,12 +63,12 @@ class CompilationProgressTest extends WebTestCase
         return [
             'awaiting: no job' => [
                 'setup' => new EnvironmentSetup(),
-                'expectedState' => CompilationState::AWAITING,
+                'expected' => CompilationState::AWAITING,
             ],
             'awaiting: has job, no sources' => [
                 'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup()),
-                'expectedState' => CompilationState::AWAITING,
+                'expected' => CompilationState::AWAITING,
             ],
             'running: has job, has sources, no sources compiled' => [
                 'setup' => new EnvironmentSetup()
@@ -79,7 +79,7 @@ class CompilationProgressTest extends WebTestCase
                         new SourceSetup()
                             ->withPath('Test/test2.yml'),
                     ]),
-                'expectedState' => CompilationState::RUNNING,
+                'expected' => CompilationState::RUNNING,
             ],
             'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
                 'setup' => new EnvironmentSetup()
@@ -94,7 +94,7 @@ class CompilationProgressTest extends WebTestCase
                         new WorkerEventSetup()
                             ->withType(EventTypeInterface::COMPILATION_FAILED),
                     ]),
-                'expectedState' => CompilationState::FAILED,
+                'expected' => CompilationState::FAILED,
             ],
             'complete: has job, has sources, no next source' => [
                 'setup' => new EnvironmentSetup()
@@ -107,115 +107,7 @@ class CompilationProgressTest extends WebTestCase
                         new TestSetup()
                             ->withSource('Test/test1.yml'),
                     ]),
-                'expectedState' => CompilationState::COMPLETE,
-            ],
-        ];
-    }
-
-    /**
-     * @param CompilationState[] $expectedIsStates
-     * @param CompilationState[] $expectedIsNotStates
-     */
-    #[DataProvider('isDataProvider')]
-    public function testIs(
-        EnvironmentSetup $setup,
-        array $expectedIsStates,
-        array $expectedIsNotStates
-    ): void {
-        $this->environmentFactory->create($setup);
-
-        self::assertContains($this->compilationProgress->get(), $expectedIsStates);
-        self::assertNotContains($this->compilationProgress->get(), $expectedIsNotStates);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public static function isDataProvider(): array
-    {
-        return [
-            'awaiting: no job' => [
-                'setup' => new EnvironmentSetup(),
-                'expectedIsStates' => [
-                    CompilationState::AWAITING,
-                ],
-                'expectedIsNotStates' => [
-                    CompilationState::RUNNING,
-                    CompilationState::FAILED,
-                    CompilationState::COMPLETE,
-                ],
-            ],
-            'awaiting: has job, no sources' => [
-                'setup' => new EnvironmentSetup()
-                    ->withJobSetup(new JobSetup()),
-                'expectedIsStates' => [
-                    CompilationState::AWAITING,
-                ],
-                'expectedIsNotStates' => [
-                    CompilationState::RUNNING,
-                    CompilationState::FAILED,
-                    CompilationState::COMPLETE,
-                ],
-            ],
-            'running: has job, has sources, no sources compiled' => [
-                'setup' => new EnvironmentSetup()
-                    ->withJobSetup(new JobSetup())
-                    ->withSourceSetups([
-                        new SourceSetup()
-                            ->withPath('Test/test1.yml'),
-                        new SourceSetup()
-                            ->withPath('Test/test2.yml'),
-                    ]),
-                'expectedIsStates' => [
-                    CompilationState::RUNNING,
-                ],
-                'expectedIsNotStates' => [
-                    CompilationState::AWAITING,
-                    CompilationState::FAILED,
-                    CompilationState::COMPLETE,
-                ],
-            ],
-            'failed: has job, has sources, has more than zero compile-failure event deliveries' => [
-                'setup' => new EnvironmentSetup()
-                    ->withJobSetup(new JobSetup())
-                    ->withSourceSetups([
-                        new SourceSetup()
-                            ->withPath('Test/test1.yml'),
-                        new SourceSetup()
-                            ->withPath('Test/test2.yml'),
-                    ])
-                    ->withWorkerEventSetups([
-                        new WorkerEventSetup()
-                            ->withType(EventTypeInterface::COMPILATION_FAILED),
-                    ]),
-                'expectedIsStates' => [
-                    CompilationState::FAILED,
-                ],
-                'expectedIsNotStates' => [
-                    CompilationState::AWAITING,
-                    CompilationState::RUNNING,
-                    CompilationState::COMPLETE,
-                ],
-            ],
-            'complete: has job, has sources, no next source' => [
-                'setup' => new EnvironmentSetup()
-                    ->withJobSetup(new JobSetup())
-                    ->withSourceSetups([
-                        new SourceSetup()
-                            ->withPath('Test/test1.yml'),
-                    ])
-                    ->withTestSetups([
-                        new TestSetup()
-                            ->withSource('Test/test1.yml'),
-                    ]),
-                'expectedIsStates' => [
-                    CompilationState::COMPLETE,
-                ],
-                'expectedIsNotStates' => [
-                    CompilationState::AWAITING,
-                    CompilationState::RUNNING,
-                    CompilationState::FAILED,
-                ],
+                'expected' => CompilationState::COMPLETE,
             ],
         ];
     }
