@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkerEvent;
+use App\Enum\WorkerEventState;
 use App\Event\EmittableEvent\EventTypeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -63,5 +64,12 @@ class WorkerEventRepository extends ServiceEntityRepository
         }
 
         return $filteredResult;
+    }
+
+    public function countFinished(): int
+    {
+        return $this->count([
+            'state' => WorkerEventState::FINISHED_STATES,
+        ]);
     }
 }

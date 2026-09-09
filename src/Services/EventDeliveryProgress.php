@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enum\EventDeliveryState;
-use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 
 class EventDeliveryProgress
@@ -17,16 +16,11 @@ class EventDeliveryProgress
     public function get(): EventDeliveryState
     {
         $eventCount = $this->repository->count([]);
-        $finishedEventCount = $this->repository->count([
-            'state' => [
-                WorkerEventState::FAILED->value,
-                WorkerEventState::COMPLETE->value,
-            ],
-        ]);
-
         if (0 === $eventCount) {
             return EventDeliveryState::AWAITING;
         }
+
+        $finishedEventCount = $this->repository->countFinished();
 
         return $finishedEventCount === $eventCount ? EventDeliveryState::COMPLETE : EventDeliveryState::RUNNING;
     }

@@ -11,4 +11,9 @@ enum WorkerEventState: string
     case SENDING = 'sending';
     case FAILED = 'failed';
     case COMPLETE = 'complete';
+
+    public const array FINISHED_STATES = [
+        self::COMPLETE,
+        self::FAILED,
+    ];
 }
