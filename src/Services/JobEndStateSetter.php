@@ -41,7 +41,7 @@ class JobEndStateSetter implements EventSubscriberInterface
                 ['setJobEndStateOnSourceCompilationFailedEvent', 100],
             ],
             ExecutionCompletedEvent::class => [
-                ['setJobEndStateOnJobCompletedEvent', 100],
+                ['setJobEndStateOnExecutionCompletedEvent', 100],
             ],
         ];
     }
@@ -49,7 +49,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnJobCompletedEvent(ExecutionCompletedEvent $event): void
+    public function setJobEndStateOnExecutionCompletedEvent(ExecutionCompletedEvent $event): void
     {
         $this->setJobEndState(JobEndState::COMPLETE);
     }
