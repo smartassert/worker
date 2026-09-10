@@ -96,7 +96,7 @@ class JobEndStateSetterTest extends WebTestCase
                 'event' => new CompilationFailedEvent('test.yml', []),
                 'expectedJobEndState' => JobEndState::FAILED_COMPILATION,
             ],
-            'job/completed' => [
+            'execution/completed' => [
                 'event' => new ExecutionCompletedEvent(),
                 'expectedJobEndState' => JobEndState::COMPLETE,
             ],
