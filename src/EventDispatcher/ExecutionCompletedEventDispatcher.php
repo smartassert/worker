@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class JobCompleteEventDispatcher
+class ExecutionCompletedEventDispatcher
 {
     public function __construct(
         private readonly ApplicationProgress $applicationProgress,

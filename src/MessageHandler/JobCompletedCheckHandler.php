@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\EventDispatcher\JobCompleteEventDispatcher;
+use App\EventDispatcher\ExecutionCompletedEventDispatcher;
 use App\Message\JobCompletedCheckMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Exception\ExceptionInterface;
 class JobCompletedCheckHandler
 {
     public function __construct(
-        private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
+        private readonly ExecutionCompletedEventDispatcher $jobCompleteEventDispatcher,
     ) {}
 
     /**

@@ -6,7 +6,7 @@ namespace App\Tests\Unit\EventDispatcher;
 
 use App\Enum\ApplicationState;
 use App\Event\ExecutionCompletedEvent;
-use App\EventDispatcher\JobCompleteEventDispatcher;
+use App\EventDispatcher\ExecutionCompletedEventDispatcher;
 use App\Message\JobCompletedCheckMessage;
 use App\Services\ApplicationProgress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class JobCompleteEventDispatcherTest extends TestCase
+class ExecutionCompletedEventDispatcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -39,7 +39,7 @@ class JobCompleteEventDispatcherTest extends TestCase
             })
         ;
 
-        $dispatcher = new JobCompleteEventDispatcher(
+        $dispatcher = new ExecutionCompletedEventDispatcher(
             $applicationProgress,
             $eventDispatcher,
             \Mockery::mock(MessageBusInterface::class),
@@ -83,7 +83,7 @@ class JobCompleteEventDispatcherTest extends TestCase
             ->andReturn($expectedEnvelope)
         ;
 
-        $dispatcher = new JobCompleteEventDispatcher(
+        $dispatcher = new ExecutionCompletedEventDispatcher(
             $applicationProgress,
             $eventDispatcher,
             $messageBus,
