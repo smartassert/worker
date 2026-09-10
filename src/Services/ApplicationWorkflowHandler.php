@@ -10,7 +10,7 @@ use App\Event\EmittableEvent\LifecycleEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobEndStateChangeEvent;
-use App\EventDispatcher\JobCompleteEventDispatcher;
+use App\EventDispatcher\ExecutionCompletedEventDispatcher;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -21,7 +21,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
-        private readonly JobCompleteEventDispatcher $jobCompleteEventDispatcher,
+        private readonly ExecutionCompletedEventDispatcher $executionCompletedEventDispatcher,
         private readonly JobEndedEventFactory $jobEndedEventFactory,
         private readonly JobRepository $jobRepository,
     ) {}
@@ -56,7 +56,7 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
             return;
         }
 
-        $this->jobCompleteEventDispatcher->dispatch();
+        $this->executionCompletedEventDispatcher->dispatch();
     }
 
     /**

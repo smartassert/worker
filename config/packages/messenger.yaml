@@ -13,7 +13,7 @@ framework:
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
-            'App\Message\JobCompletedCheckMessage': async
+            'App\Message\ExecutionCompletedCheckMessage': async
 
 when@test:
     framework:
@@ -39,5 +39,5 @@ when@integration:
                     dsn: 'in-memory://'
 
             routing:
-                'App\Message\JobCompletedCheckMessage': memory
+                'App\Message\ExecutionCompletedCheckMessage': memory
                 'App\Message\TimeoutCheckMessage': memory
