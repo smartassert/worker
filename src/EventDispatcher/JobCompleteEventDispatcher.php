@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EventDispatcher;
 
 use App\Enum\ApplicationState;
-use App\Event\JobCompletedEvent;
+use App\Event\ExecutionCompletedEvent;
 use App\Message\JobCompletedCheckMessage;
 use App\Services\ApplicationProgress;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -31,7 +31,7 @@ class JobCompleteEventDispatcher
         $applicationState = $this->applicationProgress->get();
 
         if (ApplicationState::COMPLETE === $applicationState) {
-            $this->eventDispatcher->dispatch(new JobCompletedEvent());
+            $this->eventDispatcher->dispatch(new ExecutionCompletedEvent());
 
             return;
         }

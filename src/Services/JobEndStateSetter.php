@@ -9,7 +9,7 @@ use App\Event\EmittableEvent\CompilationFailedEvent;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\TestEvent;
-use App\Event\JobCompletedEvent;
+use App\Event\ExecutionCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
@@ -40,7 +40,7 @@ class JobEndStateSetter implements EventSubscriberInterface
             CompilationFailedEvent::class => [
                 ['setJobEndStateOnSourceCompilationFailedEvent', 100],
             ],
-            JobCompletedEvent::class => [
+            ExecutionCompletedEvent::class => [
                 ['setJobEndStateOnJobCompletedEvent', 100],
             ],
         ];
@@ -49,7 +49,7 @@ class JobEndStateSetter implements EventSubscriberInterface
     /**
      * @throws JobNotFoundException
      */
-    public function setJobEndStateOnJobCompletedEvent(JobCompletedEvent $event): void
+    public function setJobEndStateOnJobCompletedEvent(ExecutionCompletedEvent $event): void
     {
         $this->setJobEndState(JobEndState::COMPLETE);
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\EventDispatcher;
 
 use App\Enum\ApplicationState;
-use App\Event\JobCompletedEvent;
+use App\Event\ExecutionCompletedEvent;
 use App\EventDispatcher\JobCompleteEventDispatcher;
 use App\Message\JobCompletedCheckMessage;
 use App\Services\ApplicationProgress;
@@ -33,7 +33,7 @@ class JobCompleteEventDispatcherTest extends TestCase
         $eventDispatcher
             ->shouldReceive('dispatch')
             ->withArgs(function (Event $event) {
-                self::assertInstanceOf(JobCompletedEvent::class, $event);
+                self::assertInstanceOf(ExecutionCompletedEvent::class, $event);
 
                 return true;
             })
@@ -61,7 +61,7 @@ class JobCompleteEventDispatcherTest extends TestCase
         $eventDispatcher
             ->shouldReceive('dispatch')
             ->withArgs(function (Event $event) {
-                self::assertInstanceOf(JobCompletedEvent::class, $event);
+                self::assertInstanceOf(ExecutionCompletedEvent::class, $event);
 
                 return true;
             })

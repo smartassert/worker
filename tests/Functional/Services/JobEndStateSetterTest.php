@@ -12,7 +12,7 @@ use App\Event\EmittableEvent\CompilationFailedEvent;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\TestEvent;
-use App\Event\JobCompletedEvent;
+use App\Event\ExecutionCompletedEvent;
 use App\Model\Document\Exception;
 use App\Model\Document\Test as TestDocument;
 use App\Repository\JobRepository;
@@ -97,7 +97,7 @@ class JobEndStateSetterTest extends WebTestCase
                 'expectedJobEndState' => JobEndState::FAILED_COMPILATION,
             ],
             'job/completed' => [
-                'event' => new JobCompletedEvent(),
+                'event' => new ExecutionCompletedEvent(),
                 'expectedJobEndState' => JobEndState::COMPLETE,
             ],
         ];
