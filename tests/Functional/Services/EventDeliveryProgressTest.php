@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Services;
 
-use App\Entity\WorkerEvent;
 use App\Enum\EventDeliveryState;
 use App\Enum\WorkerEventState;
 use App\Services\EventDeliveryProgress;
+use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\JobSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\EntityRemover;
-use App\Tests\Services\TestWorkerEventFactory;
+use App\Tests\Services\EnvironmentFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EventDeliveryProgressTest extends WebTestCase
 {
     private EventDeliveryProgress $eventDeliveryProgress;
-    private TestWorkerEventFactory $testWorkerEventFactory;
+    private EnvironmentFactory $environmentFactory;
 
     protected function setUp(): void
     {
@@ -27,25 +28,20 @@ class EventDeliveryProgressTest extends WebTestCase
         \assert($eventDeliveryProgress instanceof EventDeliveryProgress);
         $this->eventDeliveryProgress = $eventDeliveryProgress;
 
-        $testWorkerEventFactory = self::getContainer()->get(TestWorkerEventFactory::class);
-        \assert($testWorkerEventFactory instanceof TestWorkerEventFactory);
-        $this->testWorkerEventFactory = $testWorkerEventFactory;
+        $environmentFactory = self::getContainer()->get(EnvironmentFactory::class);
+        \assert($environmentFactory instanceof EnvironmentFactory);
+        $this->environmentFactory = $environmentFactory;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         if ($entityRemover instanceof EntityRemover) {
-            $entityRemover->removeForEntity(WorkerEvent::class);
+            $entityRemover->removeAll();
         }
     }
 
-    /**
-     * @param WorkerEventState[] $states
-     */
     #[DataProvider('getDataProvider')]
-    public function testGet(array $states, EventDeliveryState $expected): void
+    public function testGet(EnvironmentSetup $setup, EventDeliveryState $expected): void
     {
-        foreach ($states as $workerEventState) {
-            $this->createWorkerEventEntity($workerEventState);
-        }
+        $this->environmentFactory->create($setup);
 
         self::assertSame($expected, $this->eventDeliveryProgress->get());
     }
@@ -57,52 +53,56 @@ class EventDeliveryProgressTest extends WebTestCase
     {
         return [
             'no events' => [
-                'states' => [],
+                'setup' => new EnvironmentSetup()
+                    ->withJobSetup(new JobSetup()),
                 'expected' => EventDeliveryState::AWAITING,
             ],
             'awaiting, sending, queued' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                ],
+                'setup' => new EnvironmentSetup()
+                    ->withJobSetup(new JobSetup())
+                    ->withWorkerEventSetups([
+                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
+                        new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
+                        new WorkerEventSetup()->withState(WorkerEventState::SENDING),
+                    ]),
                 'expected' => EventDeliveryState::RUNNING,
             ],
             'awaiting, sending, queued, complete' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                    WorkerEventState::COMPLETE,
-                ],
+                'setup' => new EnvironmentSetup()
+                    ->withJobSetup(new JobSetup())
+                    ->withWorkerEventSetups([
+                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
+                        new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
+                        new WorkerEventSetup()->withState(WorkerEventState::SENDING),
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                    ]),
                 'expected' => EventDeliveryState::RUNNING,
             ],
             'awaiting, sending, queued, failed' => [
-                'states' => [
-                    WorkerEventState::AWAITING,
-                    WorkerEventState::QUEUED,
-                    WorkerEventState::SENDING,
-                    WorkerEventState::FAILED,
-                ],
+                'setup' => new EnvironmentSetup()
+                    ->withJobSetup(new JobSetup())
+                    ->withWorkerEventSetups([
+                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
+                        new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
+                        new WorkerEventSetup()->withState(WorkerEventState::SENDING),
+                        new WorkerEventSetup()->withState(WorkerEventState::FAILED),
+                    ]),
                 'expected' => EventDeliveryState::RUNNING,
             ],
             'two complete, three failed' => [
-                'states' => [
-                    WorkerEventState::COMPLETE,
-                    WorkerEventState::COMPLETE,
-                    WorkerEventState::FAILED,
-                    WorkerEventState::FAILED,
-                    WorkerEventState::FAILED,
-                ],
+                'setup' => new EnvironmentSetup()
+                    ->withJobSetup(new JobSetup())
+                    ->withWorkerEventSetups([
+                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()->withState(WorkerEventState::FAILED),
+                        new WorkerEventSetup()->withState(WorkerEventState::FAILED),
+                        new WorkerEventSetup()->withState(WorkerEventState::FAILED),
+                        new WorkerEventSetup()
+                            ->withType('job/ended')
+                            ->withState(WorkerEventState::COMPLETE),
+                    ]),
                 'expected' => EventDeliveryState::COMPLETE,
             ],
         ];
-    }
-
-    private function createWorkerEventEntity(WorkerEventState $state): void
-    {
-        $this->testWorkerEventFactory->create(
-            new WorkerEventSetup()->withState($state)
-        );
     }
 }

@@ -208,6 +208,167 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $jobLabel = md5((string) rand());
 
         return [
+            'compilation failed on second test' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'sourcePaths' => [
+                    'Page/index.yml',
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'jobLabel' => $jobLabel,
+                'expectedApplicationState' => ApplicationState::FAILED,
+                'expectedCompilationEndState' => [
+                    'state' => CompilationState::FAILED->value,
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        CompilationState::AWAITING->value,
+                        CompilationState::RUNNING->value,
+                        CompilationState::FAILED->value,
+                    ],
+                ],
+                'expectedExecutionEndState' => [
+                    'state' => ExecutionState::AWAITING->value,
+                    'meta_state' => [
+                        'pending' => true,
+                        'ended' => false,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        ExecutionState::AWAITING->value,
+                    ],
+                ],
+                'expectedTestDataCollection' => [
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => TestState::AWAITING->value,
+                        'position' => 1,
+                    ],
+                ],
+                'expectedEventsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel,
+                    string $resultsJobLabel,
+                ) {
+                    \assert('' !== $resultsJobLabel);
+                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+                    \assert('' !== $workerJobLabel);
+
+                    $successfulTestPath = 'Test/chrome-open-index.yml';
+                    $failedTestPath = 'Test/chrome-open-index-compilation-failure.yml';
+
+                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
+                    $successfulSourceReference = new ResourceReference(
+                        $successfulTestPath,
+                        md5($workerJobLabel . $successfulTestPath)
+                    );
+                    $failedSourceReference = new ResourceReference(
+                        $failedTestPath,
+                        md5($workerJobLabel . $failedTestPath)
+                    );
+
+                    return [
+                        'job/started' => (new Event(
+                            $firstSequenceNumber,
+                            'job/started',
+                            $jobReference,
+                            [
+                                'tests' => [$successfulTestPath, $failedTestPath],
+                            ]
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([$successfulSourceReference, $failedSourceReference])
+                            ),
+                        'lifecycle/compilation-started' => (new Event(
+                            ++$firstSequenceNumber,
+                            'lifecycle/compilation-started',
+                            $jobReference,
+                            []
+                        ))->withJob($resultsJobLabel),
+                        'compilation/started:' . $successfulTestPath => (new Event(
+                            ++$firstSequenceNumber,
+                            'compilation/started',
+                            $successfulSourceReference,
+                            [
+                                'source' => $successfulTestPath,
+                            ]
+                        ))->withJob($resultsJobLabel),
+                        'compilation/passed:' . $successfulTestPath => (new Event(
+                            ++$firstSequenceNumber,
+                            'compilation/passed',
+                            $successfulSourceReference,
+                            [
+                                'source' => $successfulTestPath,
+                            ],
+                        ))
+                            ->withJob($resultsJobLabel)
+                            ->withRelatedReferences(
+                                new ResourceReferenceCollection([
+                                    new ResourceReference(
+                                        'verify page is open',
+                                        md5($workerJobLabel . $successfulTestPath . 'verify page is open')
+                                    ),
+                                ])
+                            ),
+                        'compilation/started:' . $failedTestPath => (new Event(
+                            ++$firstSequenceNumber,
+                            'compilation/started',
+                            $failedSourceReference,
+                            [
+                                'source' => $failedTestPath,
+                            ]
+                        ))->withJob($resultsJobLabel),
+                        'compilation/failed' => (new Event(
+                            ++$firstSequenceNumber,
+                            'compilation/failed',
+                            $failedSourceReference,
+                            [
+                                'source' => $failedTestPath,
+                                'output' => [
+                                    'message' => 'Invalid test at path '
+                                        . '"Test/chrome-open-index-compilation-failure.yml"'
+                                        . ': test-step-invalid',
+                                    'code' => 204,
+                                    'context' => [
+                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
+                                        'validation_result' => [
+                                            'type' => 'test',
+                                            'reason' => 'test-step-invalid',
+                                            'context' => [
+                                                'step-name' => 'verify page is open',
+                                            ],
+                                            'previous' => [
+                                                'type' => 'step',
+                                                'reason' => 'step-no-assertions',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ))->withJob($resultsJobLabel),
+                        'job/ended' => (new Event(
+                            ++$firstSequenceNumber,
+                            'job/ended',
+                            $jobReference,
+                            [
+                                'end_state' => 'failed/compilation',
+                                'success' => false,
+                                'event_count' => 7,
+                            ]
+                        ))->withJob($resultsJobLabel),
+                    ];
+                },
+            ],
             'compilation failed on first test' => [
                 'manifestPaths' => [
                     'Test/chrome-open-index-compilation-failure.yml',
@@ -316,167 +477,6 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                                 'end_state' => 'failed/compilation',
                                 'success' => false,
                                 'event_count' => 5,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                    ];
-                },
-            ],
-            'compilation failed on second test' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/chrome-open-index-compilation-failure.yml',
-                ],
-                'sourcePaths' => [
-                    'Page/index.yml',
-                    'Test/chrome-open-index.yml',
-                    'Test/chrome-open-index-compilation-failure.yml',
-                ],
-                'jobLabel' => $jobLabel,
-                'expectedApplicationState' => ApplicationState::FAILED,
-                'expectedCompilationEndState' => [
-                    'state' => CompilationState::FAILED->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => false,
-                    ],
-                    'previous_states' => [
-                        CompilationState::AWAITING->value,
-                        CompilationState::RUNNING->value,
-                        CompilationState::FAILED->value,
-                    ],
-                ],
-                'expectedExecutionEndState' => [
-                    'state' => ExecutionState::AWAITING->value,
-                    'meta_state' => [
-                        'pending' => true,
-                        'ended' => false,
-                        'succeeded' => false,
-                    ],
-                    'previous_states' => [
-                        ExecutionState::AWAITING->value,
-                    ],
-                ],
-                'expectedTestDataCollection' => [
-                    [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-open-index.yml',
-                        'step_names' => ['verify page is open'],
-                        'state' => TestState::AWAITING->value,
-                        'position' => 1,
-                    ],
-                ],
-                'expectedEventsCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                    string $resultsJobLabel,
-                ) {
-                    \assert('' !== $resultsJobLabel);
-                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
-                    \assert('' !== $workerJobLabel);
-
-                    $successfulTestPath = 'Test/chrome-open-index.yml';
-                    $failedTestPath = 'Test/chrome-open-index-compilation-failure.yml';
-
-                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
-                    $successfulSourceReference = new ResourceReference(
-                        $successfulTestPath,
-                        md5($workerJobLabel . $successfulTestPath)
-                    );
-                    $failedSourceReference = new ResourceReference(
-                        $failedTestPath,
-                        md5($workerJobLabel . $failedTestPath)
-                    );
-
-                    return [
-                        'job/started' => (new Event(
-                            $firstSequenceNumber,
-                            'job/started',
-                            $jobReference,
-                            [
-                                'tests' => [$successfulTestPath, $failedTestPath],
-                            ]
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([$failedSourceReference, $successfulSourceReference])
-                            ),
-                        'lifecycle/compilation-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'compilation/started:' . $successfulTestPath => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $successfulSourceReference,
-                            [
-                                'source' => $successfulTestPath,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/passed:' . $successfulTestPath => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/passed',
-                            $successfulSourceReference,
-                            [
-                                'source' => $successfulTestPath,
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5($workerJobLabel . $successfulTestPath . 'verify page is open')
-                                    ),
-                                ])
-                            ),
-                        'compilation/started:' . $failedTestPath => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $failedSourceReference,
-                            [
-                                'source' => $failedTestPath,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/failed' => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/failed',
-                            $failedSourceReference,
-                            [
-                                'source' => $failedTestPath,
-                                'output' => [
-                                    'message' => 'Invalid test at path '
-                                        . '"Test/chrome-open-index-compilation-failure.yml"'
-                                        . ': test-step-invalid',
-                                    'code' => 204,
-                                    'context' => [
-                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
-                                        'validation_result' => [
-                                            'type' => 'test',
-                                            'reason' => 'test-step-invalid',
-                                            'context' => [
-                                                'step-name' => 'verify page is open',
-                                            ],
-                                            'previous' => [
-                                                'type' => 'step',
-                                                'reason' => 'step-no-assertions',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'job/ended' => (new Event(
-                            ++$firstSequenceNumber,
-                            'job/ended',
-                            $jobReference,
-                            [
-                                'end_state' => 'failed/compilation',
-                                'success' => false,
-                                'event_count' => 7,
                             ]
                         ))->withJob($resultsJobLabel),
                     ];

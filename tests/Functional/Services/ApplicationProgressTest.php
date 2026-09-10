@@ -169,8 +169,12 @@ class ApplicationProgressTest extends WebTestCase
                             ->withState(TestState::COMPLETE),
                     ])
                     ->withWorkerEventSetups([
-                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
-                        new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()
+                            ->withType('job/started')
+                            ->withState(WorkerEventState::COMPLETE),
+                        new WorkerEventSetup()
+                            ->withType('job/ended')
+                            ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expected' => ApplicationState::COMPLETE,
             ],

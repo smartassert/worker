@@ -461,6 +461,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(TestState::COMPLETE),
                     ])->withWorkerEventSetups([
                         new WorkerEventSetup()
+                            ->withType('job/ended')
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
@@ -534,6 +535,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(TestState::FAILED),
                     ])->withWorkerEventSetups([
                         new WorkerEventSetup()
+                            ->withType('job/ended')
                             ->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expectedResponseData' => [
@@ -607,6 +609,7 @@ class ApplicationStateControllerTest extends WebTestCase
                             ->withState(TestState::CANCELLED),
                     ])->withWorkerEventSetups([
                         new WorkerEventSetup()
+                            ->withType('job/ended')
                             ->withState(WorkerEventState::COMPLETE),
                         new WorkerEventSetup()
                             ->withType(EventTypeInterface::JOB_TIMED_OUT)
