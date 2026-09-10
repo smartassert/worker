@@ -8,7 +8,7 @@ parameters:
     compiler_target_directory: '%env(COMPILER_TARGET_DIRECTORY)%'
     event_delivery_retry_limit: '%env(int:EVENT_DELIVERY_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(int:JOB_TIMEOUT_CHECK_PERIOD_MS)%'
-    job_completed_check_period_ms: '%env(int:JOB_COMPLETED_CHECK_PERIOD_MS)%'
+    execution_completed_check_period_ms: '%env(int:EXECUTION_COMPLETED_CHECK_PERIOD_MS)%'
     compiler_default_timeout_in_seconds: 600
 
 services:
@@ -138,7 +138,7 @@ services:
 
     App\EventDispatcher\ExecutionCompletedEventDispatcher:
         arguments:
-            $dispatchDelay: '%job_completed_check_period_ms%'
+            $dispatchDelay: '%execution_completed_check_period_ms%'
 
     SmartAssert\WorkerJobSource\Validator\ManifestContentValidator: ~
     SmartAssert\WorkerJobSource\Factory\JobSourceFactory: ~
