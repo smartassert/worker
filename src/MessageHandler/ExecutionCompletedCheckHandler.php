@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
 #[AsMessageHandler]
-class JobCompletedCheckHandler
+class ExecutionCompletedCheckHandler
 {
     public function __construct(
         private readonly ExecutionCompletedEventDispatcher $jobCompleteEventDispatcher,
