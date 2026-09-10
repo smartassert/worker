@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\EventDispatcher;
 
 use App\Enum\ApplicationState;
+use App\Enum\ExecutionState;
 use App\Event\ExecutionCompletedEvent;
 use App\Message\ExecutionCompletedCheckMessage;
 use App\Services\ApplicationProgress;
+use App\Services\ExecutionProgress;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -18,6 +20,7 @@ class ExecutionCompletedEventDispatcher
 {
     public function __construct(
         private readonly ApplicationProgress $applicationProgress,
+        private readonly ExecutionProgress $executionProgress,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
         private readonly int $dispatchDelay,
@@ -28,14 +31,14 @@ class ExecutionCompletedEventDispatcher
      */
     public function dispatch(): void
     {
-        $applicationState = $this->applicationProgress->get();
-
-        if (ApplicationState::COMPLETE === $applicationState) {
+        $executionState = $this->executionProgress->get();
+        if (ExecutionState::COMPLETE === $executionState) {
             $this->eventDispatcher->dispatch(new ExecutionCompletedEvent());
 
             return;
         }
 
+        $applicationState = $this->applicationProgress->get();
         if (ApplicationState::TIMED_OUT !== $applicationState) {
             $this->messageBus->dispatch(
                 new Envelope(new ExecutionCompletedCheckMessage(), [new DelayStamp($this->dispatchDelay)])
