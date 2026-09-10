@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-class JobCompletedCheckMessage {}
+class ExecutionCompletedCheckMessage {}

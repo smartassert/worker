@@ -7,7 +7,7 @@ namespace App\Tests\Unit\EventDispatcher;
 use App\Enum\ApplicationState;
 use App\Event\ExecutionCompletedEvent;
 use App\EventDispatcher\ExecutionCompletedEventDispatcher;
-use App\Message\JobCompletedCheckMessage;
+use App\Message\ExecutionCompletedCheckMessage;
 use App\Services\ApplicationProgress;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -70,7 +70,7 @@ class ExecutionCompletedEventDispatcherTest extends TestCase
         $dispatchDelay = rand(0, 1000);
         $expectedDelayStamp = new DelayStamp($dispatchDelay);
 
-        $expectedEnvelope = new Envelope(new JobCompletedCheckMessage(), [$expectedDelayStamp]);
+        $expectedEnvelope = new Envelope(new ExecutionCompletedCheckMessage(), [$expectedDelayStamp]);
 
         $messageBus = \Mockery::mock(MessageBusInterface::class);
         $messageBus

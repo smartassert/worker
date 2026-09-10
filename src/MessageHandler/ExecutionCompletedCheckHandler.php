@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\EventDispatcher\ExecutionCompletedEventDispatcher;
-use App\Message\JobCompletedCheckMessage;
+use App\Message\ExecutionCompletedCheckMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 
@@ -19,7 +19,7 @@ class ExecutionCompletedCheckHandler
     /**
      * @throws ExceptionInterface
      */
-    public function __invoke(JobCompletedCheckMessage $jobCompletedCheck): void
+    public function __invoke(ExecutionCompletedCheckMessage $jobCompletedCheck): void
     {
         $this->jobCompleteEventDispatcher->dispatch();
     }

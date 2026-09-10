@@ -6,7 +6,7 @@ namespace App\EventDispatcher;
 
 use App\Enum\ApplicationState;
 use App\Event\ExecutionCompletedEvent;
-use App\Message\JobCompletedCheckMessage;
+use App\Message\ExecutionCompletedCheckMessage;
 use App\Services\ApplicationProgress;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -38,7 +38,7 @@ class ExecutionCompletedEventDispatcher
 
         if (ApplicationState::TIMED_OUT !== $applicationState) {
             $this->messageBus->dispatch(
-                new Envelope(new JobCompletedCheckMessage(), [new DelayStamp($this->dispatchDelay)])
+                new Envelope(new ExecutionCompletedCheckMessage(), [new DelayStamp($this->dispatchDelay)])
             );
         }
     }

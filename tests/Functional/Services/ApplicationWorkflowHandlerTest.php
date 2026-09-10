@@ -9,7 +9,7 @@ use App\Entity\Test as TestEntity;
 use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\TestEvent;
-use App\Message\JobCompletedCheckMessage;
+use App\Message\ExecutionCompletedCheckMessage;
 use App\Model\Document\Test as TestDocument;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -61,7 +61,7 @@ class ApplicationWorkflowHandlerTest extends WebTestCase
 
         $transportQueue = $this->messengerTransport->getSent();
         self::assertEquals(
-            new JobCompletedCheckMessage(),
+            new ExecutionCompletedCheckMessage(),
             $transportQueue[count($transportQueue) - 1]->getMessage()
         );
     }
