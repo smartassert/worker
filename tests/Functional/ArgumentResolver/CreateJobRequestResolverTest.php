@@ -51,7 +51,8 @@ class CreateJobRequestResolverTest extends WebTestCase
                     '',
                     '',
                     null,
-                    ''
+                    '',
+                    null,
                 ),
             ],
             'all request parameters empty' => [
@@ -67,7 +68,8 @@ class CreateJobRequestResolverTest extends WebTestCase
                     '',
                     '',
                     null,
-                    ''
+                    '',
+                    null,
                 ),
             ],
             'label, event_delivery_url, maximum_duration_in_seconds populated' => [
@@ -83,7 +85,8 @@ class CreateJobRequestResolverTest extends WebTestCase
                     'label value',
                     '',
                     300,
-                    ''
+                    '',
+                    null,
                 ),
             ],
             'all request parameters populated' => [
@@ -106,6 +109,45 @@ class CreateJobRequestResolverTest extends WebTestCase
                         ---
                         ...
                         EOT,
+                    null,
+                ),
+            ],
+            'null state notify url' => [
+                'request' => new Request(),
+                'expected' => new CreateJobRequest(
+                    '',
+                    '',
+                    null,
+                    '',
+                    null,
+                ),
+            ],
+            'empty state notify url' => [
+                'request' => new Request(
+                    request: [
+                        CreateJobRequest::STATE_NOTIFY_URL => '',
+                    ],
+                ),
+                'expected' => new CreateJobRequest(
+                    '',
+                    '',
+                    null,
+                    '',
+                    null,
+                ),
+            ],
+            'non-empty state notify url' => [
+                'request' => new Request(
+                    request: [
+                        CreateJobRequest::STATE_NOTIFY_URL => 'https://example.com/notify',
+                    ],
+                ),
+                'expected' => new CreateJobRequest(
+                    '',
+                    '',
+                    null,
+                    '',
+                    'https://example.com/notify',
                 ),
             ],
         ];

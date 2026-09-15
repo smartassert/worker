@@ -14,6 +14,7 @@ framework:
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
             'App\Message\ExecutionCompletedCheckMessage': async
+            'Symfony\Component\Webhook\Messenger\SendWebhookMessage': async
 
 when@test:
     framework:

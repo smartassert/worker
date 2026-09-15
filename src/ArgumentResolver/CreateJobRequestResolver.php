@@ -37,6 +37,11 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $sourceContent = $request->request->get(CreateJobRequest::KEY_SOURCE);
         $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
-        return [new CreateJobRequest($label, $eventAddUrl, $maximumDurationInSeconds, $sourceContent)];
+        $stateNotifyUrl = $request->request->get(CreateJobRequest::STATE_NOTIFY_URL);
+        $stateNotifyUrl = is_string($stateNotifyUrl) ? $stateNotifyUrl : '';
+        $stateNotifyUrl = trim($stateNotifyUrl);
+        $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
+
+        return [new CreateJobRequest($label, $eventAddUrl, $maximumDurationInSeconds, $sourceContent, $stateNotifyUrl)];
     }
 }
