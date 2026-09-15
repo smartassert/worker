@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\EndToEnd;
 
 use App\Enum\ApplicationState;
-use App\Enum\CompilationState;
-use App\Enum\EventDeliveryState;
-use App\Enum\ExecutionState;
 use App\Enum\StateInterface;
-use App\Enum\TestState;
-use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
 use App\Tests\Integration\AbstractBaseIntegrationTestCase;
@@ -20,14 +15,11 @@ use App\Tests\Services\CreateJobSourceFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\CallbackReceiverLogReader\Parser;
 use SmartAssert\ResultsClient\ClientInterface as ResultsClient;
-use SmartAssert\ResultsClient\Model\Event;
-use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job as ResultsJob;
-use SmartAssert\ResultsClient\Model\ResourceReference;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Uid\Ulid;
+
 use function PHPUnit\Framework\assertEquals;
 
 class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
@@ -36,13 +28,7 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
     private JsonResponseAsserter $jsonResponseAsserter;
     private CreateJobSourceFactory $createJobSourceFactory;
     private ApplicationProgress $applicationProgress;
-    private WorkerEventRepository $workerEventRepository;
     private ResultsJob $resultsJob;
-
-    /**
-     * @var non-empty-string
-     */
-    private string $apiToken;
 
     protected function setUp(): void
     {
@@ -64,29 +50,21 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
         \assert($applicationProgress instanceof ApplicationProgress);
         $this->applicationProgress = $applicationProgress;
 
-        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($workerEventRepository instanceof WorkerEventRepository);
-        $this->workerEventRepository = $workerEventRepository;
-
         $apiTokenProvider = self::getContainer()->get(ApiTokenProvider::class);
         \assert($apiTokenProvider instanceof ApiTokenProvider);
-        $this->apiToken = $apiTokenProvider->get('user@example.com');
+        $apiToken = $apiTokenProvider->get('user@example.com');
 
         $resultsClient = self::getContainer()->get(ResultsClient::class);
         \assert($resultsClient instanceof ResultsClient);
 
         $jobLabel = (string) new Ulid();
-        $this->resultsJob = $resultsClient->createJob($this->apiToken, $jobLabel);
+        $this->resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
     }
 
     /**
-     * @param non-empty-string[]                              $manifestPaths
-     * @param string[]                                        $sourcePaths
-     * @param array{state: non-empty-string}                  $expectedCompilationEndState
-     * @param array{state: non-empty-string}                  $expectedExecutionEndState
-     * @param array<int, array<mixed>>                        $expectedTestDataCollection
-     * @param callable(int, string, string): EventInterface[] $expectedEventsCreator
-     * @param array<mixed> $expectedRequestBodies
+     * @param non-empty-string[] $manifestPaths
+     * @param string[]           $sourcePaths
+     * @param array<mixed>       $expectedRequestBodies
      */
     #[DataProvider('deliveredNotificationsDataProvider')]
     public function testDeliveredNotifications(
@@ -119,8 +97,8 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
         $parser = new Parser();
 
         $requests = $parser->parse($output, $expectedDispatchedNotificationsCount);
-//        $requests = $parser->parse($output, 100);
-//        var_dump(count($requests));
+        //        $requests = $parser->parse($output, 100);
+        //        var_dump(count($requests));
         self::assertCount($expectedDispatchedNotificationsCount, $requests);
         self::assertSame(count($requests), count($expectedRequestBodies));
 
@@ -368,7 +346,6 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
                             'event_delivery' => $completeComponent,
                         ],
                     ],
-
                 ],
                 'expectedDispatchedNotificationsCount' => 4,
             ],
@@ -464,7 +441,7 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
                             'application' => $awaitingComponent,
                             'compilation' => $runningComponent,
                             'execution' => $awaitingComponent,
-                            'event_delivery' =>$awaitingComponent,
+                            'event_delivery' => $awaitingComponent,
                         ],
                         'new_state' => [
                             'application' => $applicationCompiling,
