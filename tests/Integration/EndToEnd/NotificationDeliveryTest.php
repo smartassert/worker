@@ -97,8 +97,6 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
         $parser = new Parser();
 
         $requests = $parser->parse($output, $expectedDispatchedNotificationsCount);
-        //        $requests = $parser->parse($output, 100);
-        //        var_dump(count($requests));
         self::assertCount($expectedDispatchedNotificationsCount, $requests);
         self::assertSame(count($requests), count($expectedRequestBodies));
 
@@ -158,22 +156,6 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
                 'awaiting',
                 'compiling',
                 'executing',
-            ],
-        ];
-
-        $applicationFailed = [
-            'state' => 'failed',
-            'meta_state' => [
-                'pending' => false,
-                'ended' => true,
-                'succeeded' => false,
-            ],
-            'previous_states' => [
-                'awaiting',
-                'compiling',
-                'executing',
-                'completing-event-delivery',
-                'failed',
             ],
         ];
 
