@@ -369,1029 +369,1029 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ];
                 },
             ],
-            'compilation failed on first test' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index-compilation-failure.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index-compilation-failure.yml',
-                ],
-                'jobLabel' => $jobLabel,
-                'expectedApplicationState' => ApplicationState::FAILED,
-                'expectedCompilationEndState' => [
-                    'state' => CompilationState::FAILED->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => false,
-                    ],
-                    'previous_states' => [
-                        CompilationState::AWAITING->value,
-                        CompilationState::RUNNING->value,
-                        CompilationState::FAILED->value,
-                    ],
-                ],
-                'expectedExecutionEndState' => [
-                    'state' => ExecutionState::AWAITING->value,
-                    'meta_state' => [
-                        'pending' => true,
-                        'ended' => false,
-                        'succeeded' => false,
-                    ],
-                    'previous_states' => [
-                        ExecutionState::AWAITING->value,
-                    ],
-                ],
-                'expectedTestDataCollection' => [],
-                'expectedEventsCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                    string $resultsJobLabel,
-                ) {
-                    \assert('' !== $resultsJobLabel);
-                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
-                    \assert('' !== $workerJobLabel);
-
-                    $failedTestPath = 'Test/chrome-open-index-compilation-failure.yml';
-                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
-                    $sourceReference = new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath));
-
-                    return [
-                        'job/started' => (new Event(
-                            $firstSequenceNumber,
-                            'job/started',
-                            $jobReference,
-                            [
-                                'tests' => [$failedTestPath],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'lifecycle/compilation-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'compilation/started: chrome-open-index-compilation-failure' => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $sourceReference,
-                            [
-                                'source' => $failedTestPath,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/failed: chrome-open-index-compilation-failure' => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/failed',
-                            $sourceReference,
-                            [
-                                'output' => [
-                                    'message' => 'Invalid test at path "'
-                                        . $failedTestPath
-                                        . '": test-step-invalid',
-                                    'code' => 204,
-                                    'context' => [
-                                        'test_path' => $failedTestPath,
-                                        'validation_result' => [
-                                            'type' => 'test',
-                                            'reason' => 'test-step-invalid',
-                                            'context' => [
-                                                'step-name' => 'verify page is open',
-                                            ],
-                                            'previous' => [
-                                                'type' => 'step',
-                                                'reason' => 'step-no-assertions',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                                'source' => $failedTestPath,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'job/ended' => (new Event(
-                            ++$firstSequenceNumber,
-                            'job/ended',
-                            $jobReference,
-                            [
-                                'end_state' => 'failed/compilation',
-                                'success' => false,
-                                'event_count' => 5,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                    ];
-                },
-            ],
-            'three successful tests' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index.yml',
-                    'Test/chrome-firefox-open-index.yml',
-                    'Test/chrome-open-form.yml',
-                ],
-                'sourcePaths' => [
-                    'Page/index.yml',
-                    'Test/chrome-open-index.yml',
-                    'Test/chrome-firefox-open-index.yml',
-                    'Test/chrome-open-form.yml',
-                ],
-                'jobLabel' => $jobLabel,
-                'expectedApplicationState' => ApplicationState::COMPLETE,
-                'expectedCompilationEndState' => [
-                    'state' => CompilationState::COMPLETE->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => true,
-                    ],
-                    'previous_states' => [
-                        CompilationState::AWAITING->value,
-                        CompilationState::RUNNING->value,
-                        CompilationState::COMPLETE->value,
-                    ],
-                ],
-                'expectedExecutionEndState' => [
-                    'state' => ExecutionState::COMPLETE->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => true,
-                    ],
-                    'previous_states' => [
-                        ExecutionState::AWAITING->value,
-                        ExecutionState::RUNNING->value,
-                        ExecutionState::COMPLETE->value,
-                    ],
-                ],
-                'expectedTestDataCollection' => [
-                    [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-open-index.yml',
-                        'step_names' => ['verify page is open'],
-                        'state' => TestState::COMPLETE->value,
-                        'position' => 1,
-                    ],
-                    [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_names' => ['verify page is open'],
-                        'state' => TestState::COMPLETE->value,
-                        'position' => 2,
-                    ],
-                    [
-                        'browser' => 'firefox',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-firefox-open-index.yml',
-                        'step_names' => ['verify page is open'],
-                        'state' => TestState::COMPLETE->value,
-                        'position' => 3,
-                    ],
-                    [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/form.html',
-                        'source' => 'Test/chrome-open-form.yml',
-                        'step_names' => ['verify page is open'],
-                        'state' => TestState::COMPLETE->value,
-                        'position' => 4,
-                    ],
-                ],
-                'expectedEventsCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                    string $resultsJobLabel,
-                ) {
-                    \assert('' !== $resultsJobLabel);
-                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
-                    \assert('' !== $workerJobLabel);
-
-                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
-
-                    $sourcePaths = [
-                        'Test/chrome-open-index.yml',
-                        'Test/chrome-firefox-open-index.yml',
-                        'Test/chrome-open-form.yml',
-                    ];
-
-                    $sourceReferences = [
-                        new ResourceReference($sourcePaths[0], md5($workerJobLabel . $sourcePaths[0])),
-                        new ResourceReference($sourcePaths[1], md5($workerJobLabel . $sourcePaths[1])),
-                        new ResourceReference($sourcePaths[2], md5($workerJobLabel . $sourcePaths[2])),
-                    ];
-
-                    return [
-                        'job/started' => (new Event(
-                            $firstSequenceNumber,
-                            'job/started',
-                            $jobReference,
-                            [
-                                'tests' => $sourcePaths,
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(new ResourceReferenceCollection($sourceReferences)),
-                        'lifecycle/compilation-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'compilation/started:' . $sourcePaths[0] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $sourceReferences[0],
-                            [
-                                'source' => $sourcePaths[0],
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/passed:' . $sourcePaths[0] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/passed',
-                            $sourceReferences[0],
-                            [
-                                'source' => $sourcePaths[0],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5($workerJobLabel . $sourcePaths[0] . 'verify page is open')
-                                    ),
-                                ])
-                            ),
-                        'compilation/started:' . $sourcePaths[1] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/passed:' . $sourcePaths[1] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/passed',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5($workerJobLabel . $sourcePaths[1] . 'verify page is open')
-                                    ),
-                                ])
-                            ),
-                        'compilation/started:' . $sourcePaths[2] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $sourceReferences[2],
-                            [
-                                'source' => $sourcePaths[2],
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/passed:' . $sourcePaths[2] => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/passed',
-                            $sourceReferences[2],
-                            [
-                                'source' => $sourcePaths[2],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5($workerJobLabel . $sourcePaths[2] . 'verify page is open')
-                                    ),
-                                ])
-                            ),
-                        'lifecycle/compilation-completed' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-completed',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'lifecycle/execution-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/execution-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'test/started:' . $sourcePaths[0] => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/started',
-                            $sourceReferences[0],
-                            [
-                                'source' => $sourcePaths[0],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[0],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[0]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'step/passed:' . $sourcePaths[0] . 'verify page is open' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/passed',
-                            new ResourceReference(
-                                'verify page is open',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePaths[0]
-                                    . 'verify page is open'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePaths[0],
-                                'name' => 'verify page is open',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                                'transformations' => [
-                                                    [
-                                                        'type' => 'resolution',
-                                                        'source' => '$page.url is $index.url',
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'test/passed:' . $sourcePaths[0] => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/passed',
-                            $sourceReferences[0],
-                            [
-                                'source' => $sourcePaths[0],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[0],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[0]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'test/started:' . $sourcePaths[1] . ', chrome' => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/started',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[1],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[1]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'step/passed:' . $sourcePaths[1] . 'verify page is open, chrome' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/passed',
-                            new ResourceReference(
-                                'verify page is open',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePaths[1]
-                                    . 'verify page is open'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePaths[1],
-                                'name' => 'verify page is open',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'test/passed' . $sourcePaths[1] . ', chrome' => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/passed',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[1],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[1]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'test/started:' . $sourcePaths[1] . ', firefox' => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/started',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[1],
-                                        'config' => [
-                                            'browser' => 'firefox',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[1]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'step/passed:' . $sourcePaths[1] . 'verify page is open, firefox' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/passed',
-                            new ResourceReference(
-                                'verify page is open',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePaths[1]
-                                    . 'verify page is open'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePaths[1],
-                                'name' => 'verify page is open',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'test/passed' . $sourcePaths[1] . ', firefox' => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/passed',
-                            $sourceReferences[1],
-                            [
-                                'source' => $sourcePaths[1],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[1],
-                                        'config' => [
-                                            'browser' => 'firefox',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[1]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'test/started:' . $sourcePaths[2] => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/started',
-                            $sourceReferences[2],
-                            [
-                                'source' => $sourcePaths[2],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[2],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[2]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'step/passed:' . $sourcePaths[2] . 'verify page is open' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/passed',
-                            new ResourceReference(
-                                'verify page is open',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePaths[2]
-                                    . 'verify page is open'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePaths[2],
-                                'name' => 'verify page is open',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/form.html"',
-                                                'status' => 'passed',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'test/passed' . $sourcePaths[2] => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/passed',
-                            $sourceReferences[2],
-                            [
-                                'source' => $sourcePaths[2],
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePaths[2],
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/form.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                ],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePaths[2]
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'lifecycle/execution-completed' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/execution-completed',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'job/ended' => (new Event(
-                            ++$firstSequenceNumber,
-                            'job/ended',
-                            $jobReference,
-                            [
-                                'end_state' => 'complete',
-                                'success' => true,
-                                'event_count' => 24,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                    ];
-                },
-            ],
-            'step failed' => [
-                'manifestPaths' => [
-                    'Test/chrome-open-index-with-step-failure.yml',
-                ],
-                'sourcePaths' => [
-                    'Test/chrome-open-index-with-step-failure.yml',
-                ],
-                'jobLabel' => $jobLabel,
-                'expectedApplicationState' => ApplicationState::FAILED,
-                'expectedCompilationEndState' => [
-                    'state' => CompilationState::COMPLETE->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => true,
-                    ],
-                    'previous_states' => [
-                        CompilationState::AWAITING->value,
-                        CompilationState::RUNNING->value,
-                        CompilationState::COMPLETE->value,
-                    ],
-                ],
-                'expectedExecutionEndState' => [
-                    'state' => ExecutionState::CANCELLED->value,
-                    'meta_state' => [
-                        'pending' => false,
-                        'ended' => true,
-                        'succeeded' => false,
-                    ],
-                    'previous_states' => [
-                        ExecutionState::AWAITING->value,
-                        ExecutionState::RUNNING->value,
-                        ExecutionState::CANCELLED->value,
-                    ],
-                ],
-                'expectedTestDataCollection' => [
-                    [
-                        'browser' => 'chrome',
-                        'url' => 'http://html-fixtures/index.html',
-                        'source' => 'Test/chrome-open-index-with-step-failure.yml',
-                        'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
-                        'state' => TestState::FAILED->value,
-                        'position' => 1,
-                    ],
-                ],
-                'expectedEventsCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                    string $resultsJobLabel,
-                ) {
-                    \assert('' !== $resultsJobLabel);
-                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
-                    \assert('' !== $workerJobLabel);
-
-                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
-                    $sourcePath = 'Test/chrome-open-index-with-step-failure.yml';
-                    $sourceReference = new ResourceReference($sourcePath, md5($workerJobLabel . $sourcePath));
-
-                    return [
-                        'job/started' => (new Event(
-                            $firstSequenceNumber,
-                            'job/started',
-                            $jobReference,
-                            [
-                                'tests' => [$sourcePath],
-                            ],
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
-                        'lifecycle/compilation-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'compilation/started:' . $sourcePath => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/started',
-                            $sourceReference,
-                            [
-                                'source' => $sourcePath,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'compilation/passed:' . $sourcePath => (new Event(
-                            ++$firstSequenceNumber,
-                            'compilation/passed',
-                            $sourceReference,
-                            [
-                                'source' => $sourcePath,
-                            ]
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5($workerJobLabel . $sourcePath . 'verify page is open')
-                                    ),
-                                    new ResourceReference(
-                                        'fail on intentionally-missing element',
-                                        md5($workerJobLabel . $sourcePath . 'fail on intentionally-missing element')
-                                    ),
-                                ])
-                            ),
-                        'lifecycle/compilation-completed' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/compilation-completed',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'lifecycle/execution-started' => (new Event(
-                            ++$firstSequenceNumber,
-                            'lifecycle/execution-started',
-                            $jobReference,
-                            []
-                        ))->withJob($resultsJobLabel),
-                        'test/started:' . $sourcePath => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/started',
-                            $sourceReference,
-                            [
-                                'source' => $sourcePath,
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePath,
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                    'fail on intentionally-missing element',
-                                ],
-                            ]
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePath
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                    new ResourceReference(
-                                        'fail on intentionally-missing element',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePath
-                                            . 'fail on intentionally-missing element'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'step/passed:' . $sourcePath . 'verify page is open' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/passed',
-                            new ResourceReference(
-                                'verify page is open',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePath
-                                    . 'verify page is open'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePath,
-                                'name' => 'verify page is open',
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'verify page is open',
-                                        'status' => 'passed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-                                                'status' => 'passed',
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ))->withJob($resultsJobLabel),
-                        'step/failed:' . $sourcePath . 'fail on intentionally-missing element' => (new Event(
-                            ++$firstSequenceNumber,
-                            'step/failed',
-                            new ResourceReference(
-                                'fail on intentionally-missing element',
-                                md5(
-                                    $workerJobLabel
-                                    . $sourcePath
-                                    . 'fail on intentionally-missing element'
-                                )
-                            ),
-                            [
-                                'source' => $sourcePath,
-                                'document' => [
-                                    'type' => 'step',
-                                    'payload' => [
-                                        'name' => 'fail on intentionally-missing element',
-                                        'status' => 'failed',
-                                        'statements' => [
-                                            [
-                                                'type' => 'assertion',
-                                                'source' => '$".non-existent" exists',
-                                                'status' => 'failed',
-                                                'summary' => [
-                                                    'operator' => 'exists',
-                                                    'source' => [
-                                                        'type' => 'node',
-                                                        'body' => [
-                                                            'type' => 'element',
-                                                            'identifier' => [
-                                                                'source' => '$".non-existent"',
-                                                                'properties' => [
-                                                                    'type' => 'css',
-                                                                    'locator' => '.non-existent',
-                                                                    'position' => 1,
-                                                                ],
-                                                            ],
-                                                        ],
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                                'name' => 'fail on intentionally-missing element',
-                            ]
-                        ))->withJob($resultsJobLabel),
-                        'test/failed' => (new Event(
-                            ++$firstSequenceNumber,
-                            'test/failed',
-                            $sourceReference,
-                            [
-                                'source' => $sourcePath,
-                                'document' => [
-                                    'type' => 'test',
-                                    'payload' => [
-                                        'path' => $sourcePath,
-                                        'config' => [
-                                            'browser' => 'chrome',
-                                            'url' => 'http://html-fixtures/index.html',
-                                        ],
-                                    ],
-                                ],
-                                'step_names' => [
-                                    'verify page is open',
-                                    'fail on intentionally-missing element',
-                                ],
-                            ]
-                        ))
-                            ->withJob($resultsJobLabel)
-                            ->withRelatedReferences(
-                                new ResourceReferenceCollection([
-                                    new ResourceReference(
-                                        'verify page is open',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePath
-                                            . 'verify page is open'
-                                        )
-                                    ),
-                                    new ResourceReference(
-                                        'fail on intentionally-missing element',
-                                        md5(
-                                            $workerJobLabel
-                                            . $sourcePath
-                                            . 'fail on intentionally-missing element'
-                                        )
-                                    ),
-                                ])
-                            ),
-                        'job/ended' => (new Event(
-                            ++$firstSequenceNumber,
-                            'job/ended',
-                            $jobReference,
-                            [
-                                'end_state' => 'failed/test/failure',
-                                'success' => false,
-                                'event_count' => 11,
-                            ]
-                        ))->withJob($resultsJobLabel),
-                    ];
-                },
-            ],
+//            'compilation failed on first test' => [
+//                'manifestPaths' => [
+//                    'Test/chrome-open-index-compilation-failure.yml',
+//                ],
+//                'sourcePaths' => [
+//                    'Test/chrome-open-index-compilation-failure.yml',
+//                ],
+//                'jobLabel' => $jobLabel,
+//                'expectedApplicationState' => ApplicationState::FAILED,
+//                'expectedCompilationEndState' => [
+//                    'state' => CompilationState::FAILED->value,
+//                    'meta_state' => [
+//                        'pending' => false,
+//                        'ended' => true,
+//                        'succeeded' => false,
+//                    ],
+//                    'previous_states' => [
+//                        CompilationState::AWAITING->value,
+//                        CompilationState::RUNNING->value,
+//                        CompilationState::FAILED->value,
+//                    ],
+//                ],
+//                'expectedExecutionEndState' => [
+//                    'state' => ExecutionState::AWAITING->value,
+//                    'meta_state' => [
+//                        'pending' => true,
+//                        'ended' => false,
+//                        'succeeded' => false,
+//                    ],
+//                    'previous_states' => [
+//                        ExecutionState::AWAITING->value,
+//                    ],
+//                ],
+//                'expectedTestDataCollection' => [],
+//                'expectedEventsCreator' => function (
+//                    int $firstSequenceNumber,
+//                    string $workerJobLabel,
+//                    string $resultsJobLabel,
+//                ) {
+//                    \assert('' !== $resultsJobLabel);
+//                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+//                    \assert('' !== $workerJobLabel);
+//
+//                    $failedTestPath = 'Test/chrome-open-index-compilation-failure.yml';
+//                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
+//                    $sourceReference = new ResourceReference($failedTestPath, md5($workerJobLabel . $failedTestPath));
+//
+//                    return [
+//                        'job/started' => (new Event(
+//                            $firstSequenceNumber,
+//                            'job/started',
+//                            $jobReference,
+//                            [
+//                                'tests' => [$failedTestPath],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
+//                        'lifecycle/compilation-started' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/compilation-started',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/started: chrome-open-index-compilation-failure' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/started',
+//                            $sourceReference,
+//                            [
+//                                'source' => $failedTestPath,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/failed: chrome-open-index-compilation-failure' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/failed',
+//                            $sourceReference,
+//                            [
+//                                'output' => [
+//                                    'message' => 'Invalid test at path "'
+//                                        . $failedTestPath
+//                                        . '": test-step-invalid',
+//                                    'code' => 204,
+//                                    'context' => [
+//                                        'test_path' => $failedTestPath,
+//                                        'validation_result' => [
+//                                            'type' => 'test',
+//                                            'reason' => 'test-step-invalid',
+//                                            'context' => [
+//                                                'step-name' => 'verify page is open',
+//                                            ],
+//                                            'previous' => [
+//                                                'type' => 'step',
+//                                                'reason' => 'step-no-assertions',
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                                'source' => $failedTestPath,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'job/ended' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'job/ended',
+//                            $jobReference,
+//                            [
+//                                'end_state' => 'failed/compilation',
+//                                'success' => false,
+//                                'event_count' => 5,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                    ];
+//                },
+//            ],
+//            'three successful tests' => [
+//                'manifestPaths' => [
+//                    'Test/chrome-open-index.yml',
+//                    'Test/chrome-firefox-open-index.yml',
+//                    'Test/chrome-open-form.yml',
+//                ],
+//                'sourcePaths' => [
+//                    'Page/index.yml',
+//                    'Test/chrome-open-index.yml',
+//                    'Test/chrome-firefox-open-index.yml',
+//                    'Test/chrome-open-form.yml',
+//                ],
+//                'jobLabel' => $jobLabel,
+//                'expectedApplicationState' => ApplicationState::COMPLETE,
+//                'expectedCompilationEndState' => [
+//                    'state' => CompilationState::COMPLETE->value,
+//                    'meta_state' => [
+//                        'pending' => false,
+//                        'ended' => true,
+//                        'succeeded' => true,
+//                    ],
+//                    'previous_states' => [
+//                        CompilationState::AWAITING->value,
+//                        CompilationState::RUNNING->value,
+//                        CompilationState::COMPLETE->value,
+//                    ],
+//                ],
+//                'expectedExecutionEndState' => [
+//                    'state' => ExecutionState::COMPLETE->value,
+//                    'meta_state' => [
+//                        'pending' => false,
+//                        'ended' => true,
+//                        'succeeded' => true,
+//                    ],
+//                    'previous_states' => [
+//                        ExecutionState::AWAITING->value,
+//                        ExecutionState::RUNNING->value,
+//                        ExecutionState::COMPLETE->value,
+//                    ],
+//                ],
+//                'expectedTestDataCollection' => [
+//                    [
+//                        'browser' => 'chrome',
+//                        'url' => 'http://html-fixtures/index.html',
+//                        'source' => 'Test/chrome-open-index.yml',
+//                        'step_names' => ['verify page is open'],
+//                        'state' => TestState::COMPLETE->value,
+//                        'position' => 1,
+//                    ],
+//                    [
+//                        'browser' => 'chrome',
+//                        'url' => 'http://html-fixtures/index.html',
+//                        'source' => 'Test/chrome-firefox-open-index.yml',
+//                        'step_names' => ['verify page is open'],
+//                        'state' => TestState::COMPLETE->value,
+//                        'position' => 2,
+//                    ],
+//                    [
+//                        'browser' => 'firefox',
+//                        'url' => 'http://html-fixtures/index.html',
+//                        'source' => 'Test/chrome-firefox-open-index.yml',
+//                        'step_names' => ['verify page is open'],
+//                        'state' => TestState::COMPLETE->value,
+//                        'position' => 3,
+//                    ],
+//                    [
+//                        'browser' => 'chrome',
+//                        'url' => 'http://html-fixtures/form.html',
+//                        'source' => 'Test/chrome-open-form.yml',
+//                        'step_names' => ['verify page is open'],
+//                        'state' => TestState::COMPLETE->value,
+//                        'position' => 4,
+//                    ],
+//                ],
+//                'expectedEventsCreator' => function (
+//                    int $firstSequenceNumber,
+//                    string $workerJobLabel,
+//                    string $resultsJobLabel,
+//                ) {
+//                    \assert('' !== $resultsJobLabel);
+//                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+//                    \assert('' !== $workerJobLabel);
+//
+//                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
+//
+//                    $sourcePaths = [
+//                        'Test/chrome-open-index.yml',
+//                        'Test/chrome-firefox-open-index.yml',
+//                        'Test/chrome-open-form.yml',
+//                    ];
+//
+//                    $sourceReferences = [
+//                        new ResourceReference($sourcePaths[0], md5($workerJobLabel . $sourcePaths[0])),
+//                        new ResourceReference($sourcePaths[1], md5($workerJobLabel . $sourcePaths[1])),
+//                        new ResourceReference($sourcePaths[2], md5($workerJobLabel . $sourcePaths[2])),
+//                    ];
+//
+//                    return [
+//                        'job/started' => (new Event(
+//                            $firstSequenceNumber,
+//                            'job/started',
+//                            $jobReference,
+//                            [
+//                                'tests' => $sourcePaths,
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(new ResourceReferenceCollection($sourceReferences)),
+//                        'lifecycle/compilation-started' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/compilation-started',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/started:' . $sourcePaths[0] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/started',
+//                            $sourceReferences[0],
+//                            [
+//                                'source' => $sourcePaths[0],
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/passed:' . $sourcePaths[0] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/passed',
+//                            $sourceReferences[0],
+//                            [
+//                                'source' => $sourcePaths[0],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5($workerJobLabel . $sourcePaths[0] . 'verify page is open')
+//                                    ),
+//                                ])
+//                            ),
+//                        'compilation/started:' . $sourcePaths[1] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/started',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/passed:' . $sourcePaths[1] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/passed',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5($workerJobLabel . $sourcePaths[1] . 'verify page is open')
+//                                    ),
+//                                ])
+//                            ),
+//                        'compilation/started:' . $sourcePaths[2] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/started',
+//                            $sourceReferences[2],
+//                            [
+//                                'source' => $sourcePaths[2],
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/passed:' . $sourcePaths[2] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/passed',
+//                            $sourceReferences[2],
+//                            [
+//                                'source' => $sourcePaths[2],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5($workerJobLabel . $sourcePaths[2] . 'verify page is open')
+//                                    ),
+//                                ])
+//                            ),
+//                        'lifecycle/compilation-completed' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/compilation-completed',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'lifecycle/execution-started' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/execution-started',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'test/started:' . $sourcePaths[0] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/started',
+//                            $sourceReferences[0],
+//                            [
+//                                'source' => $sourcePaths[0],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[0],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[0]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'step/passed:' . $sourcePaths[0] . 'verify page is open' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/passed',
+//                            new ResourceReference(
+//                                'verify page is open',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePaths[0]
+//                                    . 'verify page is open'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePaths[0],
+//                                'name' => 'verify page is open',
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'verify page is open',
+//                                        'status' => 'passed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+//                                                'status' => 'passed',
+//                                                'transformations' => [
+//                                                    [
+//                                                        'type' => 'resolution',
+//                                                        'source' => '$page.url is $index.url',
+//                                                    ],
+//                                                ],
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ))->withJob($resultsJobLabel),
+//                        'test/passed:' . $sourcePaths[0] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/passed',
+//                            $sourceReferences[0],
+//                            [
+//                                'source' => $sourcePaths[0],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[0],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[0]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'test/started:' . $sourcePaths[1] . ', chrome' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/started',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[1],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[1]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'step/passed:' . $sourcePaths[1] . 'verify page is open, chrome' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/passed',
+//                            new ResourceReference(
+//                                'verify page is open',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePaths[1]
+//                                    . 'verify page is open'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'name' => 'verify page is open',
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'verify page is open',
+//                                        'status' => 'passed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+//                                                'status' => 'passed',
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ))->withJob($resultsJobLabel),
+//                        'test/passed' . $sourcePaths[1] . ', chrome' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/passed',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[1],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[1]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'test/started:' . $sourcePaths[1] . ', firefox' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/started',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[1],
+//                                        'config' => [
+//                                            'browser' => 'firefox',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[1]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'step/passed:' . $sourcePaths[1] . 'verify page is open, firefox' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/passed',
+//                            new ResourceReference(
+//                                'verify page is open',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePaths[1]
+//                                    . 'verify page is open'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'name' => 'verify page is open',
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'verify page is open',
+//                                        'status' => 'passed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+//                                                'status' => 'passed',
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ))->withJob($resultsJobLabel),
+//                        'test/passed' . $sourcePaths[1] . ', firefox' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/passed',
+//                            $sourceReferences[1],
+//                            [
+//                                'source' => $sourcePaths[1],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[1],
+//                                        'config' => [
+//                                            'browser' => 'firefox',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[1]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'test/started:' . $sourcePaths[2] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/started',
+//                            $sourceReferences[2],
+//                            [
+//                                'source' => $sourcePaths[2],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[2],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/form.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[2]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'step/passed:' . $sourcePaths[2] . 'verify page is open' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/passed',
+//                            new ResourceReference(
+//                                'verify page is open',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePaths[2]
+//                                    . 'verify page is open'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePaths[2],
+//                                'name' => 'verify page is open',
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'verify page is open',
+//                                        'status' => 'passed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$page.url is "http://html-fixtures/form.html"',
+//                                                'status' => 'passed',
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ))->withJob($resultsJobLabel),
+//                        'test/passed' . $sourcePaths[2] => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/passed',
+//                            $sourceReferences[2],
+//                            [
+//                                'source' => $sourcePaths[2],
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePaths[2],
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/form.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                ],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePaths[2]
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'lifecycle/execution-completed' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/execution-completed',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'job/ended' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'job/ended',
+//                            $jobReference,
+//                            [
+//                                'end_state' => 'complete',
+//                                'success' => true,
+//                                'event_count' => 24,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                    ];
+//                },
+//            ],
+//            'step failed' => [
+//                'manifestPaths' => [
+//                    'Test/chrome-open-index-with-step-failure.yml',
+//                ],
+//                'sourcePaths' => [
+//                    'Test/chrome-open-index-with-step-failure.yml',
+//                ],
+//                'jobLabel' => $jobLabel,
+//                'expectedApplicationState' => ApplicationState::FAILED,
+//                'expectedCompilationEndState' => [
+//                    'state' => CompilationState::COMPLETE->value,
+//                    'meta_state' => [
+//                        'pending' => false,
+//                        'ended' => true,
+//                        'succeeded' => true,
+//                    ],
+//                    'previous_states' => [
+//                        CompilationState::AWAITING->value,
+//                        CompilationState::RUNNING->value,
+//                        CompilationState::COMPLETE->value,
+//                    ],
+//                ],
+//                'expectedExecutionEndState' => [
+//                    'state' => ExecutionState::CANCELLED->value,
+//                    'meta_state' => [
+//                        'pending' => false,
+//                        'ended' => true,
+//                        'succeeded' => false,
+//                    ],
+//                    'previous_states' => [
+//                        ExecutionState::AWAITING->value,
+//                        ExecutionState::RUNNING->value,
+//                        ExecutionState::CANCELLED->value,
+//                    ],
+//                ],
+//                'expectedTestDataCollection' => [
+//                    [
+//                        'browser' => 'chrome',
+//                        'url' => 'http://html-fixtures/index.html',
+//                        'source' => 'Test/chrome-open-index-with-step-failure.yml',
+//                        'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
+//                        'state' => TestState::FAILED->value,
+//                        'position' => 1,
+//                    ],
+//                ],
+//                'expectedEventsCreator' => function (
+//                    int $firstSequenceNumber,
+//                    string $workerJobLabel,
+//                    string $resultsJobLabel,
+//                ) {
+//                    \assert('' !== $resultsJobLabel);
+//                    \assert($firstSequenceNumber >= 1 && $firstSequenceNumber <= PHP_INT_MAX);
+//                    \assert('' !== $workerJobLabel);
+//
+//                    $jobReference = new ResourceReference($workerJobLabel, md5($workerJobLabel));
+//                    $sourcePath = 'Test/chrome-open-index-with-step-failure.yml';
+//                    $sourceReference = new ResourceReference($sourcePath, md5($workerJobLabel . $sourcePath));
+//
+//                    return [
+//                        'job/started' => (new Event(
+//                            $firstSequenceNumber,
+//                            'job/started',
+//                            $jobReference,
+//                            [
+//                                'tests' => [$sourcePath],
+//                            ],
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(new ResourceReferenceCollection([$sourceReference])),
+//                        'lifecycle/compilation-started' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/compilation-started',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/started:' . $sourcePath => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/started',
+//                            $sourceReference,
+//                            [
+//                                'source' => $sourcePath,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'compilation/passed:' . $sourcePath => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'compilation/passed',
+//                            $sourceReference,
+//                            [
+//                                'source' => $sourcePath,
+//                            ]
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5($workerJobLabel . $sourcePath . 'verify page is open')
+//                                    ),
+//                                    new ResourceReference(
+//                                        'fail on intentionally-missing element',
+//                                        md5($workerJobLabel . $sourcePath . 'fail on intentionally-missing element')
+//                                    ),
+//                                ])
+//                            ),
+//                        'lifecycle/compilation-completed' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/compilation-completed',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'lifecycle/execution-started' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'lifecycle/execution-started',
+//                            $jobReference,
+//                            []
+//                        ))->withJob($resultsJobLabel),
+//                        'test/started:' . $sourcePath => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/started',
+//                            $sourceReference,
+//                            [
+//                                'source' => $sourcePath,
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePath,
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                    'fail on intentionally-missing element',
+//                                ],
+//                            ]
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePath
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                    new ResourceReference(
+//                                        'fail on intentionally-missing element',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePath
+//                                            . 'fail on intentionally-missing element'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'step/passed:' . $sourcePath . 'verify page is open' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/passed',
+//                            new ResourceReference(
+//                                'verify page is open',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePath
+//                                    . 'verify page is open'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePath,
+//                                'name' => 'verify page is open',
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'verify page is open',
+//                                        'status' => 'passed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
+//                                                'status' => 'passed',
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                            ],
+//                        ))->withJob($resultsJobLabel),
+//                        'step/failed:' . $sourcePath . 'fail on intentionally-missing element' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'step/failed',
+//                            new ResourceReference(
+//                                'fail on intentionally-missing element',
+//                                md5(
+//                                    $workerJobLabel
+//                                    . $sourcePath
+//                                    . 'fail on intentionally-missing element'
+//                                )
+//                            ),
+//                            [
+//                                'source' => $sourcePath,
+//                                'document' => [
+//                                    'type' => 'step',
+//                                    'payload' => [
+//                                        'name' => 'fail on intentionally-missing element',
+//                                        'status' => 'failed',
+//                                        'statements' => [
+//                                            [
+//                                                'type' => 'assertion',
+//                                                'source' => '$".non-existent" exists',
+//                                                'status' => 'failed',
+//                                                'summary' => [
+//                                                    'operator' => 'exists',
+//                                                    'source' => [
+//                                                        'type' => 'node',
+//                                                        'body' => [
+//                                                            'type' => 'element',
+//                                                            'identifier' => [
+//                                                                'source' => '$".non-existent"',
+//                                                                'properties' => [
+//                                                                    'type' => 'css',
+//                                                                    'locator' => '.non-existent',
+//                                                                    'position' => 1,
+//                                                                ],
+//                                                            ],
+//                                                        ],
+//                                                    ],
+//                                                ],
+//                                            ],
+//                                        ],
+//                                    ],
+//                                ],
+//                                'name' => 'fail on intentionally-missing element',
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                        'test/failed' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'test/failed',
+//                            $sourceReference,
+//                            [
+//                                'source' => $sourcePath,
+//                                'document' => [
+//                                    'type' => 'test',
+//                                    'payload' => [
+//                                        'path' => $sourcePath,
+//                                        'config' => [
+//                                            'browser' => 'chrome',
+//                                            'url' => 'http://html-fixtures/index.html',
+//                                        ],
+//                                    ],
+//                                ],
+//                                'step_names' => [
+//                                    'verify page is open',
+//                                    'fail on intentionally-missing element',
+//                                ],
+//                            ]
+//                        ))
+//                            ->withJob($resultsJobLabel)
+//                            ->withRelatedReferences(
+//                                new ResourceReferenceCollection([
+//                                    new ResourceReference(
+//                                        'verify page is open',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePath
+//                                            . 'verify page is open'
+//                                        )
+//                                    ),
+//                                    new ResourceReference(
+//                                        'fail on intentionally-missing element',
+//                                        md5(
+//                                            $workerJobLabel
+//                                            . $sourcePath
+//                                            . 'fail on intentionally-missing element'
+//                                        )
+//                                    ),
+//                                ])
+//                            ),
+//                        'job/ended' => (new Event(
+//                            ++$firstSequenceNumber,
+//                            'job/ended',
+//                            $jobReference,
+//                            [
+//                                'end_state' => 'failed/test/failure',
+//                                'success' => false,
+//                                'event_count' => 11,
+//                            ]
+//                        ))->withJob($resultsJobLabel),
+//                    ];
+//                },
+//            ],
         ];
     }
 }
