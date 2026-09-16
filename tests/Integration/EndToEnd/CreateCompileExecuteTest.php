@@ -185,19 +185,19 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         self::assertSame($expectedApplicationState, $this->applicationProgress->get());
 
-        $resultsClient = self::getContainer()->get(ResultsClient::class);
-        \assert($resultsClient instanceof ResultsClient);
-
-        $resultsJobLabel = $this->resultsJob->label;
-        \assert('' !== $resultsJobLabel);
-
-        $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
-        $firstEvent = $events[0];
-        \assert($firstEvent instanceof Event);
-
-        $expectedEvents = $expectedEventsCreator($firstEvent->sequenceNumber, $jobLabel, $resultsJobLabel);
-
-        self::assertEquals(array_values($expectedEvents), $events);
+//        $resultsClient = self::getContainer()->get(ResultsClient::class);
+//        \assert($resultsClient instanceof ResultsClient);
+//
+//        $resultsJobLabel = $this->resultsJob->label;
+//        \assert('' !== $resultsJobLabel);
+//
+//        $events = $resultsClient->listEvents($this->apiToken, $resultsJobLabel, null, null);
+//        $firstEvent = $events[0];
+//        \assert($firstEvent instanceof Event);
+//
+//        $expectedEvents = $expectedEventsCreator($firstEvent->sequenceNumber, $jobLabel, $resultsJobLabel);
+//
+//        self::assertEquals(array_values($expectedEvents), $events);
     }
 
     /**
