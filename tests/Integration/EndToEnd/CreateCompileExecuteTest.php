@@ -248,10 +248,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ],
                 ],
                 'expectedDispatchedNotificationsCount' => 7,
-                'expectedRequestBodiesCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                ) {
+                'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
                             'sequence_number' => $firstSequenceNumber,
@@ -416,10 +413,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 ],
                 'expectedTestDataCollection' => [],
                 'expectedDispatchedNotificationsCount' => 5,
-                'expectedRequestBodiesCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                ) {
+                'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
                             'sequence_number' => $firstSequenceNumber,
@@ -582,10 +576,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ],
                 ],
                 'expectedDispatchedNotificationsCount' => 24,
-                'expectedRequestBodiesCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                ) {
+                'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
                             'sequence_number' => $firstSequenceNumber,
@@ -1209,10 +1200,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                     ],
                 ],
                 'expectedDispatchedNotificationsCount' => 11,
-                'expectedRequestBodiesCreator' => function (
-                    int $firstSequenceNumber,
-                    string $workerJobLabel,
-                ) {
+                'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
                             'sequence_number' => $firstSequenceNumber,
