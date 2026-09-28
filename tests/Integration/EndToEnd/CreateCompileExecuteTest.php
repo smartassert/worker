@@ -165,10 +165,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
 
         self::assertSame($expectedApplicationState, $this->applicationProgress->get());
 
-        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($workerEventRepository instanceof WorkerEventRepository);
-
-        $firstEvent = $workerEventRepository->findOneBy([], ['id' => 'ASC']);
+        $firstEvent = $this->workerEventRepository->findOneBy([], ['id' => 'ASC']);
         \assert($firstEvent instanceof WorkerEvent);
 
         $expectedRequestBodies = $expectedRequestBodiesCreator($firstEvent->getId(), $jobLabel);
