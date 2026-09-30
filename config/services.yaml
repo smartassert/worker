@@ -9,7 +9,6 @@ parameters:
     event_delivery_retry_limit: '%env(int:EVENT_DELIVERY_RETRY_LIMIT)%'
     job_timeout_check_period_ms: '%env(int:JOB_TIMEOUT_CHECK_PERIOD_MS)%'
     execution_completed_check_period_ms: '%env(int:EXECUTION_COMPLETED_CHECK_PERIOD_MS)%'
-    compiler_default_timeout_in_seconds: 600
     state_notify_secret: '%env(STATE_NOTIFY_SECRET)%'
 
 services:
@@ -157,10 +156,6 @@ services:
         class: SmartAssert\ResultsClient\AddEventClient
 
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
-
-    App\MessageFactory\ExecuteTestMessageFactory:
-        arguments:
-            $defaultCompileTimeoutInSeconds: '%compiler_default_timeout_in_seconds%'
 
     App\MessageDispatcher\SendWebhookMessageDispatcher:
         arguments:

@@ -78,12 +78,16 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
     public function dispatchNextExecuteTestMessage(): void
     {
         $testId = $this->testRepository->findNextAwaitingId();
-
-        if (is_int($testId)) {
-            $message = $this->executeTestMessageFactory->create($testId);
-
-            $this->messageBus->dispatch($message);
+        if (!is_int($testId)) {
+            return;
         }
+
+        $message = $this->executeTestMessageFactory->create($testId);
+        if (null === $message) {
+            return;
+        }
+
+        $this->messageBus->dispatch($message);
     }
 
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobCompiledEvent $event): void
