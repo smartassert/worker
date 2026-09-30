@@ -6,7 +6,6 @@ namespace App\Tests\Functional\MessageHandler;
 
 use App\Entity\Job;
 use App\Event\EmittableEvent\JobTimeoutEvent;
-use App\Exception\JobNotFoundException;
 use App\Message\TimeoutCheckMessage;
 use App\MessageHandler\TimeoutCheckHandler;
 use App\Repository\JobRepository;
@@ -47,22 +46,6 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $messengerTransport = self::getContainer()->get('messenger.transport.async');
         \assert($messengerTransport instanceof InMemoryTransport);
         $this->messengerTransport = $messengerTransport;
-    }
-
-    public function testInvokeNoJob(): void
-    {
-        self::assertCount(0, $this->messengerTransport->getSent());
-
-        $message = new TimeoutCheckMessage();
-
-        try {
-            ($this->handler)($message);
-            self::fail(JobNotFoundException::class . ' not thrown');
-        } catch (JobNotFoundException) {
-            self::assertCount(0, $this->messengerTransport->getSent());
-        }
-
-        self::assertSame(0, $this->eventRecorder->count());
     }
 
     public function testInvokeJobMaximumDurationNotReached(): void

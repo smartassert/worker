@@ -11,7 +11,6 @@ use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
 use App\Event\JobEndStateChangeEvent;
 use App\EventDispatcher\ExecutionCompletedEventDispatcher;
-use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -59,9 +58,6 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         $this->executionCompletedEventDispatcher->dispatch();
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchJobEndedEventForJobEndStateChangeEvent(JobEndStateChangeEvent $event): void
     {
         $jobEndedEvent = $this->jobEndedEventFactory->create();
@@ -80,12 +76,12 @@ class ApplicationWorkflowHandler implements EventSubscriberInterface
         ));
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchJobCompilationEndedEventForJobCompiledEvent(JobCompiledEvent $event): void
     {
         $job = $this->jobRepository->get();
+        if (null === $job) {
+            return;
+        }
 
         $this->eventDispatcher->dispatch(new LifecycleEvent(
             $job->getLabel(),

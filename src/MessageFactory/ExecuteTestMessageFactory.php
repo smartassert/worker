@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageFactory;
 
-use App\Exception\JobNotFoundException;
+use App\Entity\Job;
 use App\Message\ExecuteTestMessage;
 use App\Repository\JobRepository;
 
@@ -17,13 +17,11 @@ readonly class ExecuteTestMessageFactory
 
     public function create(int $testId): ExecuteTestMessage
     {
-        $timeout = $this->defaultCompileTimeoutInSeconds;
+        $job = $this->jobRepository->get();
 
-        try {
-            $job = $this->jobRepository->get();
-            $timeout = $job->maximumDurationInSeconds;
-        } catch (JobNotFoundException) {
-        }
+        $timeout = $job instanceof Job
+            ? $job->maximumDurationInSeconds
+            : $this->defaultCompileTimeoutInSeconds;
 
         return new ExecuteTestMessage($testId, $timeout);
     }

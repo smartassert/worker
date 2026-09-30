@@ -15,7 +15,6 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LifecycleEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
-use App\Exception\JobNotFoundException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Services\EntityMutator;
@@ -76,18 +75,20 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
     }
 
     /**
-     * @throws JobNotFoundException
      * @throws ExceptionInterface
      */
     public function dispatchForEvent(EmittableEventInterface $event): ?Envelope
     {
         $job = $this->jobRepository->get();
+        if (null === $job) {
+            return null;
+        }
 
         $workerEvent = $this->workerEventFactory->create($job, $event);
         $this->entityMutator->save($workerEvent);
 
         $this->workerEventStateMutator->setQueued($workerEvent);
 
-        return $this->messageBus->dispatch(new DeliverEventMessage((int) $workerEvent->getId()));
+        return $this->messageBus->dispatch(new DeliverEventMessage($workerEvent->getId()));
     }
 }

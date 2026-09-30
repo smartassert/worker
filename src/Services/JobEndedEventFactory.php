@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Enum\JobEndState;
 use App\Event\EmittableEvent\JobEndedEvent;
-use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 
@@ -17,13 +16,10 @@ class JobEndedEventFactory
         private readonly WorkerEventRepository $workerEventRepository,
     ) {}
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function create(): ?JobEndedEvent
     {
         $job = $this->jobRepository->get();
-        if (null === $job->endState) {
+        if (null === $job || null === $job->endState) {
             return null;
         }
 
