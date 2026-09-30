@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\Job;
 use App\Entity\Source;
 use App\Event\EmittableEvent\JobStartedEvent;
-use App\Exception\JobNotFoundException;
 use App\Exception\MissingTestSourceException;
 use App\Repository\JobRepository;
 use App\Repository\SourceRepository;
@@ -111,14 +110,11 @@ class JobController
     #[Route(self::PATH_JOB, name: 'status', methods: ['GET', 'HEAD'])]
     public function status(JobStatusFactory $jobStatusFactory): JsonResponse
     {
-        try {
-            return new JsonResponse(
-                $jobStatusFactory->create(
-                    $this->jobRepository->get()
-                )
-            );
-        } catch (JobNotFoundException) {
+        $job = $this->jobRepository->get();
+        if (null == $job) {
             return new JsonResponse([], 400);
         }
+
+        return new JsonResponse($jobStatusFactory->create($job));
     }
 }

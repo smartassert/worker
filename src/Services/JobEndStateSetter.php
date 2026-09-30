@@ -11,7 +11,6 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\ExecutionCompletedEvent;
 use App\Event\JobEndStateChangeEvent;
-use App\Exception\JobNotFoundException;
 use App\Repository\JobRepository;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -46,25 +45,16 @@ class JobEndStateSetter implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function setJobEndStateOnExecutionCompletedEvent(ExecutionCompletedEvent $event): void
     {
         $this->setJobEndState(JobEndState::COMPLETE);
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function setJobEndStateOnJobTimeoutEvent(JobTimeoutEvent $event): void
     {
         $this->setJobEndState(JobEndState::TIMED_OUT);
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function setJobEndStateOnTestFailedEvent(TestEvent $event): void
     {
         $this->setJobEndStateOnTestEventWithType(
@@ -74,17 +64,11 @@ class JobEndStateSetter implements EventSubscriberInterface
         );
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function setJobEndStateOnSourceCompilationFailedEvent(CompilationFailedEvent $event): void
     {
         $this->setJobEndState(JobEndState::FAILED_COMPILATION);
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function setJobEndStateOnTestExceptionEvent(TestEvent $event): void
     {
         $this->setJobEndStateOnTestEventWithType(
@@ -96,14 +80,9 @@ class JobEndStateSetter implements EventSubscriberInterface
 
     /**
      * @param EventTypeInterface::* $type
-     *
-     * @throws JobNotFoundException
      */
-    private function setJobEndStateOnTestEventWithType(
-        TestEvent $event,
-        string $type,
-        JobEndState $state
-    ): void {
+    private function setJobEndStateOnTestEventWithType(TestEvent $event, string $type, JobEndState $state): void
+    {
         if ($type !== $event->getType()) {
             return;
         }
@@ -111,12 +90,13 @@ class JobEndStateSetter implements EventSubscriberInterface
         $this->setJobEndState($state);
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     private function setJobEndState(JobEndState $state): void
     {
         $job = $this->jobRepository->get();
+        if (null === $job) {
+            return;
+        }
+
         $job->setEndState($state);
         $this->entityMutator->save($job);
 

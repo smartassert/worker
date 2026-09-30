@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Entity\WorkerEvent;
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
@@ -28,18 +27,24 @@ class DeliverEventHandler
      */
     public function __invoke(DeliverEventMessage $message): void
     {
-        $workerEvent = $this->workerEventRepository->find($message->workerEventId);
-
-        if ($workerEvent instanceof WorkerEvent) {
-            $this->workerEventStateMutator->setSending($workerEvent);
-
-            try {
-                $this->resultsClient->add($this->jobRepository->get()->getEventAddUrl(), $workerEvent);
-            } catch (\Throwable $e) {
-                throw new EventDeliveryException($workerEvent, $e);
-            }
-
-            $this->workerEventStateMutator->setComplete($workerEvent);
+        $job = $this->jobRepository->get();
+        if (null === $job) {
+            return;
         }
+
+        $workerEvent = $this->workerEventRepository->find($message->workerEventId);
+        if (null === $workerEvent) {
+            return;
+        }
+
+        $this->workerEventStateMutator->setSending($workerEvent);
+
+        try {
+            $this->resultsClient->add($job->getEventAddUrl(), $workerEvent);
+        } catch (\Throwable $e) {
+            throw new EventDeliveryException($workerEvent, $e);
+        }
+
+        $this->workerEventStateMutator->setComplete($workerEvent);
     }
 }

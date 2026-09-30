@@ -10,7 +10,6 @@ use App\Event\EmittableEvent\EventTypeInterface;
 use App\Event\EmittableEvent\LifecycleEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\JobCompiledEvent;
-use App\Exception\JobNotFoundException;
 use App\MessageFactory\ExecuteTestMessageFactory;
 use App\Repository\JobRepository;
 use App\Repository\TestRepository;
@@ -87,38 +86,45 @@ class ExecutionWorkflowHandler implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchExecutionStartedEventForJobCompiledEvent(JobCompiledEvent $event): void
     {
+        $job = $this->jobRepository->get();
+        if (null === $job) {
+            return;
+        }
+
         $this->eventDispatcher->dispatch(new LifecycleEvent(
-            $this->jobRepository->get()->getLabel(),
+            $job->getLabel(),
             EventTypeInterface::LIFECYCLE_EXECUTION_STARTED,
         ));
     }
 
-    /**
-     * @throws JobNotFoundException
-     */
     public function dispatchExecutionCompletedEventForTestPassedEvent(TestEvent $event): void
     {
         if (EventTypeInterface::TEST_PASSED !== $event->getType()) {
             return;
         }
 
-        $executionStateComplete = ExecutionState::COMPLETE === $this->executionProgress->get();
+        if (ExecutionState::COMPLETE !== $this->executionProgress->get()) {
+            return;
+        }
 
         $hasExecutionCompletedWorkerEvent = $this->workerEventRepository->hasForType(
             EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
         );
 
-        if (true === $executionStateComplete && false === $hasExecutionCompletedWorkerEvent) {
-            $job = $this->jobRepository->get();
-            $this->eventDispatcher->dispatch(new LifecycleEvent(
-                $job->getLabel(),
-                EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
-            ));
+        if ($hasExecutionCompletedWorkerEvent) {
+            return;
         }
+
+        $job = $this->jobRepository->get();
+        if (null === $job) {
+            return;
+        }
+
+        $this->eventDispatcher->dispatch(new LifecycleEvent(
+            $job->getLabel(),
+            EventTypeInterface::LIFECYCLE_EXECUTION_COMPLETED,
+        ));
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\MessageFactory;
 
-use App\Exception\JobNotFoundException;
+use App\Entity\Job;
 use App\Message\CompileSourceMessage;
 use App\Repository\JobRepository;
 
@@ -20,13 +20,11 @@ readonly class CompileSourceMessageFactory
      */
     public function create(string $path): CompileSourceMessage
     {
-        $timeout = $this->defaultCompileTimeoutInSeconds;
+        $job = $this->jobRepository->get();
 
-        try {
-            $job = $this->jobRepository->get();
-            $timeout = $job->maximumDurationInSeconds;
-        } catch (JobNotFoundException) {
-        }
+        $timeout = $job instanceof Job
+            ? $job->maximumDurationInSeconds
+            : $this->defaultCompileTimeoutInSeconds;
 
         return new CompileSourceMessage($path, $timeout);
     }

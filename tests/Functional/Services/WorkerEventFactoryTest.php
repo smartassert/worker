@@ -78,7 +78,10 @@ class WorkerEventFactoryTest extends WebTestCase
 
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
-        $this->job = $jobRepository->get();
+
+        $job = $jobRepository->get();
+        \assert($job instanceof Job);
+        $this->job = $job;
     }
 
     #[DataProvider('createDataProvider')]

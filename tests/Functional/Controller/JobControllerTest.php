@@ -402,6 +402,7 @@ class JobControllerTest extends WebTestCase
         self::assertTrue($this->jobRepository->has());
 
         $job = $this->jobRepository->get();
+        self::assertInstanceOf(Job::class, $job);
         self::assertSame($responseData['label'], $job->getLabel());
         self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
 
