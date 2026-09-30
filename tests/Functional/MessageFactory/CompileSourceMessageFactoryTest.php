@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageFactory;
 
 use App\Entity\Job;
+use App\Message\CompileSourceMessage;
 use App\MessageFactory\CompileSourceMessageFactory;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -38,14 +39,7 @@ class CompileSourceMessageFactoryTest extends WebTestCase
         }
     }
 
-    public function testCreateNoJob(): void
-    {
-        $message = $this->factory->create('test.yml');
-
-        self::assertSame(600, $message->timeoutInSeconds);
-    }
-
-    public function testCreateHasJob(): void
+    public function testCreate(): void
     {
         $maximumDurationInSeconds = rand(0, 1000);
 
@@ -58,7 +52,7 @@ class CompileSourceMessageFactoryTest extends WebTestCase
         );
 
         $message = $this->factory->create('test.yml');
-
+        self::assertInstanceOf(CompileSourceMessage::class, $message);
         self::assertSame($maximumDurationInSeconds, $message->timeoutInSeconds);
     }
 }

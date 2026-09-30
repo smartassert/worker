@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\MessageFactory;
 
 use App\Entity\Job;
+use App\Message\ExecuteTestMessage;
 use App\MessageFactory\ExecuteTestMessageFactory;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
@@ -38,14 +39,7 @@ class ExecuteTestMessageFactoryTest extends WebTestCase
         }
     }
 
-    public function testCreateNoJob(): void
-    {
-        $message = $this->factory->create(123);
-
-        self::assertSame(600, $message->timeoutInSeconds);
-    }
-
-    public function testCreateHasJob(): void
+    public function testCreate(): void
     {
         $testId = rand(0, 1000);
         $maximumDurationInSeconds = rand(0, 1000);
@@ -59,7 +53,7 @@ class ExecuteTestMessageFactoryTest extends WebTestCase
         );
 
         $message = $this->factory->create($testId);
-
+        self::assertInstanceOf(ExecuteTestMessage::class, $message);
         self::assertSame($maximumDurationInSeconds, $message->timeoutInSeconds);
     }
 }
