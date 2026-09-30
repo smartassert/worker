@@ -31,7 +31,7 @@ readonly class NotifiableEvent implements EventInterface
         );
 
         $references = [];
-        foreach ($this->eventEntity->relatedReferences as $reference) {
+        foreach ($this->eventEntity->getRelatedReferences() as $reference) {
             $references[] = $reference;
         }
 

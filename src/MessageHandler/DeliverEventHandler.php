@@ -6,6 +6,7 @@ namespace App\MessageHandler;
 
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
+use App\Model\NotifiableEvent;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
@@ -13,13 +14,13 @@ use SmartAssert\ResultsClient\AddEventClientInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class DeliverEventHandler
+readonly class DeliverEventHandler
 {
     public function __construct(
-        private readonly JobRepository $jobRepository,
-        private readonly WorkerEventRepository $workerEventRepository,
-        private readonly WorkerEventStateMutator $workerEventStateMutator,
-        private readonly AddEventClientInterface $resultsClient,
+        private JobRepository $jobRepository,
+        private WorkerEventRepository $workerEventRepository,
+        private WorkerEventStateMutator $workerEventStateMutator,
+        private AddEventClientInterface $resultsClient,
     ) {}
 
     /**
@@ -32,19 +33,21 @@ class DeliverEventHandler
             return;
         }
 
-        $workerEvent = $this->workerEventRepository->find($message->workerEventId);
-        if (null === $workerEvent) {
+        $eventEntity = $this->workerEventRepository->find($message->workerEventId);
+        if (null === $eventEntity) {
             return;
         }
 
-        $this->workerEventStateMutator->setSending($workerEvent);
+        $notifiableEvent = new NotifiableEvent($job->getLabel(), $eventEntity);
+
+        $this->workerEventStateMutator->setSending($eventEntity);
 
         try {
-            $this->resultsClient->add($job->getEventAddUrl(), $workerEvent);
+            $this->resultsClient->add($job->getEventAddUrl(), $notifiableEvent);
         } catch (\Throwable $e) {
-            throw new EventDeliveryException($workerEvent, $e);
+            throw new EventDeliveryException($eventEntity, $e);
         }
 
-        $this->workerEventStateMutator->setComplete($workerEvent);
+        $this->workerEventStateMutator->setComplete($eventEntity);
     }
 }

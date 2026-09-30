@@ -9,16 +9,11 @@ use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
-/**
- * @phpstan-import-type SerializedEvent from EventInterface
- */
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
-class WorkerEvent implements \JsonSerializable, EventInterface
+class WorkerEvent
 {
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $type;
@@ -37,7 +32,7 @@ class WorkerEvent implements \JsonSerializable, EventInterface
      * @var Collection<int, ResourceReferenceInterface>
      */
     #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
-    public readonly Collection $relatedReferences;
+    private Collection $relatedReferences;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -98,33 +93,10 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     }
 
     /**
-     * @return SerializedEvent
+     * @return Collection<int, ResourceReferenceInterface>
      */
-    public function jsonSerialize(): array
+    public function getRelatedReferences(): Collection
     {
-        $data = array_merge(
-            [
-                'sequence_number' => $this->getId(),
-                'type' => $this->type,
-                'body' => $this->payload,
-            ],
-            $this->reference->toArray(),
-        );
-
-        $references = [];
-        foreach ($this->relatedReferences as $reference) {
-            $references[] = $reference;
-        }
-
-        if (0 !== count($references)) {
-            $data['related_references'] = new ResourceReferenceCollection($references)->toArray();
-        }
-
-        return $data;
-    }
-
-    public function toArray(): array
-    {
-        return $this->jsonSerialize();
+        return $this->relatedReferences;
     }
 }
