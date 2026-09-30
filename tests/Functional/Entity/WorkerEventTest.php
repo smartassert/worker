@@ -56,7 +56,6 @@ class WorkerEventTest extends AbstractEntityTestCase
                     EventTypeInterface::COMPILATION_FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
-                )->withRelatedReferences(
                     new ResourceReferenceCollection([
                         new WorkerEventReference('label 1', 'reference 1'),
                         new WorkerEventReference('label 2', 'reference 2'),
