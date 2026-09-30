@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\MessageDispatcher;
 
 use App\Event\NotifiableApplicationStateChangedEvent;
-use App\Event\NotifiableEventInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface as MessengerExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -14,7 +13,7 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
 use Symfony\Component\Webhook\Subscriber;
 
-readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
+readonly class StateChangeSendWebhookDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
@@ -36,7 +35,7 @@ readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
     /**
      * @throws MessengerExceptionInterface
      */
-    public function dispatch(NotifiableEventInterface $event): void
+    public function dispatch(NotifiableApplicationStateChangedEvent $event): void
     {
         $notifyUrl = $event->getNotifyUrl();
         if (null === $notifyUrl) {
