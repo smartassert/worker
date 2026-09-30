@@ -51,13 +51,20 @@ class WorkerEvent implements \JsonSerializable, EventInterface
      * @param non-empty-string $type
      * @param array<mixed>     $payload
      */
-    public function __construct(string $type, ResourceReferenceInterface $reference, array $payload)
-    {
+    public function __construct(
+        string $type,
+        ResourceReferenceInterface $reference,
+        array $payload,
+        ?ResourceReferenceCollectionInterface $relatedReferences = null,
+    ) {
         $this->state = WorkerEventState::AWAITING;
         $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
-        $this->relatedReferences = new ArrayCollection();
+
+        $this->relatedReferences = $relatedReferences instanceof ResourceReferenceCollectionInterface
+            ? new ArrayCollection($relatedReferences->getReferences())
+            : new ArrayCollection();
     }
 
     /**

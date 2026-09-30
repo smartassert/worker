@@ -242,10 +242,11 @@ class WorkerEventFactoryTest extends WebTestCase
                             'Test/test2.yaml',
                         ],
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
-                    new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
+                        new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
+                    ])
+                ),
             ],
             CompilationStartedEvent::class => [
                 'event' => new CompilationStartedEvent($testSource),
@@ -268,10 +269,11 @@ class WorkerEventFactoryTest extends WebTestCase
                     [
                         'source' => $testSource,
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
-                    new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
+                        new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
+                    ]),
+                ),
             ],
             CompilationFailedEvent::class => [
                 'event' => new CompilationFailedEvent(
@@ -330,9 +332,10 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ]),
+                ),
             ],
             'step/passed' => [
                 'event' => new StepEvent(
@@ -393,9 +396,10 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ]),
+                ),
             ],
             'test/failed' => [
                 'event' => new TestEvent(
@@ -414,9 +418,10 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ]),
+                ),
             ],
             JobTimeoutEvent::class => [
                 'event' => new JobTimeoutEvent(self::JOB_LABEL, 10),
@@ -456,9 +461,10 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                ])),
+                    new ResourceReferenceCollection([
+                        new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
+                    ]),
+                ),
             ],
             'step/exception' => [
                 'event' => new StepEvent(
