@@ -9,16 +9,11 @@ use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
-/**
- * @phpstan-import-type SerializedEvent from EventInterface
- */
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
-class WorkerEvent implements \JsonSerializable, EventInterface
+class WorkerEvent
 {
     #[ORM\Column(type: 'string', length: 255)]
     public readonly string $type;
@@ -33,6 +28,12 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     #[ORM\JoinColumn(nullable: false)]
     public readonly ResourceReferenceInterface $reference;
 
+    /**
+     * @var Collection<int, ResourceReferenceInterface>
+     */
+    #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
+    private Collection $relatedReferences;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -40,12 +41,6 @@ class WorkerEvent implements \JsonSerializable, EventInterface
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
-
-    /**
-     * @var Collection<int, ResourceReferenceInterface>
-     */
-    #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
-    private Collection $relatedReferences;
 
     /**
      * @param non-empty-string $type
@@ -88,40 +83,20 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     }
 
     /**
-     * @return SerializedEvent
+     * @return non-empty-string
      */
-    public function jsonSerialize(): array
+    public function getType(): string
     {
-        $data = array_merge(
-            [
-                'sequence_number' => $this->getId(),
-                'type' => $this->type,
-                'body' => $this->payload,
-            ],
-            $this->reference->toArray(),
-        );
+        \assert('' !== $this->type);
 
-        $references = [];
-        foreach ($this->relatedReferences as $reference) {
-            $references[] = $reference;
-        }
-
-        if (0 !== count($references)) {
-            $data['related_references'] = new ResourceReferenceCollection($references)->toArray();
-        }
-
-        return $data;
+        return $this->type;
     }
 
-    public function toArray(): array
+    /**
+     * @return Collection<int, ResourceReferenceInterface>
+     */
+    public function getRelatedReferences(): Collection
     {
-        return $this->jsonSerialize();
-    }
-
-    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): WorkerEvent
-    {
-        $this->relatedReferences = new ArrayCollection($relatedReferences->getReferences());
-
-        return $this;
+        return $this->relatedReferences;
     }
 }

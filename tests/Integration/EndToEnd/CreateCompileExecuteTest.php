@@ -251,6 +251,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => $firstSequenceNumber,
                             'type' => 'job/started',
                             'body' => [
@@ -279,6 +280,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-started',
                             'body' => [],
@@ -286,6 +288,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -298,6 +301,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/passed',
                             'body' => [
@@ -320,6 +324,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -332,6 +337,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/failed',
                             'body' => [
@@ -365,6 +371,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'job/ended',
                             'body' => [
@@ -416,6 +423,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => $firstSequenceNumber,
                             'type' => 'job/started',
                             'body' => [
@@ -436,6 +444,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-started',
                             'body' => [],
@@ -443,6 +452,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -455,6 +465,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/failed',
                             'body' => [
@@ -488,6 +499,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'job/ended',
                             'body' => [
@@ -579,6 +591,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => $firstSequenceNumber,
                             'type' => 'job/started',
                             'body' => [
@@ -615,6 +628,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-started',
                             'body' => [],
@@ -622,6 +636,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -634,6 +649,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/passed',
                             'body' => [
@@ -656,6 +672,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -668,6 +685,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/passed',
                             'body' => [
@@ -690,6 +708,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -702,6 +721,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/passed',
                             'body' => [
@@ -724,6 +744,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-completed',
                             'body' => [],
@@ -731,6 +752,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/execution-started',
                             'body' => [],
@@ -738,6 +760,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/started',
                             'body' => [
@@ -773,6 +796,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/passed',
                             'body' => [
@@ -806,6 +830,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/passed',
                             'body' => [
@@ -841,6 +866,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/started',
                             'body' => [
@@ -876,6 +902,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/passed',
                             'body' => [
@@ -904,6 +931,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/passed',
                             'body' => [
@@ -939,6 +967,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/started',
                             'body' => [
@@ -974,6 +1003,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/passed',
                             'body' => [
@@ -1002,6 +1032,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/passed',
                             'body' => [
@@ -1037,6 +1068,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/started',
                             'body' => [
@@ -1072,6 +1104,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/passed',
                             'body' => [
@@ -1100,6 +1133,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/passed',
                             'body' => [
@@ -1134,6 +1168,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/execution-completed',
                             'body' => [],
@@ -1141,6 +1176,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'job/ended',
                             'body' => [
@@ -1203,6 +1239,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                 'expectedRequestBodiesCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
                     return [
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => $firstSequenceNumber,
                             'type' => 'job/started',
                             'body' => [
@@ -1223,6 +1260,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-started',
                             'body' => [],
@@ -1230,6 +1268,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/started',
                             'body' => [
@@ -1242,6 +1281,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'compilation/passed',
                             'body' => [
@@ -1272,6 +1312,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/compilation-completed',
                             'body' => [],
@@ -1279,6 +1320,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'lifecycle/execution-started',
                             'body' => [],
@@ -1286,6 +1328,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             'reference' => md5($workerJobLabel),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/started',
                             'body' => [
@@ -1330,6 +1373,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/passed',
                             'body' => [
@@ -1358,6 +1402,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'step/failed',
                             'body' => [
@@ -1403,6 +1448,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ),
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'test/failed',
                             'body' => [
@@ -1447,6 +1493,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                             ],
                         ],
                         [
+                            'job' => $workerJobLabel,
                             'sequence_number' => ++$firstSequenceNumber,
                             'type' => 'job/ended',
                             'body' => [
