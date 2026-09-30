@@ -33,6 +33,12 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     #[ORM\JoinColumn(nullable: false)]
     public readonly ResourceReferenceInterface $reference;
 
+    /**
+     * @var Collection<int, ResourceReferenceInterface>
+     */
+    #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
+    public readonly Collection $relatedReferences;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -40,12 +46,6 @@ class WorkerEvent implements \JsonSerializable, EventInterface
 
     #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
-
-    /**
-     * @var Collection<int, ResourceReferenceInterface>
-     */
-    #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
-    private Collection $relatedReferences;
 
     /**
      * @param non-empty-string $type
@@ -85,6 +85,16 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     public function setState(WorkerEventState $state): void
     {
         $this->state = $state;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getType(): string
+    {
+        \assert('' !== $this->type);
+
+        return $this->type;
     }
 
     /**
