@@ -157,6 +157,6 @@ services:
 
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
 
-    App\MessageDispatcher\SendWebhookMessageDispatcher:
+    App\MessageDispatcher\StateChangeSendWebhookDispatcher:
         arguments:
             $secret: '%state_notify_secret%'
