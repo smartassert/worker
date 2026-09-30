@@ -117,11 +117,4 @@ class WorkerEvent implements \JsonSerializable, EventInterface
     {
         return $this->jsonSerialize();
     }
-
-    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): WorkerEvent
-    {
-        $this->relatedReferences = new ArrayCollection($relatedReferences->getReferences());
-
-        return $this;
-    }
 }
