@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
 use Symfony\Component\Webhook\Subscriber;
 
-readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
+readonly class StateChangeSendWebhookDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
@@ -36,7 +36,7 @@ readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
     /**
      * @throws MessengerExceptionInterface
      */
-    public function dispatch(NotifiableEventInterface $event): void
+    public function dispatch(NotifiableApplicationStateChangedEvent $event): void
     {
         $notifyUrl = $event->getNotifyUrl();
         if (null === $notifyUrl) {
