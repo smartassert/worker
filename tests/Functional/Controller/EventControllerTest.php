@@ -9,6 +9,7 @@ use App\Entity\WorkerEvent;
 use App\Entity\WorkerEventReference;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Tests\Model\EnvironmentSetup;
+use App\Tests\Model\JobSetup;
 use App\Tests\Model\WorkerEventSetup;
 use App\Tests\Services\Asserter\JsonResponseAsserter;
 use App\Tests\Services\ClientRequestSender;
@@ -62,8 +63,12 @@ class EventControllerTest extends WebTestCase
         $eventReference = md5((string) rand());
         $eventReferenceEntity = new WorkerEventReference($eventLabel, $eventReference);
 
+        $jobLabel = md5((string) rand());
+        $jobSetup = new JobSetup()->withLabel($jobLabel);
+
         $environment = $this->environmentFactory->create(
             new EnvironmentSetup()
+                ->withJobSetup($jobSetup)
                 ->withWorkerEventSetups([
                     new WorkerEventSetup()
                         ->withPayload($eventPayload)
@@ -79,6 +84,7 @@ class EventControllerTest extends WebTestCase
         $this->jsonResponseAsserter->assertJsonResponse(
             200,
             [
+                'job' => $jobLabel,
                 'label' => $eventLabel,
                 'reference' => $eventReference,
                 'sequence_number' => $event->getId(),

@@ -8,7 +8,10 @@ use App\Entity\WorkerEvent;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
-readonly class NotifiableEvent implements EventInterface
+/**
+ * @phpstan-import-type SerializedEvent from EventInterface
+ */
+readonly class SerializableEvent implements EventInterface, \JsonSerializable
 {
     /**
      * @param non-empty-string $job
@@ -17,6 +20,14 @@ readonly class NotifiableEvent implements EventInterface
         private string $job,
         private WorkerEvent $eventEntity,
     ) {}
+
+    /**
+     * @return SerializedEvent
+     */
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
 
     public function toArray(): array
     {

@@ -6,7 +6,7 @@ namespace App\MessageHandler;
 
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
-use App\Model\NotifiableEvent;
+use App\Model\SerializableEvent;
 use App\Repository\JobRepository;
 use App\Repository\WorkerEventRepository;
 use App\Services\WorkerEventStateMutator;
@@ -38,7 +38,7 @@ readonly class DeliverEventHandler
             return;
         }
 
-        $notifiableEvent = new NotifiableEvent($job->getLabel(), $eventEntity);
+        $notifiableEvent = new SerializableEvent($job->getLabel(), $eventEntity);
 
         $this->workerEventStateMutator->setSending($eventEntity);
 
