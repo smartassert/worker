@@ -19,6 +19,8 @@ services:
         arguments:
             $handler: '@app.tests.services.guzzle.handler.curl'
 
+    SmartAssert\ResultsClient\JobFactory: ~
+
     SmartAssert\ResultsClient\ClientInterface:
         class: SmartAssert\ResultsClient\Client
         public: true

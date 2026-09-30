@@ -58,7 +58,7 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
         \assert($resultsClient instanceof ResultsClient);
 
         $jobLabel = (string) new Ulid();
-        $this->resultsJob = $resultsClient->createJob($apiToken, $jobLabel);
+        $this->resultsJob = $resultsClient->createJob($apiToken, $jobLabel, null);
     }
 
     /**
