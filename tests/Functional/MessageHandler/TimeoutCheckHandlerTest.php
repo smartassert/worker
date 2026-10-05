@@ -132,8 +132,8 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $labelProperty = $reflectionClass->getProperty('label');
         $labelProperty->setValue($reflectionJob, $job->getLabel());
 
-        $eventAddUrlProperty = $reflectionClass->getProperty('eventAddUrl');
-        $eventAddUrlProperty->setValue($reflectionJob, $job->getEventAddUrl());
+        $eventAddUrlProperty = $reflectionClass->getProperty('eventNotifyUrl');
+        $eventAddUrlProperty->setValue($reflectionJob, $job->getEventNotifyUrl());
 
         $testPathsProperty = $reflectionClass->getProperty('testPaths');
         $testPathsProperty->setValue($reflectionJob, $job->getTestPaths());
