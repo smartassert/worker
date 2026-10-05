@@ -45,7 +45,7 @@ readonly class DeliverEventHandler
         $this->eventDispatcher->dispatch(new SendingEvent($eventEntity));
 
         try {
-            $this->resultsClient->add($job->getEventAddUrl(), $notifiableEvent);
+            $this->resultsClient->add($job->getEventNotifyUrl(), $notifiableEvent);
         } catch (\Throwable $e) {
             throw new EventDeliveryException($eventEntity, $e);
         }
