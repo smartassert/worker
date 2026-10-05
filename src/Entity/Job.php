@@ -73,13 +73,8 @@ class Job
         return $this->label;
     }
 
-    /**
-     * @return non-empty-string
-     */
     public function getEventAddUrl(): string
     {
-        \assert('' !== $this->eventAddUrl);
-
         return $this->eventAddUrl;
     }
 
