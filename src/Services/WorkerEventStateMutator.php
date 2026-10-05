@@ -15,7 +15,7 @@ final readonly class WorkerEventStateMutator
 
     public function setQueued(WorkerEvent $workerEvent): void
     {
-        if (in_array($workerEvent->getState(), [WorkerEventState::AWAITING, WorkerEventState::SENDING])) {
+        if (WorkerEventState::SENDING == $workerEvent->getState()) {
             $this->set($workerEvent, WorkerEventState::QUEUED);
         }
     }

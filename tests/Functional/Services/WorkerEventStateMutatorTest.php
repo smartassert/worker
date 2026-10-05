@@ -59,10 +59,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
     public static function setQueuedDataProvider(): array
     {
         return [
-            WorkerEventState::AWAITING->value => [
-                'initialState' => WorkerEventState::AWAITING,
-                'expectedState' => WorkerEventState::QUEUED,
-            ],
             WorkerEventState::QUEUED->value => [
                 'initialState' => WorkerEventState::QUEUED,
                 'expectedState' => WorkerEventState::QUEUED,
@@ -103,10 +99,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
     public static function setSendingDataProvider(): array
     {
         return [
-            WorkerEventState::AWAITING->value => [
-                'initialState' => WorkerEventState::AWAITING,
-                'expectedState' => WorkerEventState::AWAITING,
-            ],
             WorkerEventState::QUEUED->value => [
                 'initialState' => WorkerEventState::QUEUED,
                 'expectedState' => WorkerEventState::SENDING,
@@ -147,10 +139,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
     public static function setFailedDataProvider(): array
     {
         return [
-            WorkerEventState::AWAITING->value => [
-                'initialState' => WorkerEventState::AWAITING,
-                'expectedState' => WorkerEventState::AWAITING,
-            ],
             WorkerEventState::QUEUED->value => [
                 'initialState' => WorkerEventState::QUEUED,
                 'expectedState' => WorkerEventState::FAILED,
@@ -191,10 +179,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
     public static function setCompleteDataProvider(): array
     {
         return [
-            WorkerEventState::AWAITING->value => [
-                'initialState' => WorkerEventState::AWAITING,
-                'expectedState' => WorkerEventState::AWAITING,
-            ],
             WorkerEventState::QUEUED->value => [
                 'initialState' => WorkerEventState::QUEUED,
                 'expectedState' => WorkerEventState::QUEUED,

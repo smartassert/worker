@@ -52,7 +52,7 @@ class WorkerEvent
         array $payload,
         ?ResourceReferenceCollectionInterface $relatedReferences = null,
     ) {
-        $this->state = WorkerEventState::AWAITING;
+        $this->state = WorkerEventState::QUEUED;
         $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
