@@ -26,6 +26,9 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $eventNotifyUrl = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_URL);
         $eventNotifyUrl = is_string($eventNotifyUrl) ? trim($eventNotifyUrl) : '';
 
+        $eventNotifyToken = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN);
+        $eventNotifyToken = is_string($eventNotifyToken) ? trim($eventNotifyToken) : '';
+
         $maximumDurationInSeconds = null;
         if ($request->request->has(CreateJobRequest::KEY_MAXIMUM_DURATION)) {
             $maximumDurationInRequest = $request->request->get(CreateJobRequest::KEY_MAXIMUM_DURATION);
@@ -45,6 +48,7 @@ class CreateJobRequestResolver implements ValueResolverInterface
         return [new CreateJobRequest(
             $label,
             $eventNotifyUrl,
+            $eventNotifyToken,
             $maximumDurationInSeconds,
             $sourceContent,
             $stateNotifyUrl,

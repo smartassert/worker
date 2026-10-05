@@ -30,6 +30,7 @@ class EnvironmentFactory
             $job = new Job(
                 $jobSetup->getLabel(),
                 $jobSetup->getEventNotifyUrl(),
+                $jobSetup->getEventNotifyToken(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
                 $jobSetup->getStateNotifyUrl(),

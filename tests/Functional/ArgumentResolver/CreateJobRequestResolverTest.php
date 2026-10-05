@@ -50,6 +50,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'expected' => new CreateJobRequest(
                     '',
                     '',
+                    '',
                     null,
                     '',
                     null,
@@ -60,6 +61,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                     request: [
                         CreateJobRequest::KEY_LABEL => '',
                         CreateJobRequest::KEY_EVENT_NOTIFY_URL => '',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
@@ -67,22 +69,25 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'expected' => new CreateJobRequest(
                     '',
                     '',
+                    '',
                     null,
                     '',
                     null,
                 ),
             ],
-            'label, event_delivery_url, maximum_duration_in_seconds populated' => [
+            'label, event_delivery_url, event_delivery_token, maximum_duration_in_seconds populated' => [
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
                         CreateJobRequest::KEY_EVENT_NOTIFY_URL => '',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
+                    '',
                     '',
                     300,
                     '',
@@ -93,7 +98,8 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'event-add-url-value',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'event-notify-url-value',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-token-value',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
@@ -103,7 +109,8 @@ class CreateJobRequestResolverTest extends WebTestCase
                 ),
                 'expected' => new CreateJobRequest(
                     'label value',
-                    'event-add-url-value',
+                    'event-notify-url-value',
+                    'event-notify-token-value',
                     300,
                     <<< 'EOT'
                         ---
@@ -115,6 +122,7 @@ class CreateJobRequestResolverTest extends WebTestCase
             'null state notify url' => [
                 'request' => new Request(),
                 'expected' => new CreateJobRequest(
+                    '',
                     '',
                     '',
                     null,
@@ -131,6 +139,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'expected' => new CreateJobRequest(
                     '',
                     '',
+                    '',
                     null,
                     '',
                     null,
@@ -143,6 +152,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                     ],
                 ),
                 'expected' => new CreateJobRequest(
+                    '',
                     '',
                     '',
                     null,

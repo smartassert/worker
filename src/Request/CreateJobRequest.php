@@ -8,6 +8,7 @@ class CreateJobRequest
 {
     public const string KEY_LABEL = 'label';
     public const string KEY_EVENT_NOTIFY_URL = 'event_notify_url';
+    public const string KEY_EVENT_NOTIFY_TOKEN = 'event_notify_token';
     public const string KEY_MAXIMUM_DURATION = 'maximum_duration_in_seconds';
     public const string KEY_SOURCE = 'source';
     public const string STATE_NOTIFY_URL = 'state_notify_url';
@@ -15,6 +16,7 @@ class CreateJobRequest
     public function __construct(
         public readonly string $label,
         public readonly string $eventNotifyUrl,
+        public readonly string $eventNotifyToken,
         public readonly ?int $maximumDurationInSeconds,
         public readonly string $source,
         public readonly ?string $stateNotifyUrl,
