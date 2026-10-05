@@ -22,6 +22,7 @@
         "symfony/framework-bundle": "8.1.*",
         "symfony/http-client": "8.1.*",
         "symfony/messenger": "8.1.*",
+        "symfony/monolog-bundle": "^4.1",
         "symfony/serializer": "8.1.*",
         "symfony/webhook": "8.1.*",
         "symfony/yaml": "8.1.*",
