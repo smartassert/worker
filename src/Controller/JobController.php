@@ -55,8 +55,8 @@ class JobController
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->eventAddUrl) {
-            return new ErrorResponse('event_add_url/missing');
+        if ('' === $request->eventNotifyUrl) {
+            return new ErrorResponse('event_notify_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
@@ -91,7 +91,7 @@ class JobController
 
         $job = new Job(
             $request->label,
-            $request->eventAddUrl,
+            $request->eventNotifyUrl,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths,
             $stateNotifyUrl,
