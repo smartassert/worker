@@ -21,7 +21,7 @@ class Job
     public ?JobEndState $endState;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private readonly string $eventAddUrl;
+    private readonly string $eventNotifyUrl;
 
     /**
      * @var string[]
@@ -50,7 +50,7 @@ class Job
         ?string $stateNotifyUrl,
     ) {
         $this->label = $label;
-        $this->eventAddUrl = $eventAddUrl;
+        $this->eventNotifyUrl = $eventAddUrl;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
@@ -73,9 +73,9 @@ class Job
         return $this->label;
     }
 
-    public function getEventAddUrl(): string
+    public function getEventNotifyUrl(): string
     {
-        return $this->eventAddUrl;
+        return $this->eventNotifyUrl;
     }
 
     /**
