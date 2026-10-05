@@ -126,12 +126,14 @@ class JobControllerTest extends WebTestCase
     {
         $label = 'label value';
         $eventNotifyUrl = 'https://example.com/results';
+        $eventNotifyToken = 'event-notify-token';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
         $nonEmptyPayload = [
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
         ];
@@ -220,6 +222,7 @@ class JobControllerTest extends WebTestCase
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'https://example.com/results',
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-url',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
 
@@ -448,6 +451,7 @@ class JobControllerTest extends WebTestCase
     {
         $label = md5((string) rand());
         $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyToken = 'event-notify-token';
         $maximumDuration = rand(1, 1000);
 
         return [
@@ -457,11 +461,13 @@ class JobControllerTest extends WebTestCase
                 ) use (
                     $label,
                     $eventNotifyUrl,
+                    $eventNotifyToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -505,11 +511,13 @@ class JobControllerTest extends WebTestCase
                 ) use (
                     $label,
                     $eventNotifyUrl,
+                    $eventNotifyToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
@@ -571,11 +579,13 @@ class JobControllerTest extends WebTestCase
                 ) use (
                     $label,
                     $eventNotifyUrl,
+                    $eventNotifyToken,
                     $maximumDuration
                 ): array {
                     return [
                         CreateJobRequest::KEY_LABEL => $label,
                         CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
                         CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
