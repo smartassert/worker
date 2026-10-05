@@ -59,7 +59,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => '',
-                        CreateJobRequest::KEY_EVENT_ADD_URL => '',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => '',
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
@@ -76,7 +76,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_EVENT_ADD_URL => '',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => '',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => '',
                     ],
@@ -93,7 +93,7 @@ class CreateJobRequestResolverTest extends WebTestCase
                 'request' => new Request(
                     request: [
                         CreateJobRequest::KEY_LABEL => 'label value',
-                        CreateJobRequest::KEY_EVENT_ADD_URL => 'event-add-url-value',
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'event-add-url-value',
                         CreateJobRequest::KEY_MAXIMUM_DURATION => 300,
                         CreateJobRequest::KEY_SOURCE => <<< 'EOT'
                         ---
