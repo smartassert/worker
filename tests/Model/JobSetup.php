@@ -27,6 +27,11 @@ class JobSetup
      */
     private array $testPaths;
 
+    /**
+     * @var ?non-empty-string
+     */
+    private ?string $stateNotifyUrl;
+
     public function __construct()
     {
         $this->label = md5('label content');
@@ -34,6 +39,7 @@ class JobSetup
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
         $this->testPaths = ['test.yml'];
+        $this->stateNotifyUrl = null;
     }
 
     /**
@@ -123,5 +129,24 @@ class JobSetup
         $new->testPaths = $testPaths;
 
         return $new;
+    }
+
+    /**
+     * @param non-empty-string $url
+     */
+    public function withStateNotifyUrl(string $url): self
+    {
+        $new = clone $this;
+        $new->stateNotifyUrl = $url;
+
+        return $new;
+    }
+
+    /**
+     * @return ?non-empty-string
+     */
+    public function getStateNotifyUrl(): ?string
+    {
+        return $this->stateNotifyUrl;
     }
 }

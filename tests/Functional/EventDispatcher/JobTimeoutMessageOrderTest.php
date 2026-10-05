@@ -49,7 +49,8 @@ class JobTimeoutMessageOrderTest extends WebTestCase
             md5((string) rand()),
             'results-token',
             600,
-            ['test.yml']
+            ['test.yml'],
+            null,
         );
 
         $jobRepository = self::getContainer()->get(JobRepository::class);

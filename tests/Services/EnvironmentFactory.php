@@ -32,6 +32,7 @@ class EnvironmentFactory
                 $jobSetup->getEventAddUrl(),
                 $jobSetup->getMaximumDurationInSeconds(),
                 $jobSetup->getTestPaths(),
+                $jobSetup->getStateNotifyUrl(),
             );
 
             $this->jobRepository->add($job);
