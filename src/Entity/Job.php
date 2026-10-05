@@ -38,19 +38,19 @@ class Job
 
     /**
      * @param non-empty-string             $label
-     * @param non-empty-string             $eventAddUrl
+     * @param non-empty-string             $eventNotifyUrl
      * @param array<int, non-empty-string> $testPaths
      * @param ?non-empty-string            $stateNotifyUrl
      */
     public function __construct(
         string $label,
-        string $eventAddUrl,
+        string $eventNotifyUrl,
         int $maximumDurationInSeconds,
         array $testPaths,
         ?string $stateNotifyUrl,
     ) {
         $this->label = $label;
-        $this->eventNotifyUrl = $eventAddUrl;
+        $this->eventNotifyUrl = $eventNotifyUrl;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
