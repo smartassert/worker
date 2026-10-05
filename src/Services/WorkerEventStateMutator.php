@@ -13,13 +13,6 @@ final readonly class WorkerEventStateMutator
         private EntityMutator $entityMutator,
     ) {}
 
-    public function setQueued(WorkerEvent $workerEvent): void
-    {
-        if (WorkerEventState::SENDING == $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEventState::QUEUED);
-        }
-    }
-
     public function setSending(WorkerEvent $workerEvent): void
     {
         if (WorkerEventState::QUEUED === $workerEvent->getState()) {

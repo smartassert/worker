@@ -38,46 +38,6 @@ class WorkerEventStateMutatorTest extends WebTestCase
         }
     }
 
-    #[DataProvider('setQueuedDataProvider')]
-    public function testSetQueued(WorkerEventState $initialState, WorkerEventState $expectedState): void
-    {
-        foreach ($this->createEntities() as $workerEvent) {
-            $this->doSetAsStateTest(
-                $workerEvent,
-                $initialState,
-                $expectedState,
-                function (WorkerEvent $workerEvent) {
-                    $this->stateMutator->setQueued($workerEvent);
-                }
-            );
-        }
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public static function setQueuedDataProvider(): array
-    {
-        return [
-            WorkerEventState::QUEUED->value => [
-                'initialState' => WorkerEventState::QUEUED,
-                'expectedState' => WorkerEventState::QUEUED,
-            ],
-            WorkerEventState::SENDING->value => [
-                'initialState' => WorkerEventState::SENDING,
-                'expectedState' => WorkerEventState::QUEUED,
-            ],
-            WorkerEventState::FAILED->value => [
-                'initialState' => WorkerEventState::FAILED,
-                'expectedState' => WorkerEventState::FAILED,
-            ],
-            WorkerEventState::COMPLETE->value => [
-                'initialState' => WorkerEventState::COMPLETE,
-                'expectedState' => WorkerEventState::COMPLETE,
-            ],
-        ];
-    }
-
     #[DataProvider('setSendingDataProvider')]
     public function testSetSending(WorkerEventState $initialState, WorkerEventState $expectedState): void
     {
