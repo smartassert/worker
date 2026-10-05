@@ -18,7 +18,7 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
     public const string REMOTE_EVENT_NAME = 'worker.event';
 
     public function __construct(
-        private readonly Job $job,
+        public readonly Job $job,
         private readonly WorkerEvent $workerEvent,
         private readonly EmittableEventInterface $event,
     ) {}
