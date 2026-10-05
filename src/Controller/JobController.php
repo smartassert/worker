@@ -56,7 +56,7 @@ class JobController
         }
 
         if ('' === $request->eventNotifyUrl) {
-            return new ErrorResponse('event_add_url/missing');
+            return new ErrorResponse('event_notify_url/missing');
         }
 
         if (null === $request->maximumDurationInSeconds) {
