@@ -23,6 +23,9 @@ class Job
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private readonly string $eventNotifyUrl;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private readonly string $eventNotifyToken;
+
     /**
      * @var string[]
      */
@@ -39,18 +42,21 @@ class Job
     /**
      * @param non-empty-string             $label
      * @param non-empty-string             $eventNotifyUrl
+     * @param non-empty-string             $eventNotifyToken
      * @param array<int, non-empty-string> $testPaths
      * @param ?non-empty-string            $stateNotifyUrl
      */
     public function __construct(
         string $label,
         string $eventNotifyUrl,
+        string $eventNotifyToken,
         int $maximumDurationInSeconds,
         array $testPaths,
         ?string $stateNotifyUrl,
     ) {
         $this->label = $label;
         $this->eventNotifyUrl = $eventNotifyUrl;
+        $this->eventNotifyToken = $eventNotifyToken;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
@@ -76,6 +82,11 @@ class Job
     public function getEventNotifyUrl(): string
     {
         return $this->eventNotifyUrl;
+    }
+
+    public function getEventNotifyToken(): string
+    {
+        return $this->eventNotifyToken;
     }
 
     /**
