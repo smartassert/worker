@@ -43,7 +43,7 @@ readonly class DeliverEventHandler
         $this->workerEventStateMutator->setSending($eventEntity);
 
         try {
-            $this->resultsClient->add($job->getEventAddUrl(), $notifiableEvent);
+            $this->resultsClient->add($job->getEventNotifyUrl(), $notifiableEvent);
         } catch (\Throwable $e) {
             throw new EventDeliveryException($eventEntity, $e);
         }
