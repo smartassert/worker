@@ -85,6 +85,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $requestPayload = [
             CreateJobRequest::KEY_LABEL => $jobLabel,
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'http://localhost:8080',
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
         ];
