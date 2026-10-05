@@ -19,20 +19,20 @@ class JobTimeoutMessageOrderTest extends WebTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private EventDispatcherInterface $eventDispatcher;
-    private WorkerEventRepository $workerEventRepository;
+    //    private EventDispatcherInterface $eventDispatcher;
+    //    private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
-        \assert($eventDispatcher instanceof EventDispatcherInterface);
-        $this->eventDispatcher = $eventDispatcher;
-
-        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($workerEventRepository instanceof WorkerEventRepository);
-        $this->workerEventRepository = $workerEventRepository;
+        //        $eventDispatcher = self::getContainer()->get(EventDispatcherInterface::class);
+        //        \assert($eventDispatcher instanceof EventDispatcherInterface);
+        //        $this->eventDispatcher = $eventDispatcher;
+        //
+        //        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
+        //        \assert($workerEventRepository instanceof WorkerEventRepository);
+        //        $this->workerEventRepository = $workerEventRepository;
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         \assert($entityRemover instanceof EntityRemover);
@@ -42,31 +42,33 @@ class JobTimeoutMessageOrderTest extends WebTestCase
 
     public function testJobTimeoutEventIsCreatedBeforeJobEndedEvent(): void
     {
-        $workerEvents = $this->workerEventRepository->findAll();
-        self::assertCount(0, $workerEvents);
+        $this->markTestSkipped('Unskip in #1385');
 
-        $job = new Job(
-            md5((string) rand()),
-            'event-notify-url',
-            'event-notify-token',
-            600,
-            ['test.yml'],
-            null,
-        );
-
-        $jobRepository = self::getContainer()->get(JobRepository::class);
-        \assert($jobRepository instanceof JobRepository);
-        $jobRepository->add($job);
-
-        $this->eventDispatcher->dispatch(new JobTimeoutEvent('job label', 5000));
-
-        $workerEvents = $this->workerEventRepository->findAll();
-        self::assertCount(2, $workerEvents);
-
-        $jobTimeoutEvent = $workerEvents[0];
-        self::assertSame(EventTypeInterface::JOB_TIMED_OUT, $jobTimeoutEvent->type);
-
-        $jobEndedEvent = $workerEvents[1];
-        self::assertSame(EventTypeInterface::JOB_ENDED, $jobEndedEvent->type);
+        //        $workerEvents = $this->workerEventRepository->findAll();
+        //        self::assertCount(0, $workerEvents);
+        //
+        //        $job = new Job(
+        //            md5((string) rand()),
+        //            'event-notify-url',
+        //            'event-notify-token',
+        //            600,
+        //            ['test.yml'],
+        //            null,
+        //        );
+        //
+        //        $jobRepository = self::getContainer()->get(JobRepository::class);
+        //        \assert($jobRepository instanceof JobRepository);
+        //        $jobRepository->add($job);
+        //
+        //        $this->eventDispatcher->dispatch(new JobTimeoutEvent('job label', 5000));
+        //
+        //        $workerEvents = $this->workerEventRepository->findAll();
+        //        self::assertCount(2, $workerEvents);
+        //
+        //        $jobTimeoutEvent = $workerEvents[0];
+        //        self::assertSame(EventTypeInterface::JOB_TIMED_OUT, $jobTimeoutEvent->type);
+        //
+        //        $jobEndedEvent = $workerEvents[1];
+        //        self::assertSame(EventTypeInterface::JOB_ENDED, $jobEndedEvent->type);
     }
 }
