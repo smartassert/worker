@@ -47,7 +47,7 @@ class Job
         string $eventAddUrl,
         int $maximumDurationInSeconds,
         array $testPaths,
-        ?string $stateNotifyUrl = null,
+        ?string $stateNotifyUrl,
     ) {
         $this->label = $label;
         $this->eventAddUrl = $eventAddUrl;

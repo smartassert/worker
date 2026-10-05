@@ -54,7 +54,8 @@ class TimeoutCheckHandlerTest extends WebTestCase
             md5((string) rand()),
             'https://results.example.com/event/add/' . new Ulid(),
             600,
-            ['test.yml']
+            ['test.yml'],
+            null,
         );
 
         $jobRepository = self::getContainer()->get(JobRepository::class);
@@ -91,7 +92,8 @@ class TimeoutCheckHandlerTest extends WebTestCase
                 md5((string) rand()),
                 'https://results.example.com/event/add/' . new Ulid(),
                 $jobMaximumDuration,
-                ['test.yml']
+                ['test.yml'],
+                null,
             )
         );
 
