@@ -59,6 +59,10 @@ class JobController
             return new ErrorResponse('event_notify_url/missing');
         }
 
+        if ('' === $request->eventNotifyToken) {
+            return new ErrorResponse('event_notify_token/missing');
+        }
+
         if (null === $request->maximumDurationInSeconds) {
             return new ErrorResponse('maximum_duration_in_seconds/missing');
         }
@@ -92,6 +96,7 @@ class JobController
         $job = new Job(
             $request->label,
             $request->eventNotifyUrl,
+            $request->eventNotifyToken,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths,
             $stateNotifyUrl,
