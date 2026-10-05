@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Entity\WorkerEvent;
 use App\Message\DeliverEventMessage;
+use App\Repository\WorkerEventRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 
-class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
+readonly class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private WorkerEventAborter $workerEventAborter,
+        private WorkerEventRepository $repository,
+        private WorkerEventStateMutator $workerEventStateMutator,
     ) {}
 
     /**
@@ -29,9 +32,19 @@ class WorkerMessageFailedEventSubscriber implements EventSubscriberInterface
     public function handleWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
     {
         $message = $event->getEnvelope()->getMessage();
-
-        if ($message instanceof DeliverEventMessage && false === $event->willRetry()) {
-            $this->workerEventAborter->abort($message->workerEventId);
+        if ($event->willRetry()) {
+            return;
         }
+
+        if (!$message instanceof DeliverEventMessage) {
+            return;
+        }
+
+        $workerEvent = $this->repository->find($message->workerEventId);
+        if (!$workerEvent instanceof WorkerEvent) {
+            return;
+        }
+
+        $this->workerEventStateMutator->setFailed($workerEvent);
     }
 }
