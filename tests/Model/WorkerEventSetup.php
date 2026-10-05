@@ -28,7 +28,7 @@ class WorkerEventSetup
     {
         $this->type = EventTypeInterface::COMPILATION_PASSED;
         $this->payload = [];
-        $this->state = WorkerEventState::AWAITING;
+        $this->state = WorkerEventState::QUEUED;
         $this->reference = new WorkerEventReference('non-empty label', 'non-empty reference');
     }
 

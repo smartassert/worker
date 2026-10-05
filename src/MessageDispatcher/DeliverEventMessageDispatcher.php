@@ -19,7 +19,6 @@ use App\Message\DeliverEventMessage;
 use App\Repository\JobRepository;
 use App\Services\EntityMutator;
 use App\Services\WorkerEventFactory;
-use App\Services\WorkerEventStateMutator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -29,7 +28,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
-        private readonly WorkerEventStateMutator $workerEventStateMutator,
         private readonly EntityMutator $entityMutator,
         private readonly JobRepository $jobRepository,
         private readonly WorkerEventFactory $workerEventFactory,
@@ -86,8 +84,6 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
 
         $workerEvent = $this->workerEventFactory->create($job, $event);
         $this->entityMutator->save($workerEvent);
-
-        $this->workerEventStateMutator->setQueued($workerEvent);
 
         return $this->messageBus->dispatch(new DeliverEventMessage($workerEvent->getId()));
     }

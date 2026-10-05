@@ -57,32 +57,29 @@ class EventDeliveryProgressTest extends WebTestCase
                     ->withJobSetup(new JobSetup()),
                 'expected' => EventDeliveryState::AWAITING,
             ],
-            'awaiting, sending, queued' => [
+            'sending, queued' => [
                 'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
-                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
                         new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
                         new WorkerEventSetup()->withState(WorkerEventState::SENDING),
                     ]),
                 'expected' => EventDeliveryState::RUNNING,
             ],
-            'awaiting, sending, queued, complete' => [
+            'sending, queued, complete' => [
                 'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
-                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
                         new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
                         new WorkerEventSetup()->withState(WorkerEventState::SENDING),
                         new WorkerEventSetup()->withState(WorkerEventState::COMPLETE),
                     ]),
                 'expected' => EventDeliveryState::RUNNING,
             ],
-            'awaiting, sending, queued, failed' => [
+            'sending, queued, failed' => [
                 'setup' => new EnvironmentSetup()
                     ->withJobSetup(new JobSetup())
                     ->withWorkerEventSetups([
-                        new WorkerEventSetup()->withState(WorkerEventState::AWAITING),
                         new WorkerEventSetup()->withState(WorkerEventState::QUEUED),
                         new WorkerEventSetup()->withState(WorkerEventState::SENDING),
                         new WorkerEventSetup()->withState(WorkerEventState::FAILED),
