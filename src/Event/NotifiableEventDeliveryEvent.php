@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Job;
+use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Model\SerializableApplicationStateInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -18,8 +19,14 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
 
     public function __construct(
         private readonly Job $job,
+        private readonly WorkerEvent $workerEvent,
         private readonly EmittableEventInterface $event,
     ) {}
+
+    public function getWorkerEvent(): WorkerEvent
+    {
+        return $this->workerEvent;
+    }
 
     public function getNotifyUrl(): ?string
     {

@@ -17,6 +17,8 @@ use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
 use App\Event\NotifiableEventDeliveryEvent;
 use App\Repository\JobRepository;
+use App\Services\EntityMutator;
+use App\Services\WorkerEventFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -24,6 +26,8 @@ final readonly class NotifiableEventDeliveryEventDispatcher implements EventSubs
 {
     public function __construct(
         private JobRepository $jobRepository,
+        private WorkerEventFactory $workerEventFactory,
+        private readonly EntityMutator $entityMutator,
         private EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -73,7 +77,10 @@ final readonly class NotifiableEventDeliveryEventDispatcher implements EventSubs
             return;
         }
 
-        $notifiableEvent = new NotifiableEventDeliveryEvent($job, $event);
+        $workerEvent = $this->workerEventFactory->create($job, $event);
+        $this->entityMutator->save($workerEvent);
+
+        $notifiableEvent = new NotifiableEventDeliveryEvent($job, $workerEvent, $event);
 
         $this->eventDispatcher->dispatch($notifiableEvent);
     }
