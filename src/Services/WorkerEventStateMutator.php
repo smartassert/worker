@@ -8,10 +8,14 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
 use App\Event\EventDelivery\SendingEvent;
 use App\Event\EventDelivery\SentEvent;
+use App\Event\NotifiableEventDeliveryEvent;
 use App\Message\DeliverEventMessage;
+use App\Model\WorkerEventRemoteEventId;
 use App\Repository\WorkerEventRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
 
 final readonly class WorkerEventStateMutator implements EventSubscriberInterface
 {
@@ -32,6 +36,9 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
             SentEvent::class => [
                 ['setCompleteForSentEvent', 0],
             ],
+            WorkerMessageReceivedEvent::class => [
+                ['setSendingForWorkerMessageReceivedEvent', 0],
+            ],
             WorkerMessageFailedEvent::class => [
                 ['setFailedForWorkerMessageFailedEvent', 0],
             ],
@@ -46,6 +53,32 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
     public function setCompleteForSentEvent(SentEvent $event): void
     {
         $this->setComplete($event->workerEvent);
+    }
+
+    public function setSendingForWorkerMessageReceivedEvent(WorkerMessageReceivedEvent $event): void
+    {
+        $message = $event->getEnvelope()->getMessage();
+        if (!$message instanceof SendWebhookMessage) {
+            return;
+        }
+
+        $remoteEvent = $message->getEvent();
+        if (NotifiableEventDeliveryEvent::REMOTE_EVENT_NAME !== $remoteEvent->getName()) {
+            return;
+        }
+
+        $remoteEventId = $remoteEvent->getId();
+        $workerEventId = WorkerEventRemoteEventId::fromString($remoteEventId)?->getWorkerEventId();
+        if (null === $workerEventId) {
+            return;
+        }
+
+        $workerEvent = $this->repository->find($workerEventId);
+        if (null === $workerEvent) {
+            return;
+        }
+
+        $this->setSending($workerEvent);
     }
 
     public function setFailedForWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
