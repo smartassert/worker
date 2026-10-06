@@ -42,7 +42,7 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
                 ['setSendingForWorkerMessageReceivedEvent', 0],
             ],
             WorkerMessageHandledEvent::class => [
-                ['setSendingForWorkerMessageReceivedEvent', 0],
+                ['setSentForWorkerMessageHandledEvent', 0],
             ],
             WorkerMessageFailedEvent::class => [
                 ['setFailedForWorkerMessageFailedEvent', 0],
@@ -77,16 +77,20 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
             return;
         }
 
-        if (!$message instanceof DeliverEventMessage) {
+        if ($message instanceof DeliverEventMessage) {
+            $workerEvent = $this->repository->find($message->workerEventId);
+            if (!$workerEvent instanceof WorkerEvent) {
+                return;
+            }
+
+            $this->setFailed($workerEvent);
+        }
+
+        if (!$message instanceof AbstractWorkerMessageEvent) {
             return;
         }
 
-        $workerEvent = $this->repository->find($message->workerEventId);
-        if (!$workerEvent instanceof WorkerEvent) {
-            return;
-        }
-
-        $this->setFailed($workerEvent);
+        $this->setForWorkerMessageEvent($event, WorkerEventState::FAILED);
     }
 
     private function setForWorkerMessageEvent(AbstractWorkerMessageEvent $event, WorkerEventState $state): void
