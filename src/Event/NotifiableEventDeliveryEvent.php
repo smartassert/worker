@@ -6,7 +6,6 @@ namespace App\Event;
 
 use App\Entity\Job;
 use App\Entity\WorkerEvent;
-use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Model\SerializableApplicationStateInterface;
 use App\Model\SerializableEvent;
 use Symfony\Contracts\EventDispatcher\Event;
