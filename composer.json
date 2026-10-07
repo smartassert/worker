@@ -147,7 +147,8 @@
         ],
         "results-setup": [
             "docker compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:database:create --if-not-exists",
-            "docker compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+            "docker compose -f tests/build/docker-compose.yml exec -T results-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
+            "docker compose -f tests/build/docker-compose.yml exec -T results-service php bin/console messenger:setup-transports"
         ],
         "integration-build": [
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker compose -f ./tests/build/docker-compose.yml build)"
