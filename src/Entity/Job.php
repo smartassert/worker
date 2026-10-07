@@ -21,7 +21,10 @@ class Job
     public ?JobEndState $endState;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    private readonly string $eventAddUrl;
+    private readonly string $eventNotifyUrl;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private readonly string $eventNotifyToken;
 
     /**
      * @var string[]
@@ -38,19 +41,22 @@ class Job
 
     /**
      * @param non-empty-string             $label
-     * @param non-empty-string             $eventAddUrl
+     * @param non-empty-string             $eventNotifyUrl
+     * @param non-empty-string             $eventNotifyToken
      * @param array<int, non-empty-string> $testPaths
      * @param ?non-empty-string            $stateNotifyUrl
      */
     public function __construct(
         string $label,
-        string $eventAddUrl,
+        string $eventNotifyUrl,
+        string $eventNotifyToken,
         int $maximumDurationInSeconds,
         array $testPaths,
         ?string $stateNotifyUrl,
     ) {
         $this->label = $label;
-        $this->eventAddUrl = $eventAddUrl;
+        $this->eventNotifyUrl = $eventNotifyUrl;
+        $this->eventNotifyToken = $eventNotifyToken;
         $this->maximumDurationInSeconds = $maximumDurationInSeconds;
         $this->testPaths = $testPaths;
         $this->startDateTime = new \DateTimeImmutable();
@@ -73,9 +79,14 @@ class Job
         return $this->label;
     }
 
-    public function getEventAddUrl(): string
+    public function getEventNotifyUrl(): string
     {
-        return $this->eventAddUrl;
+        return $this->eventNotifyUrl;
+    }
+
+    public function getEventNotifyToken(): string
+    {
+        return $this->eventNotifyToken;
     }
 
     /**

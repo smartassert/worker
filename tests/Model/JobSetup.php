@@ -14,7 +14,13 @@ class JobSetup
     /**
      * @var non-empty-string
      */
-    private string $eventAddUrl;
+    private string $eventNotifyUrl;
+
+    /**
+     * @var non-empty-string
+     */
+    private string $eventNotifyToken;
+
     private int $maximumDurationInSeconds;
 
     /**
@@ -35,7 +41,8 @@ class JobSetup
     public function __construct()
     {
         $this->label = md5('label content');
-        $this->eventAddUrl = 'https://results.example.com';
+        $this->eventNotifyUrl = 'https://results.example.com';
+        $this->eventNotifyToken = 'event_notify_token';
         $this->maximumDurationInSeconds = 600;
         $this->localSourcePaths = [];
         $this->testPaths = ['test.yml'];
@@ -53,9 +60,17 @@ class JobSetup
     /**
      * @return non-empty-string
      */
-    public function getEventAddUrl(): string
+    public function getEventNotifyUrl(): string
     {
-        return $this->eventAddUrl;
+        return $this->eventNotifyUrl;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getEventNotifyToken(): string
+    {
+        return $this->eventNotifyToken;
     }
 
     public function getMaximumDurationInSeconds(): int
@@ -93,10 +108,21 @@ class JobSetup
     /**
      * @param non-empty-string $url
      */
-    public function withEventAddUrl(string $url): self
+    public function withEventNotifyUrl(string $url): self
     {
         $new = clone $this;
-        $new->eventAddUrl = $url;
+        $new->eventNotifyUrl = $url;
+
+        return $new;
+    }
+
+    /**
+     * @param non-empty-string $token
+     */
+    public function withEventNotifyToken(string $token): self
+    {
+        $new = clone $this;
+        $new->eventNotifyToken = $token;
 
         return $new;
     }

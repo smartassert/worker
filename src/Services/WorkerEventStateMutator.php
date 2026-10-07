@@ -8,10 +8,15 @@ use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
 use App\Event\EventDelivery\SendingEvent;
 use App\Event\EventDelivery\SentEvent;
-use App\Message\DeliverEventMessage;
+use App\Event\NotifiableEventDeliveryEvent;
+use App\Model\WorkerEventRemoteEventId;
 use App\Repository\WorkerEventRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Event\AbstractWorkerMessageEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
 
 final readonly class WorkerEventStateMutator implements EventSubscriberInterface
 {
@@ -32,6 +37,12 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
             SentEvent::class => [
                 ['setCompleteForSentEvent', 0],
             ],
+            WorkerMessageReceivedEvent::class => [
+                ['setSendingForWorkerMessageReceivedEvent', 0],
+            ],
+            WorkerMessageHandledEvent::class => [
+                ['setSentForWorkerMessageHandledEvent', 0],
+            ],
             WorkerMessageFailedEvent::class => [
                 ['setFailedForWorkerMessageFailedEvent', 0],
             ],
@@ -48,23 +59,54 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
         $this->setComplete($event->workerEvent);
     }
 
+    public function setSendingForWorkerMessageReceivedEvent(WorkerMessageReceivedEvent $event): void
+    {
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setSending($workerEvent);
+        });
+    }
+
+    public function setSentForWorkerMessageHandledEvent(WorkerMessageHandledEvent $event): void
+    {
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setComplete($workerEvent);
+        });
+    }
+
     public function setFailedForWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
     {
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setFailed($workerEvent);
+        });
+    }
+
+    /**
+     * @param callable(WorkerEvent): void $action
+     */
+    private function setForWorkerMessageEvent(AbstractWorkerMessageEvent $event, callable $action): void
+    {
         $message = $event->getEnvelope()->getMessage();
-        if ($event->willRetry()) {
+        if (!$message instanceof SendWebhookMessage) {
             return;
         }
 
-        if (!$message instanceof DeliverEventMessage) {
+        $remoteEvent = $message->getEvent();
+        if (NotifiableEventDeliveryEvent::REMOTE_EVENT_NAME !== $remoteEvent->getName()) {
             return;
         }
 
-        $workerEvent = $this->repository->find($message->workerEventId);
-        if (!$workerEvent instanceof WorkerEvent) {
+        $remoteEventId = $remoteEvent->getId();
+        $workerEventId = WorkerEventRemoteEventId::fromString($remoteEventId)?->getWorkerEventId();
+        if (null === $workerEventId) {
             return;
         }
 
-        $this->setFailed($workerEvent);
+        $workerEvent = $this->repository->find($workerEventId);
+        if (null === $workerEvent) {
+            return;
+        }
+
+        $action($workerEvent);
     }
 
     private function setSending(WorkerEvent $workerEvent): void

@@ -23,8 +23,11 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $label = $request->request->get(CreateJobRequest::KEY_LABEL);
         $label = is_string($label) ? trim($label) : '';
 
-        $eventAddUrl = $request->request->get(CreateJobRequest::KEY_EVENT_ADD_URL);
-        $eventAddUrl = is_string($eventAddUrl) ? trim($eventAddUrl) : '';
+        $eventNotifyUrl = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_URL);
+        $eventNotifyUrl = is_string($eventNotifyUrl) ? trim($eventNotifyUrl) : '';
+
+        $eventNotifyToken = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN);
+        $eventNotifyToken = is_string($eventNotifyToken) ? trim($eventNotifyToken) : '';
 
         $maximumDurationInSeconds = null;
         if ($request->request->has(CreateJobRequest::KEY_MAXIMUM_DURATION)) {
@@ -42,6 +45,13 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $stateNotifyUrl = trim($stateNotifyUrl);
         $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
 
-        return [new CreateJobRequest($label, $eventAddUrl, $maximumDurationInSeconds, $sourceContent, $stateNotifyUrl)];
+        return [new CreateJobRequest(
+            $label,
+            $eventNotifyUrl,
+            $eventNotifyToken,
+            $maximumDurationInSeconds,
+            $sourceContent,
+            $stateNotifyUrl,
+        )];
     }
 }

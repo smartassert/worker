@@ -47,7 +47,8 @@ class JobTimeoutMessageOrderTest extends WebTestCase
 
         $job = new Job(
             md5((string) rand()),
-            'results-token',
+            'event-notify-url',
+            'event-notify-token',
             600,
             ['test.yml'],
             null,
