@@ -12,6 +12,7 @@ namespace App\Model;
  *      ended: bool,
  *      succeeded: bool,
  *    },
+ *    previous_states: array<non-empty-string>,
  *  }
  */
 interface SerializableComponentStateInterface extends \JsonSerializable
