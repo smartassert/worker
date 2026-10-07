@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Event;
 
 use App\Entity\Job;
-use App\Event\EmittableEvent\EmittableEventInterface;
+use App\Entity\WorkerEvent;
 use App\Model\SerializableApplicationStateInterface;
+use App\Model\SerializableEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -17,9 +18,14 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
     public const string REMOTE_EVENT_NAME = 'worker.event';
 
     public function __construct(
-        private readonly Job $job,
-        private readonly EmittableEventInterface $event,
+        public readonly Job $job,
+        private readonly WorkerEvent $workerEvent,
     ) {}
+
+    public function getWorkerEvent(): WorkerEvent
+    {
+        return $this->workerEvent;
+    }
 
     public function getNotifyUrl(): ?string
     {
@@ -36,6 +42,6 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
      */
     public function getPayload(): array
     {
-        return $this->event->getPayload();
+        return new SerializableEvent($this->job->getLabel(), $this->workerEvent)->toArray();
     }
 }
