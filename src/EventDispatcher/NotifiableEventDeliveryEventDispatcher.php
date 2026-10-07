@@ -80,7 +80,7 @@ final readonly class NotifiableEventDeliveryEventDispatcher implements EventSubs
         $workerEvent = $this->workerEventFactory->create($job, $event);
         $this->entityMutator->save($workerEvent);
 
-        $notifiableEvent = new NotifiableEventDeliveryEvent($job, $workerEvent, $event);
+        $notifiableEvent = new NotifiableEventDeliveryEvent($job, $workerEvent);
 
         $this->eventDispatcher->dispatch($notifiableEvent);
     }

@@ -8,6 +8,7 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Event\EmittableEvent\EmittableEventInterface;
 use App\Model\SerializableApplicationStateInterface;
+use App\Model\SerializableEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -20,7 +21,6 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
     public function __construct(
         public readonly Job $job,
         private readonly WorkerEvent $workerEvent,
-        private readonly EmittableEventInterface $event,
     ) {}
 
     public function getWorkerEvent(): WorkerEvent
@@ -43,6 +43,6 @@ class NotifiableEventDeliveryEvent extends Event implements NotifiableEventInter
      */
     public function getPayload(): array
     {
-        return $this->event->getPayload();
+        return new SerializableEvent($this->job->getLabel(), $this->workerEvent)->toArray();
     }
 }
