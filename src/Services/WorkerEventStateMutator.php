@@ -9,7 +9,6 @@ use App\Enum\WorkerEventState;
 use App\Event\EventDelivery\SendingEvent;
 use App\Event\EventDelivery\SentEvent;
 use App\Event\NotifiableEventDeliveryEvent;
-use App\Message\DeliverEventMessage;
 use App\Model\WorkerEventRemoteEventId;
 use App\Repository\WorkerEventRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -76,24 +75,6 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
 
     public function setFailedForWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
     {
-        $message = $event->getEnvelope()->getMessage();
-        if ($event->willRetry()) {
-            return;
-        }
-
-        if ($message instanceof DeliverEventMessage) {
-            $workerEvent = $this->repository->find($message->workerEventId);
-            if (!$workerEvent instanceof WorkerEvent) {
-                return;
-            }
-
-            $this->setFailed($workerEvent);
-        }
-
-        if (!$message instanceof AbstractWorkerMessageEvent) {
-            return;
-        }
-
         $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
             $this->setFailed($workerEvent);
         });
