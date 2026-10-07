@@ -74,7 +74,7 @@ class ExecuteTestHandlerTest extends WebTestCase
         $jobRepository = self::getContainer()->get(JobRepository::class);
         \assert($jobRepository instanceof JobRepository);
 
-        $job = $jobRepository->get();
+        $jobRepository->get();
 
         $executionProgress = self::getContainer()->get(ExecutionProgress::class);
         \assert($executionProgress instanceof ExecutionProgress);

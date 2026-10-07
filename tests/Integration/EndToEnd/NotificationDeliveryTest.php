@@ -109,7 +109,7 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
 
             $requestData = json_decode($request->getBody()->getContents(), true);
             self::assertIsArray($requestData);
-            self:assertEquals($expectedRequestBody, $requestData);
+            self::assertEquals($expectedRequestBody, $requestData);
         }
     }
 
