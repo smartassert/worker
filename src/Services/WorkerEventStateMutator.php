@@ -62,12 +62,16 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
 
     public function setSendingForWorkerMessageReceivedEvent(WorkerMessageReceivedEvent $event): void
     {
-        $this->setForWorkerMessageEvent($event, WorkerEventState::SENDING);
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setSending($workerEvent);
+        });
     }
 
     public function setSentForWorkerMessageHandledEvent(WorkerMessageHandledEvent $event): void
     {
-        $this->setForWorkerMessageEvent($event, WorkerEventState::COMPLETE);
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setComplete($workerEvent);
+        });
     }
 
     public function setFailedForWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
@@ -90,10 +94,15 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
             return;
         }
 
-        $this->setForWorkerMessageEvent($event, WorkerEventState::FAILED);
+        $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
+            $this->setFailed($workerEvent);
+        });
     }
 
-    private function setForWorkerMessageEvent(AbstractWorkerMessageEvent $event, WorkerEventState $state): void
+    /**
+     * @param callable(WorkerEvent): void $action
+     */
+    private function setForWorkerMessageEvent(AbstractWorkerMessageEvent $event, callable $action): void
     {
         $message = $event->getEnvelope()->getMessage();
         if (!$message instanceof SendWebhookMessage) {
@@ -116,7 +125,7 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
             return;
         }
 
-        $this->set($workerEvent, $state);
+        $action($workerEvent);
     }
 
     private function setSending(WorkerEvent $workerEvent): void
