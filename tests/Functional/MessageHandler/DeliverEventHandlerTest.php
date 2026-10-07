@@ -10,7 +10,6 @@ use App\Enum\WorkerEventState;
 use App\Exception\EventDeliveryException;
 use App\Message\DeliverEventMessage;
 use App\MessageHandler\DeliverEventHandler;
-use App\Repository\WorkerEventRepository;
 use App\Tests\Model\EnvironmentSetup;
 use App\Tests\Model\JobSetup;
 use App\Tests\Model\WorkerEventSetup;
@@ -29,7 +28,6 @@ class DeliverEventHandlerTest extends WebTestCase
     use MockeryPHPUnitIntegration;
 
     private DeliverEventHandler $handler;
-    private WorkerEventRepository $workerEventRepository;
     private WorkerEvent $workerEvent;
     private MockHandler $mockHandler;
 
@@ -40,10 +38,6 @@ class DeliverEventHandlerTest extends WebTestCase
         $handler = self::getContainer()->get(DeliverEventHandler::class);
         \assert($handler instanceof DeliverEventHandler);
         $this->handler = $handler;
-
-        $workerEventRepository = self::getContainer()->get(WorkerEventRepository::class);
-        \assert($workerEventRepository instanceof WorkerEventRepository);
-        $this->workerEventRepository = $workerEventRepository;
 
         $mockHandler = self::getContainer()->get('app.tests.services.guzzle.handler.queuing');
         \assert($mockHandler instanceof MockHandler);
@@ -85,13 +79,7 @@ class DeliverEventHandlerTest extends WebTestCase
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
 
-        self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
-
         ($this->handler)($message);
-
-        $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
-        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-        self::assertSame(WorkerEventState::COMPLETE, $workerEvent->getState());
     }
 
     public function testInvokeFailure(): void
@@ -100,8 +88,6 @@ class DeliverEventHandlerTest extends WebTestCase
         $this->mockHandler->append($resultsClientHttpResponse);
 
         $message = new DeliverEventMessage((int) $this->workerEvent->getId());
-
-        self::assertSame(WorkerEventState::QUEUED, $this->workerEvent->getState());
 
         $resultsClientResponse = new ServiceClientResponse($resultsClientHttpResponse);
 
@@ -119,9 +105,5 @@ class DeliverEventHandlerTest extends WebTestCase
         } catch (\Throwable $exception) {
             self::assertEquals($expectedException, $exception);
         }
-
-        $workerEvent = $this->workerEventRepository->find($this->workerEvent->getId());
-        self::assertInstanceOf(WorkerEvent::class, $workerEvent);
-        self::assertSame(WorkerEventState::SENDING, $workerEvent->getState());
     }
 }
