@@ -15,24 +15,11 @@ use App\Event\EmittableEvent\JobTimeoutEvent;
 use App\Event\EmittableEvent\LifecycleEvent;
 use App\Event\EmittableEvent\StepEvent;
 use App\Event\EmittableEvent\TestEvent;
-use App\Message\DeliverEventMessage;
-use App\Repository\JobRepository;
-use App\Services\EntityMutator;
-use App\Services\WorkerEventFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 class DeliverEventMessageDispatcher implements EventSubscriberInterface
 {
-    public function __construct(
-        private readonly MessageBusInterface $messageBus,
-        private readonly EntityMutator $entityMutator,
-        private readonly JobRepository $jobRepository,
-        private readonly WorkerEventFactory $workerEventFactory,
-    ) {}
-
     /**
      * @return array<string, array<int, array<int, int|string>>>
      */
@@ -72,19 +59,8 @@ class DeliverEventMessageDispatcher implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @throws ExceptionInterface
-     */
     public function dispatchForEvent(EmittableEventInterface $event): ?Envelope
     {
-        $job = $this->jobRepository->get();
-        if (null === $job) {
-            return null;
-        }
-
-        $workerEvent = $this->workerEventFactory->create($job, $event);
-        $this->entityMutator->save($workerEvent);
-
-        return $this->messageBus->dispatch(new DeliverEventMessage($workerEvent->getId()));
+        return null;
     }
 }
