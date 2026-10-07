@@ -20,8 +20,6 @@ use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Uid\Ulid;
 
-use function PHPUnit\Framework\assertEquals;
-
 class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
 {
     private ClientRequestSender $clientRequestSender;
@@ -109,7 +107,7 @@ class NotificationDeliveryTest extends AbstractBaseIntegrationTestCase
 
             $requestData = json_decode($request->getBody()->getContents(), true);
             self::assertIsArray($requestData);
-            self:assertEquals($expectedRequestBody, $requestData);
+            self::assertEquals($expectedRequestBody, $requestData);
         }
     }
 

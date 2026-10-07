@@ -372,7 +372,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ],
                         [
                             'job' => $workerJobLabel,
-                            'sequence_number' => ++$firstSequenceNumber,
+                            'sequence_number' => $firstSequenceNumber + 1,
                             'type' => 'job/ended',
                             'body' => [
                                 'end_state' => 'failed/compilation',
@@ -500,7 +500,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ],
                         [
                             'job' => $workerJobLabel,
-                            'sequence_number' => ++$firstSequenceNumber,
+                            'sequence_number' => $firstSequenceNumber + 1,
                             'type' => 'job/ended',
                             'body' => [
                                 'end_state' => 'failed/compilation',
@@ -1177,7 +1177,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ],
                         [
                             'job' => $workerJobLabel,
-                            'sequence_number' => ++$firstSequenceNumber,
+                            'sequence_number' => $firstSequenceNumber + 1,
                             'type' => 'job/ended',
                             'body' => [
                                 'end_state' => 'complete',
@@ -1494,7 +1494,7 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
                         ],
                         [
                             'job' => $workerJobLabel,
-                            'sequence_number' => ++$firstSequenceNumber,
+                            'sequence_number' => $firstSequenceNumber + 1,
                             'type' => 'job/ended',
                             'body' => [
                                 'end_state' => 'failed/test/failure',
