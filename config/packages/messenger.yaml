@@ -1,5 +1,9 @@
 framework:
     messenger:
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - App\Messenger\Middleware\EventDeliveryProgressEventDispatcher
         transports:
             event_delivery:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
