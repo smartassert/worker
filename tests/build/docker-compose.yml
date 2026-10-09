@@ -94,6 +94,12 @@ services:
     ports:
       - "8080:8080"
 
+  httpbin:
+    image: kennethreitz/httpbin
+    container_name: httpbin
+    ports:
+      - "8081:80"
+
   postgres:
     env_file: .env
     image: postgres:12.5-alpine
