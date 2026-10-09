@@ -178,14 +178,6 @@
             "@users-setup",
             "@results-setup"
         ],
-        "test-image": [
-            "@image-start",
-            "sleep 1",
-            "./vendor/bin/phpunit tests/Image/AppTest.php",
-            "@image-start",
-            "sleep 1",
-            "./vendor/bin/phpunit tests/Image/JobTimeoutTest.php"
-        ],
         "test-integration-sync": "./vendor/bin/phpunit -c phpunit.integration.xml",
         "ci": [
             "@cs",
