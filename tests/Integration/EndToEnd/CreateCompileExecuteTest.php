@@ -11,6 +11,7 @@ use App\Enum\EventDeliveryState;
 use App\Enum\ExecutionState;
 use App\Enum\StateInterface;
 use App\Enum\TestState;
+use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Services\ApplicationProgress;
@@ -98,6 +99,12 @@ class CreateCompileExecuteTest extends AbstractBaseIntegrationTestCase
         $duration = $timerEnd - $timerStart;
 
         self::assertLessThanOrEqual(self::MAX_DURATION_IN_SECONDS, $duration);
+
+        $workerEvents = $this->workerEventRepository->findAll();
+        foreach ($workerEvents as $workerEvent) {
+            $workerEvent->setState(WorkerEventState::COMPLETE);
+            $this->workerEventRepository->add($workerEvent);
+        }
 
         self::assertSame(200, $createResponse->getStatusCode());
         self::assertSame('application/json', $createResponse->headers->get('content-type'));
