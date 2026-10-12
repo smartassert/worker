@@ -52,7 +52,7 @@ abstract class AbstractImageTestCase extends WebTestCase
         ));
     }
 
-    protected function makeGetApplicationStateRequest(): ResponseInterface
+    protected static function makeGetApplicationStateRequest(): ResponseInterface
     {
         return self::$httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
     }
@@ -78,9 +78,9 @@ abstract class AbstractImageTestCase extends WebTestCase
     /**
      * @return array<mixed>
      */
-    protected function fetchApplicationState(): array
+    protected static function fetchApplicationState(): array
     {
-        $response = $this->makeGetApplicationStateRequest();
+        $response = self::makeGetApplicationStateRequest();
         $body = $response->getBody()->getContents();
         $data = json_decode($body, true);
         \assert(is_array($data));
