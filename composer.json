@@ -24,6 +24,7 @@
         "symfony/messenger": "8.1.*",
         "symfony/monolog-bundle": "^4.1",
         "symfony/serializer": "8.1.*",
+        "symfony/uid": "8.1.*",
         "symfony/webhook": "8.1.*",
         "symfony/yaml": "8.1.*",
         "webignition/basil-compiler-models": ">=6.2,<7",
@@ -49,7 +50,6 @@
         "symfony/maker-bundle": "^1.40",
         "symfony/phpunit-bridge": "8.1.*",
         "symfony/process": "8.1.*",
-        "symfony/uid": "8.1.*",
         "webignition/http-history-container": "^4.0",
         "webignition/object-reflector": "^1.0"
     },
