@@ -157,8 +157,6 @@
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker compose -f ./tests/build/docker-compose.yml up -d)"
         ],
         "image-start": [
-            "docker compose -f ./tests/build/docker-compose.yml stop app",
-            "@db-recreate",
             "@integration-setup",
             "docker compose -f ./tests/build/docker-compose.yml start app"
         ],
