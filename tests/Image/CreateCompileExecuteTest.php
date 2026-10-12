@@ -57,22 +57,22 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                 'maximum_duration_in_seconds' => 600,
             ]
         ));
-    }
 
-    public function testMain(): void
-    {
         $duration = 0;
         $durationExceeded = false;
         $waitThreshold = 60 * self::MICROSECONDS_PER_SECOND;
 
-        while (false === $durationExceeded && false === $this->isApplicationComplete()) {
+        while (false === $durationExceeded && false === self::isApplicationComplete()) {
             usleep(self::WAIT_INTERVAL);
             $duration += self::WAIT_INTERVAL;
             $durationExceeded = $duration >= $waitThreshold;
         }
 
         self::assertFalse($durationExceeded);
+    }
 
+    public function testMain(): void
+    {
         $this->assertJob(
             [
                 'label' => self::$jobId,
@@ -217,20 +217,20 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         self::assertSame('job/started', $responseData['type']);
     }
 
-    private function isApplicationComplete(): bool
+    private static function isApplicationComplete(): bool
     {
-        $state = $this->fetchApplicationState();
+        $state = self::fetchApplicationState();
 
-        return true === $this->isComponentEndState($state, 'compilation')
-            && true === $this->isComponentEndState($state, 'execution')
-            && true === $this->isComponentEndState($state, 'event_delivery');
+        return true === self::isComponentEndState($state, 'compilation')
+            && true === self::isComponentEndState($state, 'execution')
+            && true === self::isComponentEndState($state, 'event_delivery');
     }
 
     /**
      * @param array<mixed>     $data
      * @param non-empty-string $key
      */
-    private function isComponentEndState(array $data, string $key): bool
+    private static function isComponentEndState(array $data, string $key): bool
     {
         $state = $data[$key] ?? [];
         $state = is_array($state) ? $state : [];
