@@ -31,6 +31,10 @@ class TimeoutCheckHandler
             return;
         }
 
+        if ($job->hasEnded()) {
+            return;
+        }
+
         $duration = time() - $job->startDateTime->getTimestamp();
         if ($duration >= $job->maximumDurationInSeconds) {
             $this->eventDispatcher->dispatch(new JobTimeoutEvent(

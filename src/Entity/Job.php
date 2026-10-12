@@ -63,6 +63,11 @@ class Job
         $this->endState = $state;
     }
 
+    public function hasEnded(): bool
+    {
+        return null !== $this->endState;
+    }
+
     /**
      * @return non-empty-string
      */
