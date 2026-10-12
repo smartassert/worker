@@ -16,7 +16,7 @@ use SmartAssert\CallbackReceiverLogReader\Parser;
 use Symfony\Component\Process\Process;
 use webignition\WaitFor\WaitFor;
 
-class CreateCompileExecuteFooTest extends AbstractImageTestCase
+class CreateCompileExecuteTest extends AbstractImageTestCase
 {
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
