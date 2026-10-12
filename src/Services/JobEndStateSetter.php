@@ -97,6 +97,10 @@ class JobEndStateSetter implements EventSubscriberInterface
             return;
         }
 
+        if ($job->hasEnded()) {
+            return;
+        }
+
         $job->setEndState($state);
         $this->entityMutator->save($job);
 
