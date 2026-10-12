@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Image;
 
 use App\Tests\Services\Asserter\ApplicationResponseDataAsserter;
+use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
@@ -30,6 +31,10 @@ abstract class AbstractImageTestCase extends WebTestCase
 
         self::$httpClient = new Client(['verify' => false]);
         self::$responseDataAsserter = new ApplicationResponseDataAsserter();
+
+        $entityRemover = self::getContainer()->get(EntityRemover::class);
+        \assert($entityRemover instanceof EntityRemover);
+        $entityRemover->removeAll();
     }
 
     protected function makeGetJobRequest(): ResponseInterface

@@ -58,6 +58,8 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
             ]
         ));
 
+        self::assertSame(200, self::$createResponse->getStatusCode());
+
         $duration = 0;
         $durationExceeded = false;
         $waitThreshold = 60 * self::MICROSECONDS_PER_SECOND;
@@ -196,19 +198,16 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
         self::assertNotSame([1], $eventIds);
     }
 
-    public function testJobIsCreated(): void
-    {
-        self::assertSame(200, self::$createResponse->getStatusCode());
-
-        $responseData = json_decode(self::$createResponse->getBody()->getContents(), true);
-        self::assertIsArray($responseData);
-        self::assertArrayHasKey('event_ids', $responseData);
-        self::assertSame([1, 2], $responseData['event_ids']);
-    }
-
     public function testGetJobStartedEvent(): void
     {
-        $response = $this->makeGetEventRequest(1);
+        $jobData = $this->fetchJob();
+        $eventIds = $jobData['event_ids'];
+        \assert(\is_array($eventIds));
+
+        $eventId = $eventIds[0];
+        \assert(\is_int($eventId));
+
+        $response = $this->makeGetEventRequest($eventId);
         self::assertSame(200, $response->getStatusCode());
 
         $responseData = json_decode($response->getBody()->getContents(), true);
