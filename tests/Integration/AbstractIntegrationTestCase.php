@@ -19,7 +19,6 @@ abstract class AbstractIntegrationTestCase extends WebTestCase
 {
     private const JOB_URL = 'http://localhost:8000/job';
     private const APPLICATION_STATE_URL = 'http://localhost:8000/application_state';
-    private const EVENT_URL = 'http://localhost:8000/event/%d';
 
     private static Client $httpClient;
 
@@ -57,11 +56,6 @@ abstract class AbstractIntegrationTestCase extends WebTestCase
     protected static function makeGetApplicationStateRequest(): ResponseInterface
     {
         return self::$httpClient->sendRequest(new Request('GET', self::APPLICATION_STATE_URL));
-    }
-
-    protected function makeGetEventRequest(int $id): ResponseInterface
-    {
-        return self::$httpClient->sendRequest(new Request('GET', sprintf(self::EVENT_URL, $id)));
     }
 
     /**
