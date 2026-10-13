@@ -167,6 +167,7 @@
         "integration-setup": [
             "@integration-build",
             "@integration-start",
+            "sleep 2",
             "@db-setup",
             "@users-setup",
             "@results-setup"
