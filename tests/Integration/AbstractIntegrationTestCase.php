@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Image;
+namespace App\Tests\Integration;
 
 use App\Tests\Services\Asserter\ApplicationResponseDataAsserter;
 use App\Tests\Services\EntityRemover;
@@ -16,7 +16,7 @@ use SmartAssert\YamlFile\YamlFile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Yaml\Dumper;
 
-abstract class AbstractImageTestCase extends WebTestCase
+abstract class AbstractIntegrationTestCase extends WebTestCase
 {
     private const JOB_URL = 'http://localhost:8000/job';
     private const APPLICATION_STATE_URL = 'http://localhost:8000/application_state';

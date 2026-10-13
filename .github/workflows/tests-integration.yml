@@ -1,4 +1,4 @@
-name: tests-integration-image
+name: tests-integration
 
 on:
   push:
@@ -20,14 +20,14 @@ jobs:
       - name: Set test names
         id: test_names
         run: |
-          TEST_NAMES=$(ls tests/Image --ignore=Abstract*)
+          TEST_NAMES=$(ls tests/Integration --ignore=Abstract*)
           TEST_NAMES_LACKING_EXTENSION="${TEST_NAMES//.php/}"          
           TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$TEST_NAMES_LACKING_EXTENSION")
 
           echo "test_names=$TEST_NAMES_AS_JSON_ARRAY" >> "$GITHUB_ENV"
 
   integration-app:
-    name: Integration Image - ${{ matrix.test_name }}
+    name: Integration - ${{ matrix.test_name }}
     needs: setup
     runs-on: ubuntu-latest
     strategy:
@@ -50,9 +50,9 @@ jobs:
 
       - name: Setup image test environment
         run: |
-          composer image-start
+          composer integration-setup
           sleep 5
-          composer image-chown-app-source
+          composer integration-chown-app-source
 
       - name: Run tests
-        run: ./vendor/bin/phpunit -c phpunit.integration.xml tests/Image/${{ matrix.test_name }}.php
+        run: ./vendor/bin/phpunit -c phpunit.integration.xml tests/Integration/${{ matrix.test_name }}.php
