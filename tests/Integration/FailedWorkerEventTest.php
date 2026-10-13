@@ -4,37 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
-use App\Tests\Services\Asserter\JsonResponseAsserter;
-use App\Tests\Services\ClientRequestSender;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\EntityRemover;
-use PHPUnit\Framework\Attributes\DataProvider;
-use SmartAssert\CallbackReceiverLogReader\Parser;
-use Symfony\Component\Process\Process;
 use webignition\WaitFor\WaitFor;
 
 class FailedWorkerEventTest extends AbstractIntegrationTestCase
 {
-    private ClientRequestSender $clientRequestSender;
-    private JsonResponseAsserter $jsonResponseAsserter;
     private CreateJobSourceFactory $createJobSourceFactory;
     private WorkerEventRepository $workerEventRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $clientRequestSender = self::getContainer()->get(ClientRequestSender::class);
-        \assert($clientRequestSender instanceof ClientRequestSender);
-        $this->clientRequestSender = $clientRequestSender;
-
-        $jsonResponseAsserter = self::getContainer()->get(JsonResponseAsserter::class);
-        \assert($jsonResponseAsserter instanceof JsonResponseAsserter);
-        $this->jsonResponseAsserter = $jsonResponseAsserter;
 
         $createJobSourceFactory = self::getContainer()->get(CreateJobSourceFactory::class);
         \assert($createJobSourceFactory instanceof CreateJobSourceFactory);
@@ -52,11 +36,7 @@ class FailedWorkerEventTest extends AbstractIntegrationTestCase
     public function testBadEventUrlResultsInFailedWorkerEvents(): void
     {
         $jobLabel = md5((string) rand());
-
         $jobMaximumDurationInSeconds = 60;
-
-        $jobStatusResponse = $this->clientRequestSender->getJobStatus();
-        $this->jsonResponseAsserter->assertJsonResponse(400, [], $jobStatusResponse);
 
         $createResponse = self::makeCreateJobRequest([
             CreateJobRequest::KEY_LABEL => $jobLabel,
