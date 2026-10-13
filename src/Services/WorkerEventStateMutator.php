@@ -57,6 +57,10 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
 
     public function setFailedForWorkerMessageFailedEvent(WorkerMessageFailedEvent $event): void
     {
+        if ($event->willRetry()) {
+            return;
+        }
+
         $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
             $this->setFailed($workerEvent);
         });
