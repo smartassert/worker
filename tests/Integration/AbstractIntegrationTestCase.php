@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration;
 
-use App\Tests\Services\Asserter\ApplicationResponseDataAsserter;
 use App\Tests\Services\EntityRemover;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -23,14 +22,12 @@ abstract class AbstractIntegrationTestCase extends WebTestCase
     private const EVENT_URL = 'http://localhost:8000/event/%d';
 
     private static Client $httpClient;
-    private static ApplicationResponseDataAsserter $responseDataAsserter;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         self::$httpClient = new Client(['verify' => false]);
-        self::$responseDataAsserter = new ApplicationResponseDataAsserter();
 
         $entityRemover = self::getContainer()->get(EntityRemover::class);
         \assert($entityRemover instanceof EntityRemover);
@@ -125,23 +122,5 @@ abstract class AbstractIntegrationTestCase extends WebTestCase
         );
 
         return $yamlFileCollectionSerializer->serialize($yamlFileCollection);
-    }
-
-    /**
-     * @param array<mixed> $expected
-     * @param array<mixed> $actual
-     */
-    protected function assertJob(array $expected, array $actual): void
-    {
-        self::$responseDataAsserter->assertJob($expected, $actual);
-    }
-
-    /**
-     * @param array<mixed> $expected
-     * @param array<mixed> $actual
-     */
-    protected function assertApplicationState(array $expected, array $actual): void
-    {
-        self::$responseDataAsserter->assertApplicationState($expected, $actual);
     }
 }
