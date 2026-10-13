@@ -95,10 +95,6 @@ services:
             $maxDelayMilliseconds: 0
             $jitter: 0
 
-    App\Messenger\DeliverEventMessageRetryStrategy:
-        arguments:
-            $multiplierRetryStrategy: '@app.messenger.retry_strategy.deliver_event.multiplier'
-
     webignition\YamlDocumentSetParser\Parser: ~
 
     SmartAssert\YamlFile\FileHashes\Deserializer: ~
