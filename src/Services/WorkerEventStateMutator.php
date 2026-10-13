@@ -44,7 +44,7 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
     public function setSendingForWorkerMessageReceivedEvent(WorkerMessageReceivedEvent $event): void
     {
         $this->setForWorkerMessageEvent($event, function (WorkerEvent $workerEvent) {
-            $this->setSending($workerEvent);
+            $this->set($workerEvent, WorkerEventState::SENDING);
         });
     }
 
@@ -93,13 +93,6 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
         }
 
         $action($workerEvent);
-    }
-
-    private function setSending(WorkerEvent $workerEvent): void
-    {
-        if (WorkerEventState::QUEUED === $workerEvent->getState()) {
-            $this->set($workerEvent, WorkerEventState::SENDING);
-        }
     }
 
     private function setFailed(WorkerEvent $workerEvent): void
