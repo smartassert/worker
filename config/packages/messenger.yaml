@@ -1,15 +1,10 @@
 framework:
     messenger:
         transports:
-            event_delivery:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                retry_strategy:
-                    service: App\Messenger\DeliverEventMessageRetryStrategy
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-            'App\Message\DeliverEventMessage': event_delivery
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
@@ -29,10 +24,6 @@ when@integration:
     framework:
         messenger:
             transports:
-                event_delivery:
-                    dsn: 'sync://'
-                    retry_strategy:
-                        service: App\Messenger\DeliverEventMessageRetryStrategy
                 async:
                     dsn: 'sync://'
 
