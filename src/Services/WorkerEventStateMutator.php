@@ -6,8 +6,6 @@ namespace App\Services;
 
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
-use App\Event\EventDelivery\SendingEvent;
-use App\Event\EventDelivery\SentEvent;
 use App\Event\NotifiableEventDeliveryEvent;
 use App\Model\WorkerEventRemoteEventId;
 use App\Repository\WorkerEventRepository;
@@ -31,12 +29,6 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SendingEvent::class => [
-                ['setSendingForSendingEvent', 0],
-            ],
-            SentEvent::class => [
-                ['setCompleteForSentEvent', 0],
-            ],
             WorkerMessageReceivedEvent::class => [
                 ['setSendingForWorkerMessageReceivedEvent', 0],
             ],
@@ -47,16 +39,6 @@ final readonly class WorkerEventStateMutator implements EventSubscriberInterface
                 ['setFailedForWorkerMessageFailedEvent', 0],
             ],
         ];
-    }
-
-    public function setSendingForSendingEvent(SendingEvent $event): void
-    {
-        $this->setSending($event->workerEvent);
-    }
-
-    public function setCompleteForSentEvent(SentEvent $event): void
-    {
-        $this->setComplete($event->workerEvent);
     }
 
     public function setSendingForWorkerMessageReceivedEvent(WorkerMessageReceivedEvent $event): void
