@@ -615,1170 +615,1594 @@ class CreateCompileExecuteTest extends AbstractImageTestCase
                     ];
                 },
             ],
-//            'compilation failed on first test' => [
-//                'manifestPaths' => [
-//                    'Test/chrome-open-index-compilation-failure.yml',
-//                ],
-//                'sourcePaths' => [
-//                    'Test/chrome-open-index-compilation-failure.yml',
-//                ],
-//                'jobLabel' => $jobLabel,
-//                'expectedApplicationState' => [
-//                    'state' => 'failed',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => false,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'compiling',
-//                        'executing',
-//                        'completing-event-delivery',
-//                        'failed',
-//                    ],
-//                ],
-//                'expectedCompilationState' => [
-//                    'state' => 'failed',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => false,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'running',
-//                        'failed',
-//                    ],
-//                ],
-//                'expectedExecutionState' => [
-//                    'state' => 'awaiting',
-//                    'meta_state' => [
-//                        'pending' => true,
-//                        'ended' => false,
-//                        'succeeded' => false,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                    ],
-//                ],
-//                'expectedTestDataCollection' => [],
-//                'expectedDispatchedNotificationsCount' => 5,
-//                'expectedRequestsCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
-//                    return [
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber,
-//                            'type' => 'job/started',
-//                            'body' => [
-//                                'tests' => [
-//                                    'Test/chrome-open-index-compilation-failure.yml',
-//                                ],
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'Test/chrome-open-index-compilation-failure.yml',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-compilation-failure.yml'
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/compilation-started',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-index-compilation-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-compilation-failure.yml'
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/failed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-compilation-failure.yml',
-//                                'output' => [
-//                                    'message' => sprintf(
-//                                        'Invalid test at path "%s": test-step-invalid',
-//                                        'Test/chrome-open-index-compilation-failure.yml',
-//                                    ),
-//                                    'code' => 204,
-//                                    'context' => [
-//                                        'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
-//                                        'validation_result' => [
-//                                            'type' => 'test',
-//                                            'reason' => 'test-step-invalid',
-//                                            'context' => [
-//                                                'step-name' => 'verify page is open',
-//                                            ],
-//                                            'previous' => [
-//                                                'type' => 'step',
-//                                                'reason' => 'step-no-assertions',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-index-compilation-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-compilation-failure.yml'
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber + 1,
-//                            'type' => 'job/ended',
-//                            'body' => [
-//                                'end_state' => 'failed/compilation',
-//                                'success' => false,
-//                                'event_count' => 5,
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                    ];
-//                },
-//            ],
-//            'three successful tests' => [
-//                'manifestPaths' => [
-//                    'Test/chrome-open-index.yml',
-//                    'Test/chrome-firefox-open-index.yml',
-//                    'Test/chrome-open-form.yml',
-//                ],
-//                'sourcePaths' => [
-//                    'Page/index.yml',
-//                    'Test/chrome-open-index.yml',
-//                    'Test/chrome-firefox-open-index.yml',
-//                    'Test/chrome-open-form.yml',
-//                ],
-//                'jobLabel' => $jobLabel,
-//                'expectedApplicationState' => [
-//                    'state' => 'complete',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => true,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'compiling',
-//                        'executing',
-//                        'completing-event-delivery',
-//                        'complete',
-//                    ],
-//                ],
-//                'expectedCompilationState' => [
-//                    'state' => 'complete',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => true,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'running',
-//                        'complete',
-//                    ],
-//                ],
-//                'expectedExecutionState' => [
-//                    'state' => 'complete',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => true,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'running',
-//                        'complete',
-//                    ],
-//                ],
-//                'expectedTestDataCollection' => [
-//                    [
-//                        'browser' => 'chrome',
-//                        'url' => 'http://html-fixtures/index.html',
-//                        'source' => 'Test/chrome-open-index.yml',
-//                        'step_names' => ['verify page is open'],
-//                        'state' => 'complete',
-//                        'position' => 1,
-//                    ],
-//                    [
-//                        'browser' => 'chrome',
-//                        'url' => 'http://html-fixtures/index.html',
-//                        'source' => 'Test/chrome-firefox-open-index.yml',
-//                        'step_names' => ['verify page is open'],
-//                        'state' => 'complete',
-//                        'position' => 2,
-//                    ],
-//                    [
-//                        'browser' => 'firefox',
-//                        'url' => 'http://html-fixtures/index.html',
-//                        'source' => 'Test/chrome-firefox-open-index.yml',
-//                        'step_names' => ['verify page is open'],
-//                        'state' => 'complete',
-//                        'position' => 3,
-//                    ],
-//                    [
-//                        'browser' => 'chrome',
-//                        'url' => 'http://html-fixtures/form.html',
-//                        'source' => 'Test/chrome-open-form.yml',
-//                        'step_names' => ['verify page is open'],
-//                        'state' => 'complete',
-//                        'position' => 4,
-//                    ],
-//                ],
-//                'expectedDispatchedNotificationsCount' => 24,
-//                'expectedRequestsCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
-//                    return [
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber,
-//                            'type' => 'job/started',
-//                            'body' => [
-//                                'tests' => [
-//                                    'Test/chrome-open-index.yml',
-//                                    'Test/chrome-firefox-open-index.yml',
-//                                    'Test/chrome-open-form.yml',
-//                                ],
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'Test/chrome-open-index.yml',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index.yml'
-//                                    ),
-//                                ],
-//                                [
-//                                    'label' => 'Test/chrome-firefox-open-index.yml',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                    ),
-//                                ],
-//                                [
-//                                    'label' => 'Test/chrome-open-form.yml',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-form.yml'
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/compilation-started',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index.yml'
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index.yml'
-//                                        . 'verify page is open'
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                        . 'verify page is open'
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-form.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-form.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-form.yml'
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-form.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-form.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-form.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-form.yml'
-//                                        . 'verify page is open'
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/compilation-completed',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/execution-started',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'verify page is open',
-//                                        'status' => 'passed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-//                                                'status' => 'passed',
-//                                                'transformations' => [
-//                                                    [
-//                                                        'type' => 'resolution',
-//                                                        'source' => '$page.url is $index.url',
-//                                                    ],
-//                                                ],
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'verify page is open',
-//                            ],
-//                            'label' => 'verify page is open',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index.ymlverify page is open',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-firefox-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'verify page is open',
-//                                        'status' => 'passed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-//                                                'status' => 'passed',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'verify page is open',
-//                            ],
-//                            'label' => 'verify page is open',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                                . 'verify page is open',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-firefox-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-firefox-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'firefox',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'verify page is open',
-//                                        'status' => 'passed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-//                                                'status' => 'passed',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'verify page is open',
-//                            ],
-//                            'label' => 'verify page is open',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                                . 'verify page is open',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-firefox-open-index.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-firefox-open-index.yml',
-//                                        'config' => [
-//                                            'browser' => 'firefox',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-firefox-open-index.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-firefox-open-index.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-firefox-open-index.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-form.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-form.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/form.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-form.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-form.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-form.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-form.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'verify page is open',
-//                                        'status' => 'passed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'source' => '$page.url is "http://html-fixtures/form.html"',
-//                                                'status' => 'passed',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'verify page is open',
-//                            ],
-//                            'label' => 'verify page is open',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-form.yml'
-//                                . 'verify page is open',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-form.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-form.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/form.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-form.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-form.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel . 'Test/chrome-open-form.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/execution-completed',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber + 1,
-//                            'type' => 'job/ended',
-//                            'body' => [
-//                                'end_state' => 'complete',
-//                                'success' => true,
-//                                'event_count' => 24,
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                    ];
-//                },
-//            ],
-//            'step failed' => [
-//                'manifestPaths' => [
-//                    'Test/chrome-open-index-with-step-failure.yml',
-//                ],
-//                'sourcePaths' => [
-//                    'Test/chrome-open-index-with-step-failure.yml',
-//                ],
-//                'jobLabel' => $jobLabel,
-//                'expectedApplicationState' => [
-//                    'state' => 'failed',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => false,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'compiling',
-//                        'executing',
-//                        'completing-event-delivery',
-//                        'failed',
-//                    ],
-//                ],
-//                'expectedCompilationState' => [
-//                    'state' => 'complete',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => true,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'running',
-//                        'complete',
-//                    ],
-//                ],
-//                'expectedExecutionState' => [
-//                    'state' => 'cancelled',
-//                    'meta_state' => [
-//                        'pending' => false,
-//                        'ended' => true,
-//                        'succeeded' => false,
-//                    ],
-//                    'previous_states' => [
-//                        'awaiting',
-//                        'running',
-//                        'cancelled',
-//                    ],
-//                ],
-//                'expectedTestDataCollection' => [
-//                    [
-//                        'browser' => 'chrome',
-//                        'url' => 'http://html-fixtures/index.html',
-//                        'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                        'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
-//                        'state' => 'failed',
-//                        'position' => 1,
-//                    ],
-//                ],
-//                'expectedDispatchedNotificationsCount' => 11,
-//                'expectedRequestsCreator' => function (int $firstSequenceNumber, string $workerJobLabel) {
-//                    return [
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber,
-//                            'type' => 'job/started',
-//                            'body' => [
-//                                'tests' => [
-//                                    'Test/chrome-open-index-with-step-failure.yml',
-//                                ],
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/compilation-started',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'compilation/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            ],
-//                            'label' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml',
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                                [
-//                                    'label' => 'fail on intentionally-missing element',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'fail on intentionally-missing element',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/compilation-completed',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'lifecycle/execution-started',
-//                            'body' => [],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/started',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                    'fail on intentionally-missing element',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                                [
-//                                    'label' => 'fail on intentionally-missing element',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'fail on intentionally-missing element',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/passed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'verify page is open',
-//                                        'status' => 'passed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'status' => 'passed',
-//                                                'source' => '$page.url is "http://html-fixtures/index.html"',
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'verify page is open',
-//                            ],
-//                            'label' => 'verify page is open',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml'
-//                                . 'verify page is open',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'step/failed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                'document' => [
-//                                    'type' => 'step',
-//                                    'payload' => [
-//                                        'name' => 'fail on intentionally-missing element',
-//                                        'status' => 'failed',
-//                                        'statements' => [
-//                                            [
-//                                                'type' => 'assertion',
-//                                                'status' => 'failed',
-//                                                'source' => '$".non-existent" exists',
-//                                                'summary' => [
-//                                                    'operator' => 'exists',
-//                                                    'source' => [
-//                                                        'type' => 'node',
-//                                                        'body' => [
-//                                                            'type' => 'element',
-//                                                            'identifier' => [
-//                                                                'source' => '$".non-existent"',
-//                                                                'properties' => [
-//                                                                    'type' => 'css',
-//                                                                    'locator' => '.non-existent',
-//                                                                    'position' => 1,
-//                                                                ],
-//                                                            ],
-//                                                        ],
-//                                                    ],
-//                                                ],
-//                                            ],
-//                                        ],
-//                                    ],
-//                                ],
-//                                'name' => 'fail on intentionally-missing element',
-//                            ],
-//                            'label' => 'fail on intentionally-missing element',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml'
-//                                . 'fail on intentionally-missing element',
-//                            ),
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => ++$firstSequenceNumber,
-//                            'type' => 'test/failed',
-//                            'body' => [
-//                                'source' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                'document' => [
-//                                    'type' => 'test',
-//                                    'payload' => [
-//                                        'path' => 'Test/chrome-open-index-with-step-failure.yml',
-//                                        'config' => [
-//                                            'browser' => 'chrome',
-//                                            'url' => 'http://html-fixtures/index.html',
-//                                        ],
-//                                    ],
-//                                ],
-//                                'step_names' => [
-//                                    'verify page is open',
-//                                    'fail on intentionally-missing element',
-//                                ],
-//                            ],
-//                            'label' => 'Test/chrome-open-index-with-step-failure.yml',
-//                            'reference' => md5(
-//                                $workerJobLabel
-//                                . 'Test/chrome-open-index-with-step-failure.yml'
-//                            ),
-//                            'related_references' => [
-//                                [
-//                                    'label' => 'verify page is open',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'verify page is open',
-//                                    ),
-//                                ],
-//                                [
-//                                    'label' => 'fail on intentionally-missing element',
-//                                    'reference' => md5(
-//                                        $workerJobLabel
-//                                        . 'Test/chrome-open-index-with-step-failure.yml'
-//                                        . 'fail on intentionally-missing element',
-//                                    ),
-//                                ],
-//                            ],
-//                        ],
-//                        [
-//                            'job' => $workerJobLabel,
-//                            'sequence_number' => $firstSequenceNumber + 1,
-//                            'type' => 'job/ended',
-//                            'body' => [
-//                                'end_state' => 'failed/test/failure',
-//                                'success' => false,
-//                                'event_count' => 11,
-//                            ],
-//                            'label' => $workerJobLabel,
-//                            'reference' => md5($workerJobLabel),
-//                        ],
-//                    ];
-//                },
-//            ],
+            'compilation failed on first test' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'sourcePaths' => [
+                    'Test/chrome-open-index-compilation-failure.yml',
+                ],
+                'jobLabel' => $jobLabel,
+                'expectedApplicationState' => [
+                    'state' => 'failed',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'compiling',
+                        'executing',
+                        'completing-event-delivery',
+                        'failed',
+                    ],
+                ],
+                'expectedCompilationState' => [
+                    'state' => 'failed',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'running',
+                        'failed',
+                    ],
+                ],
+                'expectedExecutionState' => [
+                    'state' => 'awaiting',
+                    'meta_state' => [
+                        'pending' => true,
+                        'ended' => false,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                    ],
+                ],
+                'expectedTestDataCollection' => [],
+                'expectedDispatchedNotificationsCount' => 9,
+                'expectedRequestsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel
+                ) use (
+                    $awaitingComponent,
+                    $runningComponent,
+                    $failedComponent,
+                    $completeComponent,
+                    $applicationCompiling,
+                    $applicationFailed,
+                ) {
+                    return [
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $awaitingComponent,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber,
+                                'type' => 'job/started',
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index-compilation-failure.yml',
+                                    ],
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                                'related_references' => [
+                                    [
+                                        'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-compilation-failure.yml'
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/compilation-started',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                ],
+                                'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-compilation-failure.yml'
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $failedComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/failed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-compilation-failure.yml',
+                                    'output' => [
+                                        'message' => sprintf(
+                                            'Invalid test at path "%s": test-step-invalid',
+                                            'Test/chrome-open-index-compilation-failure.yml',
+                                        ),
+                                        'code' => 204,
+                                        'context' => [
+                                            'test_path' => 'Test/chrome-open-index-compilation-failure.yml',
+                                            'validation_result' => [
+                                                'type' => 'test',
+                                                'reason' => 'test-step-invalid',
+                                                'context' => [
+                                                    'step-name' => 'verify page is open',
+                                                ],
+                                                'previous' => [
+                                                    'type' => 'step',
+                                                    'reason' => 'step-no-assertions',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-index-compilation-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-compilation-failure.yml'
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber + 1,
+                                'type' => 'job/ended',
+                                'body' => [
+                                    'end_state' => 'failed/compilation',
+                                    'success' => false,
+                                    'event_count' => 5,
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $failedComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $failedComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $completeComponent,
+                                ],
+                            ],
+                        ],
+                    ];
+                },
+            ],
+            'three successful tests' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
+                    'Test/chrome-open-form.yml',
+                ],
+                'sourcePaths' => [
+                    'Page/index.yml',
+                    'Test/chrome-open-index.yml',
+                    'Test/chrome-firefox-open-index.yml',
+                    'Test/chrome-open-form.yml',
+                ],
+                'jobLabel' => $jobLabel,
+                'expectedApplicationState' => [
+                    'state' => 'complete',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'compiling',
+                        'executing',
+                        'completing-event-delivery',
+                        'complete',
+                    ],
+                ],
+                'expectedCompilationState' => [
+                    'state' => 'complete',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'running',
+                        'complete',
+                    ],
+                ],
+                'expectedExecutionState' => [
+                    'state' => 'complete',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'running',
+                        'complete',
+                    ],
+                ],
+                'expectedTestDataCollection' => [
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => 'complete',
+                        'position' => 1,
+                    ],
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => 'complete',
+                        'position' => 2,
+                    ],
+                    [
+                        'browser' => 'firefox',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-firefox-open-index.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => 'complete',
+                        'position' => 3,
+                    ],
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/form.html',
+                        'source' => 'Test/chrome-open-form.yml',
+                        'step_names' => ['verify page is open'],
+                        'state' => 'complete',
+                        'position' => 4,
+                    ],
+                ],
+                'expectedDispatchedNotificationsCount' => 30,
+                'expectedRequestsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel
+                ) use (
+                    $awaitingComponent,
+                    $runningComponent,
+                    $completeComponent,
+                    $applicationCompiling,
+                    $applicationExecuting,
+                    $applicationCompletingEventDelivery,
+                    $applicationComplete,
+                ) {
+                    return [
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $awaitingComponent,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber,
+                                'type' => 'job/started',
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index.yml',
+                                        'Test/chrome-firefox-open-index.yml',
+                                        'Test/chrome-open-form.yml',
+                                    ],
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                                'related_references' => [
+                                    [
+                                        'label' => 'Test/chrome-open-index.yml',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index.yml'
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'Test/chrome-firefox-open-index.yml',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'Test/chrome-open-form.yml',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-form.yml'
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/compilation-started',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                                'label' => 'Test/chrome-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index.yml'
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                ],
+                                'label' => 'Test/chrome-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index.yml'
+                                            . 'verify page is open'
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                            . 'verify page is open'
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                ],
+                                'label' => 'Test/chrome-open-form.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-form.yml'
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                ],
+                                'label' => 'Test/chrome-open-form.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-form.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-form.yml'
+                                            . 'verify page is open'
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/compilation-completed',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/execution-started',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $runningComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                    'transformations' => [
+                                                        [
+                                                            'type' => 'resolution',
+                                                            'source' => '$page.url is $index.url',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                                'label' => 'verify page is open',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index.ymlverify page is open',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                                'label' => 'verify page is open',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                    . 'verify page is open',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'firefox',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                    'status' => 'passed',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                                'label' => 'verify page is open',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                    . 'verify page is open',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-firefox-open-index.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-firefox-open-index.yml',
+                                            'config' => [
+                                                'browser' => 'firefox',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-firefox-open-index.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-firefox-open-index.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-firefox-open-index.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-form.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/form.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-form.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-form.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-form.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'source' => '$page.url is "http://html-fixtures/form.html"',
+                                                    'status' => 'passed',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                                'label' => 'verify page is open',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-form.yml'
+                                    . 'verify page is open',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $runningComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompletingEventDelivery,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $completeComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-form.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-form.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/form.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-form.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-form.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel . 'Test/chrome-open-form.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/execution-completed',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber + 1,
+                                'type' => 'job/ended',
+                                'body' => [
+                                    'end_state' => 'complete',
+                                    'success' => true,
+                                    'event_count' => 24,
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompletingEventDelivery,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $completeComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationComplete,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $completeComponent,
+                                    'event_delivery' => $completeComponent,
+                                ],
+                            ],
+                        ],
+                    ];
+                },
+            ],
+            'step failed' => [
+                'manifestPaths' => [
+                    'Test/chrome-open-index-with-step-failure.yml',
+                ],
+                'sourcePaths' => [
+                    'Test/chrome-open-index-with-step-failure.yml',
+                ],
+                'jobLabel' => $jobLabel,
+                'expectedApplicationState' => [
+                    'state' => 'failed',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'compiling',
+                        'executing',
+                        'completing-event-delivery',
+                        'failed',
+                    ],
+                ],
+                'expectedCompilationState' => [
+                    'state' => 'complete',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => true,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'running',
+                        'complete',
+                    ],
+                ],
+                'expectedExecutionState' => [
+                    'state' => 'cancelled',
+                    'meta_state' => [
+                        'pending' => false,
+                        'ended' => true,
+                        'succeeded' => false,
+                    ],
+                    'previous_states' => [
+                        'awaiting',
+                        'running',
+                        'cancelled',
+                    ],
+                ],
+                'expectedTestDataCollection' => [
+                    [
+                        'browser' => 'chrome',
+                        'url' => 'http://html-fixtures/index.html',
+                        'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                        'step_names' => ['verify page is open', 'fail on intentionally-missing element'],
+                        'state' => 'failed',
+                        'position' => 1,
+                    ],
+                ],
+                'expectedDispatchedNotificationsCount' => 17,
+                'expectedRequestsCreator' => function (
+                    int $firstSequenceNumber,
+                    string $workerJobLabel
+                ) use (
+                    $awaitingComponent,
+                    $runningComponent,
+                    $completeComponent,
+                    $cancelledComponent,
+                    $applicationCompiling,
+                    $applicationExecuting,
+                    $applicationFailed,
+                ) {
+                    return [
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $awaitingComponent,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $awaitingComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber,
+                                'type' => 'job/started',
+                                'body' => [
+                                    'tests' => [
+                                        'Test/chrome-open-index-with-step-failure.yml',
+                                    ],
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                                'related_references' => [
+                                    [
+                                        'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/compilation-started',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                ],
+                                'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'compilation/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                ],
+                                'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml',
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'fail on intentionally-missing element',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'fail on intentionally-missing element',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationCompiling,
+                                    'compilation' => $runningComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/compilation-completed',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'lifecycle/execution-started',
+                                'body' => [],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/started',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                        'fail on intentionally-missing element',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'fail on intentionally-missing element',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'fail on intentionally-missing element',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $awaitingComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $runningComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/passed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'verify page is open',
+                                            'status' => 'passed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'status' => 'passed',
+                                                    'source' => '$page.url is "http://html-fixtures/index.html"',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'verify page is open',
+                                ],
+                                'label' => 'verify page is open',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml'
+                                    . 'verify page is open',
+                                ),
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                               'job' => $workerJobLabel,
+                               'sequence_number' => ++$firstSequenceNumber,
+                               'type' => 'step/failed',
+                               'body' => [
+                                   'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                   'document' => [
+                                       'type' => 'step',
+                                       'payload' => [
+                                           'name' => 'fail on intentionally-missing element',
+                                           'status' => 'failed',
+                                           'statements' => [
+                                               [
+                                                   'type' => 'assertion',
+                                                   'status' => 'failed',
+                                                   'source' => '$".non-existent" exists',
+                                                   'summary' => [
+                                                       'operator' => 'exists',
+                                                       'source' => [
+                                                           'type' => 'node',
+                                                           'body' => [
+                                                               'type' => 'element',
+                                                               'identifier' => [
+                                                                   'source' => '$".non-existent"',
+                                                                   'properties' => [
+                                                                       'type' => 'css',
+                                                                       'locator' => '.non-existent',
+                                                                       'position' => 1,
+                                                                   ],
+                                                               ],
+                                                           ],
+                                                       ],
+                                                   ],
+                                               ],
+                                           ],
+                                       ],
+                                   ],
+                                   'name' => 'fail on intentionally-missing element',
+                               ],
+                               'label' => 'fail on intentionally-missing element',
+                               'reference' => md5(
+                                   $workerJobLabel
+                                   . 'Test/chrome-open-index-with-step-failure.yml'
+                                   . 'fail on intentionally-missing element',
+                               ),
+                           ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationExecuting,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $runningComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $cancelledComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'test/failed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'test',
+                                        'payload' => [
+                                            'path' => 'Test/chrome-open-index-with-step-failure.yml',
+                                            'config' => [
+                                                'browser' => 'chrome',
+                                                'url' => 'http://html-fixtures/index.html',
+                                            ],
+                                        ],
+                                    ],
+                                    'step_names' => [
+                                        'verify page is open',
+                                        'fail on intentionally-missing element',
+                                    ],
+                                ],
+                                'label' => 'Test/chrome-open-index-with-step-failure.yml',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml'
+                                ),
+                                'related_references' => [
+                                    [
+                                        'label' => 'verify page is open',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'verify page is open',
+                                        ),
+                                    ],
+                                    [
+                                        'label' => 'fail on intentionally-missing element',
+                                        'reference' => md5(
+                                            $workerJobLabel
+                                            . 'Test/chrome-open-index-with-step-failure.yml'
+                                            . 'fail on intentionally-missing element',
+                                        ),
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'uri' => '/',
+                            'payload' => [
+                                'job' => $workerJobLabel,
+                                'sequence_number' => $firstSequenceNumber + 1,
+                                'type' => 'job/ended',
+                                'body' => [
+                                    'end_state' => 'failed/test/failure',
+                                    'success' => false,
+                                    'event_count' => 11,
+                                ],
+                                'label' => $workerJobLabel,
+                                'reference' => md5($workerJobLabel),
+                            ],
+                        ],
+                        [
+                            'uri' => '/worker.application.state_changed',
+                            'payload' => [
+                                'previous_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $cancelledComponent,
+                                    'event_delivery' => $runningComponent,
+                                ],
+                                'new_state' => [
+                                    'application' => $applicationFailed,
+                                    'compilation' => $completeComponent,
+                                    'execution' => $cancelledComponent,
+                                    'event_delivery' => $completeComponent,
+                                ],
+                            ],
+                        ],
+                    ];
+                },
+            ],
         ];
     }
 
