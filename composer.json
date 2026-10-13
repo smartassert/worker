@@ -157,11 +157,7 @@
         "integration-start": [
             "(export echo $(cat image-versions.env | tr '\\n' ' '); docker compose -f ./tests/build/docker-compose.yml up -d)"
         ],
-        "image-start": [
-            "@integration-setup",
-            "docker compose -f ./tests/build/docker-compose.yml start app"
-        ],
-        "image-chown-app-source": [
+        "integration-chown-app-source": [
             "docker compose -f ./tests/build/docker-compose.yml exec -T app chown -R www-data:www-data /app/source"
         ],
         "integration-status": "docker compose -f ./tests/build/docker-compose.yml ps",
@@ -171,13 +167,11 @@
         "integration-setup": [
             "@integration-build",
             "@integration-start",
-            "docker compose -f ./tests/build/docker-compose.yml stop app",
-            "sleep 2",
             "@db-setup",
             "@users-setup",
             "@results-setup"
         ],
-        "test-integration-sync": "./vendor/bin/phpunit -c phpunit.integration.xml",
+        "test-integration": "./vendor/bin/phpunit -c phpunit.integration.xml",
         "ci": [
             "@cs",
             "@static-analysis",
