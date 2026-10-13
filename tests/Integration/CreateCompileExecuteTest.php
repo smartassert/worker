@@ -59,14 +59,14 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
      */
     #[DataProvider('createCompileExecuteDataProvider')]
     public function testCreateCompileExecute(
-        array    $manifestPaths,
-        array    $sourcePaths,
-        string   $jobLabel,
-        array    $expectedApplicationState,
-        array    $expectedCompilationState,
-        array    $expectedExecutionState,
-        array    $expectedTestDataCollection,
-        int      $expectedDispatchedNotificationsCount,
+        array $manifestPaths,
+        array $sourcePaths,
+        string $jobLabel,
+        array $expectedApplicationState,
+        array $expectedCompilationState,
+        array $expectedExecutionState,
+        array $expectedTestDataCollection,
+        int $expectedDispatchedNotificationsCount,
         callable $expectedRequestsCreator,
     ): void {
         $jobMaximumDurationInSeconds = 60;
@@ -2057,51 +2057,51 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         [
                             'uri' => '/',
                             'payload' => [
-                               'job' => $workerJobLabel,
-                               'sequence_number' => ++$firstSequenceNumber,
-                               'type' => 'step/failed',
-                               'body' => [
-                                   'source' => 'Test/chrome-open-index-with-step-failure.yml',
-                                   'document' => [
-                                       'type' => 'step',
-                                       'payload' => [
-                                           'name' => 'fail on intentionally-missing element',
-                                           'status' => 'failed',
-                                           'statements' => [
-                                               [
-                                                   'type' => 'assertion',
-                                                   'status' => 'failed',
-                                                   'source' => '$".non-existent" exists',
-                                                   'summary' => [
-                                                       'operator' => 'exists',
-                                                       'source' => [
-                                                           'type' => 'node',
-                                                           'body' => [
-                                                               'type' => 'element',
-                                                               'identifier' => [
-                                                                   'source' => '$".non-existent"',
-                                                                   'properties' => [
-                                                                       'type' => 'css',
-                                                                       'locator' => '.non-existent',
-                                                                       'position' => 1,
-                                                                   ],
-                                                               ],
-                                                           ],
-                                                       ],
-                                                   ],
-                                               ],
-                                           ],
-                                       ],
-                                   ],
-                                   'name' => 'fail on intentionally-missing element',
-                               ],
-                               'label' => 'fail on intentionally-missing element',
-                               'reference' => md5(
-                                   $workerJobLabel
-                                   . 'Test/chrome-open-index-with-step-failure.yml'
-                                   . 'fail on intentionally-missing element',
-                               ),
-                           ],
+                                'job' => $workerJobLabel,
+                                'sequence_number' => ++$firstSequenceNumber,
+                                'type' => 'step/failed',
+                                'body' => [
+                                    'source' => 'Test/chrome-open-index-with-step-failure.yml',
+                                    'document' => [
+                                        'type' => 'step',
+                                        'payload' => [
+                                            'name' => 'fail on intentionally-missing element',
+                                            'status' => 'failed',
+                                            'statements' => [
+                                                [
+                                                    'type' => 'assertion',
+                                                    'status' => 'failed',
+                                                    'source' => '$".non-existent" exists',
+                                                    'summary' => [
+                                                        'operator' => 'exists',
+                                                        'source' => [
+                                                            'type' => 'node',
+                                                            'body' => [
+                                                                'type' => 'element',
+                                                                'identifier' => [
+                                                                    'source' => '$".non-existent"',
+                                                                    'properties' => [
+                                                                        'type' => 'css',
+                                                                        'locator' => '.non-existent',
+                                                                        'position' => 1,
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'name' => 'fail on intentionally-missing element',
+                                ],
+                                'label' => 'fail on intentionally-missing element',
+                                'reference' => md5(
+                                    $workerJobLabel
+                                    . 'Test/chrome-open-index-with-step-failure.yml'
+                                    . 'fail on intentionally-missing element',
+                                ),
+                            ],
                         ],
                         [
                             'uri' => '/worker.application.state_changed',
