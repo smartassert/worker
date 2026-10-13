@@ -5,7 +5,6 @@ framework:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
-            'App\Message\DeliverEventMessage': async
             'App\Message\CompileSourceMessage': async
             'App\Message\ExecuteTestMessage': async
             'App\Message\TimeoutCheckMessage': async
