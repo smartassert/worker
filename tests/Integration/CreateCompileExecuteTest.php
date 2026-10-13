@@ -2196,7 +2196,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
     {
         $state = self::fetchApplicationState();
 
-        return true === self::isComponentEndState($state, 'application');
+        return true === self::isComponentEndState($state, 'application')
+            && true === self::isComponentEndState($state, 'event_delivery');
     }
 
     /**
