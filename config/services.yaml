@@ -148,9 +148,6 @@ services:
     SmartAssert\ResultsClient\EventFactory: ~
     SmartAssert\ResultsClient\ResourceReferenceFactory: ~
 
-    SmartAssert\ResultsClient\AddEventClientInterface:
-        class: SmartAssert\ResultsClient\AddEventClient
-
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
 
     App\MessageDispatcher\StateChangeSendWebhookDispatcher:
