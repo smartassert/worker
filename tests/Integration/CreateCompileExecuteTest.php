@@ -61,7 +61,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
 
         $createResponse = self::makeCreateJobRequest([
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_EVENT_ADD_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'http://callback-receiver:8080',
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
             CreateJobRequest::STATE_NOTIFY_URL => 'http://callback-receiver:8080',
