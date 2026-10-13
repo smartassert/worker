@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Image;
+namespace App\Tests\Integration;
 
 use GuzzleHttp\Exception\ClientException;
 
-class GetJobBeforeCreatingJobTest extends AbstractImageTestCase
+class GetJobBeforeCreatingJobTest extends AbstractIntegrationTestCase
 {
     public function testInitialStatus(): void
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Image;
+namespace App\Tests\Integration;
 
 use App\Entity\WorkerEvent;
 use App\Repository\WorkerEventRepository;
@@ -16,7 +16,7 @@ use SmartAssert\CallbackReceiverLogReader\Parser;
 use Symfony\Component\Process\Process;
 use webignition\WaitFor\WaitFor;
 
-class CreateCompileExecuteTest extends AbstractImageTestCase
+class CreateCompileExecuteTest extends AbstractIntegrationTestCase
 {
     private ClientRequestSender $clientRequestSender;
     private JsonResponseAsserter $jsonResponseAsserter;
