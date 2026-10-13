@@ -117,4 +117,29 @@ abstract class AbstractIntegrationTestCase extends WebTestCase
 
         return $yamlFileCollectionSerializer->serialize($yamlFileCollection);
     }
+
+    protected static function isApplicationComplete(): bool
+    {
+        $state = self::fetchApplicationState();
+
+        return true === self::isComponentEndState($state, 'application')
+            && true === self::isComponentEndState($state, 'event_delivery');
+    }
+
+    /**
+     * @param array<mixed>     $data
+     * @param non-empty-string $key
+     */
+    private static function isComponentEndState(array $data, string $key): bool
+    {
+        $state = $data[$key] ?? [];
+        $state = is_array($state) ? $state : [];
+
+        $metaState = $state['meta_state'] ?? [];
+        $metaState = is_array($metaState) ? $metaState : [];
+
+        $metaStateEnded = $metaState['ended'] ?? false;
+
+        return is_bool($metaStateEnded) && $metaStateEnded;
+    }
 }
