@@ -1,0 +1,1354 @@
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8QMCZPEJMR3HCGYJKK8C",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=90896bc2e2f53a6ad3353c6e02762f2e55367cde86bd4a3db0d838d1398e297d",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1094"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"compilation\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]}},\"new_state\":{\"application\":{\"state\":\"compiling\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\"]},\"compilation\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "compilation": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "compiling",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling"
+                ]
+            },
+            "compilation": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4041 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8QNBD2JS7RVN2WGQKJKW",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=0a60d9bd51105ccccb921a92df366ae853e9e93b268e26eb05e2f9b51071f2b9",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1118"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"compiling\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\"]},\"compilation\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]}},\"new_state\":{\"application\":{\"state\":\"compiling\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\"]},\"compilation\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "compiling",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling"
+                ]
+            },
+            "compilation": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "compiling",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling"
+                ]
+            },
+            "compilation": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4115 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:1",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=27e50adb798010642ba7aef3dc06e6d081a3fe28706ceaa05b875f6814656ea7",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "369"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":1,\"type\":\"job\\/started\",\"body\":{\"tests\":[\"Test\\/chrome-open-index-with-step-failure.yml\"]},\"label\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"reference\":\"63567cfab6bc185e75bf7cb5075ebcb9\",\"related_references\":[{\"label\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"reference\":\"601c1aba02051a0d88c13ca974dd839e\"}]}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 1,
+        "type": "job/started",
+        "body": {
+            "tests": [
+                "Test/chrome-open-index-with-step-failure.yml"
+            ]
+        },
+        "label": "8a1303e0b4d0f18486a183f28a3299ae",
+        "reference": "63567cfab6bc185e75bf7cb5075ebcb9",
+        "related_references": [
+            {
+                "label": "Test/chrome-open-index-with-step-failure.yml",
+                "reference": "601c1aba02051a0d88c13ca974dd839e"
+            }
+        ]
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1581 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:2",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=dde16200b3de469ec53f0189b072d36b3e247f9469df8e0e706e276d10b98492",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "202"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":2,\"type\":\"lifecycle\\/compilation-started\",\"body\":[],\"label\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"reference\":\"63567cfab6bc185e75bf7cb5075ebcb9\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 2,
+        "type": "lifecycle/compilation-started",
+        "body": [],
+        "label": "8a1303e0b4d0f18486a183f28a3299ae",
+        "reference": "63567cfab6bc185e75bf7cb5075ebcb9"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1159 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:3",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=2d868947a28eb270e3fe0c907a5d6e6bacdf457bf613dc2cbe051511e4a3ca66",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "261"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":3,\"type\":\"compilation\\/started\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\"},\"label\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"reference\":\"601c1aba02051a0d88c13ca974dd839e\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 3,
+        "type": "compilation/started",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml"
+        },
+        "label": "Test/chrome-open-index-with-step-failure.yml",
+        "reference": "601c1aba02051a0d88c13ca974dd839e"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1294 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:4",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=7efc6f318294c1d3c5c53ae0dce640065ba5efbfcbec62dbb717f18f5cdef4c7",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "459"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":4,\"type\":\"compilation\\/passed\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\"},\"label\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"reference\":\"601c1aba02051a0d88c13ca974dd839e\",\"related_references\":[{\"label\":\"verify page is open\",\"reference\":\"5cd3f94705c78a5be189a1287673ab44\"},{\"label\":\"fail on intentionally-missing element\",\"reference\":\"3916092eea1bcab95d63e25bdad746ff\"}]}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 4,
+        "type": "compilation/passed",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml"
+        },
+        "label": "Test/chrome-open-index-with-step-failure.yml",
+        "reference": "601c1aba02051a0d88c13ca974dd839e",
+        "related_references": [
+            {
+                "label": "verify page is open",
+                "reference": "5cd3f94705c78a5be189a1287673ab44"
+            },
+            {
+                "label": "fail on intentionally-missing element",
+                "reference": "3916092eea1bcab95d63e25bdad746ff"
+            }
+        ]
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1787 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8QWFW6M86EWNBMG00HSZ",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=e72a275ca37f600c60ac88531d3fdf24fddedac1ce0d8bd2a1661fe5e90d2118",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1150"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"compiling\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\"]},\"compilation\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}},\"new_state\":{\"application\":{\"state\":\"executing\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "compiling",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling"
+                ]
+            },
+            "compilation": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "executing",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4218 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:5",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=3fd31ca1ce83b86c078e56d9f5613ace0f9ebe23971c37fc5c655092a4c848d2",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "204"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":5,\"type\":\"lifecycle\\/compilation-completed\",\"body\":[],\"label\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"reference\":\"63567cfab6bc185e75bf7cb5075ebcb9\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 5,
+        "type": "lifecycle/compilation-completed",
+        "body": [],
+        "label": "8a1303e0b4d0f18486a183f28a3299ae",
+        "reference": "63567cfab6bc185e75bf7cb5075ebcb9"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1163 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:6",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=37bfa7d388db4115649080c106135a3c25432cb0b751f868f77f02373206e08a",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "200"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":6,\"type\":\"lifecycle\\/execution-started\",\"body\":[],\"label\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"reference\":\"63567cfab6bc185e75bf7cb5075ebcb9\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 6,
+        "type": "lifecycle/execution-started",
+        "body": [],
+        "label": "8a1303e0b4d0f18486a183f28a3299ae",
+        "reference": "63567cfab6bc185e75bf7cb5075ebcb9"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:10 +0000] "POST / HTTP/1.1" 200 1155 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8R21PGW0KBEZGKCQSH70",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=8ad5c0a3c73a6723a2052cbfeb51d08c0563388cdb36a7caf7e9c5be34c58696",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1182"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"executing\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"awaiting\",\"meta_state\":{\"pending\":true,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}},\"new_state\":{\"application\":{\"state\":\"executing\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "executing",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "awaiting",
+                "meta_state": {
+                    "pending": true,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "executing",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4321 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:8",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=320aabb01a9b3d76f6808e3007d163401fa79c37b6dee6e58630eef42aff1a06",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "459"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":8,\"type\":\"step\\/passed\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"document\":{\"type\":\"step\",\"payload\":{\"name\":\"verify page is open\",\"status\":\"passed\",\"statements\":[{\"type\":\"assertion\",\"source\":\"$page.url is \\\"http:\\/\\/html-fixtures\\/index.html\\\"\",\"status\":\"passed\"}]}},\"name\":\"verify page is open\"},\"label\":\"verify page is open\",\"reference\":\"5cd3f94705c78a5be189a1287673ab44\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 8,
+        "type": "step/passed",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml",
+            "document": {
+                "type": "step",
+                "payload": {
+                    "name": "verify page is open",
+                    "status": "passed",
+                    "statements": [
+                        {
+                            "type": "assertion",
+                            "source": "$page.url is \"http://html-fixtures/index.html\"",
+                            "status": "passed"
+                        }
+                    ]
+                }
+            },
+            "name": "verify page is open"
+        },
+        "label": "verify page is open",
+        "reference": "5cd3f94705c78a5be189a1287673ab44"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST / HTTP/1.1" 200 1901 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:7",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=f951d560a57f2c1d6f939cc705319f029fc3aa6b1a41c8a431fb000e3192de97",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "697"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":7,\"type\":\"test\\/started\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"document\":{\"type\":\"test\",\"payload\":{\"path\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"config\":{\"browser\":\"chrome\",\"url\":\"http:\\/\\/html-fixtures\\/index.html\"}}},\"step_names\":[\"verify page is open\",\"fail on intentionally-missing element\"]},\"label\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"reference\":\"601c1aba02051a0d88c13ca974dd839e\",\"related_references\":[{\"label\":\"verify page is open\",\"reference\":\"5cd3f94705c78a5be189a1287673ab44\"},{\"label\":\"fail on intentionally-missing element\",\"reference\":\"3916092eea1bcab95d63e25bdad746ff\"}]}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 7,
+        "type": "test/started",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml",
+            "document": {
+                "type": "test",
+                "payload": {
+                    "path": "Test/chrome-open-index-with-step-failure.yml",
+                    "config": {
+                        "browser": "chrome",
+                        "url": "http://html-fixtures/index.html"
+                    }
+                }
+            },
+            "step_names": [
+                "verify page is open",
+                "fail on intentionally-missing element"
+            ]
+        },
+        "label": "Test/chrome-open-index-with-step-failure.yml",
+        "reference": "601c1aba02051a0d88c13ca974dd839e",
+        "related_references": [
+            {
+                "label": "verify page is open",
+                "reference": "5cd3f94705c78a5be189a1287673ab44"
+            },
+            {
+                "label": "fail on intentionally-missing element",
+                "reference": "3916092eea1bcab95d63e25bdad746ff"
+            }
+        ]
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST / HTTP/1.1" 200 2431 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:9",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=f1c2b412b0c68ff7e306b0bc737d593ecbda02ddbb155cfe790062046d866e07",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "682"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":9,\"type\":\"step\\/failed\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"document\":{\"type\":\"step\",\"payload\":{\"name\":\"fail on intentionally-missing element\",\"status\":\"failed\",\"statements\":[{\"type\":\"assertion\",\"source\":\"$\\\".non-existent\\\" exists\",\"status\":\"failed\",\"summary\":{\"operator\":\"exists\",\"source\":{\"type\":\"node\",\"body\":{\"type\":\"element\",\"identifier\":{\"source\":\"$\\\".non-existent\\\"\",\"properties\":{\"type\":\"css\",\"locator\":\".non-existent\",\"position\":1}}}}}}]}},\"name\":\"fail on intentionally-missing element\"},\"label\":\"fail on intentionally-missing element\",\"reference\":\"3916092eea1bcab95d63e25bdad746ff\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 9,
+        "type": "step/failed",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml",
+            "document": {
+                "type": "step",
+                "payload": {
+                    "name": "fail on intentionally-missing element",
+                    "status": "failed",
+                    "statements": [
+                        {
+                            "type": "assertion",
+                            "source": "$\".non-existent\" exists",
+                            "status": "failed",
+                            "summary": {
+                                "operator": "exists",
+                                "source": {
+                                    "type": "node",
+                                    "body": {
+                                        "type": "element",
+                                        "identifier": {
+                                            "source": "$\".non-existent\"",
+                                            "properties": {
+                                                "type": "css",
+                                                "locator": ".non-existent",
+                                                "position": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "name": "fail on intentionally-missing element"
+        },
+        "label": "fail on intentionally-missing element",
+        "reference": "3916092eea1bcab95d63e25bdad746ff"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST / HTTP/1.1" 200 2744 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8RM52HZBS1K6F2XENQRT",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=9e8f0975e1560ac45f6c58e710f00900e3cb96e2b25d3e82e21d7493de2757c9",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1238"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"executing\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}},\"new_state\":{\"application\":{\"state\":\"failed\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\",\"completing-event-delivery\",\"failed\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"cancelled\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\",\"cancelled\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "executing",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "failed",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing",
+                    "completing-event-delivery",
+                    "failed"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "cancelled",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "cancelled"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4485 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:10",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=90c74c3beb0ecc81ff22ce43347203987b783f8ed5750e210abe2e7c83f60f7a",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "697"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":10,\"type\":\"test\\/failed\",\"body\":{\"source\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"document\":{\"type\":\"test\",\"payload\":{\"path\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"config\":{\"browser\":\"chrome\",\"url\":\"http:\\/\\/html-fixtures\\/index.html\"}}},\"step_names\":[\"verify page is open\",\"fail on intentionally-missing element\"]},\"label\":\"Test\\/chrome-open-index-with-step-failure.yml\",\"reference\":\"601c1aba02051a0d88c13ca974dd839e\",\"related_references\":[{\"label\":\"verify page is open\",\"reference\":\"5cd3f94705c78a5be189a1287673ab44\"},{\"label\":\"fail on intentionally-missing element\",\"reference\":\"3916092eea1bcab95d63e25bdad746ff\"}]}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 10,
+        "type": "test/failed",
+        "body": {
+            "source": "Test/chrome-open-index-with-step-failure.yml",
+            "document": {
+                "type": "test",
+                "payload": {
+                    "path": "Test/chrome-open-index-with-step-failure.yml",
+                    "config": {
+                        "browser": "chrome",
+                        "url": "http://html-fixtures/index.html"
+                    }
+                }
+            },
+            "step_names": [
+                "verify page is open",
+                "fail on intentionally-missing element"
+            ]
+        },
+        "label": "Test/chrome-open-index-with-step-failure.yml",
+        "reference": "601c1aba02051a0d88c13ca974dd839e",
+        "related_references": [
+            {
+                "label": "verify page is open",
+                "reference": "5cd3f94705c78a5be189a1287673ab44"
+            },
+            {
+                "label": "fail on intentionally-missing element",
+                "reference": "3916092eea1bcab95d63e25bdad746ff"
+            }
+        ]
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST / HTTP/1.1" 200 2432 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.event",
+        "webhook-id": "worker_event:11",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=ad14bb12a1efca33860c2406888d6d666b0b0370d7a2ad63e3aca0041c892947",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "251"
+    },
+    "method": "POST",
+    "body": "{\"job\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"sequence_number\":11,\"type\":\"job\\/ended\",\"body\":{\"end_state\":\"failed\\/test\\/failure\",\"success\":false,\"event_count\":11},\"label\":\"8a1303e0b4d0f18486a183f28a3299ae\",\"reference\":\"63567cfab6bc185e75bf7cb5075ebcb9\"}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "job": "8a1303e0b4d0f18486a183f28a3299ae",
+        "sequence_number": 11,
+        "type": "job/ended",
+        "body": {
+            "end_state": "failed/test/failure",
+            "success": false,
+            "event_count": 11
+        },
+        "label": "8a1303e0b4d0f18486a183f28a3299ae",
+        "reference": "63567cfab6bc185e75bf7cb5075ebcb9"
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST / HTTP/1.1" 200 1295 "-" "Symfony HttpClient (Curl)"
+-----------------
+{
+    "path": "/worker.application.state_changed",
+    "headers": {
+        "host": "callback-receiver:8080",
+        "webhook-event": "worker.application.state_changed",
+        "webhook-id": "01M4XC8RQC9S22KTPTFPDW5TT6",
+        "content-type": "application/json",
+        "webhook-signature": "sha256=e02d8a4858a8e4784ca0f02fc106a00bc961919cc8fe193e66e6e7ae021adee0",
+        "accept": "*/*",
+        "user-agent": "Symfony HttpClient (Curl)",
+        "accept-encoding": "gzip",
+        "content-length": "1294"
+    },
+    "method": "POST",
+    "body": "{\"previous_state\":{\"application\":{\"state\":\"failed\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\",\"completing-event-delivery\",\"failed\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"cancelled\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\",\"cancelled\"]},\"event_delivery\":{\"state\":\"running\",\"meta_state\":{\"pending\":false,\"ended\":false,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\"]}},\"new_state\":{\"application\":{\"state\":\"failed\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"compiling\",\"executing\",\"completing-event-delivery\",\"failed\"]},\"compilation\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]},\"execution\":{\"state\":\"cancelled\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":false},\"previous_states\":[\"awaiting\",\"running\",\"cancelled\"]},\"event_delivery\":{\"state\":\"complete\",\"meta_state\":{\"pending\":false,\"ended\":true,\"succeeded\":true},\"previous_states\":[\"awaiting\",\"running\",\"complete\"]}}}",
+    "fresh": false,
+    "hostname": "callback-receiver",
+    "ip": "::ffff:172.18.0.12",
+    "ips": [],
+    "protocol": "http",
+    "query": {},
+    "subdomains": [],
+    "xhr": false,
+    "os": {
+        "hostname": "edee85a6afe8"
+    },
+    "connection": {},
+    "json": {
+        "previous_state": {
+            "application": {
+                "state": "failed",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing",
+                    "completing-event-delivery",
+                    "failed"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "cancelled",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "cancelled"
+                ]
+            },
+            "event_delivery": {
+                "state": "running",
+                "meta_state": {
+                    "pending": false,
+                    "ended": false,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running"
+                ]
+            }
+        },
+        "new_state": {
+            "application": {
+                "state": "failed",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "compiling",
+                    "executing",
+                    "completing-event-delivery",
+                    "failed"
+                ]
+            },
+            "compilation": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            },
+            "execution": {
+                "state": "cancelled",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": false
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "cancelled"
+                ]
+            },
+            "event_delivery": {
+                "state": "complete",
+                "meta_state": {
+                    "pending": false,
+                    "ended": true,
+                    "succeeded": true
+                },
+                "previous_states": [
+                    "awaiting",
+                    "running",
+                    "complete"
+                ]
+            }
+        }
+    }
+}
+::ffff:172.18.0.12 - - [14/Oct/2026:14:15:11 +0000] "POST /worker.application.state_changed HTTP/1.1" 200 4649 "-" "Symfony HttpClient (Curl)"
