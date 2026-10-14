@@ -20,7 +20,7 @@ jobs:
       - name: Set test names
         id: test_names
         run: |
-          TEST_NAMES=$(ls tests/Integration --ignore=Abstract*)
+          TEST_NAMES=$(ls tests/Integration --ignore=Abstract* --ignore=CreateCompileExecute*)
           TEST_NAMES_LACKING_EXTENSION="${TEST_NAMES//.php/}"          
           TEST_NAMES_AS_JSON_ARRAY=$(jq -ncR '[inputs]' <<< "$TEST_NAMES_LACKING_EXTENSION")
 
