@@ -43,4 +43,4 @@ jobs:
         run: |
           ./vendor/bin/phpunit -c phpunit.integration.xml \
           tests/Integration/CreateCompileExecuteTest.php \
-          filter=testCreateCompileExecute#"${{ matrix.test_name }}"
+          --filter=testCreateCompileExecute#"${{ matrix.test_name }}"
