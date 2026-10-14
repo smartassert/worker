@@ -9,7 +9,9 @@ use App\Repository\WorkerEventRepository;
 use App\Request\CreateJobRequest;
 use App\Tests\Services\CreateJobSourceFactory;
 use App\Tests\Services\EntityRemover;
+use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Http\Message\RequestInterface;
 use SmartAssert\CallbackReceiverLogReader\Parser;
 use Symfony\Component\Process\Process;
 use webignition\WaitFor\WaitFor;
@@ -37,13 +39,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
     }
 
     /**
-     * @param non-empty-string[]                  $manifestPaths
-     * @param string[]                            $sourcePaths
-     * @param array<mixed>                        $expectedApplicationState
-     * @param array<mixed>                        $expectedCompilationState
-     * @param array<mixed>                        $expectedExecutionState
-     * @param array<int, array<mixed>>            $expectedTestDataCollection
-     * @param callable(int, string): array<mixed> $expectedRequestsCreator
+     * @param non-empty-string[]                        $manifestPaths
+     * @param string[]                                  $sourcePaths
+     * @param array<mixed>                              $expectedApplicationState
+     * @param array<mixed>                              $expectedCompilationState
+     * @param array<mixed>                              $expectedExecutionState
+     * @param array<int, array<mixed>>                  $expectedTestDataCollection
+     * @param callable(int, string): RequestInterface[] $expectedRequestsCreator
      */
     #[DataProvider('createCompileExecuteDataProvider')]
     public function testCreateCompileExecute(
@@ -137,22 +139,23 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
         $output = $process->getOutput();
         $parser = new Parser();
 
-        $requests = $parser->parse($output, $expectedDispatchedNotificationsCount);
-        self::assertCount($expectedDispatchedNotificationsCount, $requests);
-        self::assertSame(count($requests), count($expectedRequests));
+        $actualRequests = $parser->parse($output, $expectedDispatchedNotificationsCount);
+        self::assertCount($expectedDispatchedNotificationsCount, $actualRequests);
+        self::assertSame(count($actualRequests), count($expectedRequests));
 
-        foreach ($expectedRequests as $requestIndex => $expectedRequestData) {
-            $request = $requests[$requestIndex];
-            \assert(is_array($expectedRequestData));
+        $this->assertRequestCollectionContainsRequestCollection(
+            $expectedRequests,
+            $actualRequests,
+            'expected',
+            'actual',
+        );
 
-            self::assertSame('POST', $request->getMethod());
-            self::assertSame('application/json', $request->getHeaderLine('Content-Type'));
-            self::assertEquals($expectedRequestData['uri'], (string) $request->getUri());
-
-            $payload = json_decode($request->getBody()->getContents(), true);
-            self::assertIsArray($payload);
-            self::assertEquals($expectedRequestData['payload'], $payload);
-        }
+        $this->assertRequestCollectionContainsRequestCollection(
+            $actualRequests,
+            $expectedRequests,
+            'actual',
+            'expected',
+        );
     }
 
     /**
@@ -377,9 +380,11 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     $applicationFailed,
                 ) {
                     return [
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $awaitingComponent,
                                     'compilation' => $runningComponent,
@@ -392,11 +397,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $awaitingComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -409,11 +416,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber,
                                 'type' => 'job/started',
@@ -441,22 +450,26 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -468,11 +481,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/passed',
@@ -494,11 +509,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -510,11 +527,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index-compilation-failure.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -527,11 +546,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/failed',
@@ -564,11 +585,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index-compilation-failure.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber + 1,
                                 'type' => 'job/ended',
@@ -579,11 +602,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                 ],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
@@ -596,8 +621,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $completeComponent,
                                 ],
-                            ],
-                        ],
+                            ])
+                        ),
                     ];
                 },
             ],
@@ -662,9 +687,11 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     $applicationFailed,
                 ) {
                     return [
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $awaitingComponent,
                                     'compilation' => $runningComponent,
@@ -677,11 +704,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $awaitingComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -694,11 +723,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber,
                                 'type' => 'job/started',
@@ -718,22 +749,26 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -745,11 +780,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index-compilation-failure.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -762,11 +799,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/failed',
@@ -799,11 +838,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index-compilation-failure.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber + 1,
                                 'type' => 'job/ended',
@@ -814,11 +855,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                 ],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
@@ -831,8 +874,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $completeComponent,
                                 ],
-                            ],
-                        ],
+                            ])
+                        ),
                     ];
                 },
             ],
@@ -938,9 +981,11 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     $applicationComplete,
                 ) {
                     return [
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $awaitingComponent,
                                     'compilation' => $runningComponent,
@@ -953,11 +998,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $awaitingComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -970,11 +1017,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber,
                                 'type' => 'job/started',
@@ -1010,22 +1059,26 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -1037,11 +1090,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/passed',
@@ -1063,11 +1118,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -1079,11 +1136,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-firefox-open-index.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/passed',
@@ -1105,11 +1164,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -1121,11 +1182,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-form.yml'
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/passed',
@@ -1147,11 +1210,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -1164,33 +1229,39 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-completed',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/execution-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/started',
@@ -1225,11 +1296,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
@@ -1242,11 +1315,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $runningComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/passed',
@@ -1279,11 +1354,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index.ymlverify page is open',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/passed',
@@ -1318,11 +1395,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/started',
@@ -1357,11 +1436,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/passed',
@@ -1389,11 +1470,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     . 'Test/chrome-firefox-open-index.yml'
                                     . 'verify page is open',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/passed',
@@ -1428,11 +1511,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/started',
@@ -1467,11 +1552,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/passed',
@@ -1499,11 +1586,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     . 'Test/chrome-firefox-open-index.yml'
                                     . 'verify page is open',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/passed',
@@ -1538,11 +1627,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/started',
@@ -1577,11 +1668,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/passed',
@@ -1609,11 +1702,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     . 'Test/chrome-open-form.yml'
                                     . 'verify page is open',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
@@ -1626,11 +1721,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $completeComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/passed',
@@ -1664,22 +1761,26 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/execution-completed',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber + 1,
                                 'type' => 'job/ended',
@@ -1690,11 +1791,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                 ],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompletingEventDelivery,
                                     'compilation' => $completeComponent,
@@ -1707,8 +1810,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $completeComponent,
                                     'event_delivery' => $completeComponent,
                                 ],
-                            ],
-                        ],
+                            ])
+                        ),
                     ];
                 },
             ],
@@ -1785,9 +1888,11 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     $applicationFailed,
                 ) {
                     return [
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $awaitingComponent,
                                     'compilation' => $runningComponent,
@@ -1800,11 +1905,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $awaitingComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -1817,11 +1924,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber,
                                 'type' => 'job/started',
@@ -1841,22 +1950,26 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/started',
@@ -1868,11 +1981,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     $workerJobLabel
                                     . 'Test/chrome-open-index-with-step-failure.yml',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'compilation/passed',
@@ -1902,11 +2017,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
@@ -1919,33 +2036,39 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $awaitingComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/compilation-completed',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'lifecycle/execution-started',
                                 'body' => [],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/started',
@@ -1989,11 +2112,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
@@ -2006,11 +2131,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $runningComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/passed',
@@ -2038,11 +2165,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     . 'Test/chrome-open-index-with-step-failure.yml'
                                     . 'verify page is open',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'step/failed',
@@ -2087,11 +2216,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     . 'Test/chrome-open-index-with-step-failure.yml'
                                     . 'fail on intentionally-missing element',
                                 ),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
@@ -2104,11 +2235,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $cancelledComponent,
                                     'event_delivery' => $runningComponent,
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => ++$firstSequenceNumber,
                                 'type' => 'test/failed',
@@ -2152,11 +2285,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                         ),
                                     ],
                                 ],
-                            ],
-                        ],
-                        [
-                            'uri' => '/',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/',
+                            [],
+                            (string) json_encode([
                                 'job' => $workerJobLabel,
                                 'sequence_number' => $firstSequenceNumber + 1,
                                 'type' => 'job/ended',
@@ -2167,11 +2302,13 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                 ],
                                 'label' => $workerJobLabel,
                                 'reference' => md5($workerJobLabel),
-                            ],
-                        ],
-                        [
-                            'uri' => '/worker.application.state_changed',
-                            'payload' => [
+                            ])
+                        ),
+                        new Request(
+                            'POST',
+                            '/worker.application.state_changed',
+                            [],
+                            (string) json_encode([
                                 'previous_state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $completeComponent,
@@ -2184,11 +2321,69 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                                     'execution' => $cancelledComponent,
                                     'event_delivery' => $completeComponent,
                                 ],
-                            ],
-                        ],
+                            ])
+                        ),
                     ];
                 },
             ],
         ];
+    }
+
+    /**
+     * @param RequestInterface[] $collection
+     * @param RequestInterface[] $comparator
+     */
+    private function assertRequestCollectionContainsRequestCollection(
+        array $collection,
+        array $comparator,
+        string $collectionName,
+        string $comparatorName,
+    ): void {
+        foreach ($collection as $requestIndex => $request) {
+            if (false === $this->requestCollectionContainsRequest($comparator, $request)) {
+                $requestData = json_decode($request->getBody()->getContents(), true);
+                $request->getBody()->rewind();
+
+                $message = sprintf(
+                    '%s request %d not found in %s collection.',
+                    ucfirst($collectionName),
+                    $requestIndex,
+                    $comparatorName,
+                );
+
+                $failureData = [
+                    'message' => $message,
+                    'collection' => $collectionName,
+                    'comparator' => $comparatorName,
+                    'index' => $requestIndex,
+                    'missing-request' => $requestData,
+                ];
+
+                $this->fail((string) json_encode($failureData, JSON_PRETTY_PRINT));
+            }
+        }
+    }
+
+    /**
+     * @param RequestInterface[] $collection
+     */
+    private function requestCollectionContainsRequest(array $collection, RequestInterface $request): bool
+    {
+        foreach ($collection as $comparator) {
+            $uriMatches = (string) $comparator->getUri() === (string) $request->getUri();
+
+            $comparatorPayload = json_decode($comparator->getBody()->getContents(), true);
+            $requestPayload = json_decode($request->getBody()->getContents(), true);
+            $comparator->getBody()->rewind();
+            $request->getBody()->rewind();
+
+            $payloadMatches = $comparatorPayload == $requestPayload;
+
+            if ($uriMatches && $payloadMatches) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
