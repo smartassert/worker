@@ -5,10 +5,15 @@ namespace App\Entity;
 use App\Repository\WorkerEventReferenceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
+/**
+ * @phpstan-type SerializedWorkerEventReference array{
+ *     label: non-empty-string,
+ *     reference: non-empty-string
+ * }
+ */
 #[ORM\Entity(repositoryClass: WorkerEventReferenceRepository::class)]
-class WorkerEventReference implements ResourceReferenceInterface
+class WorkerEventReference
 {
     #[ORM\Column(type: Types::TEXT)]
     private readonly string $label;
@@ -42,6 +47,9 @@ class WorkerEventReference implements ResourceReferenceInterface
         return md5($label . ':' . $reference);
     }
 
+    /**
+     * @return SerializedWorkerEventReference
+     */
     public function toArray(): array
     {
         \assert('' !== $this->label);

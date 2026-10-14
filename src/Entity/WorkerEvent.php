@@ -9,7 +9,6 @@ use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
@@ -25,10 +24,10 @@ class WorkerEvent
 
     #[ORM\ManyToOne(targetEntity: WorkerEventReference::class)]
     #[ORM\JoinColumn(nullable: false)]
-    public readonly ResourceReferenceInterface $reference;
+    public readonly WorkerEventReference $reference;
 
     /**
-     * @var Collection<int, ResourceReferenceInterface>
+     * @var Collection<int, WorkerEventReference>
      */
     #[ORM\ManyToMany(targetEntity: WorkerEventReference::class, cascade: ['persist'])]
     private Collection $relatedReferences;
@@ -48,7 +47,7 @@ class WorkerEvent
      */
     public function __construct(
         string $type,
-        ResourceReferenceInterface $reference,
+        WorkerEventReference $reference,
         array $payload,
         ?array $relatedReferences = null,
     ) {
@@ -93,7 +92,7 @@ class WorkerEvent
     }
 
     /**
-     * @return Collection<int, ResourceReferenceInterface>
+     * @return Collection<int, WorkerEventReference>
      */
     public function getRelatedReferences(): Collection
     {

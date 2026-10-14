@@ -5,13 +5,22 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\WorkerEvent;
-use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
+use App\Entity\WorkerEventReference;
 
 /**
- * @phpstan-import-type SerializedEvent from EventInterface
+ * @phpstan-type SerializedEvent array{
+ *      job: non-empty-string,
+ *      sequence_number: positive-int,
+ *      type: non-empty-string,
+ *      body: array<mixed>,
+ *      related_references?: array<array{label: non-empty-string, reference: non-empty-string}>,
+ *      label: non-empty-string,
+ *      reference: non-empty-string
+ *  }
+ *
+ * @phpstan-import-type SerializedWorkerEventReference from WorkerEventReference
  */
-readonly class SerializableEvent implements EventInterface, \JsonSerializable
+readonly class SerializableEvent implements \JsonSerializable
 {
     /**
      * @param non-empty-string $job
@@ -29,6 +38,9 @@ readonly class SerializableEvent implements EventInterface, \JsonSerializable
         return $this->toArray();
     }
 
+    /**
+     * @return SerializedEvent
+     */
     public function toArray(): array
     {
         $data = array_merge(
@@ -47,9 +59,24 @@ readonly class SerializableEvent implements EventInterface, \JsonSerializable
         }
 
         if (0 !== count($references)) {
-            $data['related_references'] = new ResourceReferenceCollection($references)->toArray();
+            $data['related_references'] = $this->serializeRelatedReferences($references);
         }
 
         return $data;
+    }
+
+    /**
+     * @param WorkerEventReference[] $references
+     *
+     * @return SerializedWorkerEventReference[]
+     */
+    private function serializeRelatedReferences(array $references): array
+    {
+        $serializedReferences = [];
+        foreach ($references as $reference) {
+            $serializedReferences[] = $reference->toArray();
+        }
+
+        return $serializedReferences;
     }
 }
