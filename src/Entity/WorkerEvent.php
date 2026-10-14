@@ -9,7 +9,6 @@ use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
@@ -43,22 +42,23 @@ class WorkerEvent
     private WorkerEventState $state;
 
     /**
-     * @param non-empty-string $type
-     * @param array<mixed>     $payload
+     * @param non-empty-string            $type
+     * @param array<mixed>                $payload
+     * @param null|WorkerEventReference[] $relatedReferences
      */
     public function __construct(
         string $type,
         ResourceReferenceInterface $reference,
         array $payload,
-        ?ResourceReferenceCollectionInterface $relatedReferences = null,
+        ?array $relatedReferences = null,
     ) {
         $this->state = WorkerEventState::QUEUED;
         $this->type = $type;
         $this->reference = $reference;
         $this->payload = $payload;
 
-        $this->relatedReferences = $relatedReferences instanceof ResourceReferenceCollectionInterface
-            ? new ArrayCollection($relatedReferences->getReferences())
+        $this->relatedReferences = is_array($relatedReferences)
+            ? new ArrayCollection($relatedReferences)
             : new ArrayCollection();
     }
 
