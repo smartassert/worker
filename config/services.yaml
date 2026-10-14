@@ -95,10 +95,6 @@ services:
             $maxDelayMilliseconds: 0
             $jitter: 0
 
-    App\Messenger\DeliverEventMessageRetryStrategy:
-        arguments:
-            $multiplierRetryStrategy: '@app.messenger.retry_strategy.deliver_event.multiplier'
-
     webignition\YamlDocumentSetParser\Parser: ~
 
     SmartAssert\YamlFile\FileHashes\Deserializer: ~
@@ -152,11 +148,8 @@ services:
     SmartAssert\ResultsClient\EventFactory: ~
     SmartAssert\ResultsClient\ResourceReferenceFactory: ~
 
-    SmartAssert\ResultsClient\AddEventClientInterface:
-        class: SmartAssert\ResultsClient\AddEventClient
-
     SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory: ~
 
-    App\MessageDispatcher\SendWebhookMessageDispatcher:
+    App\MessageDispatcher\StateChangeSendWebhookDispatcher:
         arguments:
             $secret: '%state_notify_secret%'

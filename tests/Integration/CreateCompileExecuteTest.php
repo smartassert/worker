@@ -61,7 +61,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
 
         $createResponse = self::makeCreateJobRequest([
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_EVENT_ADD_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
             CreateJobRequest::STATE_NOTIFY_URL => 'http://callback-receiver:8080',
@@ -2189,29 +2190,5 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                 },
             ],
         ];
-    }
-
-    private static function isApplicationComplete(): bool
-    {
-        $state = self::fetchApplicationState();
-
-        return true === self::isComponentEndState($state, 'application');
-    }
-
-    /**
-     * @param array<mixed>     $data
-     * @param non-empty-string $key
-     */
-    private static function isComponentEndState(array $data, string $key): bool
-    {
-        $state = $data[$key] ?? [];
-        $state = is_array($state) ? $state : [];
-
-        $metaState = $state['meta_state'] ?? [];
-        $metaState = is_array($metaState) ? $metaState : [];
-
-        $metaStateEnded = $metaState['ended'] ?? false;
-
-        return is_bool($metaStateEnded) && $metaStateEnded;
     }
 }

@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace App\MessageDispatcher;
 
-use App\Event\NotifiableApplicationStateChangedEvent;
-use App\Event\NotifiableEventInterface;
+use App\Event\NotifiableEventDeliveryEvent;
+use App\Model\WorkerEventRemoteEventId;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface as MessengerExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\RemoteEvent\RemoteEvent;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
 use Symfony\Component\Webhook\Subscriber;
 
-readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
+readonly class EventNotificationSendWebhookDispatcher implements EventSubscriberInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
-        private string $secret,
     ) {}
 
     /**
-     * @return array<class-string, array<mixed>>
+     * @return array<string, array<int, array<int, int|string>>>
      */
     public static function getSubscribedEvents(): array
     {
         return [
-            NotifiableApplicationStateChangedEvent::class => [
+            NotifiableEventDeliveryEvent::class => [
                 ['dispatch', 0],
             ],
         ];
@@ -36,18 +34,13 @@ readonly class SendWebhookMessageDispatcher implements EventSubscriberInterface
     /**
      * @throws MessengerExceptionInterface
      */
-    public function dispatch(NotifiableEventInterface $event): void
+    public function dispatch(NotifiableEventDeliveryEvent $event): void
     {
-        $notifyUrl = $event->getNotifyUrl();
-        if (null === $notifyUrl) {
-            return;
-        }
-
-        $subscriber = new Subscriber($notifyUrl, $this->secret);
+        $subscriber = new Subscriber($event->job->getEventNotifyUrl(), $event->job->getEventNotifyToken());
 
         $remoteEvent = new RemoteEvent(
             name: $event->getRemoteEventName(),
-            id: (string) new Ulid(),
+            id: (string) WorkerEventRemoteEventId::fromWorkerEvent($event->getWorkerEvent()),
             payload: $event->getPayload(),
         );
 

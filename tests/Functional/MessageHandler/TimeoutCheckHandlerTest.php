@@ -53,6 +53,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $job = new Job(
             md5((string) rand()),
             'https://results.example.com/event/add/' . new Ulid(),
+            'event-notify-token',
             600,
             ['test.yml'],
             null,
@@ -91,6 +92,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
             new Job(
                 md5((string) rand()),
                 'https://results.example.com/event/add/' . new Ulid(),
+                'event-notify-token',
                 $jobMaximumDuration,
                 ['test.yml'],
                 null,
@@ -134,8 +136,11 @@ class TimeoutCheckHandlerTest extends WebTestCase
         $labelProperty = $reflectionClass->getProperty('label');
         $labelProperty->setValue($reflectionJob, $job->getLabel());
 
-        $eventAddUrlProperty = $reflectionClass->getProperty('eventAddUrl');
-        $eventAddUrlProperty->setValue($reflectionJob, $job->getEventAddUrl());
+        $eventNotifyUrlProperty = $reflectionClass->getProperty('eventNotifyUrl');
+        $eventNotifyUrlProperty->setValue($reflectionJob, $job->getEventNotifyUrl());
+
+        $eventNotifyTokenProperty = $reflectionClass->getProperty('eventNotifyToken');
+        $eventNotifyTokenProperty->setValue($reflectionJob, $job->getEventNotifyToken());
 
         $testPathsProperty = $reflectionClass->getProperty('testPaths');
         $testPathsProperty->setValue($reflectionJob, $job->getTestPaths());

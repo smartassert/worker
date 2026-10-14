@@ -8,9 +8,8 @@ use App\Entity\Job;
 use App\Entity\WorkerEvent;
 use App\Enum\WorkerEventState;
 use App\Event\EmittableEvent\JobStartedEvent;
-use App\Event\EventDelivery\SendingEvent;
-use App\Event\EventDelivery\SentEvent;
-use App\Message\DeliverEventMessage;
+use App\Event\NotifiableEventDeliveryEvent;
+use App\Model\WorkerEventRemoteEventId;
 use App\Repository\JobRepository;
 use App\Services\EntityMutator;
 use App\Services\WorkerEventFactory;
@@ -24,6 +23,11 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
+use Symfony\Component\RemoteEvent\RemoteEvent;
+use Symfony\Component\Webhook\Messenger\SendWebhookMessage;
+use Symfony\Component\Webhook\Subscriber;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class WorkerEventStateTest extends WebTestCase
@@ -97,25 +101,44 @@ class WorkerEventStateTest extends WebTestCase
      */
     public static function workerEventStateIsSetDataProvider(): array
     {
+        $messageCreator = function (WorkerEvent $workerEvent) {
+            return new SendWebhookMessage(
+                new Subscriber('https://example.com', 'secret'),
+                new RemoteEvent(
+                    NotifiableEventDeliveryEvent::REMOTE_EVENT_NAME,
+                    (string) WorkerEventRemoteEventId::fromWorkerEvent($workerEvent),
+                    [],
+                ),
+            );
+        };
+
         return [
             'queued -> sending' => [
                 'startingState' => WorkerEventState::QUEUED,
-                'eventCreator' => function (WorkerEvent $workerEvent) {
-                    return new SendingEvent($workerEvent);
+                'eventCreator' => function (WorkerEvent $workerEvent) use ($messageCreator) {
+                    $message = $messageCreator($workerEvent);
+                    $envelope = new Envelope($message);
+
+                    return new WorkerMessageReceivedEvent($envelope, 'receiver-name');
                 },
                 'expectedState' => WorkerEventState::SENDING,
             ],
             'sending -> complete' => [
                 'startingState' => WorkerEventState::SENDING,
-                'eventCreator' => function (WorkerEvent $workerEvent) {
-                    return new SentEvent($workerEvent);
+                'eventCreator' => function (WorkerEvent $workerEvent) use ($messageCreator) {
+                    $message = $messageCreator($workerEvent);
+
+                    $envelope = new Envelope($message);
+
+                    return new WorkerMessageHandledEvent($envelope, 'receiver-name');
                 },
                 'expectedState' => WorkerEventState::COMPLETE,
             ],
             'sending -> failed' => [
                 'startingState' => WorkerEventState::SENDING,
-                'eventCreator' => function (WorkerEvent $workerEvent) {
-                    $message = new DeliverEventMessage($workerEvent->getId());
+                'eventCreator' => function (WorkerEvent $workerEvent) use ($messageCreator) {
+                    $message = $messageCreator($workerEvent);
+
                     $envelope = new Envelope($message);
 
                     return new WorkerMessageFailedEvent(

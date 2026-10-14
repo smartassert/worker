@@ -9,7 +9,6 @@ use App\Entity\WorkerEventReference;
 use App\Event\EmittableEvent\EventTypeInterface;
 use App\Tests\Services\EntityRemover;
 use PHPUnit\Framework\Attributes\DataProvider;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
 class WorkerEventTest extends AbstractEntityTestCase
 {
@@ -56,11 +55,11 @@ class WorkerEventTest extends AbstractEntityTestCase
                     EventTypeInterface::COMPILATION_FAILED,
                     new WorkerEventReference('non-empty label', 'non-empty reference'),
                     [],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('label 1', 'reference 1'),
                         new WorkerEventReference('label 2', 'reference 2'),
                         new WorkerEventReference('label 3', 'reference 3'),
-                    ])
+                    ]
                 ),
             ],
         ];

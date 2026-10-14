@@ -37,7 +37,6 @@ use App\Tests\Services\EnvironmentFactory;
 use Doctrine\Common\Collections\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Attributes\DataProvider;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use webignition\BasilCompilerModels\Model\TestManifestCollection;
 use webignition\ObjectReflector\ObjectReflector;
@@ -242,10 +241,10 @@ class WorkerEventFactoryTest extends WebTestCase
                             'Test/test2.yaml',
                         ],
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('Test/test1.yaml', md5(self::JOB_LABEL . 'Test/test1.yaml')),
                         new WorkerEventReference('Test/test2.yaml', md5(self::JOB_LABEL . 'Test/test2.yaml')),
-                    ])
+                    ],
                 ),
             ],
             CompilationStartedEvent::class => [
@@ -269,10 +268,10 @@ class WorkerEventFactoryTest extends WebTestCase
                     [
                         'source' => $testSource,
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('step one', md5(self::JOB_LABEL . $testSource . 'step one')),
                         new WorkerEventReference('step two', md5(self::JOB_LABEL . $testSource . 'step two')),
-                    ]),
+                    ],
                 ),
             ],
             CompilationFailedEvent::class => [
@@ -332,9 +331,9 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ]),
+                    ],
                 ),
             ],
             'step/passed' => [
@@ -396,9 +395,9 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ]),
+                    ],
                 ),
             ],
             'test/failed' => [
@@ -418,9 +417,9 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ]),
+                    ],
                 ),
             ],
             JobTimeoutEvent::class => [
@@ -461,9 +460,9 @@ class WorkerEventFactoryTest extends WebTestCase
                             'step 1',
                         ],
                     ],
-                    new ResourceReferenceCollection([
+                    [
                         new WorkerEventReference('step 1', md5(self::JOB_LABEL . $testSource . 'step 1')),
-                    ]),
+                    ],
                 ),
             ],
             'step/exception' => [

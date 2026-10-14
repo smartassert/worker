@@ -7,8 +7,6 @@ namespace App\Services;
 use App\Entity\WorkerEventReference;
 use App\Model\ResourceReferenceSource;
 use App\Repository\WorkerEventReferenceRepository;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
-use SmartAssert\ResultsClient\Model\ResourceReferenceCollectionInterface;
 
 class WorkerEventReferenceFactory
 {
@@ -36,8 +34,10 @@ class WorkerEventReferenceFactory
     /**
      * @param non-empty-string          $jobLabel
      * @param ResourceReferenceSource[] $referenceSources
+     *
+     * @return WorkerEventReference[]
      */
-    public function createCollection(string $jobLabel, array $referenceSources): ResourceReferenceCollectionInterface
+    public function createCollection(string $jobLabel, array $referenceSources): array
     {
         $testReferences = [];
         foreach ($referenceSources as $referenceSource) {
@@ -45,6 +45,6 @@ class WorkerEventReferenceFactory
             $testReferences[] = $this->create($referenceSource->label, $reference);
         }
 
-        return new ResourceReferenceCollection($testReferences);
+        return $testReferences;
     }
 }
