@@ -41,9 +41,12 @@ class CreateJobRequestResolver implements ValueResolverInterface
         $sourceContent = is_string($sourceContent) ? $sourceContent : '';
 
         $stateNotifyUrl = $request->request->get(CreateJobRequest::KEY_STATE_NOTIFY_URL);
-        $stateNotifyUrl = is_string($stateNotifyUrl) ? $stateNotifyUrl : '';
-        $stateNotifyUrl = trim($stateNotifyUrl);
+        $stateNotifyUrl = is_string($stateNotifyUrl) ? trim($stateNotifyUrl) : '';
         $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
+
+        $stateNotifyToken = $request->request->get(CreateJobRequest::KEY_STATE_NOTIFY_TOKEN);
+        $stateNotifyToken = is_string($stateNotifyToken) ? trim($stateNotifyToken) : '';
+        $stateNotifyToken = '' !== $stateNotifyToken ? $stateNotifyToken : null;
 
         return [new CreateJobRequest(
             $label,
@@ -52,6 +55,7 @@ class CreateJobRequestResolver implements ValueResolverInterface
             $maximumDurationInSeconds,
             $sourceContent,
             $stateNotifyUrl,
+            $stateNotifyToken,
         )];
     }
 }

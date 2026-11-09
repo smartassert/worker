@@ -39,12 +39,16 @@ class Job
     #[ORM\Column(nullable: true)]
     private ?string $stateNotifyUrl;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $stateNotifyToken;
+
     /**
      * @param non-empty-string             $label
      * @param non-empty-string             $eventNotifyUrl
      * @param non-empty-string             $eventNotifyToken
      * @param array<int, non-empty-string> $testPaths
      * @param ?non-empty-string            $stateNotifyUrl
+     * @param ?non-empty-string            $stateNotifyToken
      */
     public function __construct(
         string $label,
@@ -53,6 +57,7 @@ class Job
         int $maximumDurationInSeconds,
         array $testPaths,
         ?string $stateNotifyUrl,
+        ?string $stateNotifyToken,
     ) {
         $this->label = $label;
         $this->eventNotifyUrl = $eventNotifyUrl;
@@ -62,6 +67,7 @@ class Job
         $this->startDateTime = new \DateTimeImmutable();
         $this->endState = null;
         $this->stateNotifyUrl = $stateNotifyUrl;
+        $this->stateNotifyToken = $stateNotifyToken;
     }
 
     public function setEndState(JobEndState $state): void
@@ -105,5 +111,10 @@ class Job
     public function getStateNotifyUrl(): ?string
     {
         return $this->stateNotifyUrl;
+    }
+
+    public function getStateNotifyToken(): ?string
+    {
+        return $this->stateNotifyToken;
     }
 }

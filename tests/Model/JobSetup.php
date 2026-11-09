@@ -38,6 +38,11 @@ class JobSetup
      */
     private ?string $stateNotifyUrl;
 
+    /**
+     * @var ?non-empty-string
+     */
+    private ?string $stateNotifyToken;
+
     public function __construct()
     {
         $this->label = md5('label content');
@@ -47,6 +52,7 @@ class JobSetup
         $this->localSourcePaths = [];
         $this->testPaths = ['test.yml'];
         $this->stateNotifyUrl = null;
+        $this->stateNotifyToken = null;
     }
 
     /**
@@ -174,5 +180,24 @@ class JobSetup
     public function getStateNotifyUrl(): ?string
     {
         return $this->stateNotifyUrl;
+    }
+
+    /**
+     * @param non-empty-string $token
+     */
+    public function withStateNotifyToken(string $token): self
+    {
+        $new = clone $this;
+        $new->stateNotifyToken = $token;
+
+        return $new;
+    }
+
+    /**
+     * @return ?non-empty-string
+     */
+    public function getStateNotifyToken(): ?string
+    {
+        return $this->stateNotifyToken;
     }
 }
