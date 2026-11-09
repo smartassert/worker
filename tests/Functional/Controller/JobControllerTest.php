@@ -376,6 +376,95 @@ class JobControllerTest extends WebTestCase
         ];
     }
 
+    #[DataProvider('createSuccessJobPropertiesDataProvider')]
+    public function testCreateSuccessJobProperties(
+        callable $requestDataCreator,
+        string $expectedEventNotifyUrl,
+        string $expectedEventNotifyToken,
+        ?string $expectedStateNotifyUrl,
+    ): void {
+        $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
+
+        self::assertSame(200, $response->getStatusCode());
+
+        $job = $this->jobRepository->get();
+        self::assertInstanceOf(Job::class, $job);
+
+        self::assertSame($expectedEventNotifyUrl, $job->getEventNotifyUrl());
+        self::assertSame($expectedEventNotifyToken, $job->getEventNotifyToken());
+        self::assertSame($expectedStateNotifyUrl, $job->getStateNotifyUrl());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public static function createSuccessJobPropertiesDataProvider(): array
+    {
+        $label = md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
+        $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+
+        return [
+            'non-empty event notify url, token, empty state notify url' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => rand(1, 1000),
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                        ),
+                    ];
+                },
+                'expectedEventNotifyUrl' => $eventNotifyUrl,
+                'expectedEventNotifyToken' => $eventNotifyToken,
+                'expectedStateNotifyUrl' => null,
+            ],
+            'non-empty event notify url, token, non-empty state notify url' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $stateNotifyUrl,
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => rand(1, 1000),
+                        CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                        ),
+                    ];
+                },
+                'expectedEventNotifyUrl' => $eventNotifyUrl,
+                'expectedEventNotifyToken' => $eventNotifyToken,
+                'expectedStateNotifyUrl' => $stateNotifyUrl,
+            ],
+        ];
+    }
+
     /**
      * @param array<mixed> $expectedResponseData
      */
