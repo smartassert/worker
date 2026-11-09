@@ -51,15 +51,15 @@ class JobController
             return new ErrorResponse('job/already_exists');
         }
 
-        if ('' === $request->label) {
+        if (null === $request->label) {
             return new ErrorResponse('label/missing');
         }
 
-        if ('' === $request->eventNotifyUrl) {
+        if (null === $request->eventNotifyUrl) {
             return new ErrorResponse('event_notify_url/missing');
         }
 
-        if ('' === $request->eventNotifyToken) {
+        if (null === $request->eventNotifyToken) {
             return new ErrorResponse('event_notify_token/missing');
         }
 
@@ -67,7 +67,7 @@ class JobController
             return new ErrorResponse('maximum_duration_in_seconds/missing');
         }
 
-        if ('' === trim($request->source)) {
+        if (null === $request->source) {
             return new ErrorResponse('source/missing');
         }
 

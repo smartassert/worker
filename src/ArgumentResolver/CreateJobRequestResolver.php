@@ -20,14 +20,9 @@ class CreateJobRequestResolver implements ValueResolverInterface
             return [];
         }
 
-        $label = $request->request->get(CreateJobRequest::KEY_LABEL);
-        $label = is_string($label) ? trim($label) : '';
-
-        $eventNotifyUrl = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_URL);
-        $eventNotifyUrl = is_string($eventNotifyUrl) ? trim($eventNotifyUrl) : '';
-
-        $eventNotifyToken = $request->request->get(CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN);
-        $eventNotifyToken = is_string($eventNotifyToken) ? trim($eventNotifyToken) : '';
+        $label = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_LABEL);
+        $eventNotifyUrl = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_EVENT_NOTIFY_URL);
+        $eventNotifyToken = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN);
 
         $maximumDurationInSeconds = null;
         if ($request->request->has(CreateJobRequest::KEY_MAXIMUM_DURATION)) {
@@ -36,17 +31,13 @@ class CreateJobRequestResolver implements ValueResolverInterface
                 $maximumDurationInSeconds = (int) $maximumDurationInRequest;
             }
         }
+        $maximumDurationInSeconds = is_int($maximumDurationInSeconds) && $maximumDurationInSeconds > 0
+            ? $maximumDurationInSeconds
+            : null;
 
-        $sourceContent = $request->request->get(CreateJobRequest::KEY_SOURCE);
-        $sourceContent = is_string($sourceContent) ? $sourceContent : '';
-
-        $stateNotifyUrl = $request->request->get(CreateJobRequest::KEY_STATE_NOTIFY_URL);
-        $stateNotifyUrl = is_string($stateNotifyUrl) ? trim($stateNotifyUrl) : '';
-        $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
-
-        $stateNotifyToken = $request->request->get(CreateJobRequest::KEY_STATE_NOTIFY_TOKEN);
-        $stateNotifyToken = is_string($stateNotifyToken) ? trim($stateNotifyToken) : '';
-        $stateNotifyToken = '' !== $stateNotifyToken ? $stateNotifyToken : null;
+        $sourceContent = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_SOURCE);
+        $stateNotifyUrl = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_STATE_NOTIFY_URL);
+        $stateNotifyToken = $this->getNonEmptyStringFromRequest($request, CreateJobRequest::KEY_STATE_NOTIFY_TOKEN);
 
         return [new CreateJobRequest(
             $label,
@@ -57,5 +48,16 @@ class CreateJobRequestResolver implements ValueResolverInterface
             $stateNotifyUrl,
             $stateNotifyToken,
         )];
+    }
+
+    /**
+     * @return ?non-empty-string
+     */
+    private function getNonEmptyStringFromRequest(Request $request, string $key): ?string
+    {
+        $value = $request->request->get($key);
+        $value = is_string($value) ? trim($value) : '';
+
+        return '' === $value ? null : $value;
     }
 }

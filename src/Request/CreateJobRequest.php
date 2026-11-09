@@ -14,12 +14,21 @@ class CreateJobRequest
     public const string KEY_STATE_NOTIFY_URL = 'state_notify_url';
     public const string KEY_STATE_NOTIFY_TOKEN = 'state_notify_token';
 
+    /**
+     * @param ?non-empty-string $label
+     * @param ?non-empty-string $eventNotifyUrl
+     * @param ?non-empty-string $eventNotifyToken
+     * @param ?positive-int     $maximumDurationInSeconds
+     * @param ?non-empty-string $source
+     * @param ?non-empty-string $stateNotifyUrl
+     * @param ?non-empty-string $stateNotifyToken
+     */
     public function __construct(
-        public readonly string $label,
-        public readonly string $eventNotifyUrl,
-        public readonly string $eventNotifyToken,
+        public readonly ?string $label,
+        public readonly ?string $eventNotifyUrl,
+        public readonly ?string $eventNotifyToken,
         public readonly ?int $maximumDurationInSeconds,
-        public readonly string $source,
+        public readonly ?string $source,
         public readonly ?string $stateNotifyUrl,
         public readonly ?string $stateNotifyToken,
     ) {}
