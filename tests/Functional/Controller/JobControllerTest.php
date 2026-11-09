@@ -826,8 +826,8 @@ class JobControllerTest extends WebTestCase
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
             CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-            CreateJobRequest::KEY_STATE_NOTIFY_URL => $eventNotifyUrl,
-            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create(
                 [
