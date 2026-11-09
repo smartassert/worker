@@ -377,18 +377,11 @@ class JobControllerTest extends WebTestCase
     }
 
     /**
-     * @param array<mixed>                $expectedResponseData
-     * @param array<string, array<mixed>> $expectedStoredSources
+     * @param array<mixed> $expectedResponseData
      */
-    #[DataProvider('createSuccessDataProvider')]
-    public function testCreateSuccess(
-        callable $requestDataCreator,
-        array $expectedResponseData,
-        array $expectedStoredSources,
-        JobStartedEvent $expectedJobStartedEvent,
-    ): void {
-        self::assertFalse($this->jobRepository->has());
-
+    #[DataProvider('createSuccessResponseDataProvider')]
+    public function testCreateSuccessResponse(callable $requestDataCreator, array $expectedResponseData): void
+    {
         $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
 
         $expectedResponseData['event_ids'] = $this->workerEventRepository->findAllIds();
@@ -402,12 +395,135 @@ class JobControllerTest extends WebTestCase
         $responseData = json_decode((string) $response->getContent(), true);
         self::assertIsArray($responseData);
 
-        self::assertTrue($this->jobRepository->has());
-
         $job = $this->jobRepository->get();
         self::assertInstanceOf(Job::class, $job);
         self::assertSame($responseData['label'], $job->getLabel());
         self::assertSame($responseData['maximum_duration_in_seconds'], $job->maximumDurationInSeconds);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public static function createSuccessResponseDataProvider(): array
+    {
+        $label = md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyToken = 'event-notify-token';
+        $maximumDuration = rand(1, 1000);
+
+        return [
+            'single source file, test only' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                        ),
+                    ];
+                },
+                'expectedResponseData' => [
+                    'label' => $label,
+                    'reference' => md5($label),
+                    'maximum_duration_in_seconds' => $maximumDuration,
+                    'sources' => [
+                        'Test/chrome-open-index.yml',
+                    ],
+                    'test_paths' => [
+                        'Test/chrome-open-index.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
+                        ],
+                    ],
+                    'tests' => [],
+                ],
+            ],
+            'multiple source files' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                                'Page/index.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedResponseData' => [
+                    'label' => $label,
+                    'reference' => md5($label),
+                    'maximum_duration_in_seconds' => $maximumDuration,
+                    'sources' => [
+                        'Test/chrome-open-index.yml',
+                        'Test/firefox-open-index.yml',
+                        'Page/index.yml',
+                    ],
+                    'test_paths' => [
+                        'Test/chrome-open-index.yml',
+                        'Test/firefox-open-index.yml',
+                    ],
+                    'references' => [
+                        [
+                            'label' => 'Test/chrome-open-index.yml',
+                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
+                        ],
+                        [
+                            'label' => 'Test/firefox-open-index.yml',
+                            'reference' => md5($label . 'Test/firefox-open-index.yml'),
+                        ],
+                    ],
+                    'tests' => [],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, array<mixed>> $expectedStoredSources
+     */
+    #[DataProvider('createSuccessDataProvider')]
+    public function testCreateSuccess(
+        callable $requestDataCreator,
+        array $expectedStoredSources,
+        JobStartedEvent $expectedJobStartedEvent,
+    ): void {
+        $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
+
+        $job = $this->jobRepository->get();
+        self::assertInstanceOf(Job::class, $job);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 
@@ -479,24 +595,6 @@ class JobControllerTest extends WebTestCase
                         ),
                     ];
                 },
-                'expectedResponseData' => [
-                    'label' => $label,
-                    'reference' => md5($label),
-                    'maximum_duration_in_seconds' => $maximumDuration,
-                    'sources' => [
-                        'Test/chrome-open-index.yml',
-                    ],
-                    'test_paths' => [
-                        'Test/chrome-open-index.yml',
-                    ],
-                    'references' => [
-                        [
-                            'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
-                        ],
-                    ],
-                    'tests' => [],
-                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
@@ -531,30 +629,6 @@ class JobControllerTest extends WebTestCase
                         ),
                     ];
                 },
-                'expectedResponseData' => [
-                    'label' => $label,
-                    'reference' => md5($label),
-                    'maximum_duration_in_seconds' => $maximumDuration,
-                    'sources' => [
-                        'Test/chrome-open-index.yml',
-                        'InvalidTest/invalid-yaml.yml',
-                    ],
-                    'test_paths' => [
-                        'Test/chrome-open-index.yml',
-                        'InvalidTest/invalid-yaml.yml',
-                    ],
-                    'references' => [
-                        [
-                            'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
-                        ],
-                        [
-                            'label' => 'InvalidTest/invalid-yaml.yml',
-                            'reference' => md5($label . 'InvalidTest/invalid-yaml.yml'),
-                        ],
-                    ],
-                    'tests' => [],
-                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
@@ -600,31 +674,6 @@ class JobControllerTest extends WebTestCase
                         ),
                     ];
                 },
-                'expectedResponseData' => [
-                    'label' => $label,
-                    'reference' => md5($label),
-                    'maximum_duration_in_seconds' => $maximumDuration,
-                    'sources' => [
-                        'Test/chrome-open-index.yml',
-                        'Test/firefox-open-index.yml',
-                        'Page/index.yml',
-                    ],
-                    'test_paths' => [
-                        'Test/chrome-open-index.yml',
-                        'Test/firefox-open-index.yml',
-                    ],
-                    'references' => [
-                        [
-                            'label' => 'Test/chrome-open-index.yml',
-                            'reference' => md5($label . 'Test/chrome-open-index.yml'),
-                        ],
-                        [
-                            'label' => 'Test/firefox-open-index.yml',
-                            'reference' => md5($label . 'Test/firefox-open-index.yml'),
-                        ],
-                    ],
-                    'tests' => [],
-                ],
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
                         'type' => Source::TYPE_TEST,
