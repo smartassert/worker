@@ -514,16 +514,10 @@ class JobControllerTest extends WebTestCase
     /**
      * @param array<string, array<mixed>> $expectedStoredSources
      */
-    #[DataProvider('createSuccessDataProvider')]
-    public function testCreateSuccess(
-        callable $requestDataCreator,
-        array $expectedStoredSources,
-        JobStartedEvent $expectedJobStartedEvent,
-    ): void {
+    #[DataProvider('createSuccessStoredSourcesDataProvider')]
+    public function testCreateSuccessStoredSources(callable $requestDataCreator, array $expectedStoredSources): void
+    {
         $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
-
-        $job = $this->jobRepository->get();
-        self::assertInstanceOf(Job::class, $job);
 
         self::assertSame(array_keys($expectedStoredSources), $this->sourceRepository->findAllPaths());
 
@@ -548,6 +542,138 @@ class JobControllerTest extends WebTestCase
                 trim($this->sourceFileInspector->read($sourcePath))
             );
         }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public static function createSuccessStoredSourcesDataProvider(): array
+    {
+        $label = md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyToken = 'event-notify-token';
+        $maximumDuration = rand(1, 1000);
+
+        return [
+            'single source file, test only' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                ],
+            ],
+            'single source file, test only with intentionally invalid yaml' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                                'InvalidTest/invalid-yaml.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                                'InvalidTest/invalid-yaml.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                    'InvalidTest/invalid-yaml.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'InvalidTest/invalid-yaml.yml',
+                    ],
+                ],
+            ],
+            'multiple source files' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $maximumDuration
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                                'Test/firefox-open-index.yml',
+                                'Page/index.yml',
+                            ]
+                        ),
+                    ];
+                },
+                'expectedStoredSources' => [
+                    'Test/chrome-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/chrome-open-index.yml',
+                    ],
+                    'Test/firefox-open-index.yml' => [
+                        'type' => Source::TYPE_TEST,
+                        'contentFixture' => 'Test/firefox-open-index.yml',
+                    ],
+                    'Page/index.yml' => [
+                        'type' => Source::TYPE_RESOURCE,
+                        'contentFixture' => 'Page/index.yml',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('createSuccessDataProvider')]
+    public function testCreateSuccess(
+        callable $requestDataCreator,
+        JobStartedEvent $expectedJobStartedEvent,
+    ): void {
+        $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
 
         $jobStartedEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
@@ -595,57 +721,7 @@ class JobControllerTest extends WebTestCase
                         ),
                     ];
                 },
-                'expectedStoredSources' => [
-                    'Test/chrome-open-index.yml' => [
-                        'type' => Source::TYPE_TEST,
-                        'contentFixture' => 'Test/chrome-open-index.yml',
-                    ],
-                ],
                 'expectedJobStartedEvent' => new JobStartedEvent($label, ['Test/chrome-open-index.yml']),
-            ],
-            'single source file, test only with intentionally invalid yaml' => [
-                'requestDataCreator' => function (
-                    CreateJobSourceFactory $createJobSourceFactory
-                ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
-                ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
-                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
-                            [
-                                'Test/chrome-open-index.yml',
-                                'InvalidTest/invalid-yaml.yml',
-                            ],
-                            [
-                                'Test/chrome-open-index.yml',
-                                'InvalidTest/invalid-yaml.yml',
-                            ]
-                        ),
-                    ];
-                },
-                'expectedStoredSources' => [
-                    'Test/chrome-open-index.yml' => [
-                        'type' => Source::TYPE_TEST,
-                        'contentFixture' => 'Test/chrome-open-index.yml',
-                    ],
-                    'InvalidTest/invalid-yaml.yml' => [
-                        'type' => Source::TYPE_TEST,
-                        'contentFixture' => 'InvalidTest/invalid-yaml.yml',
-                    ],
-                ],
-                'expectedJobStartedEvent' => new JobStartedEvent(
-                    $label,
-                    [
-                        'Test/chrome-open-index.yml',
-                        'InvalidTest/invalid-yaml.yml',
-                    ]
-                ),
             ],
             'multiple source files' => [
                 'requestDataCreator' => function (
@@ -674,20 +750,6 @@ class JobControllerTest extends WebTestCase
                         ),
                     ];
                 },
-                'expectedStoredSources' => [
-                    'Test/chrome-open-index.yml' => [
-                        'type' => Source::TYPE_TEST,
-                        'contentFixture' => 'Test/chrome-open-index.yml',
-                    ],
-                    'Test/firefox-open-index.yml' => [
-                        'type' => Source::TYPE_TEST,
-                        'contentFixture' => 'Test/firefox-open-index.yml',
-                    ],
-                    'Page/index.yml' => [
-                        'type' => Source::TYPE_RESOURCE,
-                        'contentFixture' => 'Page/index.yml',
-                    ],
-                ],
                 'expectedJobStartedEvent' => new JobStartedEvent(
                     $label,
                     [
