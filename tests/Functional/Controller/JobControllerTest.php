@@ -382,6 +382,7 @@ class JobControllerTest extends WebTestCase
         string $expectedEventNotifyUrl,
         string $expectedEventNotifyToken,
         ?string $expectedStateNotifyUrl,
+        ?string $expectedStateNotifyToken,
     ): void {
         $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
 
@@ -393,6 +394,7 @@ class JobControllerTest extends WebTestCase
         self::assertSame($expectedEventNotifyUrl, $job->getEventNotifyUrl());
         self::assertSame($expectedEventNotifyToken, $job->getEventNotifyToken());
         self::assertSame($expectedStateNotifyUrl, $job->getStateNotifyUrl());
+        self::assertSame($expectedStateNotifyToken, $job->getStateNotifyToken());
     }
 
     /**
@@ -404,9 +406,10 @@ class JobControllerTest extends WebTestCase
         $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
         $eventNotifyToken = 'event-notify-token';
         $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+        $stateNotifToken = 'state-notify-token';
 
         return [
-            'non-empty event notify url, token, empty state notify url' => [
+            'non-empty event notify values, empty state notify values' => [
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
@@ -432,8 +435,9 @@ class JobControllerTest extends WebTestCase
                 'expectedEventNotifyUrl' => $eventNotifyUrl,
                 'expectedEventNotifyToken' => $eventNotifyToken,
                 'expectedStateNotifyUrl' => null,
+                'expectedStateNotifyToken' => null,
             ],
-            'non-empty event notify url, token, non-empty state notify url' => [
+            'non-empty event notify values, non-empty state notify url' => [
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
@@ -461,6 +465,39 @@ class JobControllerTest extends WebTestCase
                 'expectedEventNotifyUrl' => $eventNotifyUrl,
                 'expectedEventNotifyToken' => $eventNotifyToken,
                 'expectedStateNotifyUrl' => $stateNotifyUrl,
+                'expectedStateNotifyToken' => null,
+            ],
+            'non-empty event notify values, non-empty state notify token' => [
+                'requestDataCreator' => function (
+                    CreateJobSourceFactory $createJobSourceFactory
+                ) use (
+                    $label,
+                    $eventNotifyUrl,
+                    $eventNotifyToken,
+                    $stateNotifyUrl,
+                    $stateNotifToken,
+                ): array {
+                    return [
+                        CreateJobRequest::KEY_LABEL => $label,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+                        CreateJobRequest::KEY_MAXIMUM_DURATION => rand(1, 1000),
+                        CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+                        CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifToken,
+                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                            [
+                                'Test/chrome-open-index.yml',
+                            ],
+                        ),
+                    ];
+                },
+                'expectedEventNotifyUrl' => $eventNotifyUrl,
+                'expectedEventNotifyToken' => $eventNotifyToken,
+                'expectedStateNotifyUrl' => $stateNotifyUrl,
+                'expectedStateNotifyToken' => $stateNotifToken,
             ],
         ];
     }

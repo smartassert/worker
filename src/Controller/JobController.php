@@ -93,6 +93,9 @@ class JobController
         $stateNotifyUrl = $request->stateNotifyUrl;
         $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
 
+        $stateNotifyToken = $request->stateNotifyToken;
+        $stateNotifyToken = '' !== $stateNotifyToken ? $stateNotifyToken : null;
+
         $job = new Job(
             $request->label,
             $request->eventNotifyUrl,
@@ -100,6 +103,7 @@ class JobController
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths,
             $stateNotifyUrl,
+            $stateNotifyToken,
         );
 
         $entityMutator->save($job);

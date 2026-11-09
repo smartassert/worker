@@ -57,6 +57,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
             600,
             ['test.yml'],
             null,
+            null,
         );
 
         $jobRepository = self::getContainer()->get(JobRepository::class);
@@ -95,6 +96,7 @@ class TimeoutCheckHandlerTest extends WebTestCase
                 'event-notify-token',
                 $jobMaximumDuration,
                 ['test.yml'],
+                null,
                 null,
             )
         );
