@@ -668,8 +668,8 @@ class JobControllerTest extends WebTestCase
         ];
     }
 
-    #[DataProvider('createSuccessDataProvider')]
-    public function testCreateSuccess(
+    #[DataProvider('createSuccessJobStartedEventDataProvider')]
+    public function testCreateSuccessJobStartedEvent(
         callable $requestDataCreator,
         JobStartedEvent $expectedJobStartedEvent,
     ): void {
@@ -678,18 +678,12 @@ class JobControllerTest extends WebTestCase
         $jobStartedEvent = $this->eventRecorder->get(0);
         self::assertInstanceOf(JobStartedEvent::class, $jobStartedEvent);
         self::assertEquals($expectedJobStartedEvent, $jobStartedEvent);
-
-        $transportQueue = $this->messengerTransport->getSent();
-        self::assertEquals(
-            new TimeoutCheckMessage(),
-            $transportQueue[count($transportQueue) - 1]->getMessage()
-        );
     }
 
     /**
      * @return array<mixed>
      */
-    public static function createSuccessDataProvider(): array
+    public static function createSuccessJobStartedEventDataProvider(): array
     {
         $label = md5((string) rand());
         $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
@@ -759,6 +753,35 @@ class JobControllerTest extends WebTestCase
                 ),
             ],
         ];
+    }
+
+    public function testCreateSuccessTimeoutCheckMessageIsDispatched(): void
+    {
+        $label = md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyToken = 'event-notify-token';
+        $maximumDuration = rand(1, 1000);
+
+        $this->clientRequestSender->createJob([
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+            CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create(
+                [
+                    'Test/chrome-open-index.yml',
+                ],
+                [
+                    'Test/chrome-open-index.yml',
+                ]
+            ),
+        ]);
+
+        $transportQueue = $this->messengerTransport->getSent();
+        self::assertEquals(
+            new TimeoutCheckMessage(),
+            $transportQueue[count($transportQueue) - 1]->getMessage()
+        );
     }
 
     public function testStatusNoJob(): void
