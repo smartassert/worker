@@ -11,7 +11,7 @@ class CreateJobRequest
     public const string KEY_EVENT_NOTIFY_TOKEN = 'event_notify_token';
     public const string KEY_MAXIMUM_DURATION = 'maximum_duration_in_seconds';
     public const string KEY_SOURCE = 'source';
-    public const string STATE_NOTIFY_URL = 'state_notify_url';
+    public const string KEY_STATE_NOTIFY_URL = 'state_notify_url';
 
     public function __construct(
         public readonly string $label,

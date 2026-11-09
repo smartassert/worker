@@ -51,7 +51,7 @@ class FailedWorkerEventTest extends AbstractIntegrationTestCase
                     'Test/chrome-open-index-compilation-failure.yml',
                 ],
             ),
-            CreateJobRequest::STATE_NOTIFY_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => 'http://callback-receiver:8080',
         ]);
 
         self::assertSame(200, $createResponse->getStatusCode());

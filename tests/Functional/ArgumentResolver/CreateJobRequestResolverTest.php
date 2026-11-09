@@ -133,7 +133,7 @@ class CreateJobRequestResolverTest extends WebTestCase
             'empty state notify url' => [
                 'request' => new Request(
                     request: [
-                        CreateJobRequest::STATE_NOTIFY_URL => '',
+                        CreateJobRequest::KEY_STATE_NOTIFY_URL => '',
                     ],
                 ),
                 'expected' => new CreateJobRequest(
@@ -148,7 +148,7 @@ class CreateJobRequestResolverTest extends WebTestCase
             'non-empty state notify url' => [
                 'request' => new Request(
                     request: [
-                        CreateJobRequest::STATE_NOTIFY_URL => 'https://example.com/notify',
+                        CreateJobRequest::KEY_STATE_NOTIFY_URL => 'https://example.com/notify',
                     ],
                 ),
                 'expected' => new CreateJobRequest(
