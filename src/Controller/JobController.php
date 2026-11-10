@@ -63,6 +63,14 @@ class JobController
             return new ErrorResponse('event_notify_token/missing');
         }
 
+        if (null === $request->stateNotifyUrl) {
+            return new ErrorResponse('state_notify_url/missing');
+        }
+
+        if (null === $request->stateNotifyToken) {
+            return new ErrorResponse('state_notify_token/missing');
+        }
+
         if (null === $request->maximumDurationInSeconds) {
             return new ErrorResponse('maximum_duration_in_seconds/missing');
         }
@@ -90,20 +98,14 @@ class JobController
             return $errorResponseFactory->createFromMissingTestSourceException($exception);
         }
 
-        $stateNotifyUrl = $request->stateNotifyUrl;
-        $stateNotifyUrl = '' !== $stateNotifyUrl ? $stateNotifyUrl : null;
-
-        $stateNotifyToken = $request->stateNotifyToken;
-        $stateNotifyToken = '' !== $stateNotifyToken ? $stateNotifyToken : null;
-
         $job = new Job(
             $request->label,
             $request->eventNotifyUrl,
             $request->eventNotifyToken,
             $request->maximumDurationInSeconds,
             $jobSource->manifest->testPaths,
-            $stateNotifyUrl,
-            $stateNotifyToken,
+            $request->stateNotifyUrl,
+            $request->stateNotifyToken,
         );
 
         $entityMutator->save($job);

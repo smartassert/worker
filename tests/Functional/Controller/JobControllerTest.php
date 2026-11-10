@@ -125,8 +125,10 @@ class JobControllerTest extends WebTestCase
     public static function createBadRequestMissingValuesDataProvider(): array
     {
         $label = 'label value';
-        $eventNotifyUrl = 'https://example.com/results';
+        $eventNotifyUrl = 'https://example.com/event-notify';
         $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify';
+        $stateNotifyToken = 'state-notify-token';
         $maximumDurationInSeconds = 600;
         $nonEmptySource = 'non-empty source';
 
@@ -134,6 +136,8 @@ class JobControllerTest extends WebTestCase
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
             CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $nonEmptySource,
         ];
@@ -221,8 +225,10 @@ class JobControllerTest extends WebTestCase
     {
         $nonSourcePayload = [
             CreateJobRequest::KEY_LABEL => 'label value',
-            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'https://example.com/results',
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'https://example.com/event-notify',
             CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-url',
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => 'https://example.com/state-notify',
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => 'state-notify-url',
             CreateJobRequest::KEY_MAXIMUM_DURATION => 600,
         ];
 
@@ -381,8 +387,8 @@ class JobControllerTest extends WebTestCase
         callable $requestDataCreator,
         string $expectedEventNotifyUrl,
         string $expectedEventNotifyToken,
-        ?string $expectedStateNotifyUrl,
-        ?string $expectedStateNotifyToken,
+        string $expectedStateNotifyUrl,
+        string $expectedStateNotifyToken,
     ): void {
         $response = $this->clientRequestSender->createJob($requestDataCreator($this->createJobSourceFactory));
 
@@ -409,64 +415,6 @@ class JobControllerTest extends WebTestCase
         $stateNotifToken = 'state-notify-token';
 
         return [
-            'non-empty event notify values, empty state notify values' => [
-                'requestDataCreator' => function (
-                    CreateJobSourceFactory $createJobSourceFactory
-                ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => rand(1, 1000),
-                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
-                            [
-                                'Test/chrome-open-index.yml',
-                            ],
-                            [
-                                'Test/chrome-open-index.yml',
-                            ],
-                        ),
-                    ];
-                },
-                'expectedEventNotifyUrl' => $eventNotifyUrl,
-                'expectedEventNotifyToken' => $eventNotifyToken,
-                'expectedStateNotifyUrl' => null,
-                'expectedStateNotifyToken' => null,
-            ],
-            'non-empty event notify values, non-empty state notify url' => [
-                'requestDataCreator' => function (
-                    CreateJobSourceFactory $createJobSourceFactory
-                ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $stateNotifyUrl,
-                ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => rand(1, 1000),
-                        CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
-                        CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
-                            [
-                                'Test/chrome-open-index.yml',
-                            ],
-                            [
-                                'Test/chrome-open-index.yml',
-                            ],
-                        ),
-                    ];
-                },
-                'expectedEventNotifyUrl' => $eventNotifyUrl,
-                'expectedEventNotifyToken' => $eventNotifyToken,
-                'expectedStateNotifyUrl' => $stateNotifyUrl,
-                'expectedStateNotifyToken' => null,
-            ],
             'non-empty event notify values, non-empty state notify token' => [
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
@@ -533,25 +481,29 @@ class JobControllerTest extends WebTestCase
     public static function createSuccessResponseDataProvider(): array
     {
         $label = md5((string) rand());
-        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
         $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+        $stateNotifyToken = 'state-notify-token';
         $maximumDuration = rand(1, 1000);
+
+        $requestProperties = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+        ];
 
         return [
             'single source file, test only' => [
                 'requestDataCreator' => function (
-                    CreateJobSourceFactory $createJobSourceFactory
+                    CreateJobSourceFactory $createJobSourceFactory,
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
@@ -560,7 +512,7 @@ class JobControllerTest extends WebTestCase
                                 'Test/chrome-open-index.yml',
                             ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedResponseData' => [
                     'label' => $label,
@@ -583,18 +535,11 @@ class JobControllerTest extends WebTestCase
             ],
             'multiple source files' => [
                 'requestDataCreator' => function (
-                    CreateJobSourceFactory $createJobSourceFactory
+                    CreateJobSourceFactory $createJobSourceFactory,
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
@@ -606,7 +551,7 @@ class JobControllerTest extends WebTestCase
                                 'Page/index.yml',
                             ]
                         ),
-                    ];
+                    ]);
                 },
                 'expectedResponseData' => [
                     'label' => $label,
@@ -676,34 +621,38 @@ class JobControllerTest extends WebTestCase
     public static function createSuccessStoredSourcesDataProvider(): array
     {
         $label = md5((string) rand());
-        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
         $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+        $stateNotifyToken = 'state-notify-token';
         $maximumDuration = rand(1, 1000);
+
+        $requestProperties = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+        ];
 
         return [
             'single source file, test only' => [
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
                             ],
                             [
                                 'Test/chrome-open-index.yml',
-                            ]
+                            ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
@@ -716,16 +665,9 @@ class JobControllerTest extends WebTestCase
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
@@ -734,9 +676,9 @@ class JobControllerTest extends WebTestCase
                             [
                                 'Test/chrome-open-index.yml',
                                 'InvalidTest/invalid-yaml.yml',
-                            ]
+                            ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
@@ -753,16 +695,9 @@ class JobControllerTest extends WebTestCase
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
@@ -772,9 +707,9 @@ class JobControllerTest extends WebTestCase
                                 'Test/chrome-open-index.yml',
                                 'Test/firefox-open-index.yml',
                                 'Page/index.yml',
-                            ]
+                            ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedStoredSources' => [
                     'Test/chrome-open-index.yml' => [
@@ -812,34 +747,38 @@ class JobControllerTest extends WebTestCase
     public static function createSuccessJobStartedEventDataProvider(): array
     {
         $label = md5((string) rand());
-        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
         $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+        $stateNotifyToken = 'state-notify-token';
         $maximumDuration = rand(1, 1000);
+
+        $requestProperties = [
+            CreateJobRequest::KEY_LABEL => $label,
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
+            CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
+            CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+        ];
 
         return [
             'single source file, test only' => [
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
                             ],
                             [
                                 'Test/chrome-open-index.yml',
-                            ]
+                            ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedJobStartedEvent' => new JobStartedEvent($label, ['Test/chrome-open-index.yml']),
             ],
@@ -847,16 +786,9 @@ class JobControllerTest extends WebTestCase
                 'requestDataCreator' => function (
                     CreateJobSourceFactory $createJobSourceFactory
                 ) use (
-                    $label,
-                    $eventNotifyUrl,
-                    $eventNotifyToken,
-                    $maximumDuration
+                    $requestProperties,
                 ): array {
-                    return [
-                        CreateJobRequest::KEY_LABEL => $label,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
-                        CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
-                        CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
+                    return array_merge($requestProperties, [
                         CreateJobRequest::KEY_SOURCE => $createJobSourceFactory->create(
                             [
                                 'Test/chrome-open-index.yml',
@@ -866,9 +798,9 @@ class JobControllerTest extends WebTestCase
                                 'Test/chrome-open-index.yml',
                                 'Test/firefox-open-index.yml',
                                 'Page/index.yml',
-                            ]
+                            ],
                         ),
-                    ];
+                    ]);
                 },
                 'expectedJobStartedEvent' => new JobStartedEvent(
                     $label,
@@ -884,14 +816,18 @@ class JobControllerTest extends WebTestCase
     public function testCreateSuccessTimeoutCheckMessageIsDispatched(): void
     {
         $label = md5((string) rand());
-        $eventNotifyUrl = 'https://example.com/results/' . md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/event-notify/' . md5((string) rand());
         $eventNotifyToken = 'event-notify-token';
+        $stateNotifyUrl = 'https://example.com/state-notify/' . md5((string) rand());
+        $stateNotifyToken = 'state-notify-token';
         $maximumDuration = rand(1, 1000);
 
         $this->clientRequestSender->createJob([
             CreateJobRequest::KEY_LABEL => $label,
             CreateJobRequest::KEY_EVENT_NOTIFY_URL => $eventNotifyUrl,
             CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => $eventNotifyToken,
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => $stateNotifyUrl,
+            CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => $stateNotifyToken,
             CreateJobRequest::KEY_MAXIMUM_DURATION => $maximumDuration,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create(
                 [
@@ -899,7 +835,7 @@ class JobControllerTest extends WebTestCase
                 ],
                 [
                     'Test/chrome-open-index.yml',
-                ]
+                ],
             ),
         ]);
 
