@@ -22,12 +22,7 @@ class NotifiableApplicationStateChangedEvent extends Event implements Notifiable
 
     public function getNotifyUrl(): ?string
     {
-        $baseUrl = $this->job->getStateNotifyUrl();
-        if (null === $baseUrl) {
-            return null;
-        }
-
-        return rtrim($baseUrl, '/') . '/' . $this->getRemoteEventName();
+        return $this->job->getStateNotifyUrl();
     }
 
     public function getRemoteEventName(): string
