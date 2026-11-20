@@ -6,30 +6,31 @@ namespace App\Entity;
 
 use App\Enum\TestState;
 use App\Repository\TestRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(length: 255)]
     public readonly string $browser;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(length: 255)]
     public readonly string $url;
 
-    #[ORM\Column(type: 'integer', nullable: false, unique: true)]
+    #[ORM\Column(unique: true, nullable: false)]
     public readonly int $position;
 
     /**
      * @var string[]
      */
-    #[ORM\Column(type: 'simple_array')]
+    #[ORM\Column(type: Types::JSON)]
     private readonly array $stepNames;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private readonly string $source;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private readonly string $target;
 
     #[ORM\Id]
@@ -37,7 +38,7 @@ class Test
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255, enumType: TestState::class)]
+    #[ORM\Column(length: 255, enumType: TestState::class)]
     private TestState $state;
 
     /**

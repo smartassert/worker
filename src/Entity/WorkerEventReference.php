@@ -22,7 +22,7 @@ class WorkerEventReference
     private readonly string $reference;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(length: 32)]
     private string $id;
 
     /**

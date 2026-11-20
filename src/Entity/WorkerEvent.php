@@ -8,18 +8,19 @@ use App\Enum\WorkerEventState;
 use App\Repository\WorkerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WorkerEventRepository::class)]
 class WorkerEvent
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(length: 255)]
     public readonly string $type;
 
     /**
      * @var array<mixed>
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     public readonly array $payload;
 
     #[ORM\ManyToOne(targetEntity: WorkerEventReference::class)]
@@ -37,7 +38,7 @@ class WorkerEvent
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255, enumType: WorkerEventState::class)]
+    #[ORM\Column(length: 255, enumType: WorkerEventState::class)]
     private WorkerEventState $state;
 
     /**

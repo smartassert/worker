@@ -6,34 +6,35 @@ namespace App\Entity;
 
 use App\Enum\JobEndState;
 use App\Repository\JobRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     public readonly int $maximumDurationInSeconds;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column]
     public readonly \DateTimeImmutable $startDateTime;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
+    #[ORM\Column(length: 255, nullable: true, enumType: JobEndState::class)]
     public ?JobEndState $endState;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     private readonly string $eventNotifyUrl;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     private readonly string $eventNotifyToken;
 
     /**
      * @var string[]
      */
-    #[ORM\Column(type: 'simple_array')]
+    #[ORM\Column(type: Types::JSON)]
     private readonly array $testPaths;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(length: 32)]
     private readonly string $label;
 
     #[ORM\Column(nullable: true)]
