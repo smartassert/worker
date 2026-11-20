@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     public readonly int $maximumDurationInSeconds;
 
     #[ORM\Column(type: 'datetime_immutable')]
