@@ -17,13 +17,13 @@ class Job
     #[ORM\Column]
     public readonly \DateTimeImmutable $startDateTime;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
+    #[ORM\Column(length: 255, nullable: true, enumType: JobEndState::class)]
     public ?JobEndState $endState;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     private readonly string $eventNotifyUrl;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     private readonly string $eventNotifyToken;
 
     /**
@@ -33,7 +33,7 @@ class Job
     private readonly array $testPaths;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(length: 32)]
     private readonly string $label;
 
     #[ORM\Column(nullable: true)]
