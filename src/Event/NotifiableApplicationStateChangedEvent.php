@@ -32,15 +32,15 @@ class NotifiableApplicationStateChangedEvent extends Event implements Notifiable
 
     /**
      * @return array{
-     *     previous_state: SerializedApplicationState,
-     *     new_state: SerializedApplicationState,
+     *     job: string,
+     *     state: SerializedApplicationState,
      * }
      */
     public function getPayload(): array
     {
         return [
-            'previous_state' => $this->event->previousState->toArray(),
-            'new_state' => $this->event->newState->toArray(),
+            'job' => $this->job->getLabel(),
+            'state' => $this->event->newState->toArray(),
         ];
     }
 }
