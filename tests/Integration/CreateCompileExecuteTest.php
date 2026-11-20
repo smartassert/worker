@@ -63,9 +63,9 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
 
         $createResponse = self::makeCreateJobRequest([
             CreateJobRequest::KEY_LABEL => $jobLabel,
-            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_EVENT_NOTIFY_URL => 'http://callback-receiver:8080/event_notify',
             CreateJobRequest::KEY_EVENT_NOTIFY_TOKEN => 'event-notify-token',
-            CreateJobRequest::KEY_STATE_NOTIFY_URL => 'http://callback-receiver:8080',
+            CreateJobRequest::KEY_STATE_NOTIFY_URL => 'http://callback-receiver:8080/state_notify',
             CreateJobRequest::KEY_STATE_NOTIFY_TOKEN => 'state-notify-token',
             CreateJobRequest::KEY_MAXIMUM_DURATION => $jobMaximumDurationInSeconds,
             CreateJobRequest::KEY_SOURCE => $this->createJobSourceFactory->create($manifestPaths, $sourcePaths),
@@ -383,7 +383,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -402,7 +402,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -421,7 +421,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -455,7 +455,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -468,7 +468,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -486,7 +486,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -514,7 +514,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -532,7 +532,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -551,7 +551,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -590,7 +590,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -607,7 +607,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -690,7 +690,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -709,7 +709,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -728,7 +728,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -754,7 +754,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -767,7 +767,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -785,7 +785,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -804,7 +804,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -843,7 +843,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -860,7 +860,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -984,7 +984,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1003,7 +1003,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1022,7 +1022,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1064,7 +1064,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1077,7 +1077,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1095,7 +1095,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1123,7 +1123,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1141,7 +1141,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1169,7 +1169,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1187,7 +1187,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1215,7 +1215,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1234,7 +1234,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1247,7 +1247,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1260,7 +1260,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1301,7 +1301,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1320,7 +1320,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1359,7 +1359,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1400,7 +1400,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1441,7 +1441,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1475,7 +1475,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1516,7 +1516,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1557,7 +1557,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1591,7 +1591,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1632,7 +1632,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1673,7 +1673,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1707,7 +1707,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1726,7 +1726,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1766,7 +1766,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1779,7 +1779,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1796,7 +1796,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1891,7 +1891,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1910,7 +1910,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1929,7 +1929,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1955,7 +1955,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1968,7 +1968,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -1986,7 +1986,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2022,7 +2022,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2041,7 +2041,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2054,7 +2054,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2067,7 +2067,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2117,7 +2117,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2136,7 +2136,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2170,7 +2170,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2221,7 +2221,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2240,7 +2240,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2290,7 +2290,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/',
+                            '/event_notify',
                             [],
                             (string) json_encode([
                                 'job' => $workerJobLabel,
@@ -2307,7 +2307,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/worker.application.state_changed',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2371,7 +2371,10 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
     private function requestCollectionContainsRequest(array $collection, RequestInterface $request): bool
     {
         foreach ($collection as $comparator) {
-            $uriMatches = (string) $comparator->getUri() === (string) $request->getUri();
+            $comparatorUri = rtrim((string) $comparator->getUri(), '/');
+            $requestUri = rtrim((string) $request->getUri(), '/');
+
+            $uriMatches = $comparatorUri === $requestUri;
 
             $comparatorPayload = json_decode($comparator->getBody()->getContents(), true);
             $requestPayload = json_decode($request->getBody()->getContents(), true);
