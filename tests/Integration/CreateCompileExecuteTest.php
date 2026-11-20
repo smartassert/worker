@@ -386,13 +386,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $awaitingComponent,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -405,13 +400,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -535,13 +525,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
                                     'execution' => $awaitingComponent,
@@ -610,13 +595,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationFailed,
-                                    'compilation' => $failedComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
                                     'execution' => $awaitingComponent,
@@ -693,13 +673,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $awaitingComponent,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -712,13 +687,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -788,13 +758,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
                                     'execution' => $awaitingComponent,
@@ -863,13 +828,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationFailed,
-                                    'compilation' => $failedComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $failedComponent,
                                     'execution' => $awaitingComponent,
@@ -987,13 +947,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $awaitingComponent,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -1006,13 +961,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -1218,13 +1168,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
                                     'execution' => $awaitingComponent,
@@ -1304,13 +1249,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationExecuting,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
                                     'execution' => $runningComponent,
@@ -1710,13 +1650,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationExecuting,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $runningComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompletingEventDelivery,
                                     'compilation' => $completeComponent,
                                     'execution' => $completeComponent,
@@ -1799,13 +1734,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompletingEventDelivery,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $completeComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationComplete,
                                     'compilation' => $completeComponent,
                                     'execution' => $completeComponent,
@@ -1894,13 +1824,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $awaitingComponent,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -1913,13 +1838,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $awaitingComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationCompiling,
                                     'compilation' => $runningComponent,
                                     'execution' => $awaitingComponent,
@@ -2025,13 +1945,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationCompiling,
-                                    'compilation' => $runningComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
                                     'execution' => $awaitingComponent,
@@ -2120,13 +2035,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationExecuting,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $awaitingComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationExecuting,
                                     'compilation' => $completeComponent,
                                     'execution' => $runningComponent,
@@ -2224,13 +2134,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationExecuting,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $runningComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $completeComponent,
                                     'execution' => $cancelledComponent,
@@ -2310,13 +2215,8 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                             '/state_notify',
                             [],
                             (string) json_encode([
-                                'previous_state' => [
-                                    'application' => $applicationFailed,
-                                    'compilation' => $completeComponent,
-                                    'execution' => $cancelledComponent,
-                                    'event_delivery' => $runningComponent,
-                                ],
-                                'new_state' => [
+                                'job' => $workerJobLabel,
+                                'state' => [
                                     'application' => $applicationFailed,
                                     'compilation' => $completeComponent,
                                     'execution' => $cancelledComponent,
