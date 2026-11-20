@@ -14,7 +14,7 @@ class Job
     #[ORM\Column]
     public readonly int $maximumDurationInSeconds;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column]
     public readonly \DateTimeImmutable $startDateTime;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, enumType: JobEndState::class)]
