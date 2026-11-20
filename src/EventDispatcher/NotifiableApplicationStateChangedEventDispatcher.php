@@ -13,7 +13,7 @@ final readonly class NotifiableApplicationStateChangedEventDispatcher implements
 {
     public function __construct(
         private NotifiableApplicationStateChangedEventFactory $factory,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     /**
@@ -31,6 +31,9 @@ final readonly class NotifiableApplicationStateChangedEventDispatcher implements
     public function dispatch(ApplicationStateChangedEvent $event): void
     {
         $notifiableEvent = $this->factory->create($event);
+        if (null === $notifiableEvent) {
+            return;
+        }
 
         $this->eventDispatcher->dispatch($notifiableEvent);
     }
