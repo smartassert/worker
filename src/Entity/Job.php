@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Enum\JobEndState;
 use App\Repository\JobRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
@@ -29,7 +30,7 @@ class Job
     /**
      * @var string[]
      */
-    #[ORM\Column(type: 'simple_array')]
+    #[ORM\Column(type: Types::JSON)]
     private readonly array $testPaths;
 
     #[ORM\Id]
