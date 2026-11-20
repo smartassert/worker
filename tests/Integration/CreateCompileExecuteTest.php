@@ -2373,6 +2373,12 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
         foreach ($collection as $comparator) {
             $uriMatches = (string) $comparator->getUri() === (string) $request->getUri();
 
+            var_dump([
+                'comparator' => (string) $comparator->getUri(),
+                'request' => (string) $request->getUri(),
+            ]);
+            echo "\n";
+
             $comparatorPayload = json_decode($comparator->getBody()->getContents(), true);
             $requestPayload = json_decode($request->getBody()->getContents(), true);
             $comparator->getBody()->rewind();
