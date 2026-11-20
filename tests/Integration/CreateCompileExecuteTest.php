@@ -383,7 +383,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -402,7 +402,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -532,7 +532,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -607,7 +607,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -690,7 +690,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -709,7 +709,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -785,7 +785,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -860,7 +860,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -984,7 +984,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1003,7 +1003,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1215,7 +1215,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1301,7 +1301,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1707,7 +1707,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1796,7 +1796,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1891,7 +1891,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                     return [
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -1910,7 +1910,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2022,7 +2022,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2117,7 +2117,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2221,7 +2221,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2307,7 +2307,7 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
                         ),
                         new Request(
                             'POST',
-                            '/state_notify/',
+                            '/state_notify',
                             [],
                             (string) json_encode([
                                 'previous_state' => [
@@ -2371,13 +2371,10 @@ class CreateCompileExecuteTest extends AbstractIntegrationTestCase
     private function requestCollectionContainsRequest(array $collection, RequestInterface $request): bool
     {
         foreach ($collection as $comparator) {
-            $uriMatches = (string) $comparator->getUri() === (string) $request->getUri();
+            $comparatorUri = rtrim((string) $comparator->getUri(), '/');
+            $requestUri = rtrim((string) $request->getUri(), '/');
 
-            var_dump([
-                'comparator' => (string) $comparator->getUri(),
-                'request' => (string) $request->getUri(),
-            ]);
-            echo "\n";
+            $uriMatches = $comparatorUri === $requestUri;
 
             $comparatorPayload = json_decode($comparator->getBody()->getContents(), true);
             $requestPayload = json_decode($request->getBody()->getContents(), true);
