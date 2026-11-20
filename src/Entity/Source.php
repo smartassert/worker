@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\SourceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SourceRepository::class)]
@@ -14,13 +15,13 @@ class Source
     public const TYPE_RESOURCE = 'resource';
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32)]
+    #[ORM\Column(length: 32)]
     private string $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(length: 255)]
     private readonly string $type;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private readonly string $path;
 
     /**
