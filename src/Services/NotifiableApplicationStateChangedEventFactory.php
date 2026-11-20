@@ -14,8 +14,13 @@ readonly class NotifiableApplicationStateChangedEventFactory
         private JobRepository $jobRepository,
     ) {}
 
-    public function create(ApplicationStateChangedEvent $event): NotifiableApplicationStateChangedEvent
+    public function create(ApplicationStateChangedEvent $event): ?NotifiableApplicationStateChangedEvent
     {
-        return new NotifiableApplicationStateChangedEvent($this->jobRepository->findOneBy([]), $event);
+        $job = $this->jobRepository->get();
+        if (null === $job) {
+            return null;
+        }
+
+        return new NotifiableApplicationStateChangedEvent($job, $event);
     }
 }
