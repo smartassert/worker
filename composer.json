@@ -50,7 +50,7 @@
         "symfony/phpunit-bridge": "8.1.*",
         "symfony/process": "8.1.*",
         "webignition/http-history-container": "^4.0",
-        "webignition/object-reflector": "^1.0",
+        "webignition/object-reflector": "^2.0",
         "webignition/wait-for": "^0.2"
     },
     "config": {
