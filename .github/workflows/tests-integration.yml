@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php: ['8.5']
+        php: ['8.5', '8.6']
         test_name: ${{ fromJson(needs.setup.outputs.test_names) }}
 
     steps:
@@ -47,6 +47,11 @@ jobs:
 
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Set PHP version in Dockerefile
+        run: |
+          sed -i 's/8.5-fpm/${{ matrix.php }}-fpm/g' Dockerfile
+          cat Dockerfile
 
       - name: Setup image test environment
         run: |
